@@ -3,10 +3,14 @@
 from rdkit import Chem
 import json
 
+RESULTS_DIRECTORY = "../results"
+DATA_DIRECTORY = "../data"
+
+
 pdbcode = "5qj4"
 pdbfile = open("../data/"+str(pdbcode)+".pdb").readlines()
-non_ligs = json.load(open("non_ligs", "r"))
-writer = Chem.rdmolfiles.SDWriter("../resulting_data/"+str(pdbcode)+"_out.sdf")
+non_ligs = json.load(open("../non_ligs", "r"))
+writer = Chem.rdmolfiles.SDWriter("../results/"+str(pdbcode)+"_out.sdf")
 
 
 def hets_and_cons(pdbfile):
@@ -73,7 +77,7 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
     else:
         ligand_name = str(ligand)
     
-    ligands_connections = open("../resulting_data/"+str(pdbcode)+"_"+str(ligand_name)+".pdb", "w+")
+    ligands_connections = open("../results/"+str(pdbcode)+"_"+str(ligand_name)+".pdb", "w+")
     individual_ligand = []
     individual_ligand_conect = []
    
@@ -105,7 +109,7 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
         ligands_connections.write(str(line))
     ligands_connections.close()
     
-    return Chem.rdmolfiles.MolFromPDBFile("../resulting_data/"+str(pdbcode)+"_"+str(ligand_name)+".pdb")
+    return Chem.rdmolfiles.MolFromPDBFile("../results/"+str(pdbcode)+"_"+str(ligand_name)+".pdb")
 
 
 def create_mol_file(ligand, mol_obj, pdbcode):
@@ -122,7 +126,7 @@ def create_mol_file(ligand, mol_obj, pdbcode):
     else:
         ligand_name = str(ligand)
 
-    return Chem.rdmolfiles.MolToMolFile(mol_obj, "../resulting_data/"+str(pdbcode)+"_"+str(ligand_name)+"_mol.mol")
+    return Chem.rdmolfiles.MolToMolFile(mol_obj, "../results/"+str(pdbcode)+"_"+str(ligand_name)+"_mol.mol")
 
 
 def create_sd_file(mol_obj, writer):
