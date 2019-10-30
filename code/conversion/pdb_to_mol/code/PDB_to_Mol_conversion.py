@@ -4,7 +4,7 @@ from rdkit import Chem
 import json
 import os
 
-pdbcode = "5q1l"
+pdbcode = "6jaz"
 RESULTS_DIRECTORY = "../results/"+str(pdbcode)
 DATA_DIRECTORY = "../data"
 
@@ -66,7 +66,7 @@ def find_ligand_names_new(pdbfile, non_ligs):
     wanted_ligs = []
     for lig in all_ligands:
         if lig.split()[1] not in non_ligs:
-            wanted_ligs.append(lig.split()[1:-1])
+            wanted_ligs.append(lig.split()[1:])
     return wanted_ligs
 
 
@@ -77,9 +77,9 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
     params: vari pdb conversion, ligand definition, list of ligand heteroatoms and information, connection information
     returns: .pdb file for ligand
     """
-    if len(ligand) == 3:
+    if len(ligand) == 4:
         ligand_name = str(ligand[0]+'_'+str(ligand[1])+'_'+str(ligand[2]))
-    elif len(ligand) == 2:
+    elif len(ligand) == 3:
         ligand_name = str(ligand[0]+'_'+str(ligand[1]))
     else:
         ligand_name = str(ligand)
@@ -90,13 +90,13 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
    
     print(ligand)
 
-    if len(ligand) == 2:
+    if len(ligand) == 3:
         for atom in final_hets:
             if len(atom.split()[2]) <= 3 and ligand[0] in atom.split()[3] and ligand[1] == atom.split()[4]:
                 individual_ligand.append(atom)
             elif len(atom.split()[2]) > 3 and ligand[0] in atom.split()[2] and ligand[1] == atom.split()[3]:
                 individual_ligand.append(atom)
-    if len(ligand) == 3:
+    if len(ligand) == 4:
         for atom in final_hets:
             if len(atom.split()[2]) <= 3 and ligand[0] in atom.split()[3] and ligand[1] == atom.split()[4] and ligand[2] == atom.split()[5]:
                 individual_ligand.append(atom)
@@ -104,6 +104,7 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
                 individual_ligand.append(atom)
 
     print(len(individual_ligand))
+    assert(len(individual_ligand) == int(ligand[-1]))
             
     for atom in individual_ligand:
         atom_number  = atom.split()[1]
