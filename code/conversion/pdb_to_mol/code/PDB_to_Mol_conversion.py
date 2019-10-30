@@ -69,6 +69,25 @@ def find_ligand_names_new(pdbfile, non_ligs):
             wanted_ligs.append(lig.split()[1:])
     return wanted_ligs
 
+def determine_ligands(ligands):
+    unique = []
+    for i in range(len(ligands)):
+        if ligands[i][0] not in unique:
+            unique.append(ligands[i][0])
+    if len(unique) > 1:
+        print("More than one possible ligand has been found. These are: ")
+        for i in unique:
+            print(i)
+        new_lig_name = input("Which ligand would you like to extract?")
+    new_lig_info = []
+    if len(new_lig_name) == 3:
+        for i in ligands:
+            if new_lig_name in i:
+                new_lig_info.append(i)
+        return new_lig_info
+    else:
+        return ligands
+
 
 def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
     """
@@ -127,9 +146,9 @@ def create_mol_file(ligand, mol_obj, pdbcode):
     params: ligand definition, pdb file, pdb conversion
     returns: .mol file for the ligand
     """
-    if len(ligand) == 3:
+    if len(ligand) == 4:
         ligand_name = str(ligand[0]+'_'+str(ligand[1])+'_'+str(ligand[2]))
-    elif len(ligand) == 2:
+    elif len(ligand) == 3:
         ligand_name = str(ligand[0]+'_'+str(ligand[1]))
     else:
         ligand_name = str(ligand)
@@ -151,6 +170,8 @@ def main():
     hetatms, conects = hets_and_cons(pdbfile)
     final_hets = remove_nonligands(hetatms, non_ligs)
     ligands = find_ligand_names_new(pdbfile, non_ligs)
+    if len(ligands) > 1:
+        ligands = determine_ligands(ligands)
 
     mol_list = []
     for i in range(len(ligands)):
