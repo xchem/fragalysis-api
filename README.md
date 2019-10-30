@@ -16,3 +16,7 @@ This command updates the current env you are in with the .yml file.
 ```
 conda env update -f environment.yml
 ```
+This command activates the created environment 
+```
+conda activate fragalysis_env
+```
