@@ -78,7 +78,7 @@ def determine_ligands(ligands):
         print("More than one possible ligand has been found. These are: ")
         for i in unique:
             print(i)
-        new_lig_name = input("Which ligand would you like to extract?")
+        new_lig_name = input("Which ligand would you like to extract?\nIf you do not have this information, leave blank.\n")
     new_lig_info = []
     if len(new_lig_name) == 3:
         for i in ligands:
