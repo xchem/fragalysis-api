@@ -4,12 +4,16 @@ from rdkit import Chem
 import json
 import os
 
-pdbcode = "5qj4"
-os.makedirs("../results/"+str(pdbcode))
-
+pdbcode = "5q1l"
 RESULTS_DIRECTORY = "../results/"+str(pdbcode)
 DATA_DIRECTORY = "../data"
 
+try:
+    os.makedirs(RESULTS_DIRECTORY)
+except(FileExistsError):
+    for file in os.listdir(RESULTS_DIRECTORY):
+        file_path = os.path.join(RESULTS_DIRECTORY, file)
+        os.unlink(file_path)
 
 pdbfile = open("../data/"+str(pdbcode)+".pdb").readlines()
 non_ligs = json.load(open("../non_ligs", "r"))
