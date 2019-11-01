@@ -4,7 +4,8 @@ from rdkit import Chem
 import json
 import os
 
-pdbcode = "6jaz"
+
+pdbcode = "6epx"
 RESULTS_DIRECTORY = "../results/"+str(pdbcode)
 DATA_DIRECTORY = "../data"
 
@@ -17,8 +18,6 @@ except(FileExistsError):
 
 pdbfile = open("../data/"+str(pdbcode)+".pdb").readlines()
 non_ligs = json.load(open("../non_ligs", "r"))
-writer = Chem.rdmolfiles.SDWriter(os.path.join(RESULTS_DIRECTORY, str(pdbcode)+"_out.sdf"))
-
 
 def hets_and_cons(pdbfile):
     """
@@ -71,6 +70,7 @@ def find_ligand_names_new(pdbfile, non_ligs):
 
 def determine_ligands(ligands):
     unique = []
+    new_lig_name = 'NONAME'
     for i in range(len(ligands)):
         if ligands[i][0] not in unique:
             unique.append(ligands[i][0])
@@ -111,22 +111,25 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
 
     if len(ligand) == 3:
         for atom in final_hets:
-            if len(atom.split()[2]) <= 3 and ligand[0] in atom.split()[3] and ligand[1] == atom.split()[4]:
+            atom_new = atom.replace('HETATM', '')
+            if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[3]:
                 individual_ligand.append(atom)
-            elif len(atom.split()[2]) > 3 and ligand[0] in atom.split()[2] and ligand[1] == atom.split()[3]:
+            elif len(atom_new.split()[1]) > 3 and ligand[0] in atom_new.split()[1] and ligand[1] == atom_new.split()[2]:
                 individual_ligand.append(atom)
     if len(ligand) == 4:
         for atom in final_hets:
-            if len(atom.split()[2]) <= 3 and ligand[0] in atom.split()[3] and ligand[1] == atom.split()[4] and ligand[2] == atom.split()[5]:
+            atom_new = atom.replace('HETATM', '')
+            if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[3] and ligand[2] == atom_new.split()[4]:
                 individual_ligand.append(atom)
-            elif len(atom.split()[2]) > 3 and ligand[0] in atom.split()[2] and ligand[1] == atom.split()[3] and ligand[2] == atom.split()[4]:
+            elif len(atom_new.split()[1]) > 3 and ligand[0] in atom_new.split()[1] and ligand[1] == atom_new.split()[2] and ligand[2] == atom_new.split()[3]:
                 individual_ligand.append(atom)
 
     print(len(individual_ligand))
     assert(len(individual_ligand) == int(ligand[-1]))
             
     for atom in individual_ligand:
-        atom_number  = atom.split()[1]
+        atom_new = atom.replace('HETATM', '')
+        atom_number  = atom_new.split()[0]
         for conection in conects:
             if atom_number in conection and conection not in individual_ligand_conect:
                 individual_ligand_conect.append(conection)
@@ -135,8 +138,9 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
     for line in ligand_het_con:
         ligands_connections.write(str(line))
     ligands_connections.close()
-    
-    return Chem.rdmolfiles.MolFromPDBFile(os.path.join(RESULTS_DIRECTORY, str(pdbcode)+"_"+str(ligand_name)+".pdb"))
+
+    m = Chem.rdmolfiles.MolFromPDBFile("../results/"+str(pdbcode)+"/"+str(pdbcode)+"_"+str(ligand_name)+".pdb")
+    return m
 
 
 def create_mol_file(ligand, mol_obj, pdbcode):
@@ -176,10 +180,11 @@ def main():
     mol_list = []
     for i in range(len(ligands)):
         mol_list.append(create_pdb_for_ligand(pdbcode, ligands[i], final_hets, conects))
+
+    writer = Chem.rdmolfiles.SDWriter(os.path.join(RESULTS_DIRECTORY, str(pdbcode) + "_out.sdf"))
     for i in range(len(mol_list)):
         create_mol_file(ligands[i], mol_list[i], pdbcode)
         create_sd_file(mol_list[i], writer)
     writer.close()  # this is important to make sure the file overwrites
-
 
 main()
