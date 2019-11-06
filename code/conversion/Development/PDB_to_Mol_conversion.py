@@ -5,7 +5,7 @@ import json
 import os
 
 
-pdbcode = "6hxr"
+pdbcode = "5q1j"
 RESULTS_DIRECTORY = "../results/"+str(pdbcode)
 DATA_DIRECTORY = "../data"
 
