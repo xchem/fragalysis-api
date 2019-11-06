@@ -17,9 +17,10 @@ class Align:
         Returns:
             list: list containing the path for each pdb in the given directory
         """
-        return glob.glob(os.path.join(self.directory, "*.pdb"))
+        pdb_in_list = glob.glob(os.path.join(self.directory, "*.pdb"))
+        return pdb_in_list
 
-    def __load_objs(self):
+    def _load_objs(self):
         """Loads each pdb into the pymol instance.
 
         Returns:
@@ -86,7 +87,7 @@ class Align:
 
         :return: Saved aligned pdbs
         """
-        pymol_cmd = self.__load_objs()
+        pymol_cmd = self._load_objs()
 
         for num, name in enumerate(pymol_cmd.get_names()):
 
