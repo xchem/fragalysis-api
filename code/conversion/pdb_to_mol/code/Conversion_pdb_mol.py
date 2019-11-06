@@ -75,11 +75,11 @@ class Ligand:
         return self.wanted_ligs
 
     def determine_ligands(self):
-        unique = []
+        self.unique = []
 
         for i in range(len(self.wanted_ligs)):
-            if self.wanted_ligs[i][0] not in unique:
-                unique.append(self.wanted_ligs[i][0])
+            if self.wanted_ligs[i][0] not in self.unique:
+                self.unique.append(self.wanted_ligs[i][0])
         # if len(unique) > 1:
         #     print("More than one possible ligand has been found. These are: ")
         #     for i in unique:
@@ -93,7 +93,7 @@ class Ligand:
         #             new_lig_info.append(i)
         #     return new_lig_info
         # else:
-        return self.wanted_ligs
+        return self.unique
 
     def create_pdb_for_ligand(self, ligand):
         """
