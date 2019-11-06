@@ -6,7 +6,9 @@ import os
 
 
 class Align:
+
     def __init__(self, directory, pdb_ref=''):
+
         self.directory = directory
         self.get_ref = pdb_ref
 
@@ -25,7 +27,7 @@ class Align:
         Returns:
             object: pymol cmd object containing each pdb.
         """
-        for num, file in enumerate(struc.get_files):
+        for num, file in enumerate(self.get_files):
             cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
         return cmd
@@ -88,15 +90,10 @@ class Align:
         """
         pymol_cmd = self.__load_objs()
 
+        if not os.path.exists('../data/aligned'):
+            os.makedirs('../data/aligned')
+
         for num, name in enumerate(pymol_cmd.get_names()):
 
             pymol_cmd.align(name, self.get_ref)
             pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
-
-
-
-if __name__ == "__main__":
-    struc = Align("../data/ATAD2", pdb_ref='')
-    print(struc.get_files)
-    print(struc.get_ref)
-    struc.save_align()
