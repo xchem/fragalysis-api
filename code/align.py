@@ -20,6 +20,7 @@ class Align:
         :type self:
         :return list of .pdb filenames in directory:
         """
+
         return glob.glob(os.path.join(self.directory, "*.pdb"))
 
     def __load_objs(self):
