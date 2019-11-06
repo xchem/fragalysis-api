@@ -88,15 +88,10 @@ class Align:
         """
         pymol_cmd = self.__load_objs()
 
+        if not os.path.exists('../data/aligned'):
+            os.makedirs('../data/aligned')
+
         for num, name in enumerate(pymol_cmd.get_names()):
 
             pymol_cmd.align(name, self.get_ref)
             pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
-
-
-
-if __name__ == "__main__":
-    struc = Align("../data/ATAD2", pdb_ref='')
-    print(struc.get_files)
-    print(struc.get_ref)
-    struc.save_align()
