@@ -1,5 +1,5 @@
 import unittest
-from Making_Class_conversion import Ligand, set_up
+from Conversion_pdb_mol import Ligand, set_up
 import os
 
 
