@@ -1,17 +1,19 @@
 import glob
 #import Bio.PDB
 from pymol import cmd
+import os
 
 class Align:
     def __init__(self, directory):
         self.directory = directory
-        self.ref = ""
-        self.pdb_in_list = ""
-        self.load_obj = ""
-        self.aligned_obj = ""
+        self.ref = None
+        self.load_obj = None
+        self.aligned_obj = None
 
-    def get_files(self):
-        self.pdb_in_list = glob.glob(self.directory+"*.pdb")
+    @property
+    def pdb_in_list(self):
+        return sorted(glob.glob(os.path.join(self.directory, "*.pdb")))
+
 
     def load(self):
         for i in self.pdb_in_list:
