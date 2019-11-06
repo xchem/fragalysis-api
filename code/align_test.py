@@ -16,8 +16,14 @@ class Align_test(unittest.TestCase):
         whole_files = sorted([os.path.join(self.align_obj.directory, x) for x in files])
         self.assertEqual(self.align_obj.pdb_in_list, whole_files)
 
+    # def test_load_failure(self):
+    #     try:
+    #         self.align_obj.load()
+    #     except Exception as exc:
+    #         print("FileTypeError: You have loaded the wrong type of file")
 
-
+    def test_load_success(self):
+        self.assertIsNotNone(self.align_obj.load)
 
 
 if __name__ == '__main__':
