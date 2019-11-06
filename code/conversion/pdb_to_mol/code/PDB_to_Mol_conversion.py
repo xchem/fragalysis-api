@@ -5,7 +5,7 @@ import json
 import os
 
 
-pdbcode = "6epx"
+pdbcode = "6hxr"
 RESULTS_DIRECTORY = "../results/"+str(pdbcode)
 DATA_DIRECTORY = "../data"
 
@@ -22,7 +22,7 @@ non_ligs = json.load(open("../non_ligs", "r"))
 def hets_and_cons(pdbfile):
     """
     Heteroatoms and connect files are pulled out from full pdb file
-    
+
     param: pdb file in .readlines() format
     returns: lits of hetatomic information and connection information
     """
@@ -34,16 +34,16 @@ def hets_and_cons(pdbfile):
             hetatms.append(line)
         if line.startswith("CONECT"):
             conects.append(line)
-            
+
     return hetatms, conects
 
-           
+
 def remove_nonligands(hetatms, non_ligs):
     """
-    Non-ligands such as solvents and ions are removed from the list of heteroatoms, 
+    Non-ligands such as solvents and ions are removed from the list of heteroatoms,
     to ideally leave only the target ligand
-    
-    params: list of heteroatoms and their information, list of non-ligand small molecules 
+
+    params: list of heteroatoms and their information, list of non-ligand small molecules
         that could be in crystal structure
     retunrns: list of heteroatoms that are not contained in the non_ligs list
     """
@@ -56,7 +56,7 @@ def remove_nonligands(hetatms, non_ligs):
 
 def find_ligand_names_new(pdbfile, non_ligs):
     """
-    Finds list of ligands contained in the structure, including 
+    Finds list of ligands contained in the structure, including
     """
     all_ligands = []
     for line in pdbfile:
@@ -92,7 +92,7 @@ def determine_ligands(ligands):
 def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
     """
     A pdb file is produced for an individual ligand, containing atomic and connection information
-    
+
     params: vari pdb conversion, ligand definition, list of ligand heteroatoms and information, connection information
     returns: .pdb file for ligand
     """
@@ -102,11 +102,11 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
         ligand_name = str(ligand[0]+'_'+str(ligand[1]))
     else:
         ligand_name = str(ligand)
-    
+
     ligands_connections = open(os.path.join(RESULTS_DIRECTORY, str(pdbcode)+"_"+str(ligand_name)+".pdb"), "w+")
     individual_ligand = []
     individual_ligand_conect = []
-   
+
     print(ligand)
 
     if len(ligand) == 3:
@@ -126,13 +126,16 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
 
     print(len(individual_ligand))
     assert(len(individual_ligand) == int(ligand[-1]))
-            
+
+    con_num = 0
     for atom in individual_ligand:
         atom_new = atom.replace('HETATM', '')
         atom_number  = atom_new.split()[0]
         for conection in conects:
             if atom_number in conection and conection not in individual_ligand_conect:
                 individual_ligand_conect.append(conection)
+                con_num += 1
+    assert(con_num==len(individual_ligand))
 
     ligand_het_con = individual_ligand+individual_ligand_conect
     for line in ligand_het_con:
@@ -146,7 +149,7 @@ def create_pdb_for_ligand(pdbcode, ligand, final_hets, conects):
 def create_mol_file(ligand, mol_obj, pdbcode):
     """
     a .mol file is produced for an individual ligand
-    
+
     params: ligand definition, pdb file, pdb conversion
     returns: .mol file for the ligand
     """
@@ -163,11 +166,11 @@ def create_mol_file(ligand, mol_obj, pdbcode):
 def create_sd_file(mol_obj, writer):
     """
     a molecular object defined in the pdb file is used to produce a .sdf file
-    
+
     params: pdb file for the molecule, SDWriter from rdkit
     returns: .sdf file with all input molecules from each time the function is called
     """
-    return writer.write(mol_obj)            
+    return writer.write(mol_obj)
 
 
 def main():
