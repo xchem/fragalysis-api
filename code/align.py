@@ -91,7 +91,7 @@ class Align:
         for num, name in enumerate(pymol_cmd.get_names()):
 
             pymol_cmd.align(name, self.get_ref)
-            pymol_cmd.save(f'../data/aligned/mol_{num}.pdb', name)
+            pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
 
 
 
