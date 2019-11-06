@@ -2,7 +2,11 @@ import unittest
 import os
 import align as AlignClass
 
-directory = '/home/sabs-r3/Documents/SABS/fragalysis_api/data/ATAD2'
+relative_directory = 'data/ATAD2'
+cwd = os.getcwd()
+path = os.path.split(cwd)
+directory = os.path.join(str(path[0]), relative_directory)
+
 
 class Align_test(unittest.TestCase):
     align_obj = AlignClass.Align(directory)
