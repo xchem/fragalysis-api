@@ -6,7 +6,9 @@ import os
 
 
 class Align:
+
     def __init__(self, directory, pdb_ref=''):
+
         self.directory = directory
         self.get_ref = pdb_ref
 
@@ -25,7 +27,7 @@ class Align:
         Returns:
             object: pymol cmd object containing each pdb.
         """
-        for num, file in enumerate(struc.get_files):
+        for num, file in enumerate(self.get_files):
             cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
         return cmd
