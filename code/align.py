@@ -14,18 +14,20 @@ class Align:
 
     @property
     def get_files(self):
-        """Extracts a list of paths for all pdbs within the given directory.
-
-        Returns:
-            list: list containing the path for each pdb in the given directory
+        """
+        Extracts a list of paths for all pdbs within the given directory.
+        :param self:
+        :type self:
+        :return list of .pdb filenames in directory:
         """
         return glob.glob(os.path.join(self.directory, "*.pdb"))
 
     def __load_objs(self):
-        """Loads each pdb into the pymol instance.
-
-        Returns:
-            object: pymol cmd object containing each pdb.
+        """
+        Loads each pdb into the PyMol instance/object.
+        :param self:
+        :type object:
+        :return PyMol object with .pdb protein structure file loaded:
         """
         for num, file in enumerate(self.get_files):
             cmd.load(file, os.path.splitext(os.path.basename(file))[0])
@@ -34,18 +36,21 @@ class Align:
 
     @property
     def get_ref(self):
-        """Find the pdb to use as reference for alignments. If none given as input,
-        find one based on the longest length with the lowest resolution.
-
-        Returns:
-            str: pdb to use as reference
         """
-
+        Determines the best reference structure for alignments if not user provided. Chosen based on longest length with lowest resolution.
+        :param self:
+        :type: object:
+        :return: str of .pdb filename of reference:
+        """
         return self.__pdb_ref
 
     @get_ref.setter
     def get_ref(self, pdb_ref):
-
+        """
+        :param pdb_ref:
+        :type str:
+        :return PyMol instance with reference object assigned as reference property:
+        """
         if pdb_ref != '':
             # assert(ref in directory)
             self.__pdb_ref = pdb_ref
@@ -53,14 +58,10 @@ class Align:
             self.__pdb_ref = self.__best_length_and_resolution(self.get_files)
 
     def __best_length_and_resolution(self, pdb_files):
-        """Find the longest pdb structure with the lowest resolution.
-
-        Args:
-            list of files (list): filenames all pdbs
-
-        Returns:
-            str: str containing the name of the pdb chosen as reference.
-
+        """
+        Find the longest pdb structure with the lowest resolution from all imported files.
+        :param pdb_files:
+        :return: str of filename with best .pdb file
         """
         a_df = pd.DataFrame(pdb_files, columns=['file'])
         a_df[['resolution', 'p_len', 'pdb']] = a_df.file.apply(self.__get_length_and_resolution)
@@ -68,13 +69,10 @@ class Align:
         return a_df.sort_values(by=['p_len', 'resolution'], ascending=[False, True]).pdb[0]
 
     def __get_length_and_resolution(self, file):
-        """Find the resolution, sequence length and pdb name for each pdb
-
-        Args:
-            file (str): filename of a single pdb
-
-        Returns:
-            pandas series: series with resolution, sequence length and pdb name
+        """
+        Determine resolution, sequence and length of .pdb file
+        :param file:
+        :return pandas series with resolution, sequence and length and .pdb filename:
         """
         parser = bp.PDBParser()
         ppb = bp.PPBuilder()
@@ -84,9 +82,10 @@ class Align:
         return pd.Series([structure.header['resolution'], len(pp.get_sequence()), structure.id])
 
     def save_align(self):
-        """Aligns the pdbs and saves them individually.
-
-        :return: Saved aligned pdbs
+        """
+        Saves aligned structures as .pdb files
+        :param self:
+        :return aligned structures saved as .pdb files:
         """
         pymol_cmd = self.__load_objs()
 
