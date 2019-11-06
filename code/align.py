@@ -10,10 +10,6 @@ class Align:
         self.directory = directory
         self.get_ref = pdb_ref
 
-        # self.ref = self._pick_ref(pdb_ref)
-        # self.load_obj = ""
-        # self.aligned_obj = ""
-
     @property
     def get_files(self):
         """Extracts a list of paths for all pdbs within the given directory.
@@ -24,13 +20,14 @@ class Align:
         return glob.glob(os.path.join(self.directory, "*.pdb"))
 
     def __load_objs(self):
-        """Loads each pdb into the cmd object.
+        """Loads each pdb into the pymol instance.
 
         Returns:
-            object: object containing each pdb.
+            object: pymol cmd object containing each pdb.
         """
-        for i in self.get_files:
-            cmd.load(i)
+        for num, file in enumerate(struc.get_files):
+            cmd.load(file, os.path.splitext(os.path.basename(file))[0])
+
         return cmd
 
     @property
@@ -84,35 +81,22 @@ class Align:
 
         return pd.Series([structure.header['resolution'], len(pp.get_sequence()), structure.id])
 
-    @property
-    def get_alignment(self):
-        print(os.path.join(self.directory, self.get_ref + ".pdb"))
-        return cmd.align(self.__load_objs, os.path.join(self.directory, self.get_ref + ".pdb"))
+    def save_align(self):
+        """Aligns the pdbs and saves them individually.
 
-    # method of splitting the file projeduce from alignment.
-
-    def save_pymol_objs(self):
-        """ Method to save a list of objects as individual pdb files.
-
+        :return: Saved aligned pdbs
         """
-        # cmd.multifilesave(/tmp/{self.align_obs}.pdb)
-        # cmd.multifilesave()
+        pymol_cmd = self.__load_objs()
 
-    def split_merged(self):
-        """ Method to split a pdb file containing multiple structures
-            into individual objects, before calling another method to
-            save each object as individual pdb files.
-        """
-        cmd.split_states(self.merged_align, prefix=self.directory)
-        cmd.delete(self.merged_align)
-        self.align_obs = cmd.get_object_list('(all)')
-        Align.save_pymol_objs()
+        for num, name in enumerate(pymol_cmd.get_names()):
+
+            pymol_cmd.align(name, self.get_ref)
+            pymol_cmd.save(f'../data/aligned/mol_{num}.pdb', name)
 
 
-struc = Align("../data/ATAD2", pdb_ref='')
-print(struc.get_files)
-print(struc.get_ref)
-# print(struc.pdb_objs)
-print(struc.get_alignment)
-# print(struc.pdb_multi_saved)
-# print(struc.split_merged())
+
+if __name__ == "__main__":
+    struc = Align("../data/ATAD2", pdb_ref='')
+    print(struc.get_files)
+    print(struc.get_ref)
+    struc.save_align()
