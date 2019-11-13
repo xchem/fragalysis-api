@@ -1,9 +1,16 @@
 from align import Align
+from validate import Validate
 
 if __name__ == "__main__":
-    dir = '../data/ATAD2'
+    a_dir = '../data/ATAD2/'
 
-    struc = Align(dir, pdb_ref='')
+    #a_dir = '../data/Hard_example/'
+
+
+    validation = Validate(a_dir)
+    validation.validate_pdbs
+
+    struc = Align(a_dir, pdb_ref='')
     print(struc.get_files)
     print(struc.get_ref)
     struc.save_align()
