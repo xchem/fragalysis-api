@@ -11,6 +11,4 @@ if __name__ == "__main__":
     validation.validate_pdbs
 
     struc = Align(a_dir, pdb_ref='')
-    print(struc.get_files)
-    print(struc.get_ref)
-    struc.save_align()
+    struc.align()

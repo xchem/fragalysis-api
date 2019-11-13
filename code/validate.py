@@ -44,7 +44,7 @@ class ValidatePDB:
         yield self.is_pdb_to_large()
         yield self.does_pdb_name_contain_none_whitelist_char()
         yield self.is_pdb_name_within_range()
-        yield self.does_pdb_have_same_amount_of_proteins()
+        yield self.does_pdb_have_same_amount_of_protein_chains()
 
 
     def is_pdb_to_large(self):
@@ -86,7 +86,7 @@ class ValidatePDB:
                   f'Please keep names between {char_min}-{char_max} characters.')
             return self.pdb_name
 
-    def does_pdb_have_same_amount_of_proteins(self):
+    def does_pdb_have_same_amount_of_protein_chains(self):
         pass
 
 
