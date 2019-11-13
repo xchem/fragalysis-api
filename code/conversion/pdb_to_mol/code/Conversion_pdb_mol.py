@@ -6,27 +6,25 @@ import os
 
 
 DATA_DIRECTORY = "../data"
-non_ligs = json.load(open("../non_ligs", "r"))
 
 
-class Ligand():
-    def __init__(self, pdbcode):
-        self.pdbcode = pdbcode
+class Ligand:
+    def __init__(self, pdbcode_):
+        self.pdbcode = pdbcode_
         self.mol_lst = []
         self.RESULTS_DIRECTORY = "../results/" + str(self.pdbcode)
-
-    def non_lig_add(self):
-        non_ligs = json.load(open("../non_ligs", "r"))
-        self.non_lig = non_ligs
-
-    def open_file(self):
+        self.non_ligs = json.load(open("../non_ligs", "r"))
         self.pdbfile = open("../data/" + str(self.pdbcode) + ".pdb").readlines()
-
+        self.hetatms = []
+        self.conects = []
+        self.final_hets = []
+        self.wanted_ligs = []
+        self.new_lig_name = 'NONAME'
 
     def make_directory(self):
         try:
             os.makedirs(self.RESULTS_DIRECTORY)
-        except(FileExistsError):
+        except FileExistsError:
             for file in os.listdir(self.RESULTS_DIRECTORY):
                 file_path = os.path.join(self.RESULTS_DIRECTORY, file)
                 os.unlink(file_path)
@@ -38,8 +36,6 @@ class Ligand():
         param: pdb file in .readlines() format
         returns: lits of hetatomic information and connection information
         """
-        self.hetatms = []
-        self.conects = []
 
         for line in self.pdbfile:
             if line.startswith("HETATM"):
@@ -49,18 +45,18 @@ class Ligand():
 
         return self.hetatms, self.conects
 
-    def remove_nonligands(self, non_ligs):
+    def remove_nonligands(self):
         """
         Non-ligands such as solvents and ions are removed from the list of heteroatoms,
         to ideally leave only the target ligand
 
         params: list of heteroatoms and their information, list of non-ligand small molecules
             that could be in crystal structure
-        retunrns: list of heteroatoms that are not contained in the non_ligs list
+        retunns: list of heteroatoms that are not contained in the non_ligs list
         """
-        self.final_hets = []
+
         for line in self.hetatms:
-            if str(line.split()[3]) not in non_ligs:
+            if str(line.split()[3]) not in self.non_ligs:
                 self.final_hets.append(line)
         return self.final_hets
 
@@ -72,15 +68,15 @@ class Ligand():
         for line in self.pdbfile:
             if line.startswith("HET "):
                 all_ligands.append(line)
-        self.wanted_ligs = []
+
         for lig in all_ligands:
-            if lig.split()[1] not in non_ligs:
+            if lig.split()[1] not in self.non_ligs:
                 self.wanted_ligs.append(lig.split()[1:])
         return self.wanted_ligs
 
     def determine_ligands(self):
         unique = []
-        self.new_lig_name = 'NONAME'
+
         for i in range(len(self.wanted_ligs)):
             if self.wanted_ligs[i][0] not in unique:
                 unique.append(self.wanted_ligs[i][0])
@@ -119,8 +115,7 @@ class Ligand():
         if len(ligand) == 3:
             for atom in self.final_hets:
                 atom_new = atom.replace('HETATM', '')
-                if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[
-                    3]:
+                if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[3]:
                     individual_ligand.append(atom)
                 elif len(atom_new.split()[1]) > 3 and ligand[0] in atom_new.split()[1] and ligand[1] == \
                         atom_new.split()[2]:
@@ -128,8 +123,7 @@ class Ligand():
         if len(ligand) == 4:
             for atom in self.final_hets:
                 atom_new = atom.replace('HETATM', '')
-                if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[
-                    3] and ligand[2] == atom_new.split()[4]:
+                if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[3] and ligand[2] == atom_new.split()[4]:
                     individual_ligand.append(atom)
                 elif len(atom_new.split()[1]) > 3 and ligand[0] in atom_new.split()[1] and ligand[1] == \
                         atom_new.split()[2] and ligand[2] == atom_new.split()[3]:
@@ -186,11 +180,9 @@ class Ligand():
 
 def set_up(pdbcode):
     new = Ligand(pdbcode)
-    new.non_lig_add()
-    new.open_file()
     new.make_directory()
     new.hets_and_cons()
-    new.remove_nonligands(non_ligs)
+    new.remove_nonligands()
     new.find_ligand_names_new()
     if len(new.wanted_ligs) > 1:
         new.determine_ligands()
@@ -204,6 +196,3 @@ def set_up(pdbcode):
     writer.close()  # this is important to make sure the file overwrites
 
     return new
-
-set_up("5qj7")
-print(len(open("../results/5qj7/5qj7_JMM_A_303_mol.mol").readlines()))
