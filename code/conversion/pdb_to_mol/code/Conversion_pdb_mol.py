@@ -4,10 +4,6 @@ from rdkit import Chem
 import json
 import os
 
-
-DATA_DIRECTORY = "../data"
-
-
 class Ligand:
     def __init__(self, pdbcode_):
         self.pdbcode = pdbcode_
@@ -75,11 +71,11 @@ class Ligand:
         return self.wanted_ligs
 
     def determine_ligands(self):
-        unique = []
+        self.unique = []
 
         for i in range(len(self.wanted_ligs)):
-            if self.wanted_ligs[i][0] not in unique:
-                unique.append(self.wanted_ligs[i][0])
+            if self.wanted_ligs[i][0] not in self.unique:
+                self.unique.append(self.wanted_ligs[i][0])
         # if len(unique) > 1:
         #     print("More than one possible ligand has been found. These are: ")
         #     for i in unique:
@@ -93,7 +89,7 @@ class Ligand:
         #             new_lig_info.append(i)
         #     return new_lig_info
         # else:
-        return self.wanted_ligs
+        return self.unique
 
     def create_pdb_for_ligand(self, ligand):
         """
@@ -139,7 +135,8 @@ class Ligand:
                 if atom_number in conection and conection not in individual_ligand_conect:
                     individual_ligand_conect.append(conection)
                     con_num += 1
-        assert (con_num == len(individual_ligand))
+
+        assert (0 <= con_num - len(individual_ligand) <= 1)
 
         ligand_het_con = individual_ligand + individual_ligand_conect
 
@@ -196,3 +193,5 @@ def set_up(pdbcode):
     writer.close()  # this is important to make sure the file overwrites
 
     return new
+
+set_up('2bui')
