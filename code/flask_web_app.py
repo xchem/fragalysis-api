@@ -1,17 +1,23 @@
-import requests
-import os
+__doc__ = """ 
+This is for test purposes only. 
 
-directory = 'data/ATAD2/'
-files = [('files', open(f'{directory}/{file}', 'rb')) for file in os.listdir(directory)]
-r = requests.post('http://localhost:5000/', files=files)
-print(r.json())
+After running this file, query localhost:5000/ 
+In a unrelated notebook test it as follows… where directory variable point to the folder you want to test. 
 
-"""    
-What just happened is that you sent web request on port 500 where flask is running sending the files.
+import requests 
+import os 
+
+directory = 'data/ATAD2/' 
+files = [('files', open(f'{directory}/{file}', 'rb')) for file in os.listdir(directory)] 
+r = requests.post('http://localhost:5000/', files=files) 
+print(r.json()) 
+
+What just happened is that you sent web request on port 500 where flask is running sending the files. 
 """
 
 
 from flask import Flask, request
+from align import Align
 #from .code.main import bla bla
 import os
 
@@ -40,13 +46,17 @@ def safe_filename():
 def main_route():
     if request.method == 'POST':
         uploaded_files = request.files.getlist("files")
+        a_dir = 'test/'
         for file in uploaded_files:
             if not is_valid_filename(file.filename):
                 return {'status': f'{file.filename} is not a valid file'}
             filename = safe_filename()
             print(filename)
             print(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(a_dir, filename))
+
+        struc = Align(a_dir, pdb_ref='')
+        struc.align()
         return {'status': 'success'}
     else:
         return __doc__
