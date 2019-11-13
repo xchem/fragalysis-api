@@ -16,10 +16,12 @@ class Validate:
         for pdb in self.get_files:
 
             self.is_directory_empty(pdb)
-            print(list(ValidatePDB(pdb).PDB_validations()).remove(None))
-            fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if not None]
 
-            print(fail_list)
+            fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if i != None]
+
+            if not fail_list:
+                print('yoy')
+                exit()
 
     @property
     def get_files(self):
