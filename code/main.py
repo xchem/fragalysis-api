@@ -7,10 +7,11 @@ if __name__ == "__main__":
     #a_dir = '../data/Hard_example/'
 
 
-    validation = Validate(a_dir)
-    validation.validate_pdbs
+    #validation = Validate(a_dir)
+    #validation.validate_pdbs
 
     struc = Align(a_dir, pdb_ref='')
-    print(struc.get_files)
-    print(struc.get_ref)
-    struc.save_align()
+    struc.align()
+    #print(struc.get_files)
+    #print(struc.get_ref)
+    #struc.save_align()
