@@ -89,7 +89,7 @@ class Align:
 
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
-    def _save_align(self):
+    def _save_align(self, path_save):
         """
         Saves aligned structures as .pdb files
         :param self:
@@ -97,13 +97,13 @@ class Align:
         """
         pymol_cmd = self._load_objs()
 
-        if not os.path.exists('../data/aligned'):
-            os.makedirs('../data/aligned')
+        if not os.path.exists(path_save):
+            os.makedirs(path_save)
 
         for num, name in enumerate(pymol_cmd.get_names()):
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
+                pymol_cmd.save(f'{path_save}{name}_aligned.pdb', name)
 
     def align(self):
         """
@@ -111,4 +111,4 @@ class Align:
         the pdb files of the structure.
         """
         self._get_files
-        self._save_align()
+        self._save_align('../data/aligned/')
