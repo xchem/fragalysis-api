@@ -13,10 +13,10 @@ class Align:
     def __init__(self, directory, pdb_ref=''):
 
         self.directory = directory
-        self.get_ref = pdb_ref
+        self._get_ref = pdb_ref
 
     @property
-    def get_files(self):
+    def _get_files(self):
         """Extracts a list of paths for all pdbs within the given directory.
 
         Returns:
@@ -37,13 +37,13 @@ class Align:
         Returns:
             object: pymol cmd object containing each pdb.
         """
-        for num, file in enumerate(self.get_files):
+        for num, file in enumerate(self._get_files):
             cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
         return cmd
 
     @property
-    def get_ref(self):
+    def _get_ref(self):
         """Find the pdb to use as reference for alignments. If none given as input,
         find one based on the longest length with the lowest resolution.
 
@@ -53,14 +53,14 @@ class Align:
 
         return self.__pdb_ref
 
-    @get_ref.setter
-    def get_ref(self, pdb_ref):
+    @_get_ref.setter
+    def _get_ref(self, pdb_ref):
 
         if pdb_ref != '':
             # assert(ref in directory)
             self.__pdb_ref = pdb_ref
         else:
-            self.__pdb_ref = self.__best_length_and_resolution(self.get_files)
+            self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
 
     def __best_length_and_resolution(self, pdb_files):
         """Find the longest pdb structure with the lowest resolution.
@@ -93,7 +93,7 @@ class Align:
 
         return pd.Series([structure.header['resolution'], len(pp.get_sequence()), structure.id])
 
-    def save_align(self):
+    def _save_align(self):
         """Aligns the pdbs and saves them individually.
 
         :return: Saved aligned pdbs
@@ -105,5 +105,13 @@ class Align:
 
         for num, name in enumerate(pymol_cmd.get_names()):
 
-            pymol_cmd.align(name, self.get_ref)
+            pymol_cmd.align(name, self._get_ref)
             pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
+    
+    def align(self):
+        """
+        A single method that calls the methods in sequence required to align
+        the pdb files of the structure.
+        """
+        self._get_files
+        self._save_align()
