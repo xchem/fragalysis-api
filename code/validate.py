@@ -91,9 +91,9 @@ class ValidatePDB:
 
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
-    a_dir = '../data/Hard_example/'
-    validation = Validate(a_dir)
-    print(validation.get_files)
-    print(validation.validate_pdbs)
+ #   a_dir = '../data/Hard_example/'
+  #  validation = Validate(a_dir)
+   # print(validation.get_files)
+    #print(validation.validate_pdbs)
