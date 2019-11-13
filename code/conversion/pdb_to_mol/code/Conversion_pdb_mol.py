@@ -4,10 +4,6 @@ from rdkit import Chem
 import json
 import os
 
-
-DATA_DIRECTORY = "../data"
-
-
 class Ligand:
     def __init__(self, pdbcode_):
         self.pdbcode = pdbcode_

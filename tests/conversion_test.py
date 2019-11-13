@@ -1,7 +1,6 @@
 import unittest
-from Conversion_pdb_mol import Ligand, set_up
+from code.conversion.pdb_to_mol.code.Conversion_pdb_mol import set_up
 import os
-
 
 def test_open_file():
     """
