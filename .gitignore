@@ -1,7 +1,7 @@
 /code/Testing.ipynb
 /.idea/
 /.gitignore
-/__pycache__/
+/code/__pycache__/
 /workspace.xml
 .vscode/
 .idea/
