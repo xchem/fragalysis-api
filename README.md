@@ -22,7 +22,7 @@ conda activate fragalysis_env
 ```
 #### :warning:**WARNING**:warning: *Currently aglin is only expecting 1 chain!!!!!!!!*:loudspeaker:
 
-##:scroll:Enforced rules
+## :scroll:Enforced rules
 * The pdb file shall not be greater than 5mb.
 * The pdb filename shall not contain non English lanugague ascii characters and shall be between 4 and 20 characters in length.
 * Each pdb file for alignment shall contain the same number of chains.
