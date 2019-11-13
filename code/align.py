@@ -105,6 +105,10 @@ class Align:
                 pymol_cmd.align(name, self._get_ref)
                 pymol_cmd.save(f'{path_save}{name}_aligned.pdb', name)
 
+            elif name == self._get_ref:
+                pymol_cmd.save(f'{path_save}{name}_aligned.pdb', name)
+
+
     def align(self):
         """
         A single method that calls the methods in sequence required to align
