@@ -10,10 +10,10 @@ class Align:
     def __init__(self, directory, pdb_ref=''):
 
         self.directory = directory
-        self.get_ref = pdb_ref
+        self._get_ref = pdb_ref
 
     @property
-    def get_files(self):
+    def _get_files(self):
         """
         Extracts a list of paths for all pdbs within the given directory.
         :param self:
@@ -23,20 +23,20 @@ class Align:
 
         return glob.glob(os.path.join(self.directory, "*.pdb"))
 
-    def __load_objs(self):
+    def _load_objs(self):
         """
         Loads each pdb into the PyMol instance/object.
         :param self:
         :type object:
         :return PyMol object with .pdb protein structure file loaded:
         """
-        for num, file in enumerate(self.get_files):
+        for num, file in enumerate(self._get_files):
             cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
         return cmd
 
     @property
-    def get_ref(self):
+    def _get_ref(self):
         """
         Determines the best reference structure for alignments if not user provided. Chosen based on longest length with lowest resolution.
         :param self:
@@ -45,8 +45,8 @@ class Align:
         """
         return self.__pdb_ref
 
-    @get_ref.setter
-    def get_ref(self, pdb_ref):
+    @_get_ref.setter
+    def _get_ref(self, pdb_ref):
         """
         :param pdb_ref:
         :type str:
@@ -56,7 +56,7 @@ class Align:
             # assert(ref in directory)
             self.__pdb_ref = pdb_ref
         else:
-            self.__pdb_ref = self.__best_length_and_resolution(self.get_files)
+            self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
 
     def __best_length_and_resolution(self, pdb_files):
         """
@@ -82,18 +82,25 @@ class Align:
 
         return pd.Series([structure.header['resolution'], len(pp.get_sequence()), structure.id])
 
-    def save_align(self):
+    def _save_align(self):
         """
         Saves aligned structures as .pdb files
         :param self:
         :return aligned structures saved as .pdb files:
         """
-        pymol_cmd = self.__load_objs()
+        pymol_cmd = self._load_objs()
 
         if not os.path.exists('../data/aligned'):
             os.makedirs('../data/aligned')
 
         for num, name in enumerate(pymol_cmd.get_names()):
-
-            pymol_cmd.align(name, self.get_ref)
+            pymol_cmd.align(name, self._get_ref)
             pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
+
+    def align(self):
+        """
+        A single method that calls the methods in sequence required to align
+        the pdb files of the structure.
+        """
+        self._get_files
+        self._save_align()
