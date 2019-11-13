@@ -104,6 +104,8 @@ class Align:
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
                 pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
+            elif name == self._get_ref:
+                pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
 
     def align(self):
         """
