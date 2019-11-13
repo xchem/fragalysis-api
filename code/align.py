@@ -60,7 +60,7 @@ class Align:
             # assert(ref in directory)
             self.__pdb_ref = pdb_ref
         else:
-            self.__pdb_ref = self.__best_length_and_resolution(self.get_pfiles)
+            self.__pdb_ref = self.__best_length_and_resolution(self.get_files)
 
     def __best_length_and_resolution(self, pdb_files):
         """Find the longest pdb structure with the lowest resolution.
