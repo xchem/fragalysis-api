@@ -12,6 +12,3 @@ if __name__ == "__main__":
 
     struc = Align(a_dir, pdb_ref='')
     struc.align()
-    #print(struc.get_files)
-    #print(struc.get_ref)
-    #struc.save_align()
