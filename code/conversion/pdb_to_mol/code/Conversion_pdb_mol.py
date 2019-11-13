@@ -139,7 +139,8 @@ class Ligand:
                 if atom_number in conection and conection not in individual_ligand_conect:
                     individual_ligand_conect.append(conection)
                     con_num += 1
-        assert (con_num == len(individual_ligand))
+
+        assert (0 <= con_num - len(individual_ligand) <= 1)
 
         ligand_het_con = individual_ligand + individual_ligand_conect
 
@@ -196,3 +197,5 @@ def set_up(pdbcode):
     writer.close()  # this is important to make sure the file overwrites
 
     return new
+
+set_up('2bui')
