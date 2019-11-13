@@ -4,6 +4,8 @@ This is for test purposes only.
 After running this file, query localhost:5000/ 
 In a unrelated notebook test it as follows… where directory variable point to the folder you want to test. 
 
+asdasdasdsd
+
 import requests 
 import os 
 
@@ -47,9 +49,14 @@ def main_route():
     if request.method == 'POST':
         uploaded_files = request.files.getlist("files")
         a_dir = 'test/'
+
+        if not os.path.exists(a_dir):
+            os.makedirs(a_dir)
+
         for file in uploaded_files:
             if not is_valid_filename(file.filename):
                 return {'status': f'{file.filename} is not a valid file'}
+
             filename = safe_filename()
             print(filename)
             print(file.filename)
