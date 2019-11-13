@@ -3,6 +3,9 @@ import Bio.PDB as bp
 from pymol import cmd
 import pandas as pd
 import os
+import warnings
+import Bio.PDB.PDBExceptions as bpp
+warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
 class Align:
@@ -53,7 +56,7 @@ class Align:
         :return PyMol instance with reference object assigned as reference property:
         """
         if pdb_ref != '':
-            # assert(ref in directory)
+            assert(os.path.isfile(os.path.join(self.directory, pdb_ref+".pdb")) == 1)
             self.__pdb_ref = pdb_ref
         else:
             self.__pdb_ref = self.__best_length_and_resolution(self.get_files)
@@ -78,9 +81,13 @@ class Align:
         parser = bp.PDBParser()
         ppb = bp.PPBuilder()
         structure = parser.get_structure(os.path.splitext(os.path.basename(file))[0], file)
-        pp = ppb.build_peptides(structure)[0]
 
-        return pd.Series([structure.header['resolution'], len(pp.get_sequence()), structure.id])
+        seq_len = 0
+
+        for pp in ppb.build_peptides(structure):
+            seq_len += len(pp.get_sequence())
+
+        return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
     def save_align(self):
         """
@@ -94,6 +101,6 @@ class Align:
             os.makedirs('../data/aligned')
 
         for num, name in enumerate(pymol_cmd.get_names()):
-
-            pymol_cmd.align(name, self.get_ref)
-            pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
+            if not name == self.get_ref:
+                pymol_cmd.align(name, self.get_ref)
+                pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
