@@ -1,4 +1,7 @@
-/code/Testing.ipynb
-/.idea/
-/.gitignore
-/.vscode
+code/Testing.ipynb
+.gitignore
+code/__pycache__/
+workspace.xml
+.vscode/
+.idea/
+data/
