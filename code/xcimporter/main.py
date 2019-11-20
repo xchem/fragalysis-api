@@ -1,6 +1,5 @@
-from validate import Validate
 from align import Align
-from conversion_pdb_mol import Ligand, pdb_apo
+from validate import Validate
 import os
 
 if __name__ == "__main__":
@@ -15,7 +14,3 @@ if __name__ == "__main__":
 
     struc = Align(a_dir, pdb_ref='')
     struc.align(out_dir)
-
-    conv = Ligand('ATAD2/', '../../data/xcimporter/input/', '../../data/xcimporter/output/')
-
-
