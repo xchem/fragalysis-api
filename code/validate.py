@@ -2,24 +2,29 @@ import glob
 import os
 import string
 
+
 class Validate:
-
     def __init__(self, directory):
-
         self.directory = directory
+        self.validate_pdbs = self.get_files
+
+    def is_pdbs_val(self):
+        return if 
 
     @property
     def validate_pdbs(self):
 
+        return self._fail_list
+
+    @validate_pdbs.setter
+    def validate_pdbs(self, pdb_file_list):
+
         fail_list = []
-
-        for pdb in self.get_files:
-
+        for pdb in pdb_file_list:
             self.is_directory_empty(pdb)
-            print(list(ValidatePDB(pdb).PDB_validations()).remove(None))
-            fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if not None]
+            fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if i is not None]
 
-            print(fail_list)
+        self._fail_list = fail_list
 
     @property
     def get_files(self):
@@ -44,7 +49,7 @@ class ValidatePDB:
         yield self.is_pdb_to_large()
         yield self.does_pdb_name_contain_none_whitelist_char()
         yield self.is_pdb_name_within_range()
-        yield self.does_pdb_have_same_amount_of_proteins()
+        yield self.does_pdb_have_same_amount_of_protein_chains()
 
 
     def is_pdb_to_large(self):
@@ -86,14 +91,14 @@ class ValidatePDB:
                   f'Please keep names between {char_min}-{char_max} characters.')
             return self.pdb_name
 
-    def does_pdb_have_same_amount_of_proteins(self):
+    def does_pdb_have_same_amount_of_protein_chains(self):
         pass
 
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
-    a_dir = '../data/Hard_example/'
-    validation = Validate(a_dir)
-    print(validation.get_files)
-    print(validation.validate_pdbs)
+ #   a_dir = '../data/Hard_example/'
+  #  validation = Validate(a_dir)
+   # print(validation.get_files)
+    #print(validation.validate_pdbs)

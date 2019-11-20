@@ -3,6 +3,9 @@ import Bio.PDB as bp
 from pymol import cmd
 import pandas as pd
 import os
+import warnings
+import Bio.PDB.PDBExceptions as bpp
+warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
 class Align:
@@ -53,7 +56,7 @@ class Align:
         :return PyMol instance with reference object assigned as reference property:
         """
         if pdb_ref != '':
-            # assert(ref in directory)
+            assert(os.path.isfile(os.path.join(self.directory, pdb_ref+".pdb")) == 1)
             self.__pdb_ref = pdb_ref
         else:
             self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
@@ -78,11 +81,15 @@ class Align:
         parser = bp.PDBParser()
         ppb = bp.PPBuilder()
         structure = parser.get_structure(os.path.splitext(os.path.basename(file))[0], file)
-        pp = ppb.build_peptides(structure)[0]
 
-        return pd.Series([structure.header['resolution'], len(pp.get_sequence()), structure.id])
+        seq_len = 0
 
-    def _save_align(self):
+        for pp in ppb.build_peptides(structure):
+            seq_len += len(pp.get_sequence())
+
+        return pd.Series([structure.header['resolution'], seq_len, structure.id])
+
+    def _save_align(self, path_save):
         """
         Saves aligned structures as .pdb files
         :param self:
@@ -90,17 +97,20 @@ class Align:
         """
         pymol_cmd = self._load_objs()
 
-        if not os.path.exists('../data/aligned'):
-            os.makedirs('../data/aligned')
+        if not os.path.exists(path_save):
+            os.makedirs(path_save)
 
         for num, name in enumerate(pymol_cmd.get_names()):
-            pymol_cmd.align(name, self._get_ref)
-            pymol_cmd.save(f'../data/aligned/{name}_aligned.pdb', name)
+            if not name == self._get_ref:
+                pymol_cmd.align(name, self._get_ref)
+                pymol_cmd.save(f'{path_save}{name}_aligned.pdb', name)
 
-    def align(self):
+            elif name == self._get_ref:
+                pymol_cmd.save(f'{path_save}{name}_aligned.pdb', name)
+
+    def align(self, out_dir):
         """
         A single method that calls the methods in sequence required to align
         the pdb files of the structure.
         """
-        self._get_files
-        self._save_align()
+        self._save_align(out_dir)
