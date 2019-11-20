@@ -199,8 +199,8 @@ class pdb_apo:
 
 
 def set_up(pdbcode, USER_ID):
-    DATA_DIRECTORY_INPUT = "../../data/pdb_to_frag/input/" + USER_ID + "/"
-    RESULTS_DIRECTORY = "../../data/pdb_to_frag/output/" + USER_ID + "/"
+    DATA_DIRECTORY_INPUT = "../../data/xcimporter/input/" + USER_ID + "/"
+    RESULTS_DIRECTORY = "../../data/xcimporter/output/" + USER_ID + "/"
     new = Ligand(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)
     new.make_directory()
     new.hets_and_cons()
@@ -222,4 +222,4 @@ def set_up(pdbcode, USER_ID):
 
     return new
 
-set_up('2bui', 'anna')
+#set_up('5q1j', 'anna')
