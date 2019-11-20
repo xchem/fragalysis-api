@@ -307,4 +307,4 @@ non_ligs = ['DMS', 'CL', 'MG', 'EDO', 'HOH', 'PEG', 'MLI', 'NI', 'SO4', 'WAT', '
                                               'NRU',  # ruthenium (iii) hexaamine ion
                                               '4MO'  # molybdenum(iv) ion
             ]
-json.dump(non_ligs, open(os.path.join("../", "non_ligs"), "w"))
+json.dump(non_ligs, open(os.path.join("non_ligs"), "w"))

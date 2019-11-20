@@ -4,13 +4,14 @@ from rdkit import Chem
 import json
 import os
 
+
 class Ligand:
-    def __init__(self, pdbcode_):
+    def __init__(self, pdbcode_, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY):
         self.pdbcode = pdbcode_
         self.mol_lst = []
-        self.RESULTS_DIRECTORY = "../results/" + str(self.pdbcode)
-        self.non_ligs = json.load(open("../non_ligs", "r"))
-        self.pdbfile = open("../anna/" + str(self.pdbcode) + ".pdb").readlines()
+        self.RESULTS_DIRECTORY = RESULTS_DIRECTORY + str(self.pdbcode)
+        self.non_ligs = json.load(open("non_ligs", "r"))
+        self.pdbfile = open(DATA_DIRECTORY_INPUT + str(self.pdbcode) + ".pdb").readlines()
         self.hetatms = []
         self.conects = []
         self.final_hets = []
@@ -146,7 +147,7 @@ class Ligand:
         ligands_connections.close()
 
         m = Chem.rdmolfiles.MolFromPDBFile(
-            "../results/" + str(self.pdbcode) + "/" + str(self.pdbcode) + "_" + str(ligand_name) + ".pdb")
+            self.RESULTS_DIRECTORY + "/" + str(self.pdbcode) + "_" + str(ligand_name) + ".pdb")
         self.mol_lst.append(m)
 
     def create_mol_file(self, ligand, mol_obj):
@@ -175,8 +176,32 @@ class Ligand:
         return writer.write(mol_obj)
 
 
-def set_up(pdbcode):
-    new = Ligand(pdbcode)
+class pdb_apo:
+    def __init__(self, pdbcode_, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY):
+        self.pdbcode = pdbcode_
+        self.pdbfile = open(DATA_DIRECTORY_INPUT + str(self.pdbcode) + ".pdb").readlines()
+        self.RESULTS_DIRECTORY = RESULTS_DIRECTORY + str(self.pdbcode)
+
+    def make_apo_file(self):
+        apo_file_lst = []
+        line_ter = 0
+        for i in range(len(self.pdbfile)):
+            if self.pdbfile[i].startswith('TER'):
+                line_ter = i+1
+
+        for i in range(line_ter):
+            apo_file_lst.append(self.pdbfile[i])
+
+        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.pdbcode) + "_apo.pdb"), "w+")
+        for line in apo_file_lst:
+            apo_file.write(str(line))
+        apo_file.close()
+
+
+def set_up(pdbcode, USER_ID):
+    DATA_DIRECTORY_INPUT = "../../data/pdb_to_frag/input/" + USER_ID + "/"
+    RESULTS_DIRECTORY = "../../data/pdb_to_frag/output/" + USER_ID + "/"
+    new = Ligand(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)
     new.make_directory()
     new.hets_and_cons()
     new.remove_nonligands()
@@ -192,6 +217,9 @@ def set_up(pdbcode):
         new.create_sd_file(new.mol_lst[i], writer)
     writer.close()  # this is important to make sure the file overwrites
 
+    new_apo = pdb_apo(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)
+    new_apo.make_apo_file()
+
     return new
 
-set_up('2bui')
+set_up('2bui', 'anna')
