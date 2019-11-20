@@ -9,7 +9,7 @@ asdasdasdsd
 import requests 
 import os 
 
-directory = 'data/ATAD2/' 
+directory = 'anna/ATAD2/' 
 files = [('files', open(f'{directory}/{file}', 'rb')) for file in os.listdir(directory)] 
 r = requests.post('http://localhost:5000/', files=files) 
 print(r.json()) 

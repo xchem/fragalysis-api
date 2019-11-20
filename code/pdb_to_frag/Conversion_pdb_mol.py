@@ -10,7 +10,7 @@ class Ligand:
         self.mol_lst = []
         self.RESULTS_DIRECTORY = "../results/" + str(self.pdbcode)
         self.non_ligs = json.load(open("../non_ligs", "r"))
-        self.pdbfile = open("../data/" + str(self.pdbcode) + ".pdb").readlines()
+        self.pdbfile = open("../anna/" + str(self.pdbcode) + ".pdb").readlines()
         self.hetatms = []
         self.conects = []
         self.final_hets = []
