@@ -174,6 +174,27 @@ class Ligand:
         """
         return writer.write(mol_obj)
 
+class pdb_apo:
+    def __init__(self, pdbcode_):
+        self.pdbcode = pdbcode_
+        self.pdbfile = open("../data/" + str(self.pdbcode) + ".pdb").readlines()
+        self.RESULTS_DIRECTORY = "../results/" + str(self.pdbcode)
+
+    def make_apo_file(self):
+        apo_file_lst = []
+        line_ter = 0
+        for i in range(len(self.pdbfile)):
+            if self.pdbfile[i].startswith('TER'):
+                line_ter = i+1
+
+        for i in range(line_ter):
+            apo_file_lst.append(self.pdbfile[i])
+
+        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.pdbcode) + "_apo.pdb"), "w+")
+        for line in apo_file_lst:
+            apo_file.write(str(line))
+        apo_file.close()
+
 
 def set_up(pdbcode):
     new = Ligand(pdbcode)
@@ -192,6 +213,8 @@ def set_up(pdbcode):
         new.create_sd_file(new.mol_lst[i], writer)
     writer.close()  # this is important to make sure the file overwrites
 
-    return new
+    new_apo = pdb_apo(pdbcode)
+    new_apo.make_apo_file()
+   # return new
 
-set_up('2bui')
+set_up('5q1j')
