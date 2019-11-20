@@ -8,4 +8,4 @@ tests/xcimporter/__pycache__/
 workspace.xml
 .vscode/
 .idea/
-data/output/
+data/xcimporter/output/
