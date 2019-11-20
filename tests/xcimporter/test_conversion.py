@@ -1,6 +1,6 @@
 import os
 import unittest
-from code.pdb_to_frag.Conversion_pdb_mol import set_up
+from code.xcimporter.Conversion_pdb_mol import set_up
 
 
 def test_open_file():
