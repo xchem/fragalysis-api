@@ -5,3 +5,4 @@ code/__pycache__/
 workspace.xml
 .vscode/
 .idea/
+data/output/
