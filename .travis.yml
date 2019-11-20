@@ -1,0 +1,5 @@
+language: python
+rvm:
+ - "3.7"
+install:
+  - conda env create -f environment.yml
