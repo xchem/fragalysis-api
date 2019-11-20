@@ -1,7 +1,9 @@
 from align import Align
 from conversion_pdb_mol import set_up
 from validate import Validate
+from create_directory import create_directory
 import os
+from shutil import rmtree
 
 if __name__ == "__main__":
     user_id = input("User ID:")
@@ -24,3 +26,7 @@ if __name__ == "__main__":
 
     for i in pdb_list:
         new = set_up(i, str(user_id))
+
+    create_directory(str(user_id), os.path.join(out_dir, str(user_id), 'tmp/'))
+
+    rmtree(os.path.join(out_dir, str(user_id), 'tmp/'))
