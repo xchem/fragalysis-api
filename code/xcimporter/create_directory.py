@@ -11,8 +11,9 @@ def create_directory(PDBcode, data_dir):
             os.makedirs(os.path.join(data_dir, '..', PDBcode+'_'+pdb))
 
         src = glob.glob(os.path.join(data_dir, "*"+pdb+"*"))
+        new_dir = os.path.join(data_dir, '..', PDBcode+'_'+pdb)
 
-        [copyfile(i, os.path.join(data_dir, '..', PDBcode+'_'+pdb, os.path.splitext(os.path.basename(i))[0])) for i in src]
+        [copyfile(i, os.path.join(new_dir, os.path.basename(i))) for i in src]
 
 
 if __name__ == '__main__':
