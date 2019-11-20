@@ -1,5 +1,5 @@
 import unittest
-from code.conversion.pdb_to_mol.code.Conversion_pdb_mol import set_up
+from code import set_up
 import os
 
 def test_open_file():
