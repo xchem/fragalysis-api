@@ -185,7 +185,7 @@ class pdb_apo:
         for i in range(line_ter):
             apo_file_lst.append(self.pdbfile[i])
 
-        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, "_apo.pdb"), "w+")
+        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, self.pdbcode + "_apo.pdb"), "w+")
         for line in apo_file_lst:
             apo_file.write(str(line))
         apo_file.close()
