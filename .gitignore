@@ -1,6 +1,7 @@
 code/Testing.ipynb
 .gitignore
 code/.ipynb_checkpoints/
+code/__pycache__/
 workspace.xml
 .vscode/
 .idea/
