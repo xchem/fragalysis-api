@@ -9,7 +9,7 @@ class Ligand:
     def __init__(self, pdbcode_, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY):
         self.pdbcode = pdbcode_
         self.mol_lst = []
-        self.RESULTS_DIRECTORY = RESULTS_DIRECTORY + str(self.pdbcode)
+        self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
         self.non_ligs = json.load(open("non_ligs.json", "r"))
         self.pdbfile = open(DATA_DIRECTORY_INPUT + str(self.pdbcode) + ".pdb").readlines()
         self.hetatms = []
@@ -18,13 +18,6 @@ class Ligand:
         self.wanted_ligs = []
         self.new_lig_name = 'NONAME'
 
-    def make_directory(self):
-        try:
-            os.makedirs(self.RESULTS_DIRECTORY)
-        except FileExistsError:
-            for file in os.listdir(self.RESULTS_DIRECTORY):
-                file_path = os.path.join(self.RESULTS_DIRECTORY, file)
-                os.unlink(file_path)
 
     def hets_and_cons(self):
         """
@@ -180,7 +173,7 @@ class pdb_apo:
     def __init__(self, pdbcode_, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY):
         self.pdbcode = pdbcode_
         self.pdbfile = open(DATA_DIRECTORY_INPUT + str(self.pdbcode) + ".pdb").readlines()
-        self.RESULTS_DIRECTORY = RESULTS_DIRECTORY + str(self.pdbcode)
+        self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
 
     def make_apo_file(self):
         apo_file_lst = []
@@ -192,7 +185,7 @@ class pdb_apo:
         for i in range(line_ter):
             apo_file_lst.append(self.pdbfile[i])
 
-        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.pdbcode) + "_apo.pdb"), "w+")
+        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, "_apo.pdb"), "w+")
         for line in apo_file_lst:
             apo_file.write(str(line))
         apo_file.close()
@@ -202,7 +195,6 @@ def set_up(pdbcode, USER_ID):
     DATA_DIRECTORY_INPUT = "../../data/xcimporter/input/" + USER_ID + "/"
     RESULTS_DIRECTORY = "../../data/xcimporter/output/" + USER_ID + "/tmp/"
     new = Ligand(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)
-    new.make_directory()
     new.hets_and_cons()
     new.remove_nonligands()
     new.find_ligand_names_new()
