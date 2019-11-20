@@ -1,8 +1,8 @@
 import unittest
-import os
+import osi
 import code as AlignClass
 
-relative_directory = 'anna/ATAD2'
+relative_directory = '../data/xcimporter/input/ATAD2'
 cwd = os.getcwd()
 path = os.path.split(cwd)
 directory = os.path.join(str(path[0]), relative_directory)
