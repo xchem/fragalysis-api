@@ -200,7 +200,7 @@ class pdb_apo:
 
 def set_up(pdbcode, USER_ID):
     DATA_DIRECTORY_INPUT = "../../data/xcimporter/input/" + USER_ID + "/"
-    RESULTS_DIRECTORY = "../../data/xcimporter/output/" + USER_ID + "/"
+    RESULTS_DIRECTORY = "../../data/xcimporter/output/" + USER_ID + "/tmp/"
     new = Ligand(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)
     new.make_directory()
     new.hets_and_cons()
