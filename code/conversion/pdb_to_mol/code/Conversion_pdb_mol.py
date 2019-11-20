@@ -215,6 +215,6 @@ def set_up(pdbcode):
 
     new_apo = pdb_apo(pdbcode)
     new_apo.make_apo_file()
-   # return new
+    return new
 
 set_up('5q1j')
