@@ -2,26 +2,29 @@ import glob
 import os
 import string
 
+
 class Validate:
-
     def __init__(self, directory):
-
         self.directory = directory
+        self.validate_pdbs = self.get_files
+
+    def is_pdbs_val(self):
+        return if 
 
     @property
     def validate_pdbs(self):
 
+        return self._fail_list
+
+    @validate_pdbs.setter
+    def validate_pdbs(self, pdb_file_list):
+
         fail_list = []
-
-        for pdb in self.get_files:
-
+        for pdb in pdb_file_list:
             self.is_directory_empty(pdb)
+            fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if i is not None]
 
-            fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if i != None]
-
-            if not fail_list:
-                print('yoy')
-                exit()
+        self._fail_list = fail_list
 
     @property
     def get_files(self):
