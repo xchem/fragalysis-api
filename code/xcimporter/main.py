@@ -1,21 +1,23 @@
 from validate import Validate
 from align import Align
-from conversion_pdb_mol import Ligand, pdb_apo
+from conversion_pdb_mol import set_up
 import os
 
 if __name__ == "__main__":
-    a_dir = '../../data/xcimporter/input/ATAD2/'
-    out_dir = '../../data/xcimporter/output/ATAD2/'
+    user_id = input("User ID:")
+    in_dir = '../../data/xcimporter/input/'
+    out_dir = '../../data/xcimporter/output/'
+    pdb_list = ['6epu', '6epv', '6epx', '6hi3']
 
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
+    if not os.path.exists(os.path.join(out_dir, str(user_id), '/')):
+        os.makedirs(os.path.join(out_dir, str(user_id), '/'))
+        os.makedirs(os.path.join(out_dir, str(user_id), 'tmp/'))
 
-    validation = Validate(a_dir)
+    validation = Validate(in_dir)
     validation.validate_pdbs
 
-    struc = Align(a_dir, pdb_ref='')
-    struc.align(out_dir)
+    struc = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
+    struc.align(os.path.join(out_dir, str(user_id), 'tmp/'))
 
-    conv = Ligand('ATAD2/', '../../data/xcimporter/input/', '../../data/xcimporter/output/')
-
-
+    for i in pdb_list:
+        new = set_up(i, str(user_id))
