@@ -1,6 +1,6 @@
-from validate import Validate
 from align import Align
 from conversion_pdb_mol import set_up
+from validate import Validate
 import os
 
 if __name__ == "__main__":
