@@ -108,11 +108,9 @@ class Align:
             elif name == self._get_ref:
                 pymol_cmd.save(f'{path_save}{name}_aligned.pdb', name)
 
-
-    def align(self):
+    def align(self, out_dir):
         """
         A single method that calls the methods in sequence required to align
         the pdb files of the structure.
         """
-        self._get_files
-        self._save_align('../data/aligned/')
+        self._save_align(out_dir)
