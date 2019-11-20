@@ -9,7 +9,7 @@ class Validate:
         self.validate_pdbs = self.get_files
 
     def is_pdbs_val(self):
-        return if 
+        pass
 
     @property
     def validate_pdbs(self):
