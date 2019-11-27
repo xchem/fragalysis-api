@@ -49,9 +49,14 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--in_dir', default='../../data/xcimporter/input/', help='Description for bar argument')
     parser.add_argument('-o', '--out_dir', default='../../data/xcimporter/output/', help='Description for bar argument')
     args = vars(parser.parse_args())
-
+    
     user_id = args['user_id']
     in_dir = args['in_dir']
     out_dir = args['out_dir']
+
+    if in_dir == '../../data/xcimporter/input/':
+        print('Using the default input directory ', in_dir)
+    if out_dir == '../../data/xcimporter/output/':
+        print('Using the default input directory ', out_dir)
 
     xcimporter(user_id, in_dir, out_dir)

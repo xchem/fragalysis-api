@@ -33,6 +33,7 @@ class Align:
         :type object:
         :return PyMol object with .pdb protein structure file loaded:
         """
+        #looping through each pdb file in the directory and loading them into the cmd
         for num, file in enumerate(self._get_files):
             cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
@@ -51,6 +52,7 @@ class Align:
     @_get_ref.setter
     def _get_ref(self, pdb_ref):
         """
+        Determines the best reference structure for alignments if not user provided. Chosen based on longest length with lowest resolution.
         :param pdb_ref:
         :type str:
         :return PyMol instance with reference object assigned as reference property:
@@ -63,7 +65,8 @@ class Align:
 
     def __best_length_and_resolution(self, pdb_files):
         """
-        Find the longest pdb structure with the lowest resolution from all imported files.
+        Find the longest pdb structure with the lowest resolution from all imported files. 
+        This will be used as the reference pdb for alignment against.
         :param pdb_files:
         :return: str of filename with best .pdb file
         """
@@ -84,9 +87,11 @@ class Align:
 
         seq_len = 0
 
+        # getting length by looping through each chain in the protein
         for pp in ppb.build_peptides(structure):
             seq_len += len(pp.get_sequence())
 
+        # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file 
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
     def _save_align(self, path_save):
@@ -97,9 +102,11 @@ class Align:
         """
         pymol_cmd = self._load_objs()
 
+        #creating output directory if it doesn't already exist
         if not os.path.exists(path_save):
             os.makedirs(path_save)
 
+        #saves the aligned pdb files from the cmd as pdb files 
         for num, name in enumerate(pymol_cmd.get_names()):
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
