@@ -1,6 +1,6 @@
 import unittest
 import os
-import code as AlignClass
+from fragalysis_api import Align
 
 relative_directory = '../data/xcimporter/input/ATAD2'
 cwd = os.getcwd()
@@ -9,7 +9,7 @@ directory = os.path.join(str(path[0]), relative_directory)
 
 
 class Align_test(unittest.TestCase):
-    align_obj = AlignClass.Align(directory)
+    align_obj = Align(directory)
 
     # def test_get_files(self):
     #     files = ['6epu.pdb', '6epv.pdb', '6epx.pdb', '6hi3.pdb']
