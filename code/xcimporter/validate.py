@@ -93,12 +93,3 @@ class ValidatePDB:
 
     def does_pdb_have_same_amount_of_protein_chains(self):
         pass
-
-
-
-#if __name__ == '__main__':
-
- #   a_dir = '../anna/Hard_example/'
-  #  validation = Validate(a_dir)
-   # print(validation.get_files)
-    #print(validation.validate_pdbs)
