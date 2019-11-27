@@ -1,8 +1,8 @@
-code/Testing.ipynb
+fragalysis_api/Testing.ipynb
 .gitignore
-code/.ipynb_checkpoints/
-code/__pycache__/
-code/xcimporter/__pycache__/
+fragalysis_api/.ipynb_checkpoints/
+fragalysis_api/__pycache__/
+fragalysis_api/xcimporter/__pycache__/
 tests/__pycache__/
 tests/xcimporter/__pycache__/
 workspace.xml
