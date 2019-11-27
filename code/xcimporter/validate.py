@@ -8,8 +8,9 @@ class Validate:
         self.directory = directory
         self.validate_pdbs = self.get_files
 
+    @property
     def is_pdbs_val(self):
-        pass
+        return bool(self._fail_list)
 
     @property
     def validate_pdbs(self):
