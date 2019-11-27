@@ -1,5 +1,5 @@
 import unittest
-import osi
+import os
 import code as AlignClass
 
 relative_directory = '../data/xcimporter/input/ATAD2'
