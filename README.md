@@ -1,5 +1,8 @@
 # fragalysis-api
 
+This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
+
+
 
 
 ##### How to set install, update and save the fragalysis_env conda environment.
