@@ -39,7 +39,14 @@ def xcimporter(user_id, in_dir, out_dir):
     struc.align(os.path.join(out_dir, str(user_id), 'tmp/'))
 
     for i in pdb_list:
-        new = set_up(i, str(user_id))
+        try:
+            new = set_up(i, str(user_id))
+        except AssertionError:
+            print(i, 'is not suitable, please consider removal or editing')
+            for file in os.listdir(os.path.join(out_dir, str(user_id), 'tmp/')):
+                if str(i) in file:
+                    os.remove(os.path.join(out_dir, str(user_id), 'tmp', str(file)))
+            pass
 
     create_directory(str(user_id), os.path.join(out_dir, str(user_id), 'tmp/'))
 
