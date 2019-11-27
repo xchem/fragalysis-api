@@ -47,5 +47,5 @@ George a.k.a Joff Boff :squirrel:
 Tobias :cow:  
 Alister :panda_face:  
 
-We are looked after by Rachel :crown:
+We are looked after by Rachael :crown:
 
