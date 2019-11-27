@@ -20,6 +20,12 @@ def xcimporter(user_id, in_dir, out_dir):
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
     :return:
     """
+    validation = Validate(os.path.join(in_dir, str(user_id)))
+
+    if bool(validation.is_pdbs_val):
+        exit()
+
+
     pdb_list = []
 
     for file in os.listdir(os.path.join(in_dir, str(user_id))):
@@ -28,11 +34,6 @@ def xcimporter(user_id, in_dir, out_dir):
     if not os.path.exists(os.path.join(out_dir, str(user_id), '/')):
         os.makedirs(os.path.join(out_dir, str(user_id), '/'))
         os.makedirs(os.path.join(out_dir, str(user_id), 'tmp/'))
-
-    validation = Validate(os.path.join(in_dir, str(user_id)))
-
-    if bool(validation.validate_pdbs):
-        exit()
 
     struc = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
     struc.align(os.path.join(out_dir, str(user_id), 'tmp/'))
