@@ -29,6 +29,15 @@ This command activates the created environment
 ```
 conda activate fragalysis_env
 ```
+To install setup.py cd to fragalysis_api then: 
+```
+pip install -e .
+```
+You can check if it has installed using
+```
+conda list
+```
+
 
 ### Enforced rules :scroll:
 * The pdb file shall not be greater than 5mb.
