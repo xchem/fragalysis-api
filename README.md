@@ -41,11 +41,11 @@ conda activate fragalysis_env
 
 We are the Fragment 5, a group of students at the University of Oxford.
 
--Anna :whale:
--Maranga :fire:
--George a.k.a Joff Boff :squirrel:
--Tobias :european_post_office:
--Alister :panda_face:
+Anna :whale: __
+Maranga :fire: __
+George a.k.a Joff Boff :squirrel: __
+Tobias :european_post_office:__
+Alister :panda_face:__
 
-We are looked after by Rachel :trident:
+We are looked after by Rachel :crown:
 
