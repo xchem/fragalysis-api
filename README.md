@@ -2,7 +2,7 @@
 
 This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
-# How to use API
+### How to use API
 
 1. Set up environment
 2. Submit PDB files - you will be given a query ID
