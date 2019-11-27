@@ -20,6 +20,12 @@ def xcimporter(user_id, in_dir, out_dir):
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
     :return:
     """
+    validation = Validate(os.path.join(in_dir, str(user_id)))
+
+    if bool(validation.is_pdbs_val):
+        exit()
+
+
     pdb_list = []
 
     for file in os.listdir(os.path.join(in_dir, str(user_id))):
@@ -29,14 +35,18 @@ def xcimporter(user_id, in_dir, out_dir):
         os.makedirs(os.path.join(out_dir, str(user_id), '/'))
         os.makedirs(os.path.join(out_dir, str(user_id), 'tmp/'))
 
-    validation = Validate(os.path.join(in_dir, str(user_id)))
-    validation.validate_pdbs
-
     struc = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
     struc.align(os.path.join(out_dir, str(user_id), 'tmp/'))
 
     for i in pdb_list:
-        new = set_up(i, str(user_id))
+        try:
+            new = set_up(i, str(user_id))
+        except AssertionError:
+            print(i, 'is not suitable, please consider removal or editing')
+            for file in os.listdir(os.path.join(out_dir, str(user_id), 'tmp/')):
+                if str(i) in file:
+                    os.remove(os.path.join(out_dir, str(user_id), 'tmp', str(file)))
+            pass
 
     create_directory(str(user_id), os.path.join(out_dir, str(user_id), 'tmp/'))
 

@@ -8,12 +8,12 @@ class Validate:
         self.directory = directory
         self.validate_pdbs = self.get_files
 
+    @property
     def is_pdbs_val(self):
-        pass
+        return bool(self._fail_list)
 
     @property
     def validate_pdbs(self):
-
         return self._fail_list
 
     @validate_pdbs.setter
@@ -93,3 +93,4 @@ class ValidatePDB:
 
     def does_pdb_have_same_amount_of_protein_chains(self):
         pass
+
