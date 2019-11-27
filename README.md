@@ -30,7 +30,7 @@ This command activates the created environment
 conda activate fragalysis_env
 ```
 
-## :scroll:Enforced rules
+### Enforced rules :scroll:
 * The pdb file shall not be greater than 5mb.
 * The pdb filename shall not contain non English lanugague ascii characters and shall be between 4 and 20 characters in length.
 * Each pdb file for alignment shall contain the same number of chains.
