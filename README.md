@@ -2,8 +2,12 @@
 
 This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
+# How to use API
 
-
+1. Set up environment
+2. Submit PDB files - you will be given a query ID
+3. Push your files into fragalysis and view them online
+4. Analyse the binding of ligands to your target protein!
 
 ##### How to set install, update and save the fragalysis_env conda environment.
 
@@ -23,7 +27,6 @@ This command activates the created environment
 ```
 conda activate fragalysis_env
 ```
-#### :warning:**WARNING**:warning: *Currently align is only expecting 1 chain!!!!!!!!*:loudspeaker:
 
 ## :scroll:Enforced rules
 * The pdb file shall not be greater than 5mb.
