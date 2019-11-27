@@ -230,17 +230,9 @@ def set_up(pdbcode, USER_ID):
         new.create_sd_file(new.mol_lst[i], writer)
     writer.close()  # this is important to make sure the file overwrites
 
-<<<<<<< HEAD:code/conversion/pdb_to_mol/code/Conversion_pdb_mol.py
-    new_apo = pdb_apo(pdbcode)
-    new_apo.make_apo_file()
-    return new
-
-set_up('5q1j')
-=======
     new_apo = pdb_apo(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)
     new_apo.make_apo_file()
 
     return new
 
 #set_up('5q1j', 'anna')
->>>>>>> reorder201119:code/xcimporter/conversion_pdb_mol.py
