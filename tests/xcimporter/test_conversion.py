@@ -1,6 +1,6 @@
 import os
 import unittest
-from code.xcimporter.conversion_pdb_mol import set_up
+from fragalysis_api import set_up
 
 
 def test_open_file():
