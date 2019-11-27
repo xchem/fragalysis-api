@@ -4,8 +4,10 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 
 ### How to use API
 
+(note: not live yet)
+
 1. Set up environment
-2. Submit PDB files - you will be given a query ID
+2. Submit PDB files - you will be given a query ID 
 3. Push your files into fragalysis and view them online
 4. Analyse the binding of ligands to your target protein!
 
@@ -35,4 +37,7 @@ conda activate fragalysis_env
 * All pdb files to be aligned must be in the same directory.
 * If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
 
+### Who we are
+
+We are the Fragment 5, a group of students at the University of Oxford.
 
