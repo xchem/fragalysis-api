@@ -30,7 +30,9 @@ def xcimporter(user_id, in_dir, out_dir):
         os.makedirs(os.path.join(out_dir, str(user_id), 'tmp/'))
 
     validation = Validate(os.path.join(in_dir, str(user_id)))
-    validation.validate_pdbs
+
+    if bool(validation.validate_pdbs):
+        exit()
 
     struc = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
     struc.align(os.path.join(out_dir, str(user_id), 'tmp/'))
