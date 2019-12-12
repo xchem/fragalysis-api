@@ -3,7 +3,7 @@
 import json
 import os
 
-non_ligs = ['DMS', 'CL', 'MG', 'EDO', 'HOH', 'PEG', 'MLI', 'NI', 'SO4', 'WAT', 'HOH',  # `TP3` water is ambiguous and rare
+non_ligs = ['DMS', 'CL', 'MG', 'EDO', 'PEG', 'MLI', 'NI', 'SO4', 'WAT',  # `TP3` water is ambiguous and rare
                                               'LI', 'NA' , 'K', 'RB',  # group 1 cations
                                               'BE', 'MG', 'CA', 'SR',  # earth metal cations
                                                'F', 'CL', 'BR', 'I',  #halogens
@@ -117,7 +117,6 @@ non_ligs = ['DMS', 'CL', 'MG', 'EDO', 'HOH', 'PEG', 'MLI', 'NI', 'SO4', 'WAT', '
                                               'MN5',  # manganese ion, 5 waters coordinated
                                               'MN6',  # manganese ion, 6 waters coordinated
                                               'S',  # sulfur atom
-                                              'HOH',  # water
                                               'W',  # tungsten ion
                                               'SB',  # antimony (iii) ion
                                               #'FOL',  # folic acid
