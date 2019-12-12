@@ -31,26 +31,26 @@ def xcimporter(user_id, in_dir, out_dir):
     for file in os.listdir(os.path.join(in_dir, str(user_id))):
         pdb_list.append(file[:-4])
 
-    if not os.path.exists(os.path.join(out_dir, str(user_id), '/')):
-        os.makedirs(os.path.join(out_dir, str(user_id), '/'))
-        os.makedirs(os.path.join(out_dir, str(user_id), 'tmp/'))
+    if not os.path.isdir(os.path.join(out_dir, str(user_id))):
+        os.makedirs(os.path.join(out_dir, str(user_id)))
+        os.makedirs(os.path.join(out_dir, str(user_id), 'tmp'))
 
     struc = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
-    struc.align(os.path.join(out_dir, str(user_id), 'tmp/'))
+    struc.align(os.path.join(out_dir, str(user_id), 'tmp'))
 
     for i in pdb_list:
         try:
-            new = set_up(i, str(user_id))
+            new = set_up(i, str(user_id), in_dir, out_dir)
         except AssertionError:
             print(i, 'is not suitable, please consider removal or editing')
-            for file in os.listdir(os.path.join(out_dir, str(user_id), 'tmp/')):
+            for file in os.listdir(os.path.join(out_dir, str(user_id), 'tmp')):
                 if str(i) in file:
                     os.remove(os.path.join(out_dir, str(user_id), 'tmp', str(file)))
             pass
 
-    create_directory(str(user_id), os.path.join(out_dir, str(user_id), 'tmp/'))
+    create_directory(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
 
-    rmtree(os.path.join(out_dir, str(user_id), 'tmp/'))
+    rmtree(os.path.join(out_dir, str(user_id), 'tmp'))
 
 
 if __name__ == "__main__":
