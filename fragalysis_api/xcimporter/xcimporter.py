@@ -22,7 +22,13 @@ def xcimporter(user_id, in_dir, out_dir):
     """
     validation = Validate(os.path.join(in_dir, str(user_id)))
 
-    if bool(validation.is_pdbs_val):
+    if bool(validation.is_pdbs_valid):
+        exit()
+
+    if not validation.does_dir_exist:
+        exit()
+
+    if not validation.is_there_a_pdb_in_dir:
         exit()
 
 

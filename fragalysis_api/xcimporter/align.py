@@ -1,6 +1,6 @@
 import glob
 import Bio.PDB as bp
-from pymol import cmd
+import pymol
 import pandas as pd
 import os
 import warnings
@@ -35,9 +35,9 @@ class Align:
         """
         #looping through each pdb file in the directory and loading them into the cmd
         for num, file in enumerate(self._get_files):
-            cmd.load(file, os.path.splitext(os.path.basename(file))[0])
+            pymol.cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
-        return cmd
+        return pymol.cmd
 
     @property
     def _get_ref(self):
@@ -100,8 +100,10 @@ class Align:
         :param self:
         :return aligned structures saved as .pdb files:
         """
+        # Silently open PyMOL
+        pymol.pymol_argv = ['pymol', '-qc']
+        pymol.finish_launching()
         pymol_cmd = self._load_objs()
-
         #creating output directory if it doesn't already exist
         if not os.path.exists(path_save):
             os.makedirs(path_save)
@@ -111,7 +113,6 @@ class Align:
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
                 pymol_cmd.save(f'{path_save}{name}_bound.pdb', name)
-
             elif name == self._get_ref:
                 pymol_cmd.save(f'{path_save}{name}_bound.pdb', name)
 
