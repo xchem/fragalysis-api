@@ -17,5 +17,9 @@ install:
  - conda env create -f environment.yml
  - pip install -e .
 script:
+ - git clone https://github.com/schrodinger/pymol-open-source.git
+ - cd pymol-open-source
+ - prefix=$HOME/pymol-open-source-build
+ - python setup.py build install --home=$prefix
  - conda activate fragalysis_env
  - python -m unittest discover
