@@ -112,9 +112,10 @@ class Align:
         for num, name in enumerate(pymol_cmd.get_names()):
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                pymol_cmd.save(f'{path_save}{name}_bound.pdb', name)
+                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb') , name )
+
             elif name == self._get_ref:
-                pymol_cmd.save(f'{path_save}{name}_bound.pdb', name)
+                pymol_cmd.save(os.path.join( path_save, f'{name}_bound.pdb') , name )
 
     def align(self, out_dir):
         """

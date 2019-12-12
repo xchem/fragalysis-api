@@ -18,7 +18,7 @@ class Validate:
 
     @validate_pdbs.setter
     def validate_pdbs(self, pdb_file_list):
-
+    
         fail_list = []
         for pdb in pdb_file_list:
             fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if i is not None]
