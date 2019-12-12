@@ -22,7 +22,7 @@ def xcimporter(user_id, in_dir, out_dir):
     """
     validation = Validate(os.path.join(in_dir, str(user_id)))
 
-    if bool(validation.is_pdbs_valid):
+    if not bool(validation.is_pdbs_valid):
         print('Input files are invalid!!')
         exit()
 
