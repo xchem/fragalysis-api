@@ -2,7 +2,6 @@ import os
 import unittest
 from fragalysis_api import set_up
 
-
 def test_open_file():
     """
     pdb file opens and checks that correct number of lines

@@ -9,8 +9,8 @@ class Validate:
         self.validate_pdbs = self.get_files
 
     @property
-    def is_pdbs_val(self):
-        return bool(self._fail_list)
+    def is_pdbs_valid(self):
+        return not bool(self._fail_list)
 
     @property
     def validate_pdbs(self):
@@ -18,10 +18,9 @@ class Validate:
 
     @validate_pdbs.setter
     def validate_pdbs(self, pdb_file_list):
-
+    
         fail_list = []
         for pdb in pdb_file_list:
-            self.is_directory_empty(pdb)
             fail_list += [i for i in ValidatePDB(pdb).PDB_validations() if i is not None]
 
         self._fail_list = fail_list
@@ -34,8 +33,13 @@ class Validate:
         """
         return glob.glob(os.path.join(self.directory, "*.pdb"))
 
-    def is_directory_empty(self, pdb_file):
-        pass
+    @property
+    def does_dir_exist(self):
+        return bool(os.path.isdir(self.directory))
+
+    @property
+    def is_there_a_pdb_in_dir(self):
+        return bool(self.get_files)
 
 
 class ValidatePDB:

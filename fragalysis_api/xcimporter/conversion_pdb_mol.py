@@ -11,7 +11,7 @@ class Ligand:
         self.mol_lst = []
         self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
         self.non_ligs = json.load(open("non_ligs.json", "r"))
-        self.pdbfile = open(DATA_DIRECTORY_INPUT + str(self.pdbcode) + ".pdb").readlines()
+        self.pdbfile = open(os.path.join(DATA_DIRECTORY_INPUT, str(self.pdbcode) + ".pdb")).readlines()
         self.hetatms = []
         self.conects = []
         self.final_hets = []
@@ -127,7 +127,7 @@ class Ligand:
 
         # making pdb file into mol object
         m = Chem.rdmolfiles.MolFromPDBFile(
-            self.RESULTS_DIRECTORY + "/" + str(self.pdbcode) + "_" + str(ligand_name) + ".pdb")
+            os.path.join(self.RESULTS_DIRECTORY, str(self.pdbcode) + "_" + str(ligand_name) + ".pdb"))
         self.mol_lst.append(m)
 
     def create_mol_file(self, ligand, mol_obj):
@@ -163,7 +163,7 @@ class Ligand:
 class pdb_apo:
     def __init__(self, pdbcode_, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY):
         self.pdbcode = pdbcode_
-        self.pdbfile = open(DATA_DIRECTORY_INPUT + str(self.pdbcode) + ".pdb").readlines()
+        self.pdbfile = open(os.path.join(DATA_DIRECTORY_INPUT, str(self.pdbcode) + ".pdb")).readlines()
         self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
 
     def make_apo_file(self):
@@ -188,7 +188,7 @@ class pdb_apo:
         apo_file.close()
 
 
-def set_up(pdbcode, USER_ID):
+def set_up(pdbcode, USER_ID, in_dir, out_dir):
 
     """
 
@@ -197,8 +197,8 @@ def set_up(pdbcode, USER_ID):
     :return: for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.
     """
 
-    DATA_DIRECTORY_INPUT = "../../data/xcimporter/input/" + USER_ID + "/"
-    RESULTS_DIRECTORY = "../../data/xcimporter/output/" + USER_ID + "/tmp/"
+    DATA_DIRECTORY_INPUT = os.path.join(in_dir, USER_ID)
+    RESULTS_DIRECTORY = os.path.join(out_dir, USER_ID, "tmp")
     new = Ligand(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)  # takes in pdb file and returns specific ligand files
     new.hets_and_cons()  # takes only hetatm and conect file lines from pdb file
     new.remove_nonligands()  # removes ions and solvents from list of ligands
