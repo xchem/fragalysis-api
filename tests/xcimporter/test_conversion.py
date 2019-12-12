@@ -2,7 +2,6 @@ import os
 import unittest
 from fragalysis_api import set_up
 
-
 class Conversion_test(unittest.TestCase):
 
     def test_open_file(self):
