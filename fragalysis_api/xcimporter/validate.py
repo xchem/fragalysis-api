@@ -18,7 +18,7 @@ class Validate:
 
     @validate_pdbs.setter
     def validate_pdbs(self, pdb_file_list):
-
+    
         fail_list = []
         for pdb in pdb_file_list:
             self.is_directory_empty(pdb)
