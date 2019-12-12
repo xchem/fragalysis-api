@@ -29,7 +29,7 @@ This command activates the created environment
 ```
 conda activate fragalysis_env
 ```
-To install setup.py cd to fragalysis_api then: 
+To install setup.py make sure you  are in the fragalysis_env: 
 ```
 pip install -e .
 ```
