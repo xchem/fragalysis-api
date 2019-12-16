@@ -1,26 +1,25 @@
+# Disable sudo to speed up the build
+sudo: false
+
+# Set the build language to Python
 language: python
-rvm:
- - "3.7"
+
+# Set the python version to 3.7.4
+matrix:
+  include:
+    - python: 3.7.4
+      dist: xenial
+
+# Install the requirements and codecov pip dependency
 install:
- - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-   else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-   fi
- - bash miniconda.sh -b -p $HOME/miniconda
- - source "$HOME/miniconda/etc/profile.d/conda.sh"
- - hash -r
- - conda config --set always_yes yes --set changeps1 no
- - conda update -q conda
- # Useful for debugging any issues with conda
- - conda info -a
- - conda env create -f environment.yml
- - pip install -e .
+  - pip install -r requirements.txt
+  - pip install codecov
+
+# Run the unit test
 script:
- - git clone https://github.com/schrodinger/pymol-open-source.git
- - cd pymol-open-source
- - prefix=$HOME/pymol-open-source-build
- - sudo apt-get install build-essential python-dev python-pmw libglew-dev freeglut3-dev libpng-dev libfreetype6-dev libxml2-dev libmsgpack-dev python-pyqt5.qtopengl libglm-dev libnetcdf-dev
- - python setup.py build install --home=$prefix
- - conda activate fragalysis_env
- - python -m unittest discover
+  - python test/xcimporter/test_validate.py
+  - coverage run test/xcimporter/test_validate.py
+
+# Push the results back to codecov
+after_success:
+  - codecov
