@@ -16,6 +16,7 @@ before_install:
   - chmod +x miniconda.sh
   - ./miniconda.sh -b
   - export PATH=/home/travis/miniconda2/bin:$PATH
+  - conda update conda
   - echo $TRAVIS_PYTHON_VERSION
   - echo /home/travis/miniconda/bin:$PATH
   # We just set up a conda environment with the right Python version.
