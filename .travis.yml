@@ -16,7 +16,7 @@ before_install:
   - chmod +x miniconda.sh
   - ./miniconda.sh -b
   - export PATH=/home/travis/miniconda2/bin:$PATH
-  - conda update -y
+  #- conda update --prefix /home/travis/miniconda2 anaconda --yes
 
 install:
 
