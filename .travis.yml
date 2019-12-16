@@ -36,6 +36,5 @@ script:
   - py.test  --cov-report term --cov=app/test/ # will run all tests in the package
 
 
-# Push the results back to codecov
 after_success:
-  - codecov
+  - codecov # Push the results back to codecov (code coverage)
