@@ -45,7 +45,8 @@ class Ligand:
         """
 
         for line in self.hetatms:
-            if str(line.split()[3]) not in self.non_ligs:
+            ligand_name = line[17:20].strip()
+            if ligand_name not in self.non_ligs:
                 self.final_hets.append(line)
         return self.final_hets
 
@@ -81,23 +82,15 @@ class Ligand:
 
         individual_ligand = []
         individual_ligand_conect = []
-
         # adding atom information for each specific ligand to a list
         if len(ligand) == 3:
             for atom in self.final_hets:
-                atom_new = atom.replace('HETATM', '')
-                if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[3]:
+                if atom[17:20].strip() == ligand[0] and atom[21:26].strip() == ligand[1]:
                     individual_ligand.append(atom)
-                elif len(atom_new.split()[1]) > 3 and ligand[0] in atom_new.split()[1] and ligand[1] == \
-                        atom_new.split()[2]:
-                    individual_ligand.append(atom)
+
         if len(ligand) == 4:
             for atom in self.final_hets:
-                atom_new = atom.replace('HETATM', '')
-                if len(atom_new.split()[1]) <= 3 and ligand[0] in atom_new.split()[2] and ligand[1] == atom_new.split()[3] and ligand[2] == atom_new.split()[4]:
-                    individual_ligand.append(atom)
-                elif len(atom_new.split()[1]) > 3 and ligand[0] in atom_new.split()[1] and ligand[1] == \
-                        atom_new.split()[2] and ligand[2] == atom_new.split()[3]:
+                if atom[17:20].strip() == ligand[0] and atom[21:22].strip() == ligand[1] and atom[22:26].strip() == ligand[2]:
                     individual_ligand.append(atom)
 
         assert (len(individual_ligand) == int(ligand[-1]))
@@ -216,3 +209,4 @@ def set_up(pdbcode, USER_ID, in_dir, out_dir):
     new_apo.make_apo_file() # creates pdb file that doesn't contain any ligand information
 
     return new
+
