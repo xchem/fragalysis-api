@@ -37,7 +37,7 @@ numpy==1.17.2
 numpy-base==1.17.2
 olefile==0.46
 openssl==1.1.1d
-pandas]=0.25.2
+pandas==0.25.2
 pcre==8.43
 pdb2pqr==2.1.1
 pillow==6.2.0
