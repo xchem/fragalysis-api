@@ -12,7 +12,7 @@ matrix:
 
 # Install the requirements and codecov pip dependency
 install:
-  - pip install -r requirements.txt
+  - pip install -r requirements1.txt
   - pip install codecov
 
 # Run the unit test
