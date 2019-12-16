@@ -6,51 +6,36 @@ matrix:
     # Set the python version to 3.7.4
     - python: 3.7.4
       dist: xenial
-      #env: NUMPY=1.9 SCIPY=0.15
 
 before_install:
 
   # Install Miniconda.
-
   - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
   - ./miniconda.sh -b
   - export PATH=/home/travis/miniconda2/bin:$PATH
+
+  # Update conda (otherwise conda can't be found)
   - conda update conda --yes
-  - echo $TRAVIS_PYTHON_VERSION
-  - echo /home/travis/miniconda/bin:$PATH
-  # We just set up a conda environment with the right Python version.
-  - conda create --yes -n test python=$TRAVIS_PYTHON_VERSION
-  - source activate test
-  #- conda update --prefix /home/travis/miniconda2 anaconda --yes
 
-#get https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-#  - bash miniconda.sh -b -p $HOME/miniconda
-#  - export PATH="$HOME/miniconda/bin:$PATH"
-#  - hash -r
-#  - conda config --set always_yes yes --set changeps1 no
-#  - conda update -q conda
-#  - conda info -a
-#  - conda create -q -n test-env python=$TRAVIS_PYTHON_VERSION
-#  - source activate test-env
-
-
+  # Set up a conda environment with the right Python version.
+  - conda create --yes --name travis_env python=$TRAVIS_PYTHON_VERSION
+  - source activate travis_env
 
 install:
-
-  # Below, include the dependencies you want to install with conda, optionally
-  # specifying versions used in the matrix above. If you split this into
-  # multiple conda install commands, you should always include numpy=$NUMPY as
-  # the first package to install (for every conda install command) otherwise
-  # numpy may be automatically upgraded.
-
-  - conda env update --name test --file environment.yml
-  - conda install --yes pytest
+  # Install the requirements from the environment file
+  - conda env update --name travis_env --file environment.yml
+  # Install additional dependencies used only for travis / testing
+  - conda install --yes pytest codecov
 
   # You can also install some dependencies with pip if not available in conda
-
   # - pip install ...
 
 script:
+  #- py.test  # will run all tests in the package
+  - py.test  --cov-report term --cov=app/test/ # will run all tests in the package
 
-  - py.test  # will run all tests in the package
+
+# Push the results back to codecov
+after_success:
+  - codecov
