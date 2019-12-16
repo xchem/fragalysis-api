@@ -41,7 +41,7 @@ conda list
 
 ### Enforced rules :scroll:
 * The pdb file shall not be greater than 5mb.
-* The pdb filename shall not contain non English lanugague ascii characters and shall be between 4 and 20 characters in length.
+* The pdb filename shall not contain non English language ascii characters and shall be between 4 and 20 characters in length.
 * Each pdb file for alignment shall contain the same number of chains.
 * All pdb files to be aligned must be in the same directory.
 * If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
