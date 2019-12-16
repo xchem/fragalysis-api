@@ -26,7 +26,7 @@ install:
   # Install the requirements from the environment file
   - conda env update --name travis_env --file environment.yml
   # Install additional dependencies used only for travis / testing
-  - conda install --yes pytest codecov
+  - conda install --yes pytest pytest-cov codecov
 
   # You can also install some dependencies with pip if not available in conda
   # - pip install ...
