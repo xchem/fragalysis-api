@@ -52,7 +52,7 @@ class Validate_test(unittest.TestCase):
         # If there are a pdb in dir
         self.assertTrue(hard_obj.is_there_a_pdb_in_dir)
         # Check all files are retrieved
-        self.assertEqual(hard_obj.get_files,
+        self.assertListEqual(hard_obj.get_files,
                          [os.path.join(test_dir, '5g1n (copy).pdb'), os.path.join(test_dir, '1.pdb'),
                           os.path.join(test_dir, '5g1n.pdb'), os.path.join(test_dir, 'To_big_pdb.pdb'),
                           os.path.join(test_dir, '5g1p (copy).pdb'), os.path.join(test_dir, '5g1o.pdb'),
@@ -61,7 +61,7 @@ class Validate_test(unittest.TestCase):
         # Check it catches that there are invalid pdbs in the data set
         self.assertFalse(hard_obj.is_pdbs_valid)
         # Ensure it caught them all
-        self.assertEqual(hard_obj.validate_pdbs, ['5g1n (copy)', '1', 'To_big_pdb', '5g1p (copy)',
+        self.assertListEqual(hard_obj.validate_pdbs, ['5g1n (copy)', '1', 'To_big_pdb', '5g1p (copy)',
                                                   'Empty_pdb', '1234567890asdfghjklqwe'])
         # Check if whitelisting works
         self.assertFalse(
