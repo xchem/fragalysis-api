@@ -11,6 +11,10 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 3. Push your files into fragalysis and view them online
 4. Analyse the binding of ligands to your target protein!
 
+Other functionalities that are available:
+- Import pdb files directly through the API
+- Query the pdb for similar structures that also have ligands bound and have the option to import these structures
+
 ##### How to set install, update and save the fragalysis_env conda environment.
 
 This command exports the env you are in to a .yml file.
