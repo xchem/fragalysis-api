@@ -26,19 +26,14 @@ install:
   # Install the requirements from the environment file
   - conda env update --name travis_env --file environment.yml
   # Install additional dependencies used only for travis / testing
-  - conda install --yes pytest pytest-cov codecov
+  - conda install --yes pytest codecov
 
   # You can also install some dependencies with pip if not available in conda
   # - pip install ...
 
 script:
-  #- py.test  # will run all tests in the package
-  - py.test  --cov-report term --cov=app/test/ # will run all tests in the package
-  - python -m unittest discover
-  - pytest
-  - coverage run -m py.test
-  - coverage run -m unittest discover
-
+  - coverage run -m py.test  # will run all tests in the package
+  #- coverage run -m unittest discover
 
 after_success:
   - codecov # Push the results back to codecov (code coverage)
