@@ -26,4 +26,4 @@ if __name__ == '__main__':
     data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
     pdb_code = args['pdb']
 
-    pdb_importer(data_dir, user_id, pdb_code)
+    pdb_importer(data_dir, user_id, pdb_code.lower())
