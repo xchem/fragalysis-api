@@ -5,13 +5,13 @@ from fragalysis_api import Validate, ValidatePDB
 cwd = os.getcwd()
 path = os.path.split(cwd)
 
-data_path = os.path.join('data', 'xcimporter', 'input') #str(path[0]), '..', 
+data_path = os.path.join('data', 'xcimporter', 'input') #str(path[0]), '..',
 good_directory = os.path.join(data_path, 'ATAD2')
 cif_directory = os.path.join(data_path, 'CIF')
 Hard_directory = os.path.join(data_path, 'Hard_example')
 Semi_hard_directory = os.path.join(data_path, 'Semi_hard_examples')
 PDB_directory = os.path.join(data_path, 'PDB')
-
+str(path[0]), '..',
 
 class Validate_test(unittest.TestCase):
 

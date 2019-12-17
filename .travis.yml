@@ -34,6 +34,10 @@ install:
 script:
   #- py.test  # will run all tests in the package
   - py.test  --cov-report term --cov=app/test/ # will run all tests in the package
+  - python -m unittest discover
+  - pytest
+  - coverage run -m py.test
+  - coverage run -m unittest discover
 
 
 after_success:
