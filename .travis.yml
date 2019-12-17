@@ -32,7 +32,8 @@ install:
   # - pip install ...
 
 script:
-  - coverage run -m py.test  # will run all tests in the package
+  - coverage run -m py.test # will run all tests in the package
+  - coverage report -m # Nicely shows a report of coverage of each script
   #- coverage run -m unittest discover
 
 after_success:
