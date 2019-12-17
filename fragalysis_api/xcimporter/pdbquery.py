@@ -5,38 +5,44 @@ import os
 
 
 def get_similar(pdb_code, chain_id):
-    similar_with_ligs = []
-    ligs = []
-    similar = [pdb_code]
-    similar += get_blast2(pdb_code, chain_id=chain_id)[0]
+    """
+    queries the pdb for other files with similar protein structure but different ligands bound
 
-    for i in similar[:20]:
-        ligands = get_ligands(i)
+    params: pdb code, chain id
+    returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
+    """
+    similar_with_ligs = {}
+    similar = [pdb_code]
+    similar += get_blast2(pdb_code, chain_id=chain_id)[0]  # adds all similar pdb structures to list
+
+    for i in similar:
+        ligands = get_ligands(i)  # finds ligands bound to the protein in that particular pdb file
         try:
-            if ligands['ligandInfo']['ligand'][0]['@chemicalID'] not in ligs:
-                similar_with_ligs.append(i)
-                ligs.append(ligands['ligandInfo']['ligand'][0]['@chemicalID'])
+            if ligands['ligandInfo']['ligand'][0]['@chemicalID'] not in similar_with_ligs:  # if ligand not already seen
+                similar_with_ligs[ligands['ligandInfo']['ligand'][0]['@chemicalID']] = [i.lower()]   # save pdb code
+            else:
+                similar_with_ligs[ligands['ligandInfo']['ligand'][0]['@chemicalID']].append(i.lower())
         except KeyError:
-            if ligands['ligandInfo']['ligand']['@chemicalID'] not in ligs:
-                similar_with_ligs.append(i)
-                ligs.append(ligands['ligandInfo']['ligand']['@chemicalID'])
+            if ligands['ligandInfo']['ligand']['@chemicalID'] not in similar_with_ligs:
+                similar_with_ligs[ligands['ligandInfo']['ligand']['@chemicalID']] = [i.lower()]
+            else:
+                similar_with_ligs[ligands['ligandInfo']['ligand']['@chemicalID']].append(i.lower())
         except TypeError:
             pass
 
-    print(len(similar_with_ligs)-1, 'pdb files with the same structure and a different ligand bound have been found')
-    print_list = input('would you like to view these pdb codes and their ligands? y/n : ')
+    for i in similar_with_ligs:
+        similar_with_ligs[i] = list(set(similar_with_ligs[i]))
+    print(len(similar_with_ligs)-1, 'different ligands have been found to bind to this protein')
+    print_list = input('would you like to view these ligands and the pdb codes? y/n : ')
     if print_list == 'y' or print_list == 'Y' or print_list == 'yes':
-        for i in range(len(similar_with_ligs)):
-            print(similar_with_ligs[i], ligs[i])
+        for i in similar_with_ligs:
+            print(i, similar_with_ligs[i])
     save_file = input('would you like to save this list in a json file? y/n : ')
     if save_file == 'y' or save_file == 'Y' or save_file == 'yes':
         user_id = input('user id: ')
         if not os.path.exists(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id)):
             os.mkdir(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id))
-        comb_list = {}
-        for i in range(len(similar_with_ligs)):
-            comb_list[similar_with_ligs[i]] = ligs[i]
-        json.dump(comb_list, open(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id, pdb_code+'.json'), 'w'))
+        json.dump(similar_with_ligs, open(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id, pdb_code+'.json'), 'w'))
 
 
 if __name__ == '__main__':
