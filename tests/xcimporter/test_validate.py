@@ -5,7 +5,7 @@ from fragalysis_api import Validate, ValidatePDB
 cwd = os.getcwd()
 path = os.path.split(cwd)
 
-data_path = os.path.join(str(path[0]), '..', 'data', 'xcimporter', 'input')
+data_path = os.path.join('data', 'xcimporter', 'input') #str(path[0]), '..', 
 good_directory = os.path.join(data_path, 'ATAD2')
 cif_directory = os.path.join(data_path, 'CIF')
 Hard_directory = os.path.join(data_path, 'Hard_example')
@@ -19,7 +19,7 @@ class Validate_test(unittest.TestCase):
         """
         This test shows how it should work when the input is correct
         """
-
+        print
         val_obj = Validate(good_directory)
         # Test that there is no faults with this input
         self.assertTrue(val_obj.is_pdbs_valid)
