@@ -65,7 +65,8 @@ dependencies:
   - pcre=8.43
   - pdb2pqr=2.1.1
   - pillow=6.2.1
-  - pip=19.3.1
+  - pip=19.3.1:
+      - pypdb=1.300
   - pixman=0.38.0
   - pmw=2.0.1
   - py-boost=1.67.0
