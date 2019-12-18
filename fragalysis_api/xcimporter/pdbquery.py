@@ -2,6 +2,7 @@ from pypdb import get_blast2, get_ligands
 import argparse
 import json
 import os
+from pdbimporter import pdb_importer
 
 
 def get_similar(pdb_code, chain_id):
@@ -11,9 +12,15 @@ def get_similar(pdb_code, chain_id):
     params: pdb code, chain id
     returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
     """
-    similar_with_ligs = {}
     similar = [pdb_code]
-    similar += get_blast2(pdb_code, chain_id=chain_id)[0]  # adds all similar pdb structures to list
+    result = get_blast2(pdb_code, chain_id=chain_id)
+    codes = result[0]
+    info = result[1]
+    for i in range(len(codes)):
+        if '100%' in info[i].text:
+            similar.append(codes[i])
+
+    similar_with_ligs = {}
 
     for i in similar:
         ligands = get_ligands(i)  # finds ligands bound to the protein in that particular pdb file
@@ -43,6 +50,13 @@ def get_similar(pdb_code, chain_id):
         if not os.path.exists(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id)):
             os.mkdir(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id))
         json.dump(similar_with_ligs, open(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id, pdb_code+'.json'), 'w'))
+    import_pdb = input('would you like to import these pdb files? y/n : ')
+    if import_pdb == 'y' or import_pdb == 'Y' or import_pdb == 'yes':
+        user_id = input('user id: ')
+        data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
+        for i in similar_with_ligs:
+            for j in similar_with_ligs[i]:
+                pdb_importer(data_dir, user_id, j)
 
 
 if __name__ == '__main__':
