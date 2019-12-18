@@ -2,15 +2,14 @@ import unittest
 import os
 from fragalysis_api import Validate, ValidatePDB
 
-
-
 data_path = os.path.join('data', 'xcimporter', 'input')
 good_dir = os.path.join(data_path, 'ATAD2')
 test_dir = os.path.join(data_path, 'examples_to_test1')
 test2_dir = os.path.join(data_path, 'examples_to_test2')
 PDB_dir = os.path.join(data_path, 'PDB')
 
-class Validate_test(unittest.TestCase):
+
+class ValidateTest(unittest.TestCase):
 
     def test_good_input(self):
         """
@@ -80,7 +79,6 @@ class Validate_test(unittest.TestCase):
         # Check if it finds pdbs with too large names
         self.assertFalse(
             ValidatePDB(os.path.join(test_dir, '1234567890asdfghjklqwe.pdb')).is_pdb_name_within_size_limit)
-
 
     def test_semi_hard(self):
         pass

@@ -17,7 +17,7 @@ PDB_directory = os.path.join(data_path, 'PDB')
 directory = os.path.join(str(path[0]), ATAD2_directory)
 
 
-class Align_test(unittest.TestCase):
+class AlignTest(unittest.TestCase):
 
 
     # def test_get_files(self):

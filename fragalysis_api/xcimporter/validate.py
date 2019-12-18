@@ -133,8 +133,3 @@ class ValidatePDB:
             return False
 
         return True
-
-    @property
-    def does_pdb_have_same_amount_of_protein_chains(self):
-        pass
-

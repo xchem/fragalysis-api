@@ -10,7 +10,7 @@ class Ligand:
         self.pdbcode = pdbcode_
         self.mol_lst = []
         self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
-        self.non_ligs = json.load(open("non_ligs.json", "r"))
+        self.non_ligs = json.load(open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r"))
         self.pdbfile = open(os.path.join(DATA_DIRECTORY_INPUT, str(self.pdbcode) + ".pdb")).readlines()
         self.hetatms = []
         self.conects = []
@@ -192,6 +192,10 @@ def set_up(pdbcode, USER_ID, in_dir, out_dir):
 
     DATA_DIRECTORY_INPUT = os.path.join(in_dir, USER_ID)
     RESULTS_DIRECTORY = os.path.join(out_dir, USER_ID, "tmp")
+
+    if not os.path.isdir(RESULTS_DIRECTORY):
+        os.makedirs(RESULTS_DIRECTORY)
+
     new = Ligand(pdbcode, DATA_DIRECTORY_INPUT, RESULTS_DIRECTORY)  # takes in pdb file and returns specific ligand files
     new.hets_and_cons()  # takes only hetatm and conect file lines from pdb file
     new.remove_nonligands()  # removes ions and solvents from list of ligands
