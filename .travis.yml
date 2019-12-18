@@ -8,8 +8,8 @@ matrix:
       dist: xenial
 
     # Set the python version to 3.7.4
-    - python: 3.7.4
-      os: osx
+    #- python: 3.7.4
+    #  os: osx
 
 before_install:
 
