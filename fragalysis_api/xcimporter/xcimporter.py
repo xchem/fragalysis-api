@@ -1,7 +1,4 @@
-from align import Align
-from conversion_pdb_mol import set_up
-from validate import Validate
-from create_directory import create_directory
+from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
 import os
 from shutil import rmtree
 import argparse
@@ -32,7 +29,6 @@ def xcimporter(user_id, in_dir, out_dir):
     if not validation.is_there_a_pdb_in_dir:
         exit()
 
-
     pdb_list = []
 
     for file in os.listdir(os.path.join(in_dir, str(user_id))):
@@ -58,7 +54,7 @@ def xcimporter(user_id, in_dir, out_dir):
                     os.remove(os.path.join(out_dir, str(user_id), 'tmp', str(file)))
             pass
 
-    create_directory(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
+    to_fragalysis_dir(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
 
     rmtree(os.path.join(out_dir, str(user_id), 'tmp'))
     print('Files are now in a fragalysis friendly format (fff)!!!')
@@ -66,18 +62,21 @@ def xcimporter(user_id, in_dir, out_dir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-id', '--user_id', required=True, help='Description for foo argument')
-    parser.add_argument('-i', '--in_dir', default= os.path.join('..', '..', 'data' , 'xcimporter', 'input'), help='Description for bar argument')
-    parser.add_argument('-o', '--out_dir', default= os.path.join('..', '..', 'data' , 'xcimporter', 'output'), help='Description for bar argument')
+    parser.add_argument('-id', '--user_id', required=True,
+                        help='Description for foo argument')
+    parser.add_argument('-i', '--in_dir', default=os.path.join('..', '..', 'data', 'xcimporter', 'input'),
+                        help='Description for bar argument')
+    parser.add_argument('-o', '--out_dir', default=os.path.join('..', '..', 'data', 'xcimporter', 'output'),
+                        help='Description for bar argument')
     args = vars(parser.parse_args())
     
     user_id = args['user_id']
     in_dir = args['in_dir']
     out_dir = args['out_dir']
 
-    if in_dir == os.path.join('..', '..', 'data' , 'xcimporter', 'input'):
+    if in_dir == os.path.join('..', '..', 'data', 'xcimporter', 'input'):
         print('Using the default input directory ', in_dir)
-    if out_dir == os.path.join('..', '..', 'data' , 'xcimporter', 'output'):
+    if out_dir == os.path.join('..', '..', 'data', 'xcimporter', 'output'):
         print('Using the default input directory ', out_dir)
 
     xcimporter(user_id, in_dir, out_dir)

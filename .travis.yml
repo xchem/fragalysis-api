@@ -41,4 +41,4 @@ script:
   #- coverage run -m unittest discover
 
 after_success:
-  - codecov # Push the results back to codecov (code coverage)
+  - codecov # Push the results back to codecov (code coverage) for nicer visualization

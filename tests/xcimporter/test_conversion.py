@@ -8,8 +8,8 @@ class ConversionTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.dir_input = os.path.join('data', 'xcimporter', 'input')
-        cls.dir_output = os.path.join('data', 'xcimporter', 'output')
+        cls.dir_input = os.path.join('tests', 'data_for_tests')
+        cls.dir_output = os.path.join('tests', 'data_for_tests', 'tmp')
 
 
 class PDBexample1(ConversionTest):
@@ -22,7 +22,7 @@ class PDBexample1(ConversionTest):
 
     @classmethod
     def tearDownClass(cls):
-        rmtree(os.path.join(cls.dir_output, 'examples_to_test3'))
+        rmtree(os.path.join(cls.dir_output))
 
     def test_open_file(self):
         """
