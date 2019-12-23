@@ -40,8 +40,8 @@ def xcimporter(user_id, in_dir, out_dir):
         os.makedirs(os.path.join(out_dir, str(user_id), 'tmp'))
 
     print('Aligning protein structures')
-    struc = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
-    struc.align(os.path.join(out_dir, str(user_id), 'tmp'))
+    structure = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
+    structure.align(os.path.join(out_dir, str(user_id), 'tmp'))
 
     print('Identifying ligands')
     for i in pdb_list:

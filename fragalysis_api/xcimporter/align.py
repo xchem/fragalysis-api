@@ -18,10 +18,10 @@ class Align:
     @property
     def _get_files(self):
         """
-        Extracts a list of paths for all pdbs within the given directory.
+        Extracts a list of paths for all PDBs within the given directory.
         :param self:
         :type self:
-        :return list of .pdb filenames in directory:
+        :return list of .pdb file names in directory:
         """
 
         return glob.glob(os.path.join(self.directory, "*.pdb"))
@@ -33,7 +33,7 @@ class Align:
         :type object:
         :return PyMol object with .pdb protein structure file loaded:
         """
-        #looping through each pdb file in the directory and loading them into the cmd
+        # Looping through each pdb file in the directory and loading them into the cmd
         for num, file in enumerate(self._get_files):
             pymol.cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
@@ -42,7 +42,8 @@ class Align:
     @property
     def _get_ref(self):
         """
-        Determines the best reference structure for alignments if not user provided. Chosen based on longest length with lowest resolution.
+        Determines the best reference structure for alignments if not user provided.
+        Chosen based on longest length with lowest resolution.
         :param self:
         :type: object:
         :return: str of .pdb filename of reference:
@@ -52,7 +53,8 @@ class Align:
     @_get_ref.setter
     def _get_ref(self, pdb_ref):
         """
-        Determines the best reference structure for alignments if not user provided. Chosen based on longest length with lowest resolution.
+        Determines the best reference structure for alignments if not user provided.
+        Chosen based on longest length with lowest resolution.
         :param pdb_ref:
         :type str:
         :return PyMol instance with reference object assigned as reference property:
@@ -87,8 +89,7 @@ class Align:
 
         seq_len = 0
 
-        # getting length by looping through each chain in the protein
-        for pp in ppb.build_peptides(structure):
+        for pp in ppb.build_peptides(structure):  # Retrieve length by looping through each chain in the protein
             seq_len += len(pp.get_sequence())
 
         # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file 
@@ -104,18 +105,17 @@ class Align:
         pymol.pymol_argv = ['pymol', '-qc']
         pymol.finish_launching()
         pymol_cmd = self._load_objs()
-        #creating output directory if it doesn't already exist
-        if not os.path.exists(path_save):
+
+        if not os.path.exists(path_save):  # Creating output directory if it doesn't already exist
             os.makedirs(path_save)
 
-        #saves the aligned pdb files from the cmd as pdb files 
-        for num, name in enumerate(pymol_cmd.get_names()):
+        for num, name in enumerate(pymol_cmd.get_names()):  # Saves the aligned pdb files from the cmd as pdb files
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb') , name )
+                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
 
             elif name == self._get_ref:
-                pymol_cmd.save(os.path.join( path_save, f'{name}_bound.pdb') , name )
+                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
 
     def align(self, out_dir):
         """

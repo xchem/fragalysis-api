@@ -1,46 +1,62 @@
 import unittest
 import os
 from fragalysis_api import Align
-
-# Load test data
-
-cwd = os.getcwd()
-path = os.path.split(cwd)
-
-data_path = os.path.join(str(path[0]), '..', 'data', 'xcimporter', 'input')
-ATAD2_directory = os.path.join(data_path, 'ATAD2')
-cif_directory = os.path.join(data_path, 'input/CIF')
-Hard_directory = os.path.join(data_path, 'examples_to_test1')
-Semi_hard_directory = os.path.join(data_path, 'examples_to_test2')
-PDB_directory = os.path.join(data_path, 'PDB')
-
-directory = os.path.join(str(path[0]), ATAD2_directory)
+from glob import glob
+from shutil import rmtree
 
 
 class AlignTest(unittest.TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        cls.dir_input = os.path.join('tests', 'data_for_tests')
+
+
+class EasyAlign(AlignTest):
+
+    @classmethod
+    def setUpClass(cls):
+        super(EasyAlign, cls).setUpClass()
+        cls.align_obj = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='')
+        cls.align_obj_w_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='6hi3')
+        #cls.align_obj_w_wrong_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
+
+    @classmethod
+    def tearDownClass(cls):
+        #[rmtree(a_path) for a_path in cls.test_path_list]
+        pass
 
     def test_get_files(self):
-        #    files = ['6epu.pdb', '6epv.pdb', '6epx.pdb', '6hi3.pdb']
-        #     whole_files = sorted([os.path.join(self.align_obj.directory, x) for x in files])
-        #     self.assertEqual(self.align_obj.pdb_in_list, whole_files)
+        files = ['6epu.pdb', '6epv.pdb', '6epx.pdb', '6hi3.pdb']
+        whole_files = sorted([os.path.join(self.align_obj.directory, x) for x in files])
+        self.assertCountEqual(self.align_obj._get_files, whole_files)
+
+    def test_load_obj_successfully(self):
+        self.assertIsNotNone(self.align_obj._load_objs)
+
+    def test_get_ref_automatically(self):
+        """
+        Tests it correctly automatically retrieves the best pdb to use as reference for alignments
+        """
+        self.assertTrue(self.align_obj._get_ref, '6epv.pdb')
+
+    def test_get_ref_when_input_ref(self):
+        """
+        Tests it correctly assigns the input ref as the reference pdb for alignments
+        """
+        self.assertTrue(self.align_obj_w_ref._get_ref, '6hi3.pdb')
+
+    def test_error_for_inserting_wrong_pdb_ref(self):
+        #self.assertTrue(self.align_obj_w_wrong_ref._get_ref, 'wrong_pdb.pdb')
         pass
 
-    def test_load_success(self):
-        #align_obj = Align(ATAD2_directory)
-        #self.assertIsNotNone(align_obj._load_objs)
-        pass
-
-    def test_get_ref_success(self):
-        #align_obj = Align(ATAD2_directory)
-        #self.assertTrue(align_obj._get_ref, '6epv.pdb')
-        pass
-
-    def test_align_success(self):
+    def test_aligns_saved_correctly(self):
         #align_obj = Align(ATAD2_directory)
         #self.assertIsNotNone(align_obj._save_align)
         pass
 
+    def test_aligns_are_correct_done(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
