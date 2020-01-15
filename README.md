@@ -7,18 +7,27 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 
 ### How to use API
 
-(note: not live yet)
-
 1. Set up environment
-2. Submit PDB files - you will be given a query ID 
-3. Push your files into fragalysis and view them online
-4. Analyse the binding of ligands to your target protein!
+2. Download PDB files and query the PDB for structures of the same protein bound to the same or different ligands
+3. Submit PDB files - you will be given a query ID 
+4. Push your files into fragalysis and view them online :construction:
+5. Analyse the binding of ligands to your target protein! :construction:
 
 Other functionalities that are available:
 - Import pdb files directly through the API
 - Query the pdb for similar structures that also have ligands bound and have the option to import these structures
 
-##### How to set install, update and save the fragalysis_env conda environment.
+
+### Enforced rules :scroll:
+
+* The pdb file shall not be greater than 5mb.
+* The pdb filename shall not contain non English language ascii characters and shall be between 4 and 20 characters in length.
+* Each pdb file for alignment shall contain the same number of chains.
+* All pdb files to be aligned must be in the same directory.
+* If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
+
+
+##### 1. How to set install, update and save the fragalysis_env conda environment.
 
 This command exports the env you are in to a .yml file.
 ```
@@ -45,13 +54,20 @@ You can check if it has installed using
 conda list
 ```
 
+### 2.1 How to download PDB files
 
-### Enforced rules :scroll:
-* The pdb file shall not be greater than 5mb.
-* The pdb filename shall not contain non English language ascii characters and shall be between 4 and 20 characters in length.
-* Each pdb file for alignment shall contain the same number of chains.
-* All pdb files to be aligned must be in the same directory.
-* If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
+Move to the fragalysis-api/xcimporter directory. 
+
+You will need two bits of information:
+1. Your 'user ID' - this is your name followed by your protein name. For example, Anna looking at protein ATAD2 wil have username 'Anna_ATAD2'.
+2. The PDB code you would like to download. For example, '6epu'.
+
+To download the PDB file 
+```python pdbimporter.py -id [user_id] -pdb [pdb code]```
+In our example, this would be 
+```python pdbimporter.py -id Anna_ATAD2 -pdb 6epu```
+
+
 
 ### Who we are
 
