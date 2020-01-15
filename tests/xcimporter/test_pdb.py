@@ -13,8 +13,8 @@ class ValidateTest(unittest.TestCase):
         pdb_code = '6epu'
         if os.path.exists(os.path.join(data_dir, user_id, pdb_code+'.pdb')):
             os.remove(os.path.join(data_dir, user_id, pdb_code+'.pdb'))
+        obj = ImportPdb(data_dir, user_id, pdb_code)
         pass
-        # obj = ImportPdb(data_dir, user_id, pdb_code)
         # self.assertTrue(obj.pdb_importer())
 
 
