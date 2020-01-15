@@ -63,7 +63,9 @@ You will need two bits of information:
 2. The PDB code you would like to download. For example, '6epu'.
 
 To download the PDB file 
-```python pdbimporter.py -id [user_id] -pdb [pdb code]```
+```
+python pdbimporter.py -id [user_id] -pdb [pdb code]```
+
 In our example, this would be 
 ```python pdbimporter.py -id Anna_ATAD2 -pdb 6epu```
 
