@@ -16,15 +16,17 @@ class ValidateTest(unittest.TestCase):
         obj = ImportPdb(data_dir, user_id, pdb_code)
         self.assertTrue(obj.pdb_importer())
 
+class ValidateTest(unittest.TestCase):
+
     def test_query(self):
-        # print('testing query')
-        # pdb_code = '6epu'
-        # chain_id = 'A'
-        # query_obj = Query(pdb_code, chain_id)
-        # query_obj.get_matching_proteins()
-        # query_obj.get_ligands()
-        # print(len(query_obj.match_ligs))
-        # assert(len(query_obj.match_ligs) == 41)
+        print('testing query')
+        pdb_code = '6epu'
+        chain_id = 'A'
+        query_obj = Query(pdb_code, chain_id)
+        query_obj.get_matching_proteins()
+        query_obj.get_ligands()
+        print(len(query_obj.match_ligs))
+        assert(len(query_obj.match_ligs) == 41)
         pass
 
 
