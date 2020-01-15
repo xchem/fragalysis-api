@@ -19,7 +19,7 @@ class EasyAlign(AlignTest):
         super(EasyAlign, cls).setUpClass()
         cls.align_obj = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='')
         cls.align_obj_w_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='6hi3')
-        #cls.align_obj_w_wrong_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
+        cls.align_obj_w_wrong_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
 
     @classmethod
     def tearDownClass(cls):
@@ -38,17 +38,18 @@ class EasyAlign(AlignTest):
         """
         Tests it correctly automatically retrieves the best pdb to use as reference for alignments
         """
-        self.assertTrue(self.align_obj._get_ref, '6epv.pdb')
+        self.assertEqual(self.align_obj._get_ref, '6epv')
 
     def test_get_ref_when_input_ref(self):
         """
         Tests it correctly assigns the input ref as the reference pdb for alignments
         """
-        self.assertTrue(self.align_obj_w_ref._get_ref, '6hi3.pdb')
+        self.assertEqual(self.align_obj_w_ref._get_ref, '6hi3')
 
     def test_error_for_inserting_wrong_pdb_ref(self):
-        #self.assertTrue(self.align_obj_w_wrong_ref._get_ref, 'wrong_pdb.pdb')
-        pass
+        self.assertNotEqual(self.align_obj_w_wrong_ref._get_ref, 'wrong_pdb')
+        self.assertEqual(self.align_obj_w_wrong_ref._get_ref, '6epv')
+
 
     def test_aligns_saved_correctly(self):
         #align_obj = Align(ATAD2_directory)

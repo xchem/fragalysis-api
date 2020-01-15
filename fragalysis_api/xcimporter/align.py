@@ -60,8 +60,12 @@ class Align:
         :return PyMol instance with reference object assigned as reference property:
         """
         if pdb_ref != '':
-            assert(os.path.isfile(os.path.join(self.directory, pdb_ref+".pdb")) == 1)
-            self.__pdb_ref = pdb_ref
+            try:
+                assert(os.path.isfile(os.path.join(self.directory, pdb_ref+".pdb")) == 1)
+                self.__pdb_ref = pdb_ref
+            except AssertionError:
+                print('pdb desired as reference does not exists. Default pdb chosen.')
+                self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
         else:
             self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
 
