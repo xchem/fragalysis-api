@@ -64,8 +64,8 @@ You will need two bits of information:
 
 To download the PDB file 
 ```
-python pdbimporter.py -id [user_id] -pdb [pdb code]```
-
+python pdbimporter.py -id [user_id] -pdb [pdb code]
+```
 In our example, this would be 
 ```python pdbimporter.py -id Anna_ATAD2 -pdb 6epu```
 
