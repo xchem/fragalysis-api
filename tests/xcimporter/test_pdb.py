@@ -16,13 +16,12 @@ class ValidateTest(unittest.TestCase):
         self.assertTrue(obj.pdb_importer())
 
     def test_query(self):
-        in_dir = os.path.join('data', 'xcimporter', 'input')
-        out_dir = os.path.join('data', 'xcimporter', 'output')
         pdb_code = '6epu'
         chain_id = 'A'
-        user_id = 'examples_to_test3'
         query_obj = Query(pdb_code, chain_id)
+        query_obj.get_matching_proteins()
         query_obj.get_ligands()
+        print(len(query_obj.match_ligs))
         assert(len(query_obj.match_ligs) == 41)
 
 
