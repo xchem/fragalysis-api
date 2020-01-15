@@ -16,9 +16,11 @@ SOURCE   7 EXPRESSION_SYSTEM_TAXID: 562
 KEYWDS    BROMODOMAIN, ATAD2, INHIBITOR, COMPLEX, CYTOSOLIC PROTEIN             
 EXPDTA    X-RAY DIFFRACTION                                                     
 AUTHOR    P.SLEDZ,A.CAFLISCH                                                    
+REVDAT   2   13-NOV-19 6EPU    1       JRNL                                     
 REVDAT   1   31-OCT-18 6EPU    0                                                
 JRNL        AUTH   P.SLEDZ                                                      
-JRNL        TITL   THE ATAD2 BROMODOMAIN IN COMPLEX WITH COMPOUND 2             
+JRNL        TITL   HITTING A MOVING TARGET: SIMULATION AND CRYSTALLOGRAPHY      
+JRNL        TITL 2 STUDY OF ATAD2 BROMODOMAIN BLOCKERS                          
 JRNL        REF    TO BE PUBLISHED                                              
 JRNL        REFN                                                                
 REMARK   2                                                                      
