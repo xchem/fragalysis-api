@@ -1,3 +1,4 @@
+Bio
 pypdb
 libgcc_mutex==0.1
 apbs==1.5
