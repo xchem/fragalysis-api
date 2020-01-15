@@ -5,6 +5,16 @@
 
 This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
+## Installation
+
+### Not recommended: pip
+To install with pip, you will need to install both pymol and rdkit seperatley, as these don't exist as pip packages. 
+
+To install fragalysis-api with pip:
+```
+pip install fragalysis-api
+```
+
 ### How to use API
 
 1. Set up environment
