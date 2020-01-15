@@ -5,7 +5,18 @@
 
 This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
-### How to use API
+## Installation
+
+### Not recommended: pip
+To install with pip, you will need to install both pymol and rdkit seperatley, as these don't exist as pip packages. 
+
+To install fragalysis-api with pip:
+```
+pip install fragalysis-api
+```
+
+
+## How to use API
 
 (note: not live yet)
 
@@ -46,14 +57,14 @@ conda list
 ```
 
 
-### Enforced rules :scroll:
+## Enforced rules :scroll:
 * The pdb file shall not be greater than 5mb.
 * The pdb filename shall not contain non English language ascii characters and shall be between 4 and 20 characters in length.
 * Each pdb file for alignment shall contain the same number of chains.
 * All pdb files to be aligned must be in the same directory.
 * If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
 
-### Who we are
+## Who we are
 
 We are the Fragment 5, a group of students at the University of Oxford.
 
