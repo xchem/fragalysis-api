@@ -14,10 +14,7 @@ class ValidateTest(unittest.TestCase):
         if os.path.exists(os.path.join(data_dir, user_id, pdb_code+'.pdb')):
             os.remove(os.path.join(data_dir, user_id, pdb_code+'.pdb'))
         obj = ImportPdb(data_dir, user_id, pdb_code)
-        pass
-        # self.assertTrue(obj.pdb_importer())
-
-
+        self.assertTrue(obj.pdb_importer())
 
     def test_query(self):
         # print('testing query')
