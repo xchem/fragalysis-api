@@ -1,7 +1,5 @@
 import unittest
-from fragalysis_api.xcimporter.pdbimporter import ImportPdb
 from fragalysis_api.xcimporter.pdbquery import Query
-import os
 
 
 class ValidateTest(unittest.TestCase):
