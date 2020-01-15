@@ -10,7 +10,7 @@ setuptools.setup(
     author='Fragment 5',
     author_email="",
     description="A package to load PDBs into fragalysis format.",
-    long_description=long_description,  # README.md file as description
+    long_description=long_description,  # README_1.md file as description
     long_description_content_type="text/markdown",
     url="https://github.com/xchem/fragalysis-api",
     packages=setuptools.find_packages(),

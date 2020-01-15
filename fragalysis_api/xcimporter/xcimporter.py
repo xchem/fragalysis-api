@@ -57,7 +57,7 @@ def xcimporter(user_id, in_dir, out_dir):
     to_fragalysis_dir(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
 
     rmtree(os.path.join(out_dir, str(user_id), 'tmp'))
-    print('Files are now in a fragalysis friendly format (fff)!!!')
+    print('Files are now in a fragalysis friendly format!')
 
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--out_dir', default=os.path.join('..', '..', 'data', 'xcimporter', 'output'),
                         help='Description for bar argument')
     args = vars(parser.parse_args())
-    
+
     user_id = args['user_id']
     in_dir = args['in_dir']
     out_dir = args['out_dir']
