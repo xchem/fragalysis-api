@@ -2,7 +2,10 @@ from pypdb import get_blast2, get_ligands
 import argparse
 import json
 import os
-from pdbimporter import ImportPdb
+try:
+    from pdbimporter import ImportPdb
+except ModuleNotFoundError:
+    from .pdbimporter import ImportPdb
 
 class Query:
     def __init__(self, pdb, chain):
