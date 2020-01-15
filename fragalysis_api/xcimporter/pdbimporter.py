@@ -19,10 +19,10 @@ class ImportPdb:
             pdbl.retrieve_pdb_file(self.pdb_code, pdir=os.path.join(self.data_dir, self.user_id), file_format='pdb')
             os.rename(os.path.join(self.data_dir, self.user_id, 'pdb' + self.pdb_code + '.ent'),
                       os.path.join(self.data_dir, self.user_id, self.pdb_code + '.pdb'))
+            return True
         else:
             print('File is already downloaded')
 
-        return True
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
