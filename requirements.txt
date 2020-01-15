@@ -1,3 +1,4 @@
+pypdb
 libgcc_mutex==0.1
 apbs==1.5
 asn1crypto==1.2.0
