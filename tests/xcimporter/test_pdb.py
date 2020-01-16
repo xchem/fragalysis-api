@@ -16,7 +16,8 @@ class ValidateTest(unittest.TestCase):
         self.assertTrue(obj.user_id is not None)
         self.assertTrue(obj.pdb_code is not None)
         self.assertTrue(obj.data_dir is not None)
-       # self.assertTrue(obj.pdb_importer())
+        obj.pdb_importer()
+        self.assertTrue(obj.pdb_exists)
 
 if __name__ == '__main__':
     unittest.main()

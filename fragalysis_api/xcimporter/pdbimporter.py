@@ -8,6 +8,7 @@ class ImportPdb:
         self.data_dir = dir
         self.user_id = user
         self.pdb_code = pdb.lower()
+        self.pdb_exists = False
 
     def pdb_importer(self):
         if not os.path.exists(os.path.join(self.data_dir, self.user_id)):
@@ -19,9 +20,10 @@ class ImportPdb:
             pdbl.retrieve_pdb_file(self.pdb_code, pdir=os.path.join(self.data_dir, self.user_id), file_format='pdb')
             os.rename(os.path.join(self.data_dir, self.user_id, 'pdb' + self.pdb_code + '.ent'),
                       os.path.join(self.data_dir, self.user_id, self.pdb_code + '.pdb'))
-            return True
+            self.pdb_exists = True
         else:
             print('File is already downloaded')
+            self.pdb_exists = True
 
 
 if __name__ == '__main__':
