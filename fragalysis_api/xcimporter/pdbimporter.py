@@ -17,7 +17,7 @@ class ImportPdb:
 
         if not os.path.exists(os.path.join(self.data_dir, self.user_id, self.pdb_code + '.pdb')):
             pdbl = PDBList()
-            pdbl.retrieve_pdb_file(self.pdb_code, pdir=os.path.join(self.data_dir, self.user_id), file_format='pdb')
+            #pdbl.retrieve_pdb_file(self.pdb_code, pdir=os.path.join(self.data_dir, self.user_id), file_format='pdb')
             # os.rename(os.path.join(self.data_dir, self.user_id, 'pdb' + self.pdb_code + '.ent'),
             #           os.path.join(self.data_dir, self.user_id, self.pdb_code + '.pdb'))
             self.pdb_exists = True
