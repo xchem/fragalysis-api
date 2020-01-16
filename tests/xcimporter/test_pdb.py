@@ -13,9 +13,9 @@ class ValidateTest(unittest.TestCase):
         if os.path.exists(os.path.join(data_dir, user_id, pdb_code+'.pdb')):
             os.remove(os.path.join(data_dir, user_id, pdb_code+'.pdb'))
         obj = ImportPdb(data_dir, user_id, pdb_code)
-        self.assertFalse(obj.user_id is None)
-        self.assertFalse(obj.pdb_code is None)
-        self.assertFalse(obj.data_dir is None)
+        self.assertTrue(obj.user_id is not None)
+        self.assertTrue(obj.pdb_code is not None)
+        self.assertTrue(obj.data_dir is not None)
        # self.assertTrue(obj.pdb_importer())
 
 if __name__ == '__main__':
