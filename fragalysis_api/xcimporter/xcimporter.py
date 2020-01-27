@@ -8,7 +8,7 @@ import argparse
 from sys import exit
 
 
-def xcimporter(in_dir, out_dir, validate=True):
+def xcimporter(in_dir, out_dir, validate=False):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -73,14 +73,14 @@ if __name__ == "__main__":
                         help='Description for bar argument')
     parser.add_argument('-o', '--out_dir', default=os.path.join('..', '..', 'data', 'xcimporter', 'output'),
                         help='Description for bar argument')
-    parser.add_argument('-v', '--validate', default=True,
+    parser.add_argument('-v', '--validate', action='store_true', default=False,
                         help='Validate input?')
     args = vars(parser.parse_args())
 
     # user_id = args['user_id']
     in_dir = args['in_dir']
     out_dir = args['out_dir']
-    validate=args['validate']
+    validate = args['validate']
 
     if in_dir == os.path.join('..', '..', 'data', 'xcimporter', 'input'):
         print('Using the default input directory ', in_dir)
