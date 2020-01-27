@@ -1,4 +1,4 @@
-from fragalysis_api.xcimporter_utils import *
+from ..fragalysis_api.xcimporter_utils import *
 import os
 from shutil import rmtree
 import argparse
