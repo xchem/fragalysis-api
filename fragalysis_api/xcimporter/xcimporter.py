@@ -59,7 +59,7 @@ def xcimporter(in_dir, out_dir, validate=False):
                     os.remove(os.path.join(out_dir, 'tmp', str(file)))
             pass
 
-    to_fragalysis_dir(str(user_id), os.path.join(out_dir, 'tmp'))
+    to_fragalysis_dir(in_dir, os.path.join(out_dir, 'tmp'))
 
     rmtree(os.path.join(out_dir, 'tmp'))
     print('Files are now in a fragalysis friendly format!')
