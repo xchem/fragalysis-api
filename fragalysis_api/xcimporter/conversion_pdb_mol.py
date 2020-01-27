@@ -181,7 +181,7 @@ class pdb_apo:
         apo_file.close()
 
 
-def set_up(pdbcode, USER_ID, in_dir, out_dir):
+def set_up(pdbcode, in_dir, out_dir, USER_ID=None,):
 
     """
 
@@ -189,9 +189,12 @@ def set_up(pdbcode, USER_ID, in_dir, out_dir):
     :param USER_ID: User ID and timestamp that has been given to user when they upload their files
     :return: for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.
     """
-
-    DATA_DIRECTORY_INPUT = os.path.join(in_dir, USER_ID)
-    RESULTS_DIRECTORY = os.path.join(out_dir, USER_ID, "tmp")
+    if USER_ID:
+        DATA_DIRECTORY_INPUT = os.path.join(in_dir, USER_ID)
+        RESULTS_DIRECTORY = os.path.join(out_dir, USER_ID, "tmp")
+    else:
+        DATA_DIRECTORY_INPUT = in_dir
+        RESULTS_DIRECTORY = os.path.join(out_dir, 'tmp')
 
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
