@@ -1,7 +1,7 @@
-from .align import *
-from .conversion_pdb_mol import *
-from .validate import *
-from .xc_utils import *
+from fragalysis_api.xcimporter.align import *
+from fragalysis_api.xcimporter.conversion_pdb_mol import *
+from fragalysis_api.xcimporter.validate import *
+from fragalysis_api.xcimporter.xc_utils import *
 import os
 from shutil import rmtree
 import argparse
