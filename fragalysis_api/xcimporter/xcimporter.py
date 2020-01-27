@@ -1,4 +1,7 @@
-from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
+from .align import *
+from .conversion_pdb_mol import *
+from .validate import *
+from .xc_utils import *
 import os
 from shutil import rmtree
 import argparse
