@@ -3,41 +3,28 @@ from graph import GraphRequest
 
 
 def xcextracter(target_name):
-
-    # Initiate the object
-    search = GetTargetsData()
-    # Set the target into the object
-    search.set_target_name_url(target=target_name)
-    # get the json response (it internally calls the frag database)
-    results = search.get_target_json()
-
-    print(results)
-
-    # get a list of integers corresponding to the pk's for all entries related to the search target
-    id_list = search.get_target_id_list()
-
-    print(id_list)
-
-    search = GetPdbData()
-
-    # get apo pdb for bound-state of NUDT5A-x0123 in string representation
-    apo_pdb = search.get_pdb_file(code='NUDT7A-x0140_1')
+    import pandas as pd
 
     search = GetMoleculesData()
 
     # get the target id's for further operations for NUDT5A
-    id_list = search.get_target_ids(target='NUDT5A')
+    search.set_target_id(target=target_name)
 
     # set the molecule url for the current instance of GetMoleculesData to the first id in the id_list from above
-    url = search.set_molecule_url(target_id=id_list[0])
+    search.set_molecule_url()
 
     # get a json response from the url we set above
-    results = search.get_molecules_json(url=url)
+    search.set_mol_data()
+
+    print(pd.DataFrame(search.get_mol_data))
 
     # get all molecule data (json) related to all of the ids in id_list
-    results_table = search.get_all_mol_responses()
+    search.set_complete_mol_data()
 
-    print(results_table)
+    print(pd.DataFrame(search.get_complete_mol_data))
+
+    a_df = pd.DataFrame(search.get_complete_mol_data)
+
 
     search = GraphRequest()
 
