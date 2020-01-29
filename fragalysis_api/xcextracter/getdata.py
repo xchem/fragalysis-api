@@ -166,6 +166,7 @@ class GetMoleculesData:
         self.get_complete_mol_data = json_list
 
     def convert_mols_to_dict(self):
+
         results_dict = {
             'code':[],
             'pdb':[],
