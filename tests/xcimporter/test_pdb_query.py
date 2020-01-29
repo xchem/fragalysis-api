@@ -16,7 +16,7 @@ class ValidateTest(unittest.TestCase):
         query_obj.view_ligands()
         ## these lines make travis have a nightmare ##
         query_obj.save_dictionary('anna')
-        assert(os.path.exists(os.path.join('..', '..', 'data', 'xcimporter', 'other', 'anna')))
+        assert(os.path.exists(os.path.abspath(os.path.join('..', '..', 'data', 'xcimporter', 'other', 'anna'))))
 
 
 if __name__ == '__main__':
