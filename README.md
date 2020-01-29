@@ -8,7 +8,7 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 ## Installation
 
 ### Not recommended: pip
-To install with pip, you will need to install both pymol and rdkit seperatley, as these don't exist as pip packages. 
+To install with pip, you will need to install both pymol and rdkit separately, as these don't exist as pip packages. 
 
 To install fragalysis-api with pip:
 ```
