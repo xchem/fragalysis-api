@@ -61,7 +61,7 @@ class GetPdbData:
 
         if len(response['results']) > 1:
             raise Exception('more than one pdb found... contact admin')
-        print(response)
+        #print(response)
         return response['results'][0]['pdb_data']
 
 
