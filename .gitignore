@@ -3,8 +3,10 @@ fragalysis_api/Testing.ipynb
 fragalysis_api/.ipynb_checkpoints/
 fragalysis_api/__pycache__/
 fragalysis_api/xcimporter/__pycache__/
+fragalysis_api/xcextracter/__pycache__/
 tests/__pycache__/
 tests/xcimporter/__pycache__/
+tests/xcextracter/__pycache__/
 workspace.xml
 .vscode/
 .idea/
