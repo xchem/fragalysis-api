@@ -16,8 +16,8 @@ class ValidateTest(unittest.TestCase):
         self.assertTrue(obj.user_id is not None)
         self.assertTrue(obj.pdb_code is not None)
         self.assertTrue(obj.data_dir is not None)
-        ## these lines make travis have a nightmare ##
-        #obj.pdb_importer()
+        ## this line makes travis have a nightmare ##
+        obj.pdb_importer()
         self.assertFalse(obj.pdb_exists)
 
 if __name__ == '__main__':
