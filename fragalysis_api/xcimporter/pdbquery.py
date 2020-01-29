@@ -58,6 +58,8 @@ class Query:
         return len(self.match_ligs)
 
     def save_dictionary(self, user):
+        if not os.path.exists(os.path.join('..', '..', 'data', 'xcimporter', 'other')):
+            os.mkdir(os.path.join('..', '..', 'data', 'xcimporter', 'other'))
         if not os.path.exists(os.path.join('..', '..', 'data', 'xcimporter', 'other', user)):
             os.mkdir(os.path.join('..', '..', 'data', 'xcimporter', 'other', user))
         json.dump(self.match_ligs, open(os.path.join('..', '..', 'data', 'xcimporter', 'other', user, self.pdb_code+'.json'), 'w'))
