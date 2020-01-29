@@ -12,7 +12,7 @@ class ImportPdb:
 
     def pdb_importer(self):
         if not os.path.exists(os.path.join(self.data_dir, self.user_id)):
-            os.mkdir(os.path.join(self.data_dir, self.user_id))
+            os.makedirs(os.path.join(self.data_dir, self.user_id))
             print('making directory')
 
         if not os.path.exists(os.path.join(self.data_dir, self.user_id, self.pdb_code + '.pdb')):
