@@ -61,7 +61,7 @@ class Query:
         otherpath = os.path.abspath(os.path.join('..', '..', 'data', 'xcimporter', 'other'))
         userpath = os.path.abspath(os.path.join(otherpath, user))
         if not os.path.exists(otherpath):
-            os.mkdirs(otherpath)
+            os.makedirs(otherpath)
         if not os.path.exists(os.path.join(userpath)):
             os.mkdir(os.path.join(userpath))
         json.dump(self.match_ligs, open(os.path.join(userpath, self.pdb_code+'.json'), 'w'))
