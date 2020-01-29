@@ -34,7 +34,7 @@ if __name__ == '__main__':
     args = vars(parser.parse_args())
 
     user_id = args['user_id']
-    data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
+    data_dir = os.path.join(os.path.abspath('..', '..', 'data', 'xcimporter', 'input'))
     pdb_code = args['pdb']
 
     init = ImportPdb(data_dir, user_id, pdb_code.lower())
