@@ -6,7 +6,18 @@ import pandas as pd
 
 
 class GetTargetsData:
+    '''Class to contain and get data on the protein target of interest
+    '''
     def __init__(self):
+        '''
+        param self.frag_url: URL of the fragalysis website
+        param self.target_url: URL of extention for the target of fragalysis website
+        param self.query: URL to tell the restfull API how to do the query
+        param self.search_url: URL for the query 
+        param self.target_name_url: Lists of all the proteins associated with the target
+        param self.target_json: Json of the query
+        param self.target_id_list:list of the ID numbers/number for the targets/target
+        '''
         settings = setup()
 
         self.frag_url = settings.get('fragalysis', 'url')
@@ -21,9 +32,18 @@ class GetTargetsData:
         self.target_id_list = None
 
     def set_target_name_url(self, target):
+          '''Setting target name url
+
+        param target: Target name
+        '''
         self.target_name_url = str(self.search_url + target)
 
     def get_target_json(self):
+         '''Gets the json output of the lists of all the proteins associated with the target
+        from fragalysis
+
+        returns response: Json response from the restful API
+        '''
         if not self.target_name_url:
             raise Exception('Please initiate target_name url with set_target_name_url(<target>)!')
 
@@ -37,6 +57,11 @@ class GetTargetsData:
         return response
 
     def get_target_id_list(self):
+        '''Gets the target_id_ from self.target_json associated with the queried target in the 
+        fragalysis database
+
+        returns id_list: The ID number associated with the target.
+        '''
         if not self.target_json:
             raise Exception('Please get data with get_target_json!')
 
@@ -46,7 +71,14 @@ class GetTargetsData:
 
 
 class GetPdbData:
+    '''Searching the PDB for protein
+    '''
     def __init__(self):
+        '''
+        param self.frag_url: URL of the fragalysis website
+        param self.pdb_url: URL to search the pdb
+        param self.query: URL to tell the restfull API how to do the query
+        '''
         settings = setup()
 
         self.frag_url = settings.get('fragalysis', 'url')
@@ -54,6 +86,10 @@ class GetPdbData:
         self.query = settings.get('pdb', 'query')
 
     def get_pdb_file(self, code):
+         ''' Function to search the PDB for protein the protein.
+         
+        param code: The PDB code for the protein
+        '''
         url = str(self.frag_url + self.pdb_url + self.query + code)
         # get response from url and decode -> json
         with urllib.request.urlopen(url) as f:
