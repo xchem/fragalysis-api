@@ -1,10 +1,9 @@
 #from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
-from align import Align
-from validate import Validate
-from conversion_pdb_mol import set_up
-from xc_utils import to_fragalysis_dir
+from .align import Align
+from .validate import Validate
+from .conversion_pdb_mol import set_up
 import os
-from shutil import rmtree
+# from shutil import rmtree
 import argparse
 from sys import exit
 
