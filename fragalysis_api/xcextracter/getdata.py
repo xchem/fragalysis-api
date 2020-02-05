@@ -87,8 +87,8 @@ class GetPdbData:
 
     def get_pdb_file(self, code):
         ''' Function to search the PDB for protein the protein.
-         
         param code: The PDB code for the protein
+        return response: Response from the API = ????????
         '''
         url = str(self.frag_url + self.pdb_url + self.query + code)
         # get response from url and decode -> json
