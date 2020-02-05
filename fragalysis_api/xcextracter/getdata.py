@@ -32,14 +32,14 @@ class GetTargetsData:
         self.target_id_list = None
 
     def set_target_name_url(self, target):
-          '''Setting target name url
+        '''Setting target name url
 
         param target: Target name
         '''
         self.target_name_url = str(self.search_url + target)
 
     def get_target_json(self):
-         '''Gets the json output of the lists of all the proteins associated with the target
+        '''Gets the json output of the lists of all the proteins associated with the target
         from fragalysis
 
         returns response: Json response from the restful API
@@ -86,7 +86,7 @@ class GetPdbData:
         self.query = settings.get('pdb', 'query')
 
     def get_pdb_file(self, code):
-         ''' Function to search the PDB for protein the protein.
+        ''' Function to search the PDB for protein the protein.
          
         param code: The PDB code for the protein
         '''

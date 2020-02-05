@@ -16,12 +16,11 @@ def xcextracter(target_name):
     # get a json response from the url we set above
     search.set_mol_data()
 
-    print(pd.DataFrame(search.get_mol_data))
-
     # get all molecule data (json) related to all of the ids in id_list
     search.set_complete_mol_data()
 
     a_df = pd.DataFrame(search.get_complete_mol_data)
+    print(a_df)
 
     return a_df
 
@@ -38,9 +37,8 @@ def xcgraphcreator(target_smiles):
     return results
 
 
-
 if '__main__' == __name__:
 
-    xcextracter(target_name='ATAD')
+    #xcextracter(target_name='ATAD')
 
     xcgraphcreator(target_smiles='O=C(Nc1ccccc1)Nc1cccnc1')
