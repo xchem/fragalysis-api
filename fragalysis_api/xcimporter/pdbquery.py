@@ -58,9 +58,13 @@ class Query:
         return len(self.match_ligs)
 
     def save_dictionary(self, user):
-        if not os.path.exists(os.path.join('..', '..', 'data', 'xcimporter', 'other', user)):
-            os.mkdir(os.path.join('..', '..', 'data', 'xcimporter', 'other', user))
-        json.dump(self.match_ligs, open(os.path.join('..', '..', 'data', 'xcimporter', 'other', user_id, self.pdb_code+'.json'), 'w'))
+        otherpath = os.path.abspath(os.path.join('..', '..', 'data', 'xcimporter', 'other'))
+        userpath = os.path.abspath(os.path.join(otherpath, user))
+        if not os.path.exists(otherpath):
+            os.makedirs(otherpath)
+        if not os.path.exists(os.path.join(userpath)):
+            os.mkdir(os.path.join(userpath))
+        json.dump(self.match_ligs, open(os.path.join(userpath, self.pdb_code+'.json'), 'w'))
 
     def import_pdbs(self, user):
         data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
