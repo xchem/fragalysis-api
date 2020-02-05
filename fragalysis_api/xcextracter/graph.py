@@ -1,4 +1,4 @@
-from set_config import setup
+from fragalysis_api import setup
 import urllib
 import json
 
