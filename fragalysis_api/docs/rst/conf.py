@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('/home/sabs-r3/Documents/SABS/Fragalyis/Current/fragalysis_api/xcimporter/'))
+sys.path.insert(0, os.path.abspath('../xcimporter/'))
 
 
 # -- Project information -----------------------------------------------------
