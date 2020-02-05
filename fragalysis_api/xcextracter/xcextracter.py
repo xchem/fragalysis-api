@@ -1,9 +1,16 @@
 from getdata import GetTargetsData, GetPdbData, GetMoleculesData
 from graph import GraphRequest
-
-
+from frag_web_live import can_connect
+import pandas as pd
+import sys
 def xcextracter(target_name):
-    import pandas as pd
+
+    #checking the fragalysis website is live
+    if can_connect():
+        print('Can connect to Fragalysis')
+    else:
+        print('Cannot connect to Fragalysis')
+        sys.exit()
 
     search = GetMoleculesData()
 
@@ -39,6 +46,6 @@ def xcgraphcreator(target_smiles):
 
 if '__main__' == __name__:
 
-    #xcextracter(target_name='ATAD')
+    xcextracter(target_name='ATAD')
 
-    xcgraphcreator(target_smiles='O=C(Nc1ccccc1)Nc1cccnc1')
+    #xcgraphcreator(target_smiles='O=C(Nc1ccccc1)Nc1cccnc1')
