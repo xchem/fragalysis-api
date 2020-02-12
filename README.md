@@ -37,13 +37,18 @@ Other functionalities that are available:
 * If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
 
 
-##### 1. How to set install, update and save the fragalysis_env conda environment.
+##### 1. How to set install, update a fragalysis enviroment
 
-This command exports the env you are in to a .yml file:   ```conda env export > environment.yml```
-This command creates the env from the .yml file:    ```conda env create -f environment.yml```
-This command updates the current env you are in with the .yml file:   ```conda env update -f environment.yml```
-This command activates the created environment:     ```conda activate fragalysis_env```
-To install setup.py make sure you  are in the fragalysis_env:     ```pip install -e .```
+Starting out by initialising an environment and activating it.
+
+Clone the repository and cd to the relevant directory.
+
+Install pymol and rdkit via conda, and the other dependcies via the setup.py file:
+```python
+conda install -c schrodinger pymol
+conda install -c rdkit rdkit 
+pip install -e .
+```
 You can check if it has installed using:    ```conda list```
 
 ### 2.1 How to download PDB files
