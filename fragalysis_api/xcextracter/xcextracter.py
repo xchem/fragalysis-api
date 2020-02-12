@@ -1,4 +1,4 @@
-from getdata import GetTargetsData, GetPdbData, GetMoleculesData
+from fragalysis_api import GetMoleculesData
 
 
 def xcextracter(target_name):
