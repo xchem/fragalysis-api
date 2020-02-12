@@ -165,23 +165,23 @@ class GetMoleculesData:
 
         self.get_complete_mol_data = json_list
 
-    def convert_mols_to_dict(self):
+    # def convert_mols_to_dict(self):
 
-        results_dict = {
-            'code':[],
-            'pdb':[],
-            'sdf':[],
-            'smiles':[],
-        }
+    #     results_dict = {
+    #         'code':[],
+    #         'pdb':[],
+    #         'sdf':[],
+    #         'smiles':[],
+    #     }
 
-        if not self.molecule_json:
-            raise Exception('Please get the molecule data with get_all_mol_responses')
+    #     if not self.molecule_json:
+    #         raise Exception('Please get the molecule data with get_all_mol_responses')
 
-        for r in self.molecule_json:
-            results_dict['code'].append(r['protein_code'])
-            results_dict['pdb'].append(GetPdbData().get_pdb_file(r['protein_code']))
-            results_dict['sdf'].append(r['sdf_info'])
-            results_dict['smiles'].append(r['smiles'])
+    #     for r in self.molecule_json:
+    #         results_dict['code'].append(r['protein_code'])
+    #         results_dict['pdb'].append(GetPdbData().get_pdb_file(r['protein_code']))
+    #         results_dict['sdf'].append(r['sdf_info'])
+    #         results_dict['smiles'].append(r['smiles'])
 
-        return pd.DataFrame.from_dict(results_dict)
+    #     return pd.DataFrame.from_dict(results_dict)
 

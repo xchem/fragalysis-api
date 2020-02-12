@@ -12,7 +12,7 @@ To install with pip, you will need to install both pymol and rdkit separately, a
 
 To install fragalysis-api with pip:
 ```
-pip install fragalysis-api
+pip install -e .
 ```
 
 ### How to use API

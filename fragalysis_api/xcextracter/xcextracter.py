@@ -1,8 +1,16 @@
-from fragalysis_api import GetMoleculesData
+from fragalysis_api import GetMoleculesData, can_connect
+import pandas as pd
+import sys
 
 
 def xcextracter(target_name):
-    import pandas as pd
+
+    #checking the fragalysis website is live
+    if can_connect():
+        print('Can connect to Fragalysis')
+    else:
+        print('Cannot connect to Fragalysis')
+        sys.exit()
 
     search = GetMoleculesData()
 
@@ -27,3 +35,4 @@ if '__main__' == __name__:
 
     results = xcextracter(target_name='NUDT5A')
     print(results)
+

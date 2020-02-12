@@ -1,5 +1,5 @@
 from fragalysis_api import ConfigSetup
-import urllib
+import urllib.request as urllib
 import json
 import pandas as pd
 
@@ -44,7 +44,7 @@ class GraphRequest:
             raise Exception('Please initiate smiles url with set_smiles_url(<smiles>)!')
 
         # get response from url and decode -> json
-        with urllib.request.urlopen(self.smiles_url) as f:
+        with urllib.urlopen(self.smiles_url) as f:
             result = f.read().decode('utf-8')
             if not result == 'EMPTY RESULT SET':
                 response = json.loads(result)
