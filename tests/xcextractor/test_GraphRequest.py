@@ -18,7 +18,7 @@ class test_graphRequest(unittest.TestCase):
         target_smiley='O=C(Nc1ccccc1)Nc1cccnc1'
         search = GraphRequest()
         search.set_smiles_url(smiles=target_smiley)
-        self.assertIsNotNone(search. get_graph_json)
+        self.assertIsNotNone(search.get_graph_json)
 
 if __name__ == '__main__':
     unittest.main()
