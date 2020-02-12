@@ -1,5 +1,4 @@
 from getdata import GetTargetsData, GetPdbData, GetMoleculesData
-from graph import GraphRequest
 
 
 def xcextracter(target_name):
@@ -20,25 +19,11 @@ def xcextracter(target_name):
     search.set_complete_mol_data()
 
     a_df = pd.DataFrame(search.get_complete_mol_data)
-    print(a_df)
 
     return a_df
 
 
-def xcgraphcreator(target_smiles):
-
-    search = GraphRequest()
-
-    # set the search smiles
-    search.set_smiles_url(smiles=target_smiles)
-
-    results = search.get_graph_json()
-
-    return results
-
-
 if '__main__' == __name__:
 
-    #xcextracter(target_name='ATAD')
-
-    xcgraphcreator(target_smiles='O=C(Nc1ccccc1)Nc1cccnc1')
+    results = xcextracter(target_name='NUDT5A')
+    print(results)

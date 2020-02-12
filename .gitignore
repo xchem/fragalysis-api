@@ -112,3 +112,4 @@ ENV/
 env.bak/
 venv.bak/
 
+/fragalysis_api/xcextracter/get_target_data.py

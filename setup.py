@@ -17,10 +17,12 @@ setuptools.setup(
     install_requires=['biopython',
                       'numpy',
                       'pandas',
-                      'pypdb'],  # Install requirements extracted from requirements.txt
+                      'pypdb',
+                      'matplotlib'],  # Install requirements extracted from requirements.txt
     include_package_data=True,  # Allow to include other files than .py in package
     package_data={
-        '': ['fragalysis_api/xcimporter/non_ligs.json']
+        '': ['fragalysis_api/xcimporter/non_ligs.json',
+             'fragalysis_api/xcglobalscripts/config.ini']
     },  # Define which additional files should be included in package
     classifiers=[
         'Development Status :: 4 - Beta',

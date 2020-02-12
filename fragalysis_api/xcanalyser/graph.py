@@ -1,6 +1,7 @@
 from set_config import setup
 import urllib
 import json
+import pandas as pd
 
 
 class GraphRequest:
@@ -59,3 +60,21 @@ def flatten_json(y):
     return out
 
 
+def graph_dict_to_df(graph_dict):
+    a_df = pd.DataFrame()
+    columns = ['type', 'insert_smiles', 'new_smiles', 'insertion']
+
+    start = '2'
+
+    for i1 in graph_dict[start].keys():
+        for i2 in graph_dict[start][i1].keys():
+            if isinstance(graph_dict[start][i1][i2], dict):
+                for i3 in graph_dict[start][i1][i2].keys():
+                    if isinstance(graph_dict[start][i1][i2][i3], dict):
+                        for i4 in graph_dict[start][i1][i2][i3].keys():
+                            if isinstance(graph_dict[start][i1][i2][i3][i4], list):
+                                for i5 in graph_dict[start][i1][i2][i3][i4]:
+                                    tmp_df = pd.DataFrame([[i1, i2, i5['end'], i5['change']]], columns=columns)
+                                    a_df = pd.concat([a_df, tmp_df])
+
+    return a_df

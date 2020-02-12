@@ -1,6 +1,6 @@
 import urllib
 import json
-from set_config import setup
+from fragalysis_api import ConfigSetup
 import pandas as pd
 
 
@@ -17,7 +17,7 @@ class GetTargetsData:
         param self.target_json: Json of the query
         param self.target_id_list:list of the ID numbers/number for the targets/target
         '''
-        settings = setup()
+        settings = ConfigSetup()
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.target_url = settings.get('targets', 'search')
@@ -78,7 +78,7 @@ class GetPdbData:
         param self.pdb_url: URL to search the pdb
         param self.query: URL to tell the restfull API how to do the query
         '''
-        settings = setup()
+        settings = ConfigSetup()
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.pdb_url = settings.get('pdb', 'search')
@@ -102,7 +102,8 @@ class GetPdbData:
 
 class GetMoleculesData:
     def __init__(self):
-        settings = setup()
+        settings = ConfigSetup()
+
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.molecules_url = settings.get('molecules', 'search')
@@ -149,6 +150,7 @@ class GetMoleculesData:
         """
 
         # get response from url and decode -> json
+        print(self.get_molecule_url)
         with urllib.request.urlopen(self.get_molecule_url) as f:
             self.get_mol_data = json.loads(f.read().decode('utf-8'))
 
