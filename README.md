@@ -45,11 +45,12 @@ conda create -n fragalysis_env2 anaconda -y
 conda activate fragalysis_env2
 conda install -c schrodinger pymol -y
 conda install -c rdkit rdkit -y
-git clone https://github.com/xchem/fragalysis-api.git
-cd fragalysis-api
+git clone "https://github.com/xchem/fragalysis-api.git"
+cd fragalysis-api/
 pip install -e .
 cd ..
-rm -r fragalysis-api
+rm -rf fragalysis-api/
+
 ```
 You can check if it has installed using:    ```conda list```
 
