@@ -1,6 +1,7 @@
 import unittest
 from fragalysis_api import GetMoleculesData
 
+
 class GetMoleculesDataTest(unittest.TestCase):
 
     def test_GetMoleculesData_exists(self):

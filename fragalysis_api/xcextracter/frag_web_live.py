@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from urllib.error import URLError
-from set_config import setup
+from fragalysis_api import ConfigSetup
 
 
 def can_connect():
@@ -9,7 +9,7 @@ def can_connect():
     return status: boolean specifying if fragalysis is live
     '''
 
-    settings = setup()
+    settings = ConfigSetup()
     #defining the fragalysis url
     url = settings.get('fragalysis', 'url')
 
