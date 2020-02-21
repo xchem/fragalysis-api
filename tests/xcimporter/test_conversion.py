@@ -17,8 +17,8 @@ class PDBexample1(ConversionTest):
     @classmethod
     def setUpClass(cls):
         super(PDBexample1, cls).setUpClass()
-        cls.obj_5q1j = set_up("5q1j", 'examples_to_test3', cls.dir_input, cls.dir_output)
-        cls.obj_5qj7 = set_up("5qj7", 'examples_to_test3', cls.dir_input, cls.dir_output)
+        cls.obj_5q1j = set_up(target_name="5q1j", infile=os.path.join(cls.dir_input,'5q1j.pdb'), out_dir=cls.dir_output)
+        cls.obj_5qj7 = set_up(target_name="5qj7", infile=os.path.join(cls.dir_input,'5qj7.pdb'), out_dir=cls.dir_output)
 
     @classmethod
     def tearDownClass(cls):
