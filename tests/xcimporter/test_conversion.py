@@ -8,7 +8,7 @@ class ConversionTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.dir_input = os.path.join('tests', 'data_for_tests')
+        cls.dir_input = os.path.join('tests', 'data_for_tests', 'examples_to_test3')
         cls.dir_output = os.path.join('tests', 'data_for_tests', 'tmp')
 
 
