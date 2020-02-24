@@ -48,7 +48,7 @@ class PDBexample1(ConversionTest):
         tests that solvents and ions from crystallography have been removed
         """
         # Changed because we leave in water?
-        self.assertEqual(len(self.obj_5q1j.final_hets), 318)
+        self.assertEqual(len(self.obj_5q1j.final_hets), 11)
         #assert len(self.obj_5q1j.final_hets) == 11
 
     def test_wanted_ligs(self):
@@ -83,7 +83,7 @@ class PDBexample1(ConversionTest):
         test that a sdf file has been made that incorporates the different mol objects
         """
         file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0_out.sdf")).readlines()
-        self.assertEqual(len(file), 176)
+        self.assertEqual(len(file), 44)
 
 if __name__ == '__main__':
     unittest.main()
