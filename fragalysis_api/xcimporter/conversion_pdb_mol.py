@@ -162,27 +162,49 @@ class pdb_apo:
         self.pdbfile = open(infile).readlines()
         self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
         self.filebase = filebase
+        self.non_ligs = json.load(open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r"))
+        self.apo_file = None
 
     def make_apo_file(self):
         """
-        Finds terminus of protein chain and takes everything up to and including terminus into a pdb file
+        Keeps anything other than unique ligands
 
         :param: pdb file
         :returns: created XXX_apo.pdb file
         """
-        apo_file_lst = []
-        line_ter = 0
-        for i in range(len(self.pdbfile)):
-            if self.pdbfile[i].startswith('TER'): # finds terminus in PDB file
-                line_ter = i+1
+        lines = ''
+        for line in self.pdbfile:
+            if line.startswith('HETATM') and line.split()[3] not in self.non_ligs or line.startswith('CONECT'):
+                continue
+            else:
+                lines += line
 
-        for i in range(line_ter):  # takes every line up to and including terminus and appends to list
-            apo_file_lst.append(self.pdbfile[i])
 
         apo_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb")), "w+")
-        for line in apo_file_lst:  # turns list into pdb file
-            apo_file.write(str(line))
+        apo_file.write(str(lines))
         apo_file.close()
+        self.apo_file=os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb"))
+
+    def make_apo_desol_files(self):
+        """
+        Creates two files:
+        _apo-desolv - as apo, but without solvent, ions and buffers;
+        _apo-solv - just the ions, solvent and buffers
+
+        :returns: Created files
+        """
+        prot_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo-desolv.pdb")), "w+")
+        solv_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo-solv.pdb")), "w+")
+        if not self.apo_file:
+            return Warning('Apo file has not been created. Use pdb_apo().make_apo_file()')
+        else:
+            for line in open(self.apo_file).readlines():
+                if line.startswith('HETATM'):
+                    solv_file.write(line)
+                else:
+                    prot_file.write(line)
+        solv_file.close()
+        prot_file.close()
 
 
 def set_up(target_name, infile, out_dir):
@@ -225,7 +247,8 @@ def set_up(target_name, infile, out_dir):
         writer.close()  # this is important to make sure the file overwrites each time
 
         new_apo = pdb_apo(infile, target_name, new.mol_dict['directory'][i], new.mol_dict['file_base'][i])
-        new_apo.make_apo_file() # creates pdb file that doesn't contain any ligand information
+        new_apo.make_apo_file()  # creates pdb file that doesn't contain any ligand information
+        new_apo.make_apo_desol_files()  # makes apo file without solvent, ions and buffers, and file with just those
 
     return new
 
