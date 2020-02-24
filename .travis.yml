@@ -28,12 +28,13 @@ before_install:
 
 install:
   # Install the requirements from the environment file
-  - conda env update --name travis_env --file environment.yml
+  - conda install -c schrodinger pymol -y
+  - conda install -c rdkit rdkit -y
   # Install additional dependencies used only for travis / testing
   - conda install --yes pytest codecov
 
   # You can also install some dependencies with pip if not available in conda
-  # - pip install ...
+  - pip install -e .
 
 script:
   - coverage run -m py.test # will run all tests in the package
