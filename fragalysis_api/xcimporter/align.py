@@ -37,6 +37,9 @@ class Align:
         for num, file in enumerate(self._get_files):
             pymol.cmd.load(file, os.path.splitext(os.path.basename(file))[0])
 
+        # deal with files that have no conect records
+        pymol.cmd.set('pdb_conect_all', 'on')
+
         return pymol.cmd
 
     @property
