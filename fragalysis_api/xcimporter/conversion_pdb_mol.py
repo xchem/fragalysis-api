@@ -233,6 +233,11 @@ def set_up(target_name, infile, out_dir):
 
     for i in range(len(new.mol_dict['directory'])):
 
+        if not new.mol_dict['mol'][i]:
+            print Warning(str('RDkit mol object for ' + new.mol_dict['file_base'][i] +
+                              'is None, please check the input. Will not write any files'))
+            continue
+
         shutil.copy(infile, os.path.join(new.mol_dict['directory'][i],
                                          str(new.mol_dict['file_base'][i] + '_bound.pdb')))
 
