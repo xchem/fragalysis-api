@@ -1,0 +1,59 @@
+\hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query}{}\doxysection{fragalysis\+\_\+api.\+xcimporter.\+pdbquery.\+Query Class Reference}
+\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query}\index{fragalysis\_api.xcimporter.pdbquery.Query@{fragalysis\_api.xcimporter.pdbquery.Query}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a4c9143433e01d6c355246e1ea4f86265}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a4c9143433e01d6c355246e1ea4f86265}} 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, pdb, chain)
+\item 
+def \mbox{\hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a0beef45de2126a3837b02050e1b90a74}{get\+\_\+matching\+\_\+proteins}} (self)
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a846d2bc401e56a452222d95b630fb9b0}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a846d2bc401e56a452222d95b630fb9b0}} 
+def {\bfseries get\+\_\+ligands} (self)
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a36dfa365ad219285d470107eba4e7080}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a36dfa365ad219285d470107eba4e7080}} 
+def {\bfseries print\+\_\+number\+\_\+ligs} (self)
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_ada4ce4d98d911a33baabe42bf38a4aa1}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_ada4ce4d98d911a33baabe42bf38a4aa1}} 
+def {\bfseries view\+\_\+ligands} (self)
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a42babe6a340aaf0b2dcc84ea5d0c0b11}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a42babe6a340aaf0b2dcc84ea5d0c0b11}} 
+def {\bfseries save\+\_\+dictionary} (self, user)
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a603457434ea6b5b11a2f40676c9a46ce}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a603457434ea6b5b11a2f40676c9a46ce}} 
+def {\bfseries import\+\_\+pdbs} (self, user)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_aa773c64b22dedb31eb01f3286a2e1a53}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_aa773c64b22dedb31eb01f3286a2e1a53}} 
+{\bfseries pdb\+\_\+code}
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a79cbf79b07436d26929d7576a5f687da}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a79cbf79b07436d26929d7576a5f687da}} 
+{\bfseries chain\+\_\+id}
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a14c73f40bf22f1b1e4388b9215307ee2}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a14c73f40bf22f1b1e4388b9215307ee2}} 
+{\bfseries similar}
+\item 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a5162fe822deae38446960b3593b17aa5}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a5162fe822deae38446960b3593b17aa5}} 
+{\bfseries match\+\_\+ligs}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a0beef45de2126a3837b02050e1b90a74}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a0beef45de2126a3837b02050e1b90a74}} 
+\index{fragalysis\_api.xcimporter.pdbquery.Query@{fragalysis\_api.xcimporter.pdbquery.Query}!get\_matching\_proteins@{get\_matching\_proteins}}
+\index{get\_matching\_proteins@{get\_matching\_proteins}!fragalysis\_api.xcimporter.pdbquery.Query@{fragalysis\_api.xcimporter.pdbquery.Query}}
+\doxysubsubsection{\texorpdfstring{get\_matching\_proteins()}{get\_matching\_proteins()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+pdbquery.\+Query.\+get\+\_\+matching\+\_\+proteins (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}queries the pdb for other files with similar protein structure but different ligands bound
+
+params: pdb code, chain id
+returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/marangamokaya/\+Documents/02 work/\+Ph\+D/\+Fragalysis/\+Git/fragalysis-\/api/fragalysis\+\_\+api/xcimporter/pdbquery.\+py\end{DoxyCompactItemize}
