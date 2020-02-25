@@ -5,17 +5,18 @@ import pandas as pd
 
 
 class GetTargetsData:
-    '''Class to contain and get data on the protein target of interest
+    '''
+    Class to contain and get data on the protein target of interest
     '''
     def __init__(self):
         '''
-        param self.frag_url: URL of the fragalysis website
-        param self.target_url: URL of extention for the target of fragalysis website
-        param self.query: URL to tell the restfull API how to do the query
-        param self.search_url: URL for the query 
-        param self.target_name_url: Lists of all the proteins associated with the target
-        param self.target_json: Json of the query
-        param self.target_id_list:list of the ID numbers/number for the targets/target
+        :param self.frag_url: URL of the fragalysis website
+        :param self.target_url: URL of extention for the target of fragalysis website
+        :param self.query: URL to tell the restfull API how to do the query
+        :param self.search_url: URL for the query 
+        :param self.target_name_url: Lists of all the proteins associated with the target
+        :param self.target_json: Json of the query
+        :param self.target_id_list: list of the ID numbers/number for the targets/target
         '''
         settings = ConfigSetup()
 
@@ -31,17 +32,19 @@ class GetTargetsData:
         self.target_id_list = None
 
     def set_target_name_url(self, target):
-        '''Setting target name url
+        '''
+        Setting target name url
 
-        param target: Target name
+        :param target: Target name
         '''
         self.target_name_url = str(self.search_url + target)
 
     def get_target_json(self):
-        '''Gets the json output of the lists of all the proteins associated with the target
+        '''
+        Gets the json output of the lists of all the proteins associated with the target
         from fragalysis
 
-        returns response: Json response from the restful API
+        :returns response: Json response from the restful API
         '''
         if not self.target_name_url:
             raise Exception('Please initiate target_name url with set_target_name_url(<target>)!')
@@ -56,10 +59,11 @@ class GetTargetsData:
         return response
 
     def get_target_id_list(self):
-        '''Gets the target_id_ from self.target_json associated with the queried target in the 
+        '''
+        Gets the target_id_ from self.target_json associated with the queried target in the 
         fragalysis database
 
-        returns id_list: The ID number associated with the target.
+        :returns id_list: The ID number associated with the target.
         '''
         if not self.target_json:
             raise Exception('Please get data with get_target_json!')
@@ -70,13 +74,14 @@ class GetTargetsData:
 
 
 class GetPdbData:
-    '''Searching the PDB for protein
+    '''
+    Getting protine data from the fragalysis website in the pdb file format
     '''
     def __init__(self):
         '''
-        param self.frag_url: URL of the fragalysis website
-        param self.pdb_url: URL to search the pdb
-        param self.query: URL to tell the restfull API how to do the query
+        :param self.frag_url: URL of the fragalysis website
+        :param self.pdb_url: URL to search the fragalysis data base for the protein
+        :param self.query: URL to tell the restfull API how to do the query
         '''
         settings = ConfigSetup()
 
@@ -85,9 +90,10 @@ class GetPdbData:
         self.query = settings.get('pdb', 'query')
 
     def get_pdb_file(self, code):
-        ''' Function to search the PDB for protein the protein.
-        param code: The PDB code for the protein
-        return response: Response from the API = ????????
+        '''
+        Function to search fragalysis for PDB file.
+        :param code: The code associated with the protein on the fragalysis website.
+        :return response: Response from the API = pdb file
         '''
         url = str(self.frag_url + self.pdb_url + self.query + code)
         # get response from url and decode -> json
@@ -102,6 +108,16 @@ class GetPdbData:
 
 class GetMoleculesData:
     def __init__(self):
+        '''
+        :param self.frag_url: URL of the fragalysis website
+        :param self.moleclues_url: URL of extention for the moleclue on the fragalysis website
+        :param self.query: URL to tell the restfull API how to do the query
+        :param self.search_url: URL for the query 
+        :param self.get_molecule_url: Molecule URL for the fragalysis website
+        :param self.get_target_id: Target's fragalysis ID 
+        :param self.get_mol_data: Molecule data in json format
+        :param self.get_complete_mol_data: Complete molecule data in json format
+        '''
         settings = ConfigSetup()
 
 
@@ -109,14 +125,8 @@ class GetMoleculesData:
         self.molecules_url = settings.get('molecules', 'search')
         self.query = settings.get('molecules', 'query')
 
-        # get full url
         self.search_url = str(self.frag_url + self.molecules_url + self.query)
 
-        # self.molecule_url = None
-        self.molecule_json = None
-        self.get_target_id = None
-
-        #
         self.get_molecule_url = ''
         self.get_target_id = ''
         self.get_mol_data = ''
@@ -155,6 +165,12 @@ class GetMoleculesData:
             self.get_mol_data = json.loads(f.read().decode('utf-8'))
 
     def set_complete_mol_data(self):
+        '''
+        Extracting the results from the url query
+        i.e self.get_complete_mol_data contains only
+        the results of the query on te molecule.
+        :return:
+        '''
 
         if not self.get_target_id:
             raise Exception('Please get the target ids with get_target_ids!')
@@ -164,24 +180,4 @@ class GetMoleculesData:
         json_list.extend(self.get_mol_data['results'])
 
         self.get_complete_mol_data = json_list
-
-    # def convert_mols_to_dict(self):
-
-    #     results_dict = {
-    #         'code':[],
-    #         'pdb':[],
-    #         'sdf':[],
-    #         'smiles':[],
-    #     }
-
-    #     if not self.molecule_json:
-    #         raise Exception('Please get the molecule data with get_all_mol_responses')
-
-    #     for r in self.molecule_json:
-    #         results_dict['code'].append(r['protein_code'])
-    #         results_dict['pdb'].append(GetPdbData().get_pdb_file(r['protein_code']))
-    #         results_dict['sdf'].append(r['sdf_info'])
-    #         results_dict['smiles'].append(r['smiles'])
-
-    #     return pd.DataFrame.from_dict(results_dict)
-
+        
