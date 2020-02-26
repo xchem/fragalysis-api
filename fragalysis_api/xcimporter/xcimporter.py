@@ -1,4 +1,4 @@
-from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
+from . import validate, align, conversion_pdb_mol, xc_utils
 import os
 from shutil import rmtree
 import argparse
@@ -17,7 +17,7 @@ def xcimporter(user_id, in_dir, out_dir):
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
     :return:
     """
-    validation = Validate(os.path.join(in_dir, str(user_id)))
+    validation = validate.Validate(os.path.join(in_dir, str(user_id)))
 
     if not bool(validation.is_pdbs_valid):
         print('Input files are invalid!!')
@@ -40,13 +40,13 @@ def xcimporter(user_id, in_dir, out_dir):
         os.makedirs(os.path.join(out_dir, str(user_id), 'tmp'))
 
     print('Aligning protein structures')
-    structure = Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
+    structure = align.Align(os.path.join(in_dir, str(user_id)), pdb_ref='')
     structure.align(os.path.join(out_dir, str(user_id), 'tmp'))
 
     print('Identifying ligands')
     for i in pdb_list:
         try:
-            new = set_up(i, str(user_id), in_dir, out_dir)
+            new = conversion_pdb_mol.set_up(i, str(user_id), in_dir, out_dir)
         except AssertionError:
             print(i, 'is not suitable, please consider removal or editing')
             for file in os.listdir(os.path.join(out_dir, str(user_id), 'tmp')):
@@ -54,7 +54,7 @@ def xcimporter(user_id, in_dir, out_dir):
                     os.remove(os.path.join(out_dir, str(user_id), 'tmp', str(file)))
             pass
 
-    to_fragalysis_dir(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
+    xc_utils.to_fragalysis_dir(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
 
     rmtree(os.path.join(out_dir, str(user_id), 'tmp'))
     print('Files are now in a fragalysis friendly format!')

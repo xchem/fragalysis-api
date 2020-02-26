@@ -1,6 +1,6 @@
 import os
 import unittest
-from fragalysis_api import to_fragalysis_dir
+from fragalysis_api.xcimporter import xc_utils
 from glob import glob
 from shutil import rmtree
 
@@ -17,7 +17,7 @@ class ToFragalysisDir(xcUtilsTest):
     @classmethod
     def setUpClass(cls):
         super(ToFragalysisDir, cls).setUpClass()
-        to_fragalysis_dir('a_test', os.path.join(cls.dir_input, 'examples_to_test4'))
+        xc_utils.to_fragalysis_dir('a_test', os.path.join(cls.dir_input, 'examples_to_test4'))
         cls.test_path_list = glob(os.path.join(cls.dir_input, '*a_test*'))
 
     @classmethod

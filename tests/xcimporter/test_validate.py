@@ -1,6 +1,6 @@
 import unittest
 import os
-from fragalysis_api import Validate, ValidatePDB
+from fragalysis_api.xcimporter import validate
 
 
 class ValidateTest(unittest.TestCase):
@@ -18,7 +18,7 @@ class CorrectInput(ValidateTest):
     @classmethod
     def setUpClass(cls):
         super(CorrectInput, cls).setUpClass()
-        cls.correct_obj = Validate(cls.test0_dir)
+        cls.correct_obj = validate.Validate(cls.test0_dir)
 
     def test_if_pdbs_are_valid(self):
         """
@@ -54,7 +54,7 @@ class NoneExistingDir(ValidateTest):
     @classmethod
     def setUpClass(cls):
         super(NoneExistingDir, cls).setUpClass()
-        cls.val_obj = Validate('not_a_dir')
+        cls.val_obj = validate.Validate('not_a_dir')
 
     def test_pdbs_are_valid(self):
         """
@@ -81,7 +81,7 @@ class ErrorInput(ValidateTest):
     @classmethod
     def setUpClass(cls):
         super(ErrorInput, cls).setUpClass()
-        cls.val_obj = Validate(cls.test1_dir)
+        cls.val_obj = validate.Validate(cls.test1_dir)
 
     def test_if_dir_exists(self):
         """
@@ -124,33 +124,33 @@ class ErrorInput(ValidateTest):
         Test that it finds pdbs which contain characters which are not in the whitelist
         """
         self.assertFalse(
-            ValidatePDB(os.path.join(self.test1_dir, '5g1n (copy).pdb')).does_pdb_name_contain_only_whitelist_char)
+            validate.ValidatePDB(os.path.join(self.test1_dir, '5g1n (copy).pdb')).does_pdb_name_contain_only_whitelist_char)
         self.assertFalse(
-            ValidatePDB(os.path.join(self.test1_dir, '5g1p (copy).pdb')).does_pdb_name_contain_only_whitelist_char)
+            validate.ValidatePDB(os.path.join(self.test1_dir, '5g1p (copy).pdb')).does_pdb_name_contain_only_whitelist_char)
 
     def test_finds_pdbs_outside_allowed_size(self):
         """
         Test if it finds empty pdb files
         """
         self.assertFalse(
-            ValidatePDB(os.path.join(self.test1_dir, 'Empty_pdb.pdb')).is_pdb_allowed_size)
+            validate.ValidatePDB(os.path.join(self.test1_dir, 'Empty_pdb.pdb')).is_pdb_allowed_size)
         """
         Test if it finds pdbs larger than allowed size (5 mb)
         """
         self.assertFalse(
-            ValidatePDB(os.path.join(self.test1_dir, 'To_big_pdb.pdb')).is_pdb_allowed_size)
+            validate.ValidatePDB(os.path.join(self.test1_dir, 'To_big_pdb.pdb')).is_pdb_allowed_size)
 
     def test_finds_pdbs_with_allowed_name_sizes(self):
         """
         Test if it finds pdbs with a name with less than 4 characters
         """
         self.assertFalse(
-            ValidatePDB(os.path.join(self.test1_dir, '1.pdb')).is_pdb_name_within_size_limit)
+            validate.ValidatePDB(os.path.join(self.test1_dir, '1.pdb')).is_pdb_name_within_size_limit)
         """
         Test if it finds pdbs with a name larger than 20 characters
         """
         self.assertFalse(
-            ValidatePDB(os.path.join(self.test1_dir, '1234567890asdfghjklqwe.pdb')).is_pdb_name_within_size_limit)
+            validate.ValidatePDB(os.path.join(self.test1_dir, '1234567890asdfghjklqwe.pdb')).is_pdb_name_within_size_limit)
 
 
 if __name__ == '__main__':

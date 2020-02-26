@@ -1,7 +1,7 @@
 import unittest
 from urllib.request import urlopen
 from urllib.error import URLError
-from fragalysis_api import ConfigSetup
+from fragalysis_api.xcglobalscripts import set_config
 
 
 class test_fragalysis(unittest.TestCase):
@@ -9,7 +9,7 @@ class test_fragalysis(unittest.TestCase):
     def test_fragalysis_connection(self):
 
         def can_connect():
-            settings = ConfigSetup()
+            settings = set_config.ConfigSetup()
             url = settings.get('fragalysis', 'url')
             status = ''
             try:
