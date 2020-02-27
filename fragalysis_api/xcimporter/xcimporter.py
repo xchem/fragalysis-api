@@ -1,8 +1,9 @@
-from . import validate, align, conversion_pdb_mol, xc_utils
 import os
-from shutil import rmtree
 import argparse
 
+from shutil import rmtree
+
+from fragalysis_api.xcimporter import validate, align, conversion_pdb_mol, xc_utils
 
 def xcimporter(user_id, in_dir, out_dir):
     """Formats a lists of PDB files into fragalysis friendly format.
