@@ -9,3 +9,5 @@ from .xcimporter import validate, pdbimporter, pdbquery, xcimporter
 from .xcextracter import frag_web_live, getdata, xcextracter
 
 from .xcanalyser import graphcreator
+
+from .xcwonka import lig_clust
