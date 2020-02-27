@@ -113,6 +113,7 @@ class ValidatePDB:
         """
         for character in self.pdb_name:
             if character not in string.ascii_letters+string.digits:
+                print(character)
                 print(f'{self.pdb_name} contains characters which are not allowed.\n'
                       f'Please only use ASCII or digits.')
                 return False

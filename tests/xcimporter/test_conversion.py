@@ -8,7 +8,7 @@ class ConversionTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.dir_input = os.path.join('tests', 'data_for_tests')
+        cls.dir_input = os.path.join('tests', 'data_for_tests', 'examples_to_test3')
         cls.dir_output = os.path.join('tests', 'data_for_tests', 'tmp')
 
 
@@ -48,7 +48,7 @@ class PDBexample1(ConversionTest):
         tests that solvents and ions from crystallography have been removed
         """
         # Changed because we leave in water?
-        self.assertEqual(len(self.obj_5q1j.final_hets), 318)
+        self.assertEqual(len(self.obj_5q1j.final_hets), 11)
         #assert len(self.obj_5q1j.final_hets) == 11
 
     def test_wanted_ligs(self):
@@ -68,22 +68,22 @@ class PDBexample1(ConversionTest):
         tests that a pdb file has been made for a particular ligand with the correct
         number of lines (HETATM & CONECT)
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_JMM_A_303.pdb")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.pdb")).readlines()
         self.assertEqual(len(file), 36)
 
     def test_make_mol_file(self):
         """
         tests that a mol file has been made with the correct number of lines
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_JMM_A_303_mol.mol")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0_mol.mol")).readlines()
         self.assertEqual(len(file), 43)
 
     def test_make_sdf_file(self):
         """
         test that a sdf file has been made that incorporates the different mol objects
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_out.sdf")).readlines()
-        self.assertEqual(len(file), 176)
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0_out.sdf")).readlines()
+        self.assertEqual(len(file), 44)
 
 if __name__ == '__main__':
     unittest.main()
