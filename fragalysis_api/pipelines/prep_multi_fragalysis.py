@@ -58,7 +58,7 @@ class BatchProcessAlignedPDB(luigi.Task):
         aligned_list = outlist_from_align(self.input_dir, self.output_dir)
         return [
             ProcessAlignedPDB(
-                target_name=self.target_name, input_file=i, output_dir=self.output_dir,
+                target_name=i.split('/')[-1].replace('_bound.pdb',''), input_file=i, output_dir=self.output_dir,
                 input_dir=self.input_dir
             )
             for i in aligned_list
