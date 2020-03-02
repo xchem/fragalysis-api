@@ -58,7 +58,7 @@ class BatchProcessAlignedPDB(luigi.Task):
         aligned_list = outlist_from_align(self.input_dir, self.output_dir)
         return [
             ProcessAlignedPDB(
-                target_name=i.split('/')[-1].replace('_bound.pdb',''), input_file=i, output_dir=self.output_dir,
+                target_name=self.target_name, input_file=i, output_dir=self.output_dir,
                 input_dir=self.input_dir
             )
             for i in aligned_list
@@ -85,8 +85,8 @@ class BatchConvertAligned(luigi.Task):
             out_lst.append(out)
             target_names.append(f.split('/')[-1])
 
-        return[BatchProcessAlignedPDB(input_dir=i, output_dir=o, target_name=t)
-               for (i,o,t) in list(zip(in_lst, out_lst, target_names))]
+        return[BatchProcessAlignedPDB(input_dir=i, output_dir=self.output_directory, target_name=t)
+               for (i,t) in list(zip(in_lst, target_names))]
 
     def output(self):
         return luigi.LocalTarget(os.path.join(self.search_directory, 'dir_list.txt'))
