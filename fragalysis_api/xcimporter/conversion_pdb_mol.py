@@ -306,7 +306,7 @@ def set_up(target_name, infile, out_dir):
         writer = Chem.rdmolfiles.SDWriter(
             os.path.join(
                 new.mol_dict["directory"][i],
-                str(new.mol_dict["file_base"][i] + "_out.sdf"),
+                str(new.mol_dict["file_base"][i] + ".sdf"),
             )
         )
 
