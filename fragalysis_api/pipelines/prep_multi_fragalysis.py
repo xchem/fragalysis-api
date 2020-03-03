@@ -72,7 +72,7 @@ class BatchProcessAlignedPDB(luigi.Task):
         return luigi.LocalTarget(os.path.join(self.output_dir, 'aligned_list.pdb'))
 
     def run(self):
-        with open(self.output().path, 'wb') as f:
+        with open(self.output().path, 'w') as f:
             f.write('\n'.join(self.aligned_list))
         f.close()
 
