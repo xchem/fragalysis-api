@@ -82,7 +82,7 @@ class PDBexample1(ConversionTest):
         """
         test that a sdf file has been made that incorporates the different mol objects
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0_out.sdf")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.sdf")).readlines()
         self.assertEqual(len(file), 44)
 
 if __name__ == '__main__':
