@@ -90,7 +90,7 @@ class BatchConvertAligned(luigi.Task):
         for f in in_lst:
             out = os.path.join(os.path.abspath(self.output_directory), f.split('/')[-1])
             out_lst.append(out)
-            target_names.append(f.split('/')[-1])
+            target_names.append(f.split('/')[-1]).upper()
 
         return [BatchProcessAlignedPDB(input_dir=i, output_dir=self.output_directory, target_name=t)
                 for (i, t) in list(zip(in_lst, target_names))]
@@ -104,26 +104,3 @@ class BatchConvertAligned(luigi.Task):
         with open(self.output().path, 'w') as w:
             w.write(lst_str)
         w.close()
-
-# class AlignTargets(luigi.Task):
-#     search_directory = luigi.Parameter()
-#     output_directory = luigi.Parameter()
-#     def requires(self):
-#         in_lst = [os.path.abspath(f.path) for f in os.scandir(self.search_directory) if f.is_dir()]
-#         out_lst = []
-#
-#         for f in in_lst:
-#             out = os.path.join(os.path.abspath(self.output_directory)  , f.split('/')[-1])
-#             out_lst.append(out)
-#
-#         return [AlignTarget(input_dir=i, output_dir=o) for (i,o) in list(zip(in_lst, out_lst))]
-#
-#     def output(self):
-#         return luigi.LocalTarget(os.path.join(self.search_directory, 'dir_list.txt'))
-#
-#     def run(self):
-#         lst = [os.path.abspath(f.path) for f in os.scandir(self.search_directory) if f.is_dir()]
-#         lst_str = '\n'.join([f for f in lst])
-#         with open(self.output().path, 'w') as w:
-#             w.write(lst_str)
-#         w.close()
