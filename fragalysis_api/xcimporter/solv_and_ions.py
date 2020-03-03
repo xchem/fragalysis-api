@@ -305,5 +305,6 @@ non_ligs = ['DMS', 'CL', 'MG', 'EDO', 'PEG', 'MLI', 'NI', 'SO4', 'WAT',  # `TP3`
                                               'KO4',  # potassium ion, 4 waters coordinated
                                               'NRU',  # ruthenium (iii) hexaamine ion
                                               '4MO'  # molybdenum(iv) ion
+                                              'HOH'
             ]
 json.dump(non_ligs, open(os.path.join("non_ligs.json"), "w"))

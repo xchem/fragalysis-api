@@ -1,7 +1,7 @@
-# from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
-from .align import Align
-from .validate import Validate
-from .conversion_pdb_mol import set_up
+from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
+# from .align import Align
+# from .validate import Validate
+from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 import os
 
 # from shutil import rmtree
