@@ -74,8 +74,8 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     for f in os.listdir(os.path.join(out_dir, "tmp")):
         if '.pdb' in f:
             aligned_dict['bound_pdb'].append(f)
-            if os.path.isfile(f.replace('.pdb', '_smiles.txt')):
-                aligned_dict['smiles'].append(f.replace('.pdb', '_smiles.txt'))
+            if os.path.isfile(f.replace('_bound.pdb', '_smiles.txt')):
+                aligned_dict['smiles'].append(f.replace('_bound.pdb', '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
 
@@ -83,8 +83,6 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
-            print(aligned)
-            print(smiles)
             new = set_up(target_name=target, infile=aligned, out_dir=out_dir, smiles_file=smiles)
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
