@@ -83,6 +83,8 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
+            print(aligned)
+            print(smiles)
             new = set_up(target_name=target, infile=aligned, out_dir=out_dir, smiles_file=smiles)
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
