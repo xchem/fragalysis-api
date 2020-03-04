@@ -37,6 +37,8 @@ Other functionalities that are available:
 * Each pdb file for alignment shall contain the same number of chains.
 * All pdb files to be aligned must be in the same directory.
 * If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
+* PDB file must abide by best practices set out at https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html#note5
+* In PDB file, ligands must be referred to by same code in 'HET' lines in header and in 'HETATM' lines in main part of file
 
 
 ##### 1. How to set install, update a fragalysis enviroment
