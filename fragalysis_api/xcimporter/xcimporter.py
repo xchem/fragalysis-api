@@ -80,6 +80,8 @@ def xcimporter(in_dir, out_dir, target, validate=False):
                 aligned_dict['smiles'].append(None)
 
 
+    print(aligned_dict['smiles'])
+
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
