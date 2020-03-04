@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from rdkit import Chem
+from rdkit.Chem import AllChem
 import json
 import os
 import shutil
@@ -17,7 +18,7 @@ class Ligand:
         self.non_ligs = json.load(
             open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r")
         )
-        self.pdbfile = open(infile).readlines()
+        self.pdbfile = open(os.path.abspath(infile)).readlines()
         self.hetatms = []
         self.conects = []
         self.final_hets = []
@@ -66,12 +67,14 @@ class Ligand:
                 all_ligands.append(line)
 
         for lig in all_ligands:
+            # print(lig.split()[3][-3:])
             if (
-                lig.split()[3] not in self.non_ligs
+                lig.split()[3][-3:] not in self.non_ligs
             ):  # this takes out the solvents and ions a.k.a non-ligands
                 self.wanted_ligs.append(lig[17:26])
 
         self.wanted_ligs = list(set(self.wanted_ligs))
+        # print(self.wanted_ligs)
 
         return self.wanted_ligs
 
@@ -151,12 +154,13 @@ class Ligand:
         m = Chem.rdmolfiles.MolFromPDBFile(
             os.path.join(lig_out_dir, (file_base + ".pdb"))
         )
+        Chem.AddHs(m)
         self.mol_lst.append(m)
         self.mol_dict["directory"].append(lig_out_dir)
         self.mol_dict["mol"].append(m)
         self.mol_dict["file_base"].append(file_base)
 
-    def create_mol_file(self, directory, file_base, mol_obj):
+    def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
         """
         a .mol file is produced for an individual ligand
 
@@ -164,7 +168,15 @@ class Ligand:
         returns: .mol file for the ligand
         """
 
-        out_file = os.path.join(directory, str(file_base + "_mol.mol"))
+        out_file = os.path.join(directory, str(file_base + ".mol"))
+
+        if smiles_file:
+            smiles = open(smiles_file, 'r').readlines()[0].rstrip()
+            template = AllChem.MolFromSmiles(smiles)
+            new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
+
+            return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
+
 
         # creating mol file
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
@@ -250,7 +262,7 @@ class pdb_apo:
         prot_file.close()
 
 
-def set_up(target_name, infile, out_dir):
+def set_up(target_name, infile, out_dir, smiles_file=None):
 
     """
 
@@ -301,6 +313,7 @@ def set_up(target_name, infile, out_dir):
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             mol_obj=new.mol_dict["mol"][i],
+            smiles_file=smiles_file,
         )  # creates mol file for each ligand
 
         writer = Chem.rdmolfiles.SDWriter(

@@ -1,8 +1,9 @@
-# from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
-from .align import Align
-from .validate import Validate
-from .conversion_pdb_mol import set_up
+from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
+# from .align import Align
+# from .validate import Validate
+from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 import os
+from shutil import copyfile
 
 # from shutil import rmtree
 import argparse
@@ -35,12 +36,21 @@ def xcimporter(in_dir, out_dir, target, validate=False):
         if not validation.is_there_a_pdb_in_dir:
             exit()
 
+    pdb_smiles_dict = {'pdb':[], 'smiles':[]}
+
     pdb_list = []
+    smiles_list = []
 
-    for file in os.listdir(in_dir):
-        pdb_list.append(os.path.join(in_dir, file))
+    for f in os.listdir(in_dir):
+        if '.pdb' in f:
+            pdb_smiles_dict['pdb'].append(os.path.join(in_dir, f))
+            print(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
+            if os.path.isfile(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt')):
+                pdb_smiles_dict['smiles'].append(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
+            else:
+                pdb_smiles_dict['smiles'].append(None)
 
-    print(pdb_list)
+    print(pdb_smiles_dict['smiles'])
 
     print("Making output directories")
     if not os.path.isdir(out_dir):
@@ -51,19 +61,42 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     structure = Align(in_dir, pdb_ref="")
     structure.align(os.path.join(out_dir, "tmp"))
 
-    aligned_list = [
-        os.path.join(out_dir, "tmp", x)
-        for x in os.listdir(os.path.join(out_dir, "tmp"))
-    ]
+
+    # aligned_list = [
+    #     os.path.join(out_dir, "tmp", x)
+    #     for x in os.listdir(os.path.join(out_dir, "tmp"))
+    # ]
+
+    for smiles_file in pdb_smiles_dict['smiles']:
+        if smiles_file:
+            print(smiles_file)
+            copyfile(smiles_file, os.path.join(os.path.join(out_dir, "tmp", smiles_file.split('/')[-1])))
+            print(os.path.join(out_dir, "tmp", smiles_file.split('/')[-1]))
+
+    aligned_dict = {'bound_pdb':[], 'smiles':[]}
+
+    for f in os.listdir(os.path.join(out_dir, "tmp")):
+        if '.pdb' in f:
+            aligned_dict['bound_pdb'].append(os.path.join(out_dir, "tmp",f))
+            if os.path.isfile(os.path.join(out_dir, "tmp",f).replace('_bound.pdb', '_smiles.txt')):
+                aligned_dict['smiles'].append(os.path.join(out_dir, "tmp",f).replace('_bound.pdb', '_smiles.txt'))
+            else:
+                aligned_dict['smiles'].append(None)
+
+
+    print(aligned_dict['smiles'])
 
     print("Identifying ligands")
-    for i in aligned_list:
+    for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
-            new = set_up(target_name=target, infile=i, out_dir=out_dir)
+            if smiles:
+                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, smiles_file=os.path.abspath(smiles))
+            else:
+                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir)
         except AssertionError:
-            print(i, "is not suitable, please consider removal or editing")
+            print(aligned, "is not suitable, please consider removal or editing")
             for file in os.listdir(os.path.join(out_dir, "tmp")):
-                if str(i) in file:
+                if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
     # to_fragalysis_dir(in_dir, os.path.join(out_dir, 'tmp'))
@@ -94,6 +127,7 @@ if __name__ == "__main__":
         "-v", "--validate", action="store_true", default=False, help="Validate input"
     )
     parser.add_argument("-t", "--target", help="Target name", required=True)
+
     args = vars(parser.parse_args())
 
     # user_id = args['user_id']
