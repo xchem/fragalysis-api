@@ -50,6 +50,7 @@ def xcimporter(in_dir, out_dir, target, validate=False):
             else:
                 pdb_smiles_dict['smiles'].append(None)
 
+    print(pdb_smiles_dict['smiles'])
 
     print("Making output directories")
     if not os.path.isdir(out_dir):
@@ -81,7 +82,7 @@ def xcimporter(in_dir, out_dir, target, validate=False):
                 aligned_dict['smiles'].append(None)
 
 
-    print(aligned_dict['smiles'])
+    # print(aligned_dict['smiles'])
 
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
