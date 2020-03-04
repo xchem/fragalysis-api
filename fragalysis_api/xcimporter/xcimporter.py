@@ -44,6 +44,7 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     for f in os.listdir(in_dir):
         if '.pdb' in f:
             pdb_smiles_dict['pdb'].append(os.path.join(in_dir, f))
+            print(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
             if os.path.isfile(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt')):
                 pdb_smiles_dict['smiles'].append(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
             else:
