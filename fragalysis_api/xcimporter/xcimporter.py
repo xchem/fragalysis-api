@@ -44,8 +44,8 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     for f in os.listdir(in_dir):
         if '.pdb' in f:
             pdb_smiles_dict['pdb'].append(os.path.join(in_dir, f))
-            if os.path.isfile(f.replace('.pdb', '_smiles.txt')):
-                pdb_smiles_dict['smiles'].append(f.replace('.pdb', '_smiles.txt'))
+            if os.path.isfile(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt')):
+                pdb_smiles_dict['smiles'].append(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
             else:
                 pdb_smiles_dict['smiles'].append(None)
 
@@ -73,9 +73,9 @@ def xcimporter(in_dir, out_dir, target, validate=False):
 
     for f in os.listdir(os.path.join(out_dir, "tmp")):
         if '.pdb' in f:
-            aligned_dict['bound_pdb'].append(f)
+            aligned_dict['bound_pdb'].append(os.path.join(out_dir, "tmp",f))
             if os.path.isfile(f.replace('_bound.pdb', '_smiles.txt')):
-                aligned_dict['smiles'].append(f.replace('_bound.pdb', '_smiles.txt'))
+                aligned_dict['smiles'].append(os.path.join(out_dir, "tmp",f).replace('_bound.pdb', '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
 
