@@ -18,7 +18,7 @@ class Ligand:
         self.non_ligs = json.load(
             open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r")
         )
-        self.pdbfile = open(infile).readlines()
+        self.pdbfile = open(os.path.abspath(infile).readlines())
         self.hetatms = []
         self.conects = []
         self.final_hets = []
