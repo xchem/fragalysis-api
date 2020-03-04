@@ -171,7 +171,7 @@ class Ligand:
         out_file = os.path.join(directory, str(file_base + ".mol"))
 
         if smiles_file:
-            smiles=  open(smiles_file, 'r').readlines()[0].rstrip()
+            smiles = open(smiles_file, 'r').readlines()[0].rstrip()
             template = AllChem.MolFromSmiles(smiles)
             new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
 

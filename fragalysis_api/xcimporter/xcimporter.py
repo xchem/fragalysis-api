@@ -10,7 +10,7 @@ import argparse
 from sys import exit
 
 
-def xcimporter(in_dir, out_dir, target, validate=False, smiles_file=None):
+def xcimporter(in_dir, out_dir, target, validate=False):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -74,8 +74,8 @@ def xcimporter(in_dir, out_dir, target, validate=False, smiles_file=None):
     for f in os.listdir(os.path.join(out_dir, "tmp")):
         if '_bound.pdb' in f:
             aligned_dict['bound_pdb'].append(f)
-            if os.path.isfile(file.replace('_bound.pdb', '_smiles.txt')):
-                aligned_dict['smiles'].append(file.replace('._bound.pdb', '_smiles.txt'))
+            if os.path.isfile(f.replace('_bound.pdb', '_smiles.txt')):
+                aligned_dict['smiles'].append(f.replace('._bound.pdb', '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
 
@@ -85,9 +85,9 @@ def xcimporter(in_dir, out_dir, target, validate=False, smiles_file=None):
         try:
             new = set_up(target_name=target, infile=aligned, out_dir=out_dir, smiles_file=smiles)
         except AssertionError:
-            print(i, "is not suitable, please consider removal or editing")
+            print(aligned, "is not suitable, please consider removal or editing")
             for file in os.listdir(os.path.join(out_dir, "tmp")):
-                if str(i) in file:
+                if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
     # to_fragalysis_dir(in_dir, os.path.join(out_dir, 'tmp'))
@@ -118,12 +118,6 @@ if __name__ == "__main__":
         "-v", "--validate", action="store_true", default=False, help="Validate input"
     )
     parser.add_argument("-t", "--target", help="Target name", required=True)
-    parser.add_argument(
-        "-s",
-        "--smiles_file",
-        help="Smiles File",
-        required=False,
-    )
 
     args = vars(parser.parse_args())
 
@@ -132,11 +126,10 @@ if __name__ == "__main__":
     out_dir = args["out_dir"]
     validate = args["validate"]
     target = args["target"]
-    smiles_file = args['smiles_file']
 
     if in_dir == os.path.join("..", "..", "data", "xcimporter", "input"):
         print("Using the default input directory ", in_dir)
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
 
-    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, smiles_file=smiles_file)
+    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate)
