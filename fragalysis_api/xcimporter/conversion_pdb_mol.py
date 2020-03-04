@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from rdkit import Chem
+from rdkit.Chem import AllChem
 import json
 import os
 import shutil
@@ -159,7 +160,7 @@ class Ligand:
         self.mol_dict["mol"].append(m)
         self.mol_dict["file_base"].append(file_base)
 
-    def create_mol_file(self, directory, file_base, mol_obj):
+    def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
         """
         a .mol file is produced for an individual ligand
 
@@ -169,74 +170,16 @@ class Ligand:
 
         out_file = os.path.join(directory, str(file_base + ".mol"))
 
-        from rdkit import Chem
-        from rdkit.Chem import AllChem, rdFMCS, rdDepictor, rdMolTransforms
-        from typing import List
+        if smiles_file:
+            smiles=  open(smiles_file, 'r').readlines()[0].rstrip()
+            template = AllChem.MolFromSmiles(smiles)
+            new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
 
-        def fix_bond_order(mol: Chem.Mol) -> Chem.Mol:
-            """On a Mol where hydrogens are present it guesses bond order."""
+            return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
 
-            def is_sp2(atom: Chem.Atom) -> bool:
-                N_neigh = len(atom.GetBonds())
-                symbol = atom.GetSymbol()
-                if symbol == 'H':
-                    return False
-                elif symbol == 'N' and N_neigh < 3:
-                    return True
-                elif symbol == 'C' and N_neigh < 4:
-                    return True
-                elif symbol == 'O' and N_neigh < 2:
-                    return True
-                else:
-                    return False
-
-            def get_other(bond: Chem.Bond, atom: Chem.Atom) -> Chem.Atom:
-                """Given an bond and an atom return the other."""
-                if bond.GetEndAtomIdx() == atom.GetIdx():  # atom == itself gives false.
-                    return bond.GetBeginAtom()
-                else:
-                    return bond.GetEndAtom()
-
-            def find_sp2_bonders(atom: Chem.Atom) -> List[Chem.Atom]:
-                return [neigh for neigh in find_bonders(atom) if is_sp2(neigh)]
-
-            def find_bonders(atom: Chem.Atom) -> List[Chem.Atom]:
-                return [get_other(bond, atom) for bond in atom.GetBonds()]
-
-            def descr(atom: Chem.Atom) -> str:
-                return f'{atom.GetSymbol()}{atom.GetIdx()}'
-
-            ## main body of function
-            for atom in mol.GetAtoms():
-                # print(atom.GetSymbol(), is_sp2(atom), find_sp2_bonders(atom))
-                if is_sp2(atom):
-                    doubles = find_sp2_bonders(atom)
-                    if len(doubles) == 1:
-                        # tobedoubled.append([atom.GetIdx(), doubles[0].GetIdx()])
-                        b = mol.GetBondBetweenAtoms(atom.GetIdx(), doubles[0].GetIdx())
-                        if b:
-                            b.SetBondType(Chem.rdchem.BondType.DOUBLE)
-                        else:
-                            raise ValueError('Issue with:', descr(atom), descr(doubles[0]))
-                    elif len(doubles) > 1:
-                        for d in doubles:
-                            b = mol.GetBondBetweenAtoms(atom.GetIdx(), d.GetIdx())
-                        if b:
-                            b.SetBondType(Chem.rdchem.BondType.AROMATIC)
-                            b.SetIsAromatic(True)
-                        else:
-                            raise ValueError('Issue with:', descr(atom), descr(d))
-                    elif len(doubles) == 0:
-                        print(descr(atom), ' is underbonded!')
-                else:
-                    pass
-                    # print(descr(atom),' is single', find_bonders(atom))
-            return mol
-
-        mol = fix_bond_order(mol_obj)
 
         # creating mol file
-        return Chem.rdmolfiles.MolToMolFile(mol, out_file)
+        return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
     def create_sd_file(self, mol_obj, writer):
         """
@@ -319,7 +262,7 @@ class pdb_apo:
         prot_file.close()
 
 
-def set_up(target_name, infile, out_dir):
+def set_up(target_name, infile, out_dir, smiles_file=None):
 
     """
 
@@ -370,6 +313,7 @@ def set_up(target_name, infile, out_dir):
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             mol_obj=new.mol_dict["mol"][i],
+            smiles_file=smiles_file,
         )  # creates mol file for each ligand
 
         writer = Chem.rdmolfiles.SDWriter(
