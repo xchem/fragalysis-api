@@ -69,6 +69,7 @@ def xcimporter(in_dir, out_dir, target, validate=False):
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
+            print(smiles_file)
             copyfile(smiles_file, os.path.join(os.path.join(out_dir, "tmp", smiles_file.split('/')[-1])))
 
     aligned_dict = {'bound_pdb':[], 'smiles':[]}
