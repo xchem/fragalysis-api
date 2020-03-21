@@ -90,7 +90,7 @@ class BatchConvertAligned(luigi.Task):
         for f in in_lst:
             out = os.path.join(os.path.abspath(self.output_directory), f.split('/')[-1])
             out_lst.append(out)
-            target_names.append(f.split('/')[-1]).upper()
+            target_names.append(f.split('/')[-1].upper())
 
         return [BatchProcessAlignedPDB(input_dir=i, output_dir=self.output_directory, target_name=t)
                 for (i, t) in list(zip(in_lst, target_names))]

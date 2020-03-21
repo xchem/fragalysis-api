@@ -171,12 +171,15 @@ class Ligand:
         out_file = os.path.join(directory, str(file_base + ".mol"))
 
         if smiles_file:
-            smiles = open(smiles_file, 'r').readlines()[0].rstrip()
-            template = AllChem.MolFromSmiles(smiles)
-            new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
+            try:
+                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
+                template = AllChem.MolFromSmiles(smiles)
+                new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
 
-            return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
-
+                return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
+            except:
+                print('failed to fit template ' + smiles_file)
+                return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
         # creating mol file
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
