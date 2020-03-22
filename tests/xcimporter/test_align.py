@@ -1,6 +1,8 @@
 import unittest
 import os
-from fragalysis_api.xcimporter import align
+from fragalysis_api import Align
+from glob import glob
+from shutil import rmtree
 
 
 class AlignTest(unittest.TestCase):
@@ -15,9 +17,9 @@ class EasyAlign(AlignTest):
     @classmethod
     def setUpClass(cls):
         super(EasyAlign, cls).setUpClass()
-        cls.align_obj = align.Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='')
-        cls.align_obj_w_ref = align.Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='6hi3')
-        cls.align_obj_w_wrong_ref = align.Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
+        cls.align_obj = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='')
+        cls.align_obj_w_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='6hi3')
+        cls.align_obj_w_wrong_ref = Align(os.path.join(cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
 
     @classmethod
     def tearDownClass(cls):

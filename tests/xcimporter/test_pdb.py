@@ -1,5 +1,5 @@
 import unittest
-from fragalysis_api.xcimporter import pdbimporter
+from fragalysis_api.xcimporter.pdbimporter import ImportPdb
 import os
 
 
@@ -12,7 +12,7 @@ class ValidateTest(unittest.TestCase):
         pdb_code = '6epu'
         if os.path.exists(os.path.join(data_dir, user_id, pdb_code+'.pdb')):
             os.remove(os.path.join(data_dir, user_id, pdb_code+'.pdb'))
-        obj = pdbimporter.ImportPdb(data_dir, user_id, pdb_code)
+        obj = ImportPdb(data_dir, user_id, pdb_code)
         self.assertTrue(obj.user_id is not None)
         self.assertTrue(obj.pdb_code is not None)
         self.assertTrue(obj.data_dir is not None)

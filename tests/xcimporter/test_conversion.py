@@ -1,6 +1,6 @@
 import os
 import unittest
-from fragalysis_api.xcimporter import conversion_pdb_mol
+from fragalysis_api import set_up
 from shutil import rmtree
 
 
@@ -17,8 +17,8 @@ class PDBexample1(ConversionTest):
     @classmethod
     def setUpClass(cls):
         super(PDBexample1, cls).setUpClass()
-        cls.obj_5q1j = conversion_pdb_mol.set_up("5q1j", os.path.join(cls.dir_input,'5q1j.pdb'), cls.dir_output)
-        cls.obj_5qj7 = conversion_pdb_mol.set_up("5qj7", os.path.join(cls.dir_input,'5qj7.pdb'), cls.dir_output)
+        cls.obj_5q1j = set_up(target_name="5q1j", infile=os.path.join(cls.dir_input,'5q1j.pdb'), out_dir=cls.dir_output)
+        cls.obj_5qj7 = set_up(target_name="5qj7", infile=os.path.join(cls.dir_input,'5qj7.pdb'), out_dir=cls.dir_output)
 
     @classmethod
     def tearDownClass(cls):

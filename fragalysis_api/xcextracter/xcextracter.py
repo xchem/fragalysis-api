@@ -1,4 +1,4 @@
-from . import getdata, frag_web_live
+from fragalysis_api import GetMoleculesData, can_connect
 import pandas as pd
 import sys
 
@@ -6,13 +6,13 @@ import sys
 def xcextracter(target_name):
 
     #checking the fragalysis website is live
-    if frag_web_live.can_connect():
+    if can_connect():
         print('Can connect to Fragalysis')
     else:
         print('Cannot connect to Fragalysis')
         sys.exit()
 
-    search = getdata.GetMoleculesData()
+    search = GetMoleculesData()
 
     # get the target id's for further operations for NUDT5A
     search.set_target_id(target=target_name)
