@@ -2,8 +2,10 @@ from pypdb import get_blast2, get_ligands
 import argparse
 import json
 import os
-from . import pdbimporter
-
+try:
+    from pdbimporter import ImportPdb
+except ModuleNotFoundError:
+    from .pdbimporter import ImportPdb
 
 class Query:
     def __init__(self, pdb, chain):
@@ -68,7 +70,7 @@ class Query:
         data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
         for i in self.match_ligs:
             for j in self.match_ligs[i]:
-                initial = pdbimporter.ImportPdb(data_dir, user, j)
+                initial = ImportPdb(data_dir, user, j)
                 initial.pdb_importer()
 
 

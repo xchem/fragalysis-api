@@ -1,8 +1,7 @@
+from fragalysis_api import ConfigSetup
 import urllib.request as urllib
 import json
 import pandas as pd
-
-from fragalysis_api.xcglobalscripts import set_config
 
 
 def xcgraphcreator(target_smiles):
@@ -21,7 +20,7 @@ def xcgraphcreator(target_smiles):
 
 class GraphRequest:
     def __init__(self):
-        settings = set_config.ConfigSetup()
+        settings = ConfigSetup()
 
         # get url pieces
         self.frag_url = settings.get('fragalysis', 'url')
@@ -56,8 +55,6 @@ class GraphRequest:
         return self.graph_json
 
 # to flatten into a list for processing
-
-
 def flatten_json(y):
     out = {}
 

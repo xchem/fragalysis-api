@@ -1,19 +1,18 @@
 import unittest
 from urllib.request import urlopen
 from urllib.error import URLError
+from fragalysis_api import ConfigSetup
+from fragalysis_api import can_connect
 
-from fragalysis_api.xcglobalscripts import set_config
-from fragalysis_api.xcextracter import frag_web_live
 
-
-class WebFragalysis(unittest.TestCase):
+class test_fragalysis(unittest.TestCase):
 
     def test_fragalysis_connection(self):
 
         def frag_connection():
-            settings = set_config.ConfigSetup()
+            settings = ConfigSetup()
             url = settings.get('fragalysis', 'url')
-
+            status = ''
             try:
                 urlopen(url, timeout=1)
                 status = True
@@ -21,8 +20,7 @@ class WebFragalysis(unittest.TestCase):
                 status = False
 
             return status
-
-        if frag_web_live.can_connect():
+        if can_connect():
             print('Can connect to Fragalysis')
         else:
             print('Cannot connect to Fragalysis')
@@ -31,7 +29,7 @@ class WebFragalysis(unittest.TestCase):
 
     def test_can_connect_function(self):
             
-        self.assertIsNotNone(frag_web_live.can_connect())
+        self.assertIsNotNone(can_connect())
 
 
 if __name__ == '__main__':

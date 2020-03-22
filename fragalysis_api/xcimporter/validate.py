@@ -2,7 +2,6 @@ import glob
 import os
 import string
 
-
 class Validate:
     def __init__(self, directory):
         self.directory = directory
