@@ -75,14 +75,14 @@ class PDBexample1(ConversionTest):
         """
         tests that a mol file has been made with the correct number of lines
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0_mol.mol")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.mol")).readlines()
         self.assertEqual(len(file), 43)
 
     def test_make_sdf_file(self):
         """
         test that a sdf file has been made that incorporates the different mol objects
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0_out.sdf")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.sdf")).readlines()
         self.assertEqual(len(file), 44)
 
 if __name__ == '__main__':

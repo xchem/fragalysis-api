@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 from rdkit import Chem
+from rdkit.Chem import AllChem
 import json
 import os
 import shutil
+import warnings
 
 
 class Ligand:
@@ -11,15 +13,17 @@ class Ligand:
         self.infile = infile
         self.target_name = target_name
         self.mol_lst = []
-        self.mol_dict = {'directory':[], 'mol':[], 'file_base':[]}
+        self.mol_dict = {"directory": [], "mol": [], "file_base": []}
         self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
-        self.non_ligs = json.load(open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r"))
-        self.pdbfile = open(infile).readlines()
+        self.non_ligs = json.load(
+            open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r")
+        )
+        self.pdbfile = open(os.path.abspath(infile)).readlines()
         self.hetatms = []
         self.conects = []
         self.final_hets = []
         self.wanted_ligs = []
-        self.new_lig_name = 'NONAME'
+        self.new_lig_name = "NONAME"
 
     def hets_and_cons(self):
         """
@@ -57,16 +61,20 @@ class Ligand:
         """
         Finds list of ligands contained in the structure, including
         """
-        all_ligands = []   # all ligands go in here, including solvents and ions
+        all_ligands = []  # all ligands go in here, including solvents and ions
         for line in self.pdbfile:
             if line.startswith("HETATM"):
                 all_ligands.append(line)
 
         for lig in all_ligands:
-            if lig.split()[3] not in self.non_ligs: # this takes out the solvents and ions a.k.a non-ligands
+            # print(lig.split()[3][-3:])
+            if (
+                lig.split()[3][-3:] not in self.non_ligs
+            ):  # this takes out the solvents and ions a.k.a non-ligands
                 self.wanted_ligs.append(lig[17:26])
 
         self.wanted_ligs = list(set(self.wanted_ligs))
+        # print(self.wanted_ligs)
 
         return self.wanted_ligs
 
@@ -79,16 +87,29 @@ class Ligand:
         """
 
         # making ligand name which identifies type of ligand and location, so is specific to the particular ligand
-        ligand_name = ''.join(ligand.split())
+        ligand_name = "".join(ligand.split())
 
         # out directory and filename for lig pdb
         if not self.target_name in os.path.abspath(self.infile):
-            file_base = str(self.target_name + '-' +
-                           os.path.abspath(self.infile).split('/')[-1].replace('.pdb', '').replace('_bound', '') +
-                           '_' + str(count))
+            file_base = str(
+                self.target_name
+                + "-"
+                + os.path.abspath(self.infile)
+                .split("/")[-1]
+                .replace(".pdb", "")
+                .replace("_bound", "")
+                + "_"
+                + str(count)
+            )
         else:
-            file_base = str(os.path.abspath(self.infile).split('/')[-1].replace('.pdb', '').replace('_bound', '')
-                           + '_' + str(count))
+            file_base = str(
+                os.path.abspath(self.infile)
+                .split("/")[-1]
+                .replace(".pdb", "")
+                .replace("_bound", "")
+                + "_"
+                + str(count)
+            )
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
 
@@ -103,13 +124,16 @@ class Ligand:
         for atom in individual_ligand:
             atom_number = atom.split()[1]
             for conection in self.conects:
-                if atom_number in conection and conection not in individual_ligand_conect:
+                if (
+                    atom_number in conection
+                    and conection not in individual_ligand_conect
+                ):
                     individual_ligand_conect.append(conection)
                     con_num += 1
 
         # checking that the number of conect files and number of atoms are almost the same
         # (taking into account ligands that are covalently bound to the protein
-        assert (0 <= con_num - len(individual_ligand) <= 1)
+        assert 0 <= con_num - len(individual_ligand) <= 1
 
         # making into one list that is compatible with conversion to mol object
         ligand_het_con = individual_ligand + individual_ligand_conect
@@ -119,20 +143,24 @@ class Ligand:
         if not os.path.isdir(lig_out_dir):
             os.makedirs(lig_out_dir)
 
-        ligands_connections = open(os.path.join(lig_out_dir, (file_base + '.pdb')), "w+")
+        ligands_connections = open(
+            os.path.join(lig_out_dir, (file_base + ".pdb")), "w+"
+        )
         for line in ligand_het_con:
             ligands_connections.write(str(line))
         ligands_connections.close()
 
         # making pdb file into mol object
         m = Chem.rdmolfiles.MolFromPDBFile(
-            os.path.join(lig_out_dir, (file_base + '.pdb')))
+            os.path.join(lig_out_dir, (file_base + ".pdb"))
+        )
+        Chem.AddHs(m)
         self.mol_lst.append(m)
-        self.mol_dict['directory'].append(lig_out_dir)
-        self.mol_dict['mol'].append(m)
-        self.mol_dict['file_base'].append(file_base)
+        self.mol_dict["directory"].append(lig_out_dir)
+        self.mol_dict["mol"].append(m)
+        self.mol_dict["file_base"].append(file_base)
 
-    def create_mol_file(self, directory, file_base, mol_obj):
+    def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
         """
         a .mol file is produced for an individual ligand
 
@@ -140,7 +168,18 @@ class Ligand:
         returns: .mol file for the ligand
         """
 
-        out_file = os.path.join(directory, str(file_base + '_mol.mol'))
+        out_file = os.path.join(directory, str(file_base + ".mol"))
+
+        if smiles_file:
+            try:
+                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
+                template = AllChem.MolFromSmiles(smiles)
+                new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
+
+                return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
+            except:
+                print('failed to fit template ' + smiles_file)
+                return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
         # creating mol file
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
@@ -162,7 +201,9 @@ class pdb_apo:
         self.pdbfile = open(infile).readlines()
         self.RESULTS_DIRECTORY = RESULTS_DIRECTORY
         self.filebase = filebase
-        self.non_ligs = json.load(open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r"))
+        self.non_ligs = json.load(
+            open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r")
+        )
         self.apo_file = None
 
     def make_apo_file(self):
@@ -172,18 +213,25 @@ class pdb_apo:
         :param: pdb file
         :returns: created XXX_apo.pdb file
         """
-        lines = ''
+        lines = ""
         for line in self.pdbfile:
-            if line.startswith('HETATM') and line.split()[3] not in self.non_ligs or line.startswith('CONECT'):
+            if (
+                line.startswith("HETATM")
+                and line.split()[3] not in self.non_ligs
+                or line.startswith("CONECT")
+            ):
                 continue
             else:
                 lines += line
 
-
-        apo_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb")), "w+")
+        apo_file = open(
+            os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb")), "w+"
+        )
         apo_file.write(str(lines))
         apo_file.close()
-        self.apo_file=os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb"))
+        self.apo_file = os.path.join(
+            self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb")
+        )
 
     def make_apo_desol_files(self):
         """
@@ -193,13 +241,23 @@ class pdb_apo:
 
         :returns: Created files
         """
-        prot_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo-desolv.pdb")), "w+")
-        solv_file = open(os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo-solv.pdb")), "w+")
+        prot_file = open(
+            os.path.join(
+                self.RESULTS_DIRECTORY, str(self.filebase + "_apo-desolv.pdb")
+            ),
+            "w+",
+        )
+        solv_file = open(
+            os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo-solv.pdb")),
+            "w+",
+        )
         if not self.apo_file:
-            return Warning('Apo file has not been created. Use pdb_apo().make_apo_file()')
+            return Warning(
+                "Apo file has not been created. Use pdb_apo().make_apo_file()"
+            )
         else:
             for line in open(self.apo_file).readlines():
-                if line.startswith('HETATM'):
+                if line.startswith("HETATM"):
                     solv_file.write(line)
                 else:
                     prot_file.write(line)
@@ -207,7 +265,7 @@ class pdb_apo:
         prot_file.close()
 
 
-def set_up(target_name, infile, out_dir):
+def set_up(target_name, infile, out_dir, smiles_file=None):
 
     """
 
@@ -218,37 +276,68 @@ def set_up(target_name, infile, out_dir):
 
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name)
 
-
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
 
     print(RESULTS_DIRECTORY)
 
-    new = Ligand(target_name, infile, RESULTS_DIRECTORY)  # takes in pdb file and returns specific ligand files
+    new = Ligand(
+        target_name, infile, RESULTS_DIRECTORY
+    )  # takes in pdb file and returns specific ligand files
     new.hets_and_cons()  # takes only hetatm and conect file lines from pdb file
     new.remove_nonligands()  # removes ions and solvents from list of ligands
     new.find_ligand_names_new()  # finds the specific name and locations of desired ligands
     for i in range(len(new.wanted_ligs)):
-        new.create_pdb_for_ligand(new.wanted_ligs[i], count=i)  # creates pdb file and mol object for specific ligand
+        new.create_pdb_for_ligand(
+            new.wanted_ligs[i], count=i
+        )  # creates pdb file and mol object for specific ligand
 
-    for i in range(len(new.mol_dict['directory'])):
+    for i in range(len(new.mol_dict["directory"])):
 
-        shutil.copy(infile, os.path.join(new.mol_dict['directory'][i],
-                                         str(new.mol_dict['file_base'][i] + '_bound.pdb')))
+        if not new.mol_dict["mol"][i]:
+            warnings.warn(
+                str(
+                    "RDkit mol object for "
+                    + new.mol_dict["file_base"][i]
+                    + " is None, please check the input. Will not write any files"
+                )
+            )
+            continue
 
-        new.create_mol_file(directory=new.mol_dict['directory'][i],
-                            file_base=new.mol_dict['file_base'][i],
-                            mol_obj=new.mol_dict['mol'][i])  # creates mol file for each ligand
+        shutil.copy(
+            infile,
+            os.path.join(
+                new.mol_dict["directory"][i],
+                str(new.mol_dict["file_base"][i] + "_bound.pdb"),
+            ),
+        )
 
-        writer = Chem.rdmolfiles.SDWriter(os.path.join(new.mol_dict['directory'][i],
-                                                       str(new.mol_dict['file_base'][i] + '_out.sdf')))
+        new.create_mol_file(
+            directory=new.mol_dict["directory"][i],
+            file_base=new.mol_dict["file_base"][i],
+            mol_obj=new.mol_dict["mol"][i],
+            smiles_file=smiles_file,
+        )  # creates mol file for each ligand
 
-        new.create_sd_file(new.mol_lst[i], writer)  # creates sd file containing all mol files
+        writer = Chem.rdmolfiles.SDWriter(
+            os.path.join(
+                new.mol_dict["directory"][i],
+                str(new.mol_dict["file_base"][i] + ".sdf"),
+            )
+        )
+
+        new.create_sd_file(
+            new.mol_lst[i], writer
+        )  # creates sd file containing all mol files
         writer.close()  # this is important to make sure the file overwrites each time
 
-        new_apo = pdb_apo(infile, target_name, new.mol_dict['directory'][i], new.mol_dict['file_base'][i])
+        new_apo = pdb_apo(
+            infile,
+            target_name,
+            new.mol_dict["directory"][i],
+            new.mol_dict["file_base"][i],
+        )
         new_apo.make_apo_file()  # creates pdb file that doesn't contain any ligand information
         new_apo.make_apo_desol_files()  # makes apo file without solvent, ions and buffers, and file with just those
 
     return new
-
