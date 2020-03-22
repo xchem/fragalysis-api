@@ -19,9 +19,8 @@ class Align:
     def _get_files(self):
         """
         Extracts a list of paths for all PDBs within the given directory.
-        :param self:
-        :type self:
-        :return list of .pdb file names in directory:
+
+        :return: list of .pdb file names in directory
         """
 
         return glob.glob(os.path.join(self.directory, "*.pdb"))
@@ -29,9 +28,9 @@ class Align:
     def _load_objs(self):
         """
         Loads each pdb into the PyMol instance/object.
-        :param self:
-        :type object:
-        :return PyMol object with .pdb protein structure file loaded:
+
+        :type: object
+        :return: PyMol object with .pdb protein structure file loaded
         """
         # Looping through each pdb file in the directory and loading them into the cmd
         for num, file in enumerate(self._get_files):
@@ -47,8 +46,7 @@ class Align:
         """
         Determines the best reference structure for alignments if not user provided.
         Chosen based on longest length with lowest resolution.
-        :param self:
-        :type: object:
+
         :return: str of .pdb filename of reference:
         """
         return self.__pdb_ref
@@ -58,8 +56,8 @@ class Align:
         """
         Determines the best reference structure for alignments if not user provided.
         Chosen based on longest length with lowest resolution.
-        :param pdb_ref:
-        :type str:
+
+        :param pdb_ref: pdb to use as reference pdb for alignments
         :return PyMol instance with reference object assigned as reference property:
         """
         if pdb_ref != '':
@@ -76,6 +74,7 @@ class Align:
         """
         Find the longest pdb structure with the lowest resolution from all imported files. 
         This will be used as the reference pdb for alignment against.
+
         :param pdb_files:
         :return: str of filename with best .pdb file
         """
@@ -86,7 +85,8 @@ class Align:
 
     def __get_length_and_resolution(self, file):
         """
-        Determine resolution, sequence and length of .pdb file
+        Determine resolution, sequence and length of .pdb file.
+
         :param file:
         :return pandas series with resolution, sequence and length and .pdb filename:
         """
@@ -102,31 +102,81 @@ class Align:
         # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file 
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
-    def _save_align(self, path_save):
+    def __get_pdb_file(self, pdb_name):
         """
-        Saves aligned structures as .pdb files
-        :param self:
-        :return aligned structures saved as .pdb files:
+        Returns the pdb file path for a given pdb name.
+
+        :param pdb_name: name of pdb
+        :return: file path to the pdb with the given name
         """
+
+        for file in self._get_files:
+            if pdb_name == os.path.splitext(os.path.basename(file))[0]:
+                return file
+
+    def __get_header(self, file):
+        """
+        Get headers (front and end) for a given pdb file.
+
+        :param file: pdb file
+        :return: front and end headers for given pdb file
+        """
+        with open(file) as handle:
+            switch = 0
+            header_front, header_end = [], []
+
+            for line in handle:
+
+                if line.startswith('ATOM'): switch = 1
+
+                if line.startswith('HETATM'): switch = 2
+
+                if switch == 0: header_front.append(line)
+
+                if (switch == 2) and not line.startswith('HETATM'): header_end.append(line)
+
+        return header_front, header_end
+
+    def _save_align(self, name, pdb_base, out_dir):
+        """
+        Saves modified pdb as pdb file again. It also ensures the pdb header is kept in the new file.
+
+        :param name: name of pdb
+        :param pdb_base: coordinates of atom in the pdb format
+        :param out_dir: directory to save new pdb file in
+        :return: a saved pdb file
+        """
+        if not os.path.exists(out_dir):  # Creating output directory if it doesn't already exist
+            os.makedirs(out_dir)
+
+        pdb_file = self.__get_pdb_file(name)
+        header_front = self.__get_header(pdb_file)[0]
+
+        with open(os.path.join(out_dir, f'{name}_bound.pdb'), 'w') as handle:
+
+            new_pdb = header_front + [pdb_base]
+
+            for line in new_pdb:
+                handle.write(line)
+
+    def align(self, out_dir):
+        """
+        Aligns all pdbs in the pymol object to the pdb_ref.
+
+        :param out_dir: directory to save aligned pdbs in
+        :return: saves the pdbs
+        """
+
         # Silently open PyMOL
         pymol.pymol_argv = ['pymol', '-qc']
         pymol.finish_launching()
         pymol_cmd = self._load_objs()
 
-        if not os.path.exists(path_save):  # Creating output directory if it doesn't already exist
-            os.makedirs(path_save)
-
         for num, name in enumerate(pymol_cmd.get_names()):  # Saves the aligned pdb files from the cmd as pdb files
+
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
+                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
 
             elif name == self._get_ref:
-                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
-
-    def align(self, out_dir):
-        """
-        A single method that calls the methods in sequence required to align
-        the pdb files of the structure.
-        """
-        self._save_align(out_dir)
+                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
