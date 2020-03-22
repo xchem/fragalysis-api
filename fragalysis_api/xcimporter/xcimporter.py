@@ -25,7 +25,6 @@ def xcimporter(user_id, in_dir, out_dir):
         print('Input files are invalid!!')
         exit()
 
-
     if not validation.does_dir_exist:
         exit()
 
@@ -33,9 +32,6 @@ def xcimporter(user_id, in_dir, out_dir):
         exit()
 
     pdb_smiles_dict = {'pdb':[], 'smiles':[]}
-
-    pdb_list = []
-    smiles_list = []
 
     for f in os.listdir(in_dir):
         if '.pdb' in f:
@@ -54,7 +50,7 @@ def xcimporter(user_id, in_dir, out_dir):
         os.makedirs(os.path.join(out_dir, "tmp"))
 
     print("Aligning protein structures")
-    structure = Align(in_dir, pdb_ref="")
+    structure = align.Align(in_dir, pdb_ref="")
     structure.align(os.path.join(out_dir, "tmp"))
 
 
