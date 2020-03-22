@@ -47,7 +47,7 @@ def xcimporter(user_id, in_dir, out_dir):
     print('Identifying ligands')
     for i in pdb_list:
         try:
-            new = conversion_pdb_mol.set_up(i, str(user_id), in_dir, out_dir)
+            new = conversion_pdb_mol.set_up(i, os.path.join(str(user_id), in_dir), out_dir)
         except AssertionError:
             print(i, 'is not suitable, please consider removal or editing')
             for file in os.listdir(os.path.join(out_dir, str(user_id), 'tmp')):
