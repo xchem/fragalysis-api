@@ -1,6 +1,6 @@
 import urllib
 import json
-from fragalysis_api import ConfigSetup
+from fragalysis_api.xcglobalscripts import set_config
 import pandas as pd
 
 
@@ -18,7 +18,7 @@ class GetTargetsData:
         :param self.target_json: Json of the query
         :param self.target_id_list: list of the ID numbers/number for the targets/target
         '''
-        settings = ConfigSetup()
+        settings = set_config.ConfigSetup()
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.target_url = settings.get('targets', 'search')
@@ -83,7 +83,7 @@ class GetPdbData:
         :param self.pdb_url: URL to search the fragalysis data base for the protein
         :param self.query: URL to tell the restfull API how to do the query
         '''
-        settings = ConfigSetup()
+        settings = set_config.ConfigSetup()
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.pdb_url = settings.get('pdb', 'search')
@@ -108,6 +108,8 @@ class GetPdbData:
 
 class GetMoleculesData:
     def __init__(self):
+
+        settings = set_config.ConfigSetup()
         '''
         :param self.frag_url: URL of the fragalysis website
         :param self.moleclues_url: URL of extention for the moleclue on the fragalysis website
@@ -118,8 +120,6 @@ class GetMoleculesData:
         :param self.get_mol_data: Molecule data in json format
         :param self.get_complete_mol_data: Complete molecule data in json format
         '''
-        settings = ConfigSetup()
-
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.molecules_url = settings.get('molecules', 'search')
@@ -160,7 +160,6 @@ class GetMoleculesData:
         """
 
         # get response from url and decode -> json
-        print(self.get_molecule_url)
         with urllib.request.urlopen(self.get_molecule_url) as f:
             self.get_mol_data = json.loads(f.read().decode('utf-8'))
 

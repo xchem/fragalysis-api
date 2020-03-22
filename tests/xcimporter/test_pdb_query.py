@@ -1,6 +1,7 @@
 import unittest
-from fragalysis_api.xcimporter.pdbquery import Query
+from fragalysis_api.xcimporter import pdbquery
 import os
+
 
 class ValidateTest(unittest.TestCase):
 
@@ -8,7 +9,7 @@ class ValidateTest(unittest.TestCase):
         print('testing query')
         pdb_code = '6epu'
         chain_id = 'A'
-        query_obj = Query(pdb_code, chain_id)
+        query_obj = pdbquery.Query(pdb_code, chain_id)
         query_obj.get_matching_proteins()
         query_obj.get_ligands()
         assert(len(query_obj.match_ligs) == 41)

@@ -1,16 +1,12 @@
-from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
-# from .align import Align
-# from .validate import Validate
-from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
+
 import os
-from shutil import copyfile
-
-# from shutil import rmtree
 import argparse
-from sys import exit
 
+from shutil import rmtree, copyfile
 
-def xcimporter(in_dir, out_dir, target, validate=False):
+from fragalysis_api.xcimporter import validate, align, conversion_pdb_mol, xc_utils
+
+def xcimporter(user_id, in_dir, out_dir):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -23,23 +19,19 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
     :return:
     """
-    if validate:
-        validation = Validate(in_dir)
+    validation = validate.Validate(os.path.join(in_dir, str(user_id)))
 
-        if not bool(validation.is_pdbs_valid):
-            print("Input files are invalid!!")
-            exit()
+    if not bool(validation.is_pdbs_valid):
+        print('Input files are invalid!!')
+        exit()
 
-        if not validation.does_dir_exist:
-            exit()
+    if not validation.does_dir_exist:
+        exit()
 
-        if not validation.is_there_a_pdb_in_dir:
-            exit()
+    if not validation.is_there_a_pdb_in_dir:
+        exit()
 
     pdb_smiles_dict = {'pdb':[], 'smiles':[]}
-
-    pdb_list = []
-    smiles_list = []
 
     for f in os.listdir(in_dir):
         if '.pdb' in f:
@@ -58,7 +50,7 @@ def xcimporter(in_dir, out_dir, target, validate=False):
         os.makedirs(os.path.join(out_dir, "tmp"))
 
     print("Aligning protein structures")
-    structure = Align(in_dir, pdb_ref="")
+    structure = align.Align(in_dir, pdb_ref="")
     structure.align(os.path.join(out_dir, "tmp"))
 
 
@@ -99,16 +91,19 @@ def xcimporter(in_dir, out_dir, target, validate=False):
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
-    # to_fragalysis_dir(in_dir, os.path.join(out_dir, 'tmp'))
 
-    # rmtree(os.path.join(out_dir, 'tmp'))
-    print("Files are now in a fragalysis friendly format!")
+    xc_utils.to_fragalysis_dir(str(user_id), os.path.join(out_dir, str(user_id), 'tmp'))
+
+    rmtree(os.path.join(out_dir, str(user_id), 'tmp'))
+    print('Files are now in a fragalysis friendly format!')
+
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument('-id', '--user_id', required=True,
-    #                     help='Description for foo argument')
+
+    parser.add_argument(
+        '-id', '--user_id', required=True, help='Description for foo argument')
     parser.add_argument(
         "-i",
         "--in_dir",
@@ -130,7 +125,7 @@ if __name__ == "__main__":
 
     args = vars(parser.parse_args())
 
-    # user_id = args['user_id']
+    user_id = args['user_id']
     in_dir = args["in_dir"]
     out_dir = args["out_dir"]
     validate = args["validate"]
@@ -141,4 +136,4 @@ if __name__ == "__main__":
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
 
-    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate)
+    xcimporter(user_id, in_dir, out_dir)

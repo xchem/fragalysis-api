@@ -1,4 +1,4 @@
-fragalysis_api/Testing.ipynb
+Testing.ipynb
 .gitignore
 fragalysis_api/.ipynb_checkpoints/
 fragalysis_api/__pycache__/
@@ -113,3 +113,4 @@ env.bak/
 venv.bak/
 
 /fragalysis_api/xcextracter/get_target_data.py
+/fragalysis_api/Untitled.ipynb
