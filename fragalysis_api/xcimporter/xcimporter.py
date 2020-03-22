@@ -2,7 +2,7 @@
 import os
 import argparse
 
-from shutil import rmtree
+from shutil import rmtree, copyfile
 
 from fragalysis_api.xcimporter import validate, align, conversion_pdb_mol, xc_utils
 
