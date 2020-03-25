@@ -1,11 +1,7 @@
-from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
-# from .align import Align
-# from .validate import Validate
+from fragalysis_api import Validate, Align
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 import os
 from shutil import copyfile
-
-# from shutil import rmtree
 import argparse
 from sys import exit
 
@@ -38,9 +34,6 @@ def xcimporter(in_dir, out_dir, target, validate=False):
 
     pdb_smiles_dict = {'pdb':[], 'smiles':[]}
 
-    pdb_list = []
-    smiles_list = []
-
     for f in os.listdir(in_dir):
         if '.pdb' in f:
             pdb_smiles_dict['pdb'].append(os.path.join(in_dir, f))
@@ -60,12 +53,6 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     print("Aligning protein structures")
     structure = Align(in_dir, pdb_ref="")
     structure.align(os.path.join(out_dir, "tmp"))
-
-
-    # aligned_list = [
-    #     os.path.join(out_dir, "tmp", x)
-    #     for x in os.listdir(os.path.join(out_dir, "tmp"))
-    # ]
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
@@ -99,16 +86,12 @@ def xcimporter(in_dir, out_dir, target, validate=False):
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
-    # to_fragalysis_dir(in_dir, os.path.join(out_dir, 'tmp'))
-
-    # rmtree(os.path.join(out_dir, 'tmp'))
     print("Files are now in a fragalysis friendly format!")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument('-id', '--user_id', required=True,
-    #                     help='Description for foo argument')
+
     parser.add_argument(
         "-i",
         "--in_dir",

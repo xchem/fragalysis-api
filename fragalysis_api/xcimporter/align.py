@@ -166,7 +166,7 @@ class Align:
 
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
+                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
 
             elif name == self._get_ref:
                 self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
