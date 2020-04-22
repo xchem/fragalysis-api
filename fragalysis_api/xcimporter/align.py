@@ -119,10 +119,10 @@ class Align:
         for num, name in enumerate(pymol_cmd.get_names()):  # Saves the aligned pdb files from the cmd as pdb files
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
 
-            elif name == self._get_ref:
-                pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
+            pymol_cmd.save(os.path.join(path_save, f'{name}_bound.pdb'), name)
+
+        pymol_cmd.quit()
 
     def align(self, out_dir):
         """

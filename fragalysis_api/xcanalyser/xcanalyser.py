@@ -1,15 +1,13 @@
-from fragalysis_api import xcgraphcreator
 from rdkit import Chem
 
+from fragalysis_api import xcgraphcreator
 
-def main():
+def xcanalyser():
 
     #m = Chem.MolFromMolFile('../..data/xcimporter/output/ATAD')
 
-    this = xcgraphcreator(target_smiles='O=C(Nc1ccccc1)Nc1cccnc1')
-
-    print(this)
+    return xcgraphcreator(target_smiles='O=C(Nc1ccccc1)Nc1cccnc1')
 
 
 if __name__ == '__main__':
-    main()
+    xcanalyser()
