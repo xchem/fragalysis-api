@@ -177,7 +177,8 @@ class Ligand:
                 new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
 
                 return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
-            except:
+            except Exception as e:
+                print(e)
                 print('failed to fit template ' + smiles_file)
                 return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
