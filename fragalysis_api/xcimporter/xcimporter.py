@@ -1,7 +1,7 @@
 from fragalysis_api import Validate, Align
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 import os
-from shutil import copyfile
+from shutil import copyfile, rmtree
 import argparse
 from sys import exit
 
@@ -125,3 +125,15 @@ if __name__ == "__main__":
         print("Using the default input directory ", out_dir)
 
     xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate)
+
+    fix_pdb = open(os.path.join(out_dir, target, 'pdb_file_failures.txt'), 'w')
+
+    for target_file in os.listdir(os.path.join(out_dir, target)):
+        if target_file != 'pdb_file_failures.txt' and len(os.listdir(os.path.join(out_dir, target, target_file))) < 2:
+            rmtree(os.path.join(out_dir, target, target_file))
+            fix_pdb.write(target_file.split('-')[1]+'\n')
+
+    fix_pdb.close()
+    print('For files that we were unable to process, look at the pdb_file_failures.txt file in your results directory.'
+          ' These files were unable to produce RDKit molecules, so the error likely lies in the way the ligand atoms or'
+          'the conect files have been written in the pdb file')

@@ -133,7 +133,8 @@ class Ligand:
 
         # checking that the number of conect files and number of atoms are almost the same
         # (taking into account ligands that are covalently bound to the protein
-        assert 0 <= con_num - len(individual_ligand) <= 1
+
+        # assert 0 <= con_num - len(individual_ligand) <= 1
 
         # making into one list that is compatible with conversion to mol object
         ligand_het_con = individual_ligand + individual_ligand_conect
@@ -154,11 +155,16 @@ class Ligand:
         m = Chem.rdmolfiles.MolFromPDBFile(
             os.path.join(lig_out_dir, (file_base + ".pdb"))
         )
-        Chem.AddHs(m)
-        self.mol_lst.append(m)
-        self.mol_dict["directory"].append(lig_out_dir)
-        self.mol_dict["mol"].append(m)
-        self.mol_dict["file_base"].append(file_base)
+        try:
+            Chem.AddHs(m)
+
+            self.mol_lst.append(m)
+            self.mol_dict["directory"].append(lig_out_dir)
+            self.mol_dict["mol"].append(m)
+            self.mol_dict["file_base"].append(file_base)
+
+        except:
+            print(file_base, 'is unable to produce a ligand file')
 
     def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
         """
