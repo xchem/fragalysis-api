@@ -34,7 +34,8 @@ target = 'Mpro'
 if os.path.exists(os.path.join('results', target)):
     os.system('rm -r '+os.path.join('results', target))
 os.makedirs(os.path.join('results', target))
-link_atoms = {'SG':16, 'O': 8, 'N': 7, 'C':12, 'C5':12}
+
+link_atoms = {'SG':16, 'O': 8, 'N': 7}
 
 for file in os.listdir(os.path.join('data', target)):
     lig = file[5:10]
@@ -53,8 +54,10 @@ for file in os.listdir(os.path.join('data', target)):
                     pass
 
         edmol = Chem.EditableMol(m2)
-
-        new_mol = edmol.AddAtom(Chem.Atom(link_atoms[link_info[1]]))
+        try:
+            new_mol = edmol.AddAtom(Chem.Atom(link_atoms[link_info[1]]))
+        except ValueError:
+            new_mol = edmol.AddAtom(Chem.Atom(link_atoms[link_info[0]]))
         Chem.MolToPDBFile(edmol.GetMol(), 'edlig.pdb')
         edpdb = open('edlig.pdb', 'r').readlines()
 
