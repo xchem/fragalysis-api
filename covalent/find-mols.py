@@ -31,13 +31,15 @@ def write_lig_pdb(pdb):
 
 
 target = 'Mpro'
+if os.path.exists(os.path.join('results', target)):
+    os.system('rm -r '+os.path.join('results', target))
 os.makedirs(os.path.join('results', target))
-link_atoms = {'SG':16, 'O': 8, 'N': 7}
+link_atoms = {'SG':16, 'O': 8, 'N': 7, 'C':12, 'C5':12}
 
 for file in os.listdir(os.path.join('data', target)):
     lig = file[5:10]
     smile_ref = target+'-'+lig+'-bound.pdb'
-    pdb = open(os.path.join('data', 'Mpro', target+'-'+lig+'_0.pdb'), 'r').readlines()
+    pdb = open(os.path.join('data', 'Mpro', target+'-'+lig+'.pdb'), 'r').readlines()
 
     link_info = write_lig_pdb(pdb)
     if link_info is not None:
@@ -45,9 +47,13 @@ for file in os.listdir(os.path.join('data', target)):
 
         for line in pdb:
             if line[13:17].strip() == link_info[1] and line[17:20] == link_info[2] and line[20:23].strip() == link_info[3] and line[23:27].strip() == link_info[4]:
-                res_coords = [line[31:39].strip(), line[39:47].strip(), line[47:55].strip()]
+                try:
+                    res_coords = [float(line[31:39].strip()), float(line[39:47].strip()), float(line[47:55].strip())]
+                except ValueError:
+                    pass
 
         edmol = Chem.EditableMol(m2)
+
         new_mol = edmol.AddAtom(Chem.Atom(link_atoms[link_info[1]]))
         Chem.MolToPDBFile(edmol.GetMol(), 'edlig.pdb')
         edpdb = open('edlig.pdb', 'r').readlines()
@@ -55,6 +61,7 @@ for file in os.listdir(os.path.join('data', target)):
         distances = {}
         for line in edpdb:
             if line.startswith('HETATM'):
+               # print(res_coords)
                 distances[get_3d_distance(res_coords, [line[31:39].strip(), line[39:47].strip(), line[47:55].strip()])] = line[7:11].strip()
             if [line[31:39].strip(), line[39:47].strip(), line[47:55].strip()] == ['0.000', '0.000', '0.000']:
                 new_idx = line[7:11].strip()
