@@ -35,12 +35,12 @@ if os.path.exists(os.path.join('results', target)):
     os.system('rm -r '+os.path.join('results', target))
 os.makedirs(os.path.join('results', target))
 
-link_atoms = {'SG':16, 'O': 8, 'N': 7}
+link_atoms = {'SG':16, 'O': 8, 'N': 7, 'S' : 16}
 
 for file in os.listdir(os.path.join('data', target)):
     lig = file[5:10]
     smile_ref = target+'-'+lig+'-bound.pdb'
-    pdb = open(os.path.join('data', 'Mpro', target+'-'+lig+'.pdb'), 'r').readlines()
+    pdb = open(os.path.join('data', 'Mpro', target+'-'+lig+'_0.pdb'), 'r').readlines()
 
     link_info = write_lig_pdb(pdb)
     if link_info is not None:
