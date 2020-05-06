@@ -1,9 +1,11 @@
-from fragalysis_api import Validate, Align
-from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
-import os
-from shutil import copyfile, rmtree
 import argparse
 from sys import exit
+import os
+
+from shutil import copyfile
+
+from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
+from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
 
 def xcimporter(in_dir, out_dir, target, validate=False):
@@ -19,18 +21,21 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
     :return:
     """
+
     if validate:
         validation = Validate(in_dir)
 
         if not bool(validation.is_pdbs_valid):
             print("Input files are invalid!!")
-            exit()
+            exit
 
         if not validation.does_dir_exist:
-            exit()
+            print("Input dir doesn't exist.")
+            exit
 
         if not validation.is_there_a_pdb_in_dir:
-            exit()
+            print("No PDB file in input dir.")
+            exit
 
     pdb_smiles_dict = {'pdb':[], 'smiles':[]}
 

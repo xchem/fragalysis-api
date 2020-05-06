@@ -11,3 +11,4 @@ from .xcextracter.frag_web_live import can_connect
 from .xcextracter.xcextracter import xcextracter
 
 from .xcanalyser.graphcreator import GraphRequest, xcgraphcreator
+from .xcanalyser.xcanalyser import xcanalyser
