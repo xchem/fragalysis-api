@@ -107,13 +107,13 @@ class Align:
             if pdb_name == os.path.splitext(os.path.basename(file))[0]:
                 return file
 
-    def __get_header(self, file):
+    def __get_header(self, pdb_file):
         """
         Identifies the section of the PDB file which contains the headers ATOM & HETATM 
         :param file: pdb file
         :return: front and end locations of the ATOM/HETATM headers in the given pdb file
         """
-        with open(file) as handle:
+        with open(pdb_file) as handle:
             switch = 0
             header_front, header_end = [], []
 
