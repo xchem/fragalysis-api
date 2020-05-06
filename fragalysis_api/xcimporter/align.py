@@ -109,8 +109,7 @@ class Align:
 
     def __get_header(self, file):
         """
-        Identifies the section of the PDB file which contains the headers ATOM and HETATM
-        this is done by identifying the line a section with header ATOM/HETATM starts and finishes 
+        Identifies the section of the PDB file which contains the headers ATOM & HETATM 
         :param file: pdb file
         :return: front and end locations of the ATOM/HETATM headers in the given pdb file
         """
