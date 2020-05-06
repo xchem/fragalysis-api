@@ -1,6 +1,8 @@
-from fragalysis_api import GetMoleculesData, can_connect
-import pandas as pd
 import sys
+
+import pandas as pd
+
+from fragalysis_api import GetMoleculesData, can_connect
 
 
 def xcextracter(target_name):

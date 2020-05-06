@@ -8,14 +8,9 @@ def xcgraphcreator(target_smiles):
 
     search = GraphRequest()
 
-    # set the search smiles
-    search.set_smiles_url(smiles=target_smiles)
-
-    results = search.get_graph_json()
-
-    results = graph_dict_to_df(results)
-
-    return results.reset_index(drop=True)
+    new_smiles = search.get_new_smiles(smiles=target_smiles)
+    
+    return new_smiles
 
 
 class GraphRequest:
@@ -38,21 +33,21 @@ class GraphRequest:
         # set full search url
         self.smiles_url = str(self.search_url + smiles)
 
-    def get_graph_json(self):
+    def get_new_smiles(self, smiles):
         # check for a smiles url
-        if not self.smiles_url:
+        smiles_url = str(self.search_url + smiles)
+        if not smiles_url:
             raise Exception('Please initiate smiles url with set_smiles_url(<smiles>)!')
 
         # get response from url and decode -> json
-        with urllib.urlopen(self.smiles_url) as f:
+        with urllib.urlopen(smiles_url) as f:
             result = f.read().decode('utf-8')
             if not result == 'EMPTY RESULT SET':
                 response = json.loads(result)
 
                 # set json as decoded response for processing
-                self.graph_json = response
+                return graph_dict_to_df(response).reset_index(drop=True).copy()
 
-        return self.graph_json
 
 # to flatten into a list for processing
 def flatten_json(y):
@@ -77,6 +72,7 @@ def flatten_json(y):
 def graph_dict_to_df(graph_dict):
     """
     This is the staircase to heaven
+    
     :param graph_dict:
     :return:
     """
