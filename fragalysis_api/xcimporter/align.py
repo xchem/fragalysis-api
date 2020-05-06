@@ -108,11 +108,6 @@ class Align:
                 return file
 
     def __get_header(self, pdb_file):
-        """
-        Identifies the section of a PDB which contains the headers ATOM/HETATM
-        :param pdb_file: The pdb to acquire the header locations of
-        :return: front locations of the ATOM/HETATM headers in the given pdb, end locations of the ATOM/HETATM headers in the given pdb
-        """
         with open(pdb_file) as handle:
             switch = 0
             header_front, header_end = [], []
