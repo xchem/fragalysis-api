@@ -161,7 +161,7 @@ class Align:
         """
 
         # Silently open PyMOL - -q for quiet
-        pymol.pymol_argv = ['pymol', '-c']
+        pymol.pymol_argv = ['pymol', '-qc']
         pymol.finish_launching()
         pymol_cmd = self._load_objs()
 

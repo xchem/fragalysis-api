@@ -80,8 +80,8 @@ def xcimporter(in_dir, out_dir, target, validate=False):
 
     print(f"{len(aligned_dict['bound_pdb'])} pdb files aligned and found")
     print(f"{len(aligned_dict['smiles'])} pdb files aligned and found (smiles)")
-    print('zipped list:')
-    print(list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])))
+    #print('zipped list:')
+    #print(list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])))
 
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
