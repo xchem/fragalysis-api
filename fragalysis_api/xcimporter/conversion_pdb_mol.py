@@ -302,6 +302,11 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
     for i in range(len(new.mol_dict["directory"])):
 
         if not new.mol_dict["mol"][i]:
+            print(str(
+                    "RDkit mol object for "
+                    + new.mol_dict["file_base"][i]
+                    + " is None, please check the input. Will not write any files"
+                ))
             warnings.warn(
                 str(
                     "RDkit mol object for "
