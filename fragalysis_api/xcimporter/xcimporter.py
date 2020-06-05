@@ -84,6 +84,7 @@ def xcimporter(in_dir, out_dir, target, validate=False):
             if smiles:
                 new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, smiles_file=os.path.abspath(smiles))
             else:
+                print(aligned)
                 new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir)
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
