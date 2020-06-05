@@ -31,8 +31,9 @@ class Align:
         :return: PyMol object with .pdb protein structure file loaded
         """
         # Looping through each pdb file in the directory and loading them into the cmd
-        for num, file in enumerate(self._get_files):
-            pymol.cmd.load(file, os.path.splitext(os.path.basename(file))[0])
+        for num, f in enumerate(self._get_files):
+            print("from load objs: " + str(f))
+            pymol.cmd.load(f, os.path.splitext(os.path.basename(f))[0])
 
         # deal with files that have no conect records
         pymol.cmd.set('pdb_conect_all', 'on')
