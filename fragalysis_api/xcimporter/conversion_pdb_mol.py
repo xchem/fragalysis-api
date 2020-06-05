@@ -286,7 +286,7 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
 
-    print(RESULTS_DIRECTORY)
+    # print(RESULTS_DIRECTORY)
 
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
@@ -294,12 +294,14 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
     new.hets_and_cons()  # takes only hetatm and conect file lines from pdb file
     new.remove_nonligands()  # removes ions and solvents from list of ligands
     new.find_ligand_names_new()  # finds the specific name and locations of desired ligands
+    print(new.wanted_ligs)
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
             new.wanted_ligs[i], count=i
         )  # creates pdb file and mol object for specific ligand
 
     for i in range(len(new.mol_dict["directory"])):
+
 
         if not new.mol_dict["mol"][i]:
             print(str(
