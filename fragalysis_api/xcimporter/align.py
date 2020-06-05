@@ -32,7 +32,7 @@ class Align:
         """
         # Looping through each pdb file in the directory and loading them into the cmd
         for num, f in enumerate(self._get_files):
-            print("from load objs: " + str(f))
+            #print("from load objs: " + str(f))
             pymol.cmd.load(f, os.path.splitext(os.path.basename(f))[0])
 
         # deal with files that have no conect records
@@ -166,7 +166,7 @@ class Align:
         pymol_cmd = self._load_objs()
 
         for num, name in enumerate(pymol_cmd.get_names()):  # Saves the aligned pdb files from the cmd as pdb files
-            print(f'from pymol name: {name}')
+            #print(f'from pymol name: {name}')
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
                 self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)

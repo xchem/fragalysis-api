@@ -295,7 +295,7 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
     new.remove_nonligands()  # removes ions and solvents from list of ligands
     new.find_ligand_names_new()  # finds the specific name and locations of desired ligands
     if len(new.wanted_ligs)==0:
-        print(f"No lignds found for {infile}, please check manually.")
+        print(f"No ligands found for {infile}, please check manually.")
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
             new.wanted_ligs[i], count=i
