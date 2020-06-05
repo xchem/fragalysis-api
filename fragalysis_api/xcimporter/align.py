@@ -103,9 +103,10 @@ class Align:
         :return: file path to the pdb with the given name
         """
 
-        for file in self._get_files:
-            if pdb_name == os.path.splitext(os.path.basename(file))[0]:
-                return file
+        for f in self._get_files:
+            if pdb_name == os.path.splitext(os.path.basename(f))[0]:
+                return f
+
 
     def __get_header(self, pdb_file):
         """
@@ -113,6 +114,7 @@ class Align:
         :param pdb_file: The pdb to acquire the header locations of
         :return: front locations of the ATOM/HETATM headers in the given pdb, end locations of the ATOM/HETATM headers in the given pdb       
         """
+
         with open(pdb_file) as handle:
             switch = 0
             header_front, header_end = [], []
