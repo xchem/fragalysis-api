@@ -42,13 +42,13 @@ def xcimporter(in_dir, out_dir, target, validate=False):
     for f in os.listdir(in_dir):
         if '.pdb' in f:
             pdb_smiles_dict['pdb'].append(os.path.join(in_dir, f))
-            print(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
+            #print(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
             if os.path.isfile(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt')):
                 pdb_smiles_dict['smiles'].append(os.path.join(in_dir, f).replace('.pdb', '_smiles.txt'))
             else:
                 pdb_smiles_dict['smiles'].append(None)
 
-    print(pdb_smiles_dict['smiles'])
+    #print(pdb_smiles_dict['smiles'])
 
     print("Making output directories")
     if not os.path.isdir(out_dir):
@@ -61,9 +61,9 @@ def xcimporter(in_dir, out_dir, target, validate=False):
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
-            print(smiles_file)
+            #print(smiles_file)
             copyfile(smiles_file, os.path.join(os.path.join(out_dir, "tmp", smiles_file.split('/')[-1])))
-            print(os.path.join(out_dir, "tmp", smiles_file.split('/')[-1]))
+            #print(os.path.join(out_dir, "tmp", smiles_file.split('/')[-1]))
 
     aligned_dict = {'bound_pdb':[], 'smiles':[]}
 
@@ -76,7 +76,12 @@ def xcimporter(in_dir, out_dir, target, validate=False):
                 aligned_dict['smiles'].append(None)
 
 
-    print(aligned_dict['smiles'])
+    #print(aligned_dict['smiles'])
+
+    print(f"{len(aligned_dict['bound_pdb'])} pdb files aligned and found")
+    print(f"{len(aligned_dict['smiles'])} pdb files aligned and found (smiles)")
+    print('zipped list:')
+    print(list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])))
 
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
