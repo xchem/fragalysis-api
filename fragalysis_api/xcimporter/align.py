@@ -160,8 +160,8 @@ class Align:
         :return: saves the pdbs
         """
 
-        # Silently open PyMOL
-        pymol.pymol_argv = ['pymol', '-qc']
+        # Silently open PyMOL - -q for quiet
+        pymol.pymol_argv = ['pymol', '-c']
         pymol.finish_launching()
         pymol_cmd = self._load_objs()
 
