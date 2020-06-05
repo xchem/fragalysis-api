@@ -294,7 +294,8 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
     new.hets_and_cons()  # takes only hetatm and conect file lines from pdb file
     new.remove_nonligands()  # removes ions and solvents from list of ligands
     new.find_ligand_names_new()  # finds the specific name and locations of desired ligands
-    print(new.wanted_ligs)
+    if len(new.wanted_ligs)==0:
+        print(f"No lignds found for {infile}, please check manually.")
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
             new.wanted_ligs[i], count=i
