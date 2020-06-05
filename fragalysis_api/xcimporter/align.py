@@ -103,17 +103,22 @@ class Align:
         :return: file path to the pdb with the given name
         """
 
-        for file in self._get_files:
-            if pdb_name == os.path.splitext(os.path.basename(file))[0]:
-                return file
+        for f in self._get_files:
+            if pdb_name == os.path.splitext(os.path.basename(f))[0]:
+                return f
 
-    def __get_header(self, file):
+    def __get_header(self, f):
         """
         Get headers (front and end) for a given pdb file.
         :param file: pdb file
         :return: front and end headers for given pdb file
         """
-        with open(file) as handle:
+        print(f)
+        if not f:
+            header_front = ''
+            header_end = ''
+            return header_front, header_end
+        with open(f) as handle:
             switch = 0
             header_front, header_end = [], []
 
