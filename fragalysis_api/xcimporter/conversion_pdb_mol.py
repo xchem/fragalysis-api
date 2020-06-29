@@ -67,11 +67,11 @@ class Ligand:
                 all_ligands.append(line)
 
         for lig in all_ligands:
-            # print(lig.split()[3][-3:])
             if (
                 lig.split()[3][-3:] not in self.non_ligs
             ):  # this takes out the solvents and ions a.k.a non-ligands
-                self.wanted_ligs.append(lig[17:26])
+                self.wanted_ligs.append(lig[16:20].strip() + lig[20:26])
+                # print(lig[16:20].strip() + lig[20:26])
 
         self.wanted_ligs = list(set(self.wanted_ligs))
         # print(self.wanted_ligs)
@@ -117,7 +117,7 @@ class Ligand:
         individual_ligand_conect = []
         # adding atom information for each specific ligand to a list
         for atom in self.final_hets:
-            if atom[17:26] == ligand:
+            if str(atom[16:20].strip() + atom[20:26]) == str(ligand):
                 individual_ligand.append(atom)
 
         con_num = 0
@@ -152,9 +152,26 @@ class Ligand:
         ligands_connections.close()
 
         # making pdb file into mol object
-        m = Chem.rdmolfiles.MolFromPDBFile(
-            os.path.join(lig_out_dir, (file_base + ".pdb"))
-        )
+
+        pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
+
+        new_pdb_block = ''
+
+        for lig in pdb_block.split('\n'):
+            if 'ATM' in lig:
+                pos = 16
+                s = lig[:pos] + ' ' + lig[pos + 1:]
+                new_pdb_block += s
+            else:
+                new_pdb_block += lig
+
+            new_pdb_block += '\n'
+
+        m = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
+
+        if not m:
+            print(f'WARNING: {file_base} did not produce a mol object from its pdb lig file!')
+
         try:
             Chem.AddHs(m)
 
@@ -176,6 +193,9 @@ class Ligand:
 
         out_file = os.path.join(directory, str(file_base + ".mol"))
 
+        if not mol_obj:
+            print(f'WARNING: mol object is empty: {file_base}')
+
         if smiles_file:
             try:
                 smiles = open(smiles_file, 'r').readlines()[0].rstrip()
@@ -186,7 +206,11 @@ class Ligand:
             except Exception as e:
                 print(e)
                 print('failed to fit template ' + smiles_file)
+                print(f'template smiles: {smiles}')
                 return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
+
+        else:
+            print(f'Warning: No smiles file: {file_base}' )
 
         # creating mol file
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
