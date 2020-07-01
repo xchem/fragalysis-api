@@ -5,6 +5,8 @@ import pandas as pd
 import os
 import warnings
 import Bio.PDB.PDBExceptions as bpp
+import json
+import shutil
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
@@ -170,3 +172,92 @@ class Align:
 
             elif name == self._get_ref:
                 self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
+
+
+class Monomerize:
+
+    def __init__(self, directory, outdir):
+        self.directory = directory
+        self.outdir = outdir
+        self.non_ligs = json.load(
+            open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r")
+        )
+
+    def get_filelist(self):
+        return glob.glob(os.path.join(self.directory, '*.pdb'))
+
+    def find_ligs(self, pdb_lines):
+        """
+        Finds list of ligands contained in the structure, including
+        """
+        all_ligands = []  # all ligands go in here, including solvents and ions
+        wanted_ligs = []
+        for line in pdb_lines:
+            if line.startswith("HETATM"):
+                all_ligands.append(line)
+
+        for lig in all_ligands:
+            if (
+                    lig.split()[3][-3:] not in self.non_ligs
+            ):  # this takes out the solvents and ions a.k.a non-ligands
+                wanted_ligs.append(lig[16:20] + lig[20:26])
+                # print(lig[16:20].strip() + lig[20:26])
+
+        wanted_ligs = list(set(wanted_ligs))
+
+        return wanted_ligs
+
+    def save_chain(self, lig, f):
+        lig_chain = lig[5]
+        name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
+        filename = os.path.join(self.outdir, f'{name}_mono.pdb')
+        pymol.cmd.load(f, name)
+        pymol.cmd.save(filename, f'chain {lig_chain}')
+        pymol.cmd.reinitialize()
+
+        return filename
+
+    def process_ligs(self, filename):
+        test_block = open(filename, 'r').readlines()
+        ligs = self.find_ligs(test_block)
+        print(ligs)
+        outnames = []
+        for lig in ligs:
+            o = self.save_chain(lig, filename)
+            outnames.append(o)
+            if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
+                shutil.copy(filename.replace('.pdb', '_smiles.txt'), o.replace('_mono.pdb', '_smiles.txt'))
+        return outnames
+
+    def write_bound(self, inname, outname):
+        with open(inname, 'r') as handle:
+            switch = 0
+            header_front, header_end = [], []
+
+            for line in handle:
+
+                if line.startswith('ATOM'): switch = 1
+
+                if line.startswith('HETATM'): switch = 2
+
+                if switch == 0: header_front.append(line)
+
+                if (switch == 2) and not line.startswith('HETATM'): header_end.append(line)
+        for o in outname:
+            newfile_contents = open(o, 'r').readlines()
+
+            with open(o.replace('_mono.pdb', '.pdb'), 'w') as handle:
+                remark = ['REMARK warning: chains may be ommitted for alignment\n']
+                new_pdb = ''.join(remark + header_front + newfile_contents)
+                print(new_pdb)
+                handle.write(new_pdb)
+
+    def monomerize_all(self):
+        for f in self.get_filelist():
+            print(f)
+            outnames = self.process_ligs(f)
+            print(outnames)
+            self.write_bound(f, outnames)
+            for o in outnames:
+                if os.path.isfile(o):
+                    os.remove(o)

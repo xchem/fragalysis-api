@@ -66,8 +66,11 @@ class Query:
             os.mkdir(os.path.join(userpath))
         json.dump(self.match_ligs, open(os.path.join(userpath, self.pdb_code+'.json'), 'w'))
 
-    def import_pdbs(self, user):
-        data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
+    def import_pdbs(self, user, out=None):
+        if not out:
+            data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
+        else:
+            data_dir = out
         for i in self.match_ligs:
             for j in self.match_ligs[i]:
                 initial = ImportPdb(data_dir, user, j)
@@ -78,10 +81,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-pdb', '--pdb', required=True, help='pdb code to search for similar')
     parser.add_argument('-chain', '--chain', required=True, help='chain of structure you want to look at')
+    parser.add_argument('-out', '--out', required=False, help='directory to save pdbs to')
     args = vars(parser.parse_args())
 
     pdb_code = args['pdb']
     chain_id = args['chain']
+    out = args['out']
+
 
     query_obj = Query(pdb_code, chain_id)
     query_obj.get_matching_proteins()
@@ -97,4 +103,4 @@ if __name__ == '__main__':
     import_pdb = input('would you like to import these pdb files? y/n : ')
     if import_pdb == 'y' or import_pdb == 'Y' or import_pdb == 'yes':
         user_id = input('user id: ')
-        query_obj.import_pdbs(user_id)
+        query_obj.import_pdbs(user_id, out=out)
