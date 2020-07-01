@@ -4,11 +4,11 @@ import os
 
 from shutil import copyfile
 
-from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir
+from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
 
-def xcimporter(in_dir, out_dir, target, validate=False):
+def xcimporter(in_dir, out_dir, target, validate=False, monomerize=False):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -37,7 +37,21 @@ def xcimporter(in_dir, out_dir, target, validate=False):
             print("No PDB file in input dir.")
             exit
 
-    pdb_smiles_dict = {'pdb':[], 'smiles':[]}
+    print("Making output directories")
+    if not os.path.isdir(out_dir):
+        os.makedirs(out_dir)
+        os.makedirs(os.path.join(out_dir, "tmp"))
+
+    if monomerize:
+        print("Monomerizing input structures")
+        out = os.path.join(out_dir, 'mono/')
+        if not os.path.isdir(out):
+            os.makedirs(out)
+        mono = Monomerize(directory=in_dir, outdir=out)
+        mono.monomerize_all()
+        in_dir = out
+
+    pdb_smiles_dict = {'pdb': [], 'smiles': []}
 
     for f in os.listdir(in_dir):
         if '.pdb' in f:
@@ -49,11 +63,6 @@ def xcimporter(in_dir, out_dir, target, validate=False):
                 pdb_smiles_dict['smiles'].append(None)
 
     print(pdb_smiles_dict['smiles'])
-
-    print("Making output directories")
-    if not os.path.isdir(out_dir):
-        os.makedirs(out_dir)
-        os.makedirs(os.path.join(out_dir, "tmp"))
 
     print("Aligning protein structures")
     structure = Align(in_dir, pdb_ref="")
@@ -114,6 +123,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "-v", "--validate", action="store_true", default=False, help="Validate input"
     )
+    parser.add_argument(
+        "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
+    )
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
     args = vars(parser.parse_args())
@@ -122,6 +134,7 @@ if __name__ == "__main__":
     in_dir = args["in_dir"]
     out_dir = args["out_dir"]
     validate = args["validate"]
+    monomerize = args["monomerize"]
     target = args["target"]
 
     if in_dir == os.path.join("..", "..", "data", "xcimporter", "input"):
@@ -129,7 +142,7 @@ if __name__ == "__main__":
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
 
-    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate)
+    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, monomerize=monomerize)
 
     fix_pdb = open(os.path.join(out_dir, target, 'pdb_file_failures.txt'), 'w')
 
