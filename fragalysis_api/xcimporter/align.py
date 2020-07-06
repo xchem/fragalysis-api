@@ -240,9 +240,10 @@ class Monomerize:
 
                 if line.startswith('HETATM'): switch = 2
 
-                if switch == 0: header_front.append(line)
+                if switch == 0 and not line.startswith('REMARK 350'): header_front.append(line)
 
                 if (switch == 2) and not line.startswith('HETATM'): header_end.append(line)
+
         for o in outname:
             newfile_contents = open(o, 'r').readlines()
 
