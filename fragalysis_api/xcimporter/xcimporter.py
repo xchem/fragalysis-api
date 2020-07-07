@@ -102,14 +102,6 @@ def xcimporter(in_dir, out_dir, target, validate=False, monomerize=False):
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
-    # # Deal with labelling
-    # folders = [x[0] for x in os.walk(out_dir + '/' + target)]
-    # # Group the folders with same ID
-    # folders.sort()
-    # grouped_id = [list(i) for j, i in groupby(folders,
-    #                                           lambda a: a.split('_')[0])]
-    # print(grouped_id[0])
-
     print("Files are now in a fragalysis friendly format!")
 
 if __name__ == "__main__":
