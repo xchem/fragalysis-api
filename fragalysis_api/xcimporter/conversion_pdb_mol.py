@@ -231,12 +231,15 @@ class Ligand:
         Metadata .csv file prepared for each ligand
 
         params: file_base and smiles
-        returns: .mol file for the ligand
+        returns: metadata.csv and smiles.txt file for each ligand
         """
 
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
         smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
 
+        # Input files (mArh) possibly include a chain label eg. 1hjz_A.pdb
+        # Need to get this label for crystal name metadata entry - sure it's possible to get this
+        # info somewhere else but here for now
         try:
             chain = str(
                 os.path.abspath(self.infile)
