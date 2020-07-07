@@ -237,13 +237,17 @@ class Ligand:
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
         smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
 
-        chain = str(
-            os.path.abspath(self.infile)
-            .split("/")[-1]
-            .replace(".pdb", "")
-            .replace("_bound", "")
-            .split('_')[1]
-        )
+        try:
+            chain = str(
+                os.path.abspath(self.infile)
+                .split("/")[-1]
+                .replace(".pdb", "")
+                .replace("_bound", "")
+                .split('_')[1]
+            )
+
+        except Exception as e:
+            chain = ''
 
         crystal_name = str(
             self.target_name
@@ -264,7 +268,6 @@ class Ligand:
                 smiles_txt = open(smiles_out_file, "w+")
                 smiles_txt.write(smiles)
                 smiles_txt.close()
-                smiles.close()
 
             except Exception as e:
                 print(e)
