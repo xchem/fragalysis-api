@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import warnings
+import csv
 
 
 class Ligand:
@@ -225,6 +226,70 @@ class Ligand:
         # creating sd file with all mol files
         return writer.write(mol_obj)
 
+    def create_metadata_file(self, directory, file_base, smiles_file=None):
+        """
+        Metadata .csv file prepared for each ligand
+
+        params: file_base and smiles
+        returns: .mol file for the ligand
+        """
+
+        meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
+        smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
+
+        chain = str(
+            os.path.abspath(self.infile)
+            .split("/")[-1]
+            .replace(".pdb", "")
+            .replace("_bound", "")
+            .split('_')[1]
+        )
+
+        crystal_name = str(
+            self.target_name
+            + "-"
+            + os.path.abspath(self.infile)
+            .split("/")[-1]
+            .replace(".pdb", "")
+            .replace("_bound", "")
+            .split('_')[0]
+            + '_'
+            + chain
+        )
+
+        if smiles_file:
+            try:
+                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
+                # write to .txt file
+                smiles_txt = open(smiles_out_file, "w+")
+                smiles_txt.write(smiles)
+                smiles_txt.close()
+                smiles.close()
+
+            except Exception as e:
+                print(e)
+                print('failed to open smiles file ' + smiles_file)
+                smiles = 'NA'
+
+        else:
+            print(f'Warning: No smiles file: {file_base}')
+            smiles = 'NA'
+
+        meta_data_dict = {'Blank':'',
+                          'fragalysis_name': file_base,
+                          'crystal_name': crystal_name,
+                          'smiles': smiles,
+                          'new_smiles':'',
+                          'alternate_name':'',
+                          'site_name':'',
+                          'pdb_entry':''}
+
+        # Write dict to csv
+        meta_data_file = open(meta_out_file, 'w+')
+        w = csv.DictWriter(meta_data_file, meta_data_dict.keys())
+        w.writeheader()
+        w.writerow(meta_data_dict)
+        meta_data_file.close()
 
 class pdb_apo:
     def __init__(self, infile, target_name, RESULTS_DIRECTORY, filebase):
@@ -361,6 +426,12 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
             new.mol_lst[i], writer
         )  # creates sd file containing all mol files
         writer.close()  # this is important to make sure the file overwrites each time
+
+        new.create_metadata_file(
+            directory=new.mol_dict["directory"][i],
+            file_base=new.mol_dict["file_base"][i],
+            smiles_file=smiles_file,
+        ) # create metadata csv file for each ligand
 
         new_apo = pdb_apo(
             infile,

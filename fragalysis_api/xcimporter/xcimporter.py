@@ -7,6 +7,8 @@ from shutil import copyfile
 from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
+from itertools import groupby
+
 
 def xcimporter(in_dir, out_dir, target, validate=False, monomerize=False):
     """Formats a lists of PDB files into fragalysis friendly format.
@@ -100,8 +102,15 @@ def xcimporter(in_dir, out_dir, target, validate=False, monomerize=False):
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
-    print("Files are now in a fragalysis friendly format!")
+    # # Deal with labelling
+    # folders = [x[0] for x in os.walk(out_dir + '/' + target)]
+    # # Group the folders with same ID
+    # folders.sort()
+    # grouped_id = [list(i) for j, i in groupby(folders,
+    #                                           lambda a: a.split('_')[0])]
+    # print(grouped_id[0])
 
+    print("Files are now in a fragalysis friendly format!")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
