@@ -26,10 +26,10 @@ class Ligand:
         self.wanted_ligs = []
         self.new_lig_name = "NONAME"
         # Check if chain has been assigned (Fix in dictionary update?)
-        # try:
-        #     self.chain = self.infile.split("/")[-1].split("_")[-2]
-        # except:
-        #     self.chain = ''
+        try:
+            self.chain = self.infile.split("/")[-1].split("_")[-2]
+        except:
+            self.chain = None
 
     def hets_and_cons(self):
         """
@@ -104,8 +104,11 @@ class Ligand:
                             .replace(".pdb", "")
                             .replace("_bound", "")
                             )
-            chain = file_base.split("_")[-1]
-            file_base = file_base[:-2] + "_" + str(count) + chain
+            if not self.chain:
+                file_base = file_base[:-2]
+            if self.chain:
+                chain = file_base.split("_")[-1]
+                file_base = file_base[:-2] + "_" + str(count) + chain
 
         else:
             file_base = str(os.path.abspath(self.infile)
@@ -113,8 +116,11 @@ class Ligand:
                             .replace(".pdb", "")
                             .replace("_bound", "")
                             )
-            chain = file_base.split("_")[-1]
-            file_base = file_base[:-2] + "_" + str(count) + chain
+            if not self.chain:
+                file_base = file_base[:-2]
+            if self.chain:
+                chain = file_base.split("_")[-1]
+                file_base = file_base[:-2] + "_" + str(count) + chain
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
 
