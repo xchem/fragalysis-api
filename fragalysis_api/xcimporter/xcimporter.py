@@ -7,10 +7,10 @@ from shutil import copyfile
 from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
-from itertools import groupby
+import csv
 
 
-def xcimporter(in_dir, out_dir, target, validate=False, monomerize=False):
+def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomerize=False):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -102,6 +102,19 @@ def xcimporter(in_dir, out_dir, target, validate=False, monomerize=False):
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, "tmp", str(file)))
 
+    if metadata == '1':
+        print("Preparing metadata file")
+        metadata_fp = os.path.join(out_dir, target, "metadata.csv")
+        path = os.path.join(out_dir, target)
+
+        with open(metadata_fp, 'w+') as f:
+            for root, dirs_list, files_list in os.walk(path):
+                for file_name in files_list:
+                    if file_name.endswith('meta.csv'):
+                        csv_path = os.path.join(root, file_name)
+                        for line in open(csv_path, 'r'):
+                            f.write(line)
+
     print("Files are now in a fragalysis friendly format!")
 
 if __name__ == "__main__":
@@ -128,6 +141,7 @@ if __name__ == "__main__":
         "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
     )
     parser.add_argument("-t", "--target", help="Target name", required=True)
+    parser.add_argument("-md", "--metadata", help="Metadata output", default=False)
 
     args = vars(parser.parse_args())
 
@@ -137,13 +151,14 @@ if __name__ == "__main__":
     validate = args["validate"]
     monomerize = args["monomerize"]
     target = args["target"]
+    metadata = args["metadata"]
 
     if in_dir == os.path.join("..", "..", "data", "xcimporter", "input"):
         print("Using the default input directory ", in_dir)
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
 
-    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, monomerize=monomerize)
+    xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, monomerize=monomerize, metadata=metadata)
 
     fix_pdb = open(os.path.join(out_dir, target, 'pdb_file_failures.txt'), 'w')
 
