@@ -105,7 +105,7 @@ class Ligand:
                             .replace("_bound", "")
                             )
             if not self.chain:
-                file_base = file_base[:-2]
+                file_base = file_base
             if self.chain:
                 chain = file_base.split("_")[-1]
                 file_base = file_base[:-2] + "_" + str(count) + chain
@@ -117,7 +117,7 @@ class Ligand:
                             .replace("_bound", "")
                             )
             if not self.chain:
-                file_base = file_base[:-2]
+                file_base = file_base
             if self.chain:
                 chain = file_base.split("_")[-1]
                 file_base = file_base[:-2] + "_" + str(count) + chain
