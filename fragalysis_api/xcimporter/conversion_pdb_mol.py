@@ -25,6 +25,7 @@ class Ligand:
         self.final_hets = []
         self.wanted_ligs = []
         self.new_lig_name = "NONAME"
+        self.chain = self.infile.split("/")[-1].split("_")[-2]
 
     def hets_and_cons(self):
         """
@@ -92,25 +93,24 @@ class Ligand:
 
         # out directory and filename for lig pdb
         if not self.target_name in os.path.abspath(self.infile):
-            file_base = str(
-                self.target_name
-                + "-"
-                + os.path.abspath(self.infile)
-                .split("/")[-1]
-                .replace(".pdb", "")
-                .replace("_bound", "")
-                + "_"
-                + str(count)
-            )
+            file_base = str(self.target_name
+                            + "-"
+                            + os.path.abspath(self.infile)
+                            .split("/")[-1]
+                            .replace(".pdb", "")
+                            .replace("_bound", "")
+                            )
+            #chain = file_base.split("_")[-1]
+            file_base = file_base[:-2] + "_" + str(count) + self.chain
+
         else:
-            file_base = str(
-                os.path.abspath(self.infile)
-                .split("/")[-1]
-                .replace(".pdb", "")
-                .replace("_bound", "")
-                + "_"
-                + str(count)
-            )
+            file_base = str(os.path.abspath(self.infile)
+                            .split("/")[-1]
+                            .replace(".pdb", "")
+                            .replace("_bound", "")
+                            )
+            #chain = file_base.split("_")[-1]
+            file_base = file_base[:-2] + "_" + str(count) + self.chain
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
 
@@ -226,7 +226,7 @@ class Ligand:
         # creating sd file with all mol files
         return writer.write(mol_obj)
 
-    def create_metadata_file(self, directory, file_base, smiles_file=None):
+    def create_metadata_file(self, directory, file_base, mol_obj, smiles_file=None):
         """
         Metadata .csv file prepared for each ligand
 
@@ -240,29 +240,6 @@ class Ligand:
         # Input files (mArh) possibly include a chain label eg. 1hjz_A.pdb
         # Need to get this label for crystal name metadata entry - sure ipossible to get this
         # info somewhere else but here for now
-        try:
-            chain = str(
-                os.path.abspath(self.infile)
-                .split("/")[-1]
-                .replace(".pdb", "")
-                .replace("_bound", "")
-                .split('_')[1]
-            )
-
-        except Exception as e:
-            chain = ''
-
-        crystal_name = str(
-            self.target_name
-            + "-"
-            + os.path.abspath(self.infile)
-            .split("/")[-1]
-            .replace(".pdb", "")
-            .replace("_bound", "")
-            .split('_')[0]
-            + '_'
-            + chain
-        )
 
         if smiles_file:
             try:
@@ -275,15 +252,20 @@ class Ligand:
             except Exception as e:
                 print(e)
                 print('failed to open smiles file ' + smiles_file)
-                smiles = 'NA'
 
         else:
             print(f'Warning: No smiles file: {file_base}')
-            smiles = 'NA'
+            # Try use mol_obj if no smiles file
+            try:
+                smiles = Chem.MolToSmiles(mol_obj)
+            except Exception as e:
+                print(e)
+                print('failed to convert mol obj to smiles' + smiles_file)
+                smiles = "NA"
 
         meta_data_dict = {'Blank':'',
                           'fragalysis_name': file_base,
-                          'crystal_name': crystal_name,
+                          'crystal_name': file_base.split("_")[0],
                           'smiles': smiles,
                           'new_smiles':'',
                           'alternate_name':'',
@@ -433,6 +415,7 @@ def set_up(target_name, infile, out_dir, smiles_file=None):
         writer.close()  # this is important to make sure the file overwrites each time
 
         new.create_metadata_file(
+            mol_obj=new.mol_dict["mol"][i],
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             smiles_file=smiles_file,
