@@ -104,6 +104,7 @@ class Ligand:
                             .replace(".pdb", "")
                             .replace("_bound", "")
                             )
+            chain = file_base.split("_")[-1]
             file_base = file_base[:-2] + "_" + str(count) + chain
 
         else:
