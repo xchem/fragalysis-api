@@ -261,6 +261,7 @@ class Ligand:
             except Exception as e:
                 print(e)
                 print('failed to convert mol obj to smiles' + smiles_file)
+                
                 smiles = "NA"
 
         meta_data_dict = {'Blank':'',
