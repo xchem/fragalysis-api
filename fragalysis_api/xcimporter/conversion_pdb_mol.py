@@ -100,7 +100,6 @@ class Ligand:
                             .replace(".pdb", "")
                             .replace("_bound", "")
                             )
-            #chain = file_base.split("_")[-1]
             file_base = file_base[:-2] + "_" + str(count) + self.chain
 
         else:
@@ -109,7 +108,6 @@ class Ligand:
                             .replace(".pdb", "")
                             .replace("_bound", "")
                             )
-            #chain = file_base.split("_")[-1]
             file_base = file_base[:-2] + "_" + str(count) + self.chain
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
@@ -261,7 +259,7 @@ class Ligand:
             except Exception as e:
                 print(e)
                 print('failed to convert mol obj to smiles' + smiles_file)
-                
+
                 smiles = "NA"
 
         meta_data_dict = {'Blank':'',
