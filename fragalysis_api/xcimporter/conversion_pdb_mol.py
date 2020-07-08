@@ -25,7 +25,11 @@ class Ligand:
         self.final_hets = []
         self.wanted_ligs = []
         self.new_lig_name = "NONAME"
-        self.chain = self.infile.split("/")[-1].split("_")[-2]
+        # Check if chain has been assigned (Fix in dictionary update?)
+        try:
+            self.chain = self.infile.split("/")[-1].split("_")[-2]
+        except:
+            self.chain = ''
 
     def hets_and_cons(self):
         """
@@ -108,6 +112,7 @@ class Ligand:
                             .replace(".pdb", "")
                             .replace("_bound", "")
                             )
+            #chain = file_base.split("_")[-1]
             file_base = file_base[:-2] + "_" + str(count) + self.chain
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
