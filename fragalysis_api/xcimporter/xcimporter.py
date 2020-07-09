@@ -7,6 +7,8 @@ from shutil import copyfile
 from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
+from distutils.dir_util import copy_tree
+
 import csv
 
 
@@ -117,13 +119,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                             f.write(line)
 
     # Move input files into Target/crystallographic folder
-    from distutils.dir_util import copy_tree
-
-    # copy subdirectory example
-    fromDirectory = in_dir
-    toDirectory = os.path.join(out_dir, target, 'crystallographic')
-
-    copy_tree(fromDirectory, toDirectory)
+    copy_tree(in_dir, os.path.join(out_dir, target, 'crystallographic') )
 
     print("Files are now in a fragalysis friendly format!")
 
