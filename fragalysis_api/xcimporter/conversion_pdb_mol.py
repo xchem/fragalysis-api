@@ -283,7 +283,7 @@ class Ligand:
 
         meta_data_dict = {'Blank':'',
                           'fragalysis_name': file_base,
-                          'crystal_name': file_base.split("_")[0],
+                          'crystal_name': file_base.rsplit('_', 1)[0],
                           'smiles': smiles,
                           'new_smiles':'',
                           'alternate_name':'',
