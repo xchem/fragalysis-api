@@ -93,9 +93,10 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
             if smiles:
-                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, smiles_file=os.path.abspath(smiles))
+                new = set_up(target_name=target, infile=os.path.abspath(aligned),
+                             out_dir=out_dir, monomerize=monomerize, smiles_file=os.path.abspath(smiles))
             else:
-                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir)
+                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, monomerize=monomerize)
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
             for file in os.listdir(os.path.join(out_dir, "tmp")):
