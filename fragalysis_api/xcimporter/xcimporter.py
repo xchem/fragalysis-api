@@ -7,6 +7,8 @@ from shutil import copyfile
 from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
+from distutils.dir_util import copy_tree
+
 import csv
 
 
@@ -93,9 +95,10 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
             if smiles:
-                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, smiles_file=os.path.abspath(smiles))
+                new = set_up(target_name=target, infile=os.path.abspath(aligned),
+                             out_dir=out_dir, monomerize=monomerize, smiles_file=os.path.abspath(smiles))
             else:
-                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir)
+                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, monomerize=monomerize)
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
             for file in os.listdir(os.path.join(out_dir, "tmp")):
@@ -114,6 +117,9 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                         csv_path = os.path.join(root, file_name)
                         for line in open(csv_path, 'r'):
                             f.write(line)
+
+    # Move input files into Target/crystallographic folder
+    copy_tree(in_dir, os.path.join(out_dir, target, 'crystallographic') )
 
     print("Files are now in a fragalysis friendly format!")
 
@@ -160,7 +166,7 @@ if __name__ == "__main__":
 
     xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, monomerize=monomerize, metadata=metadata)
 
-    fix_pdb = open(os.path.join(out_dir, target, 'pdb_file_failures.txt'), 'w')
+    fix_pdb = open(os.path.join(out_dir, 'aligned', target, 'pdb_file_failures.txt'), 'w')
 
     for target_file in os.listdir(os.path.join(out_dir, target)):
         if target_file != 'pdb_file_failures.txt' and len(os.listdir(os.path.join(out_dir, target, target_file))) < 2:
