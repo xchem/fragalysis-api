@@ -375,7 +375,7 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None):
     :return: for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.
     """
 
-    RESULTS_DIRECTORY = os.path.join(out_dir, target_name)
+    RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
 
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)

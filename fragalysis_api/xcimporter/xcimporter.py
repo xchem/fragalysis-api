@@ -116,6 +116,15 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                         for line in open(csv_path, 'r'):
                             f.write(line)
 
+    # Move input files into Target/crystallographic folder
+    from distutils.dir_util import copy_tree
+
+    # copy subdirectory example
+    fromDirectory = in_dir
+    toDirectory = os.path.join(out_dir, target, 'crystallographic')
+
+    copy_tree(fromDirectory, toDirectory)
+
     print("Files are now in a fragalysis friendly format!")
 
 if __name__ == "__main__":
@@ -161,7 +170,7 @@ if __name__ == "__main__":
 
     xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, monomerize=monomerize, metadata=metadata)
 
-    fix_pdb = open(os.path.join(out_dir, target, 'pdb_file_failures.txt'), 'w')
+    fix_pdb = open(os.path.join(out_dir, 'aligned', target, 'pdb_file_failures.txt'), 'w')
 
     for target_file in os.listdir(os.path.join(out_dir, target)):
         if target_file != 'pdb_file_failures.txt' and len(os.listdir(os.path.join(out_dir, target, target_file))) < 2:
