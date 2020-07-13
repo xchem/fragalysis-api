@@ -7,6 +7,7 @@ import os
 import shutil
 import warnings
 import csv
+import pypdb
 
 
 class Ligand:
@@ -78,6 +79,41 @@ class Ligand:
         # print(self.wanted_ligs)
 
         return self.wanted_ligs
+
+    def create_pdb_mol(self, file_base, lig_out_dir):
+        pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
+
+        # Look for PDB entries
+        try:
+            lig_line = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').readline()
+            res_name = lig_line[16:20].replace(' ', '')
+
+            mol = Chem.MolFromPDBBlock(pdb_block)
+            chem_desc = pypdb.describe_chemical(f"{res_name}")
+            new_smiles = chem_desc["describeHet"]["ligandInfo"]["ligand"]["smiles"]
+
+            template = Chem.MolFromSmiles(new_smiles)
+            new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
+
+            return new_mol
+
+        except:
+            new_pdb_block = ''
+
+            for lig in pdb_block.split('\n'):
+                if 'ATM' in lig:
+                    pos = 16
+                    s = lig[:pos] + ' ' + lig[pos + 1:]
+                    new_pdb_block += s
+                else:
+                    new_pdb_block += lig
+
+                new_pdb_block += '\n'
+
+            mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
+
+            return mol
+
 
     def create_pdb_for_ligand(self, ligand, count, monomerize):
         """
@@ -175,36 +211,22 @@ class Ligand:
         ligands_connections.close()
 
         # making pdb file into mol object
+        mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir)
 
-        pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
-
-        new_pdb_block = ''
-
-        for lig in pdb_block.split('\n'):
-            if 'ATM' in lig:
-                pos = 16
-                s = lig[:pos] + ' ' + lig[pos + 1:]
-                new_pdb_block += s
-            else:
-                new_pdb_block += lig
-
-            new_pdb_block += '\n'
-
-        m = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-
-        if not m:
+        if not mol:
             print(f'WARNING: {file_base} did not produce a mol object from its pdb lig file!')
 
         try:
-            Chem.AddHs(m)
+            Chem.AddHs(mol)
 
-            self.mol_lst.append(m)
+            self.mol_lst.append(mol)
             self.mol_dict["directory"].append(lig_out_dir)
-            self.mol_dict["mol"].append(m)
+            self.mol_dict["mol"].append(mol)
             self.mol_dict["file_base"].append(file_base)
 
         except:
             print(file_base, 'is unable to produce a ligand file')
+
 
     def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
         """
@@ -258,28 +280,12 @@ class Ligand:
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
         smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
 
-        if smiles_file:
-            try:
-                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
-                # write to .txt file
-                smiles_txt = open(smiles_out_file, "w+")
-                smiles_txt.write(smiles)
-                smiles_txt.close()
-
-            except Exception as e:
-                print(e)
-                print('failed to open smiles file ' + smiles_file)
-
-        else:
-            print(f'Warning: No smiles file: {file_base}')
-            # Try use mol_obj if no smiles file
-            try:
-                smiles = Chem.MolToSmiles(mol_obj)
-            except Exception as e:
-                print(e)
-                print('failed to convert mol obj to smiles' + smiles_file)
-
-                smiles = "NA"
+        try:
+            smiles = Chem.MolToSmiles(mol_obj)
+        except Exception as e:
+            print(e)
+            print('failed to convert mol obj to smiles' + smiles_file)
+            smiles = "NA"
 
         meta_data_dict = {'Blank':'',
                           'fragalysis_name': file_base,
