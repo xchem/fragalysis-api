@@ -81,6 +81,13 @@ class Ligand:
         return self.wanted_ligs
 
     def create_pdb_mol(self, file_base, lig_out_dir, smiles_file):
+        """
+        :param file_base: fragalysis crystal name
+        :param lig_out_dir: output directory
+        :param smiles_file: smiles file associated with pdb
+        :return: mol object that attempts to correct bond order if PDB entry
+                or mol object extracted from pdb file
+        """
         pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
 
         # Look for PDB entries in PDB bank and use residue name to get bond order
@@ -116,7 +123,7 @@ class Ligand:
                 return mol
 
         # Look for new XChem data - new XChem data must have associated smile.txt file
-        # Ned to do this to catch corner case - x0685 from mArh residue
+        # Need to do this to catch corner case - x0685 from mArh residue
         # name NHE was found ----> yielded wrong mol/smiles
         if smiles_file:
             new_pdb_block = ''
