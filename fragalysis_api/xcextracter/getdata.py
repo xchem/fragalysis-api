@@ -87,9 +87,11 @@ class GetPdbData:
 
         self.frag_url = settings.get('fragalysis', 'url')
         self.pdb_url = settings.get('pdb', 'search')
+        self.bound_pdb_url = settings.get('bound_pdb', 'search')
+        self.bound_query = settings.get('bound_pdb', 'query')
         self.query = settings.get('pdb', 'query')
 
-    def get_pdb_file(self, code):
+    def get_apo_pdb_file(self, code):
         '''
         Function to search fragalysis for PDB file.
         :param code: The code associated with the protein on the fragalysis website.
@@ -102,8 +104,22 @@ class GetPdbData:
 
         if len(response['results']) > 1:
             raise Exception('more than one pdb found... contact admin')
-        #print(response)
         return response['results'][0]['pdb_data']
+
+    def get_bound_pdb_file(self, code):
+        '''
+        Function to search fragalysis for PDB file.
+        :param code: The code associated with the protein on the fragalysis website.
+        :return response: Response from the API = pdb file
+        '''
+        url = str(self.frag_url + self.bound_pdb_url + self.bound_query + code)
+        # get response from url and decode -> json
+        with urllib.request.urlopen(url) as f:
+            response = json.loads(f.read().decode('utf-8'))
+
+        if len(response['results']) > 1:
+            raise Exception('more than one pdb found... contact admin')
+        return response['results'][0]['bound_pdb_data']
 
 
 class GetMoleculesData:
