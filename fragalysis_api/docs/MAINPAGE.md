@@ -1,9 +1,5 @@
-[![Build Status](https://travis-ci.org/xchem/fragalysis-api.svg?branch=master)](https://travis-ci.org/xchem/fragalysis-api)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/xchem/fragalysis-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/xchem/fragalysis-api/context:python)
 
-# fragalysis-api
-
-This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
+This API aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
 ## Installation
 
@@ -11,6 +7,7 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 To install with pip, you will need to install both pymol and rdkit separately, as these don't exist as pip packages. 
 
 To install fragalysis-api with pip:
+
 ```
 pip install -e .
 ```
@@ -42,6 +39,7 @@ Other functionalities that are available:
 ##### 1. How to set install, update a fragalysis enviroment
 
 Starting out by initialising an environment and activating it. Clone the repository and cd to the relevant directory. Install pymol and rdkit via conda, and the other dependcies via the setup.py file:
+
 ```python
 conda create -n fragalysis_env2 anaconda -y
 conda activate fragalysis_env2
@@ -54,7 +52,9 @@ cd ..
 rm -rf fragalysis-api/
 
 ```
+
 You can check if it has installed using:    ```conda list```
+
 
 ### 2.1 How to download PDB files
 
@@ -65,45 +65,53 @@ You will need two bits of information:
 2. The PDB code you would like to download. For example, '6epu'.
 
 To download the PDB file 
+
 ```
 python pdbimporter.py -id [user_id] -pdb [pdb code]
 ```
-In our example, this would be 
-```python pdbimporter.py -id Anna_ATAD2 -pdb 6epu```
 
-Alternatively, you can upload your own PDB files. :construction:
+In our example, this would be:  ```python pdbimporter.py -id Anna_ATAD2 -pdb 6epu```
+
+Alternatively, you can upload your own PDB files. 
+
 
 ### 2.2 How to query the PDB file
 
 Note: you don't need to manually download a pdb file before querying the PDB for structures of the same protein
 
 Similar to downloading PDB files, however initially all you need is the PDB code and the chain you would like to query. The command is 
+
 ```
 python pdbquery.py -pdb [pdb code] -chain [required chain]
 ```
+
 The API will then query the PDB for structures of the same protein that also have ligands bound. You will be asked if you would like to see a list of these structures and ligands, and if you would like to download all of these pdb files in bulk. If you choose to download these pdb files, you will be asked for your user id. This is as before: your name followed by the protein name (e.g. Anna_ATAD2).
+
 
 ### 3.How to submit PDB files for conversion to a fragalysis friendly format (fff)
 
 Once you have the files downloaded, they need to be processed before they can be visualised in fragalysis. This is done using
+
 ```
 python xcimporter -id [user id] 
 ```
+
 Default directories are used. These can however be changed by using ```-i [input directory] ``` or   ```-o [output directory] ``` if this is required.
 
 The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
 
-### Who we are
 
-We are the Fragment 5, a group of students at the University of Oxford.
+### Who we are?
 
-Anna :whale:   
-Maranga :fire:  
-George a.k.a Joff Boff :squirrel:  
-Tobias :cow:  
-Alister :panda_face:  
+We are the 'Fragment 5', a group of students at the University of Oxford.
 
-We are looked after by Rachael :crown:
+* Anna
+* Maranga
+* George (Joff Boff)  
+* Tobias 
+* Alister
+
+We are looked after by Rachael (Queen).
 
 
 
