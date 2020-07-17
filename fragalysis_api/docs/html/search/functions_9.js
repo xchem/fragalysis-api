@@ -1,5 +1,0 @@
-var searchData=
-[
-  ['outlist_5ffrom_5falign',['outlist_from_align',['../namespacefragalysis__api_1_1pipelines_1_1prep__multi__fragalysis.html#a936e1e43fa7f1c0fb2f7e9c7469fac84',1,'fragalysis_api::pipelines::prep_multi_fragalysis']]],
-  ['output',['output',['../classfragalysis__api_1_1pipelines_1_1prep__multi__fragalysis_1_1AlignTarget.html#af03e78146095ecbc6679a20329b2e989',1,'fragalysis_api.pipelines.prep_multi_fragalysis.AlignTarget.output()'],['../classfragalysis__api_1_1pipelines_1_1prep__multi__fragalysis_1_1ProcessAlignedPDB.html#a5d8621cb1acf0b27868577a91ad34d1b',1,'fragalysis_api.pipelines.prep_multi_fragalysis.ProcessAlignedPDB.output()'],['../classfragalysis__api_1_1pipelines_1_1prep__multi__fragalysis_1_1BatchProcessAlignedPDB.html#a4645eb3d13c22aa71c3e60c7fe1f9b56',1,'fragalysis_api.pipelines.prep_multi_fragalysis.BatchProcessAlignedPDB.output()'],['../classfragalysis__api_1_1pipelines_1_1prep__multi__fragalysis_1_1BatchConvertAligned.html#ae1fb7fb1e376f89a85ce3538c6b25eea',1,'fragalysis_api.pipelines.prep_multi_fragalysis.BatchConvertAligned.output()']]]
-];
