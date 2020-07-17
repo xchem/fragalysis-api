@@ -5,7 +5,6 @@ import os
 from shutil import copyfile
 
 from fragalysis_api import Validate, Align, set_up, Monomerize
-from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
 from distutils.dir_util import copy_tree
 
