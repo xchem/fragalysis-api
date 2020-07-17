@@ -33,6 +33,13 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb
 \end{DoxyCompactItemize}
 
 
+\subsection{Detailed Description}
+
+
+Definition at line 299 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+
+
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_ab88e88fe9d512e1635e5f1d61040f9f6}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_ab88e88fe9d512e1635e5f1d61040f9f6}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo}!make\+\_\+apo\+\_\+desol\+\_\+files@{make\+\_\+apo\+\_\+desol\+\_\+files}}
@@ -46,7 +53,46 @@ _apo-solv - just the ions, solvent and buffers
 
 :returns: Created files
 \end{DoxyVerb}
- \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_a08488b34eeb131d43d3139ecbbdb78fb}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_a08488b34eeb131d43d3139ecbbdb78fb}} 
+ 
+
+Definition at line 337 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+
+
+\begin{DoxyCode}
+337     \textcolor{keyword}{def }make\_apo\_desol\_files(self):
+338         \textcolor{stringliteral}{"""}
+339 \textcolor{stringliteral}{        Creates two files:}
+340 \textcolor{stringliteral}{        \_apo-desolv - as apo, but without solvent, ions and buffers;}
+341 \textcolor{stringliteral}{        \_apo-solv - just the ions, solvent and buffers}
+342 \textcolor{stringliteral}{}
+343 \textcolor{stringliteral}{        :returns: Created files}
+344 \textcolor{stringliteral}{        """}
+345         prot\_file = open(
+346             os.path.join(
+347                 self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo-desolv.pdb"})
+348             ),
+349             \textcolor{stringliteral}{"w+"},
+350         )
+351         solv\_file = open(
+352             os.path.join(self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo-solv.pdb"})),
+353             \textcolor{stringliteral}{"w+"},
+354         )
+355         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.apo\_file:
+356             \textcolor{keywordflow}{return} Warning(
+357                 \textcolor{stringliteral}{"Apo file has not been created. Use pdb\_apo().make\_apo\_file()"}
+358             )
+359         \textcolor{keywordflow}{else}:
+360             \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} open(self.apo\_file).readlines():
+361                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+362                     solv\_file.write(line)
+363                 \textcolor{keywordflow}{else}:
+364                     prot\_file.write(line)
+365         solv\_file.close()
+366         prot\_file.close()
+367 
+368 
+\end{DoxyCode}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_a08488b34eeb131d43d3139ecbbdb78fb}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_a08488b34eeb131d43d3139ecbbdb78fb}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo}!make\+\_\+apo\+\_\+file@{make\+\_\+apo\+\_\+file}}
 \index{make\+\_\+apo\+\_\+file@{make\+\_\+apo\+\_\+file}!fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo}}
 \subsubsection{\texorpdfstring{make\+\_\+apo\+\_\+file()}{make\_apo\_file()}}
@@ -59,6 +105,40 @@ _apo-solv - just the ions, solvent and buffers
 \end{DoxyVerb}
  
 
+Definition at line 310 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+
+
+\begin{DoxyCode}
+310     \textcolor{keyword}{def }make\_apo\_file(self):
+311         \textcolor{stringliteral}{"""}
+312 \textcolor{stringliteral}{        Keeps anything other than unique ligands}
+313 \textcolor{stringliteral}{}
+314 \textcolor{stringliteral}{        :param: pdb file}
+315 \textcolor{stringliteral}{        :returns: created XXX\_apo.pdb file}
+316 \textcolor{stringliteral}{        """}
+317         lines = \textcolor{stringliteral}{""}
+318         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
+319             \textcolor{keywordflow}{if} (
+320                 line.startswith(\textcolor{stringliteral}{"HETATM"})
+321                 \textcolor{keywordflow}{and} line.split()[3] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
+322                 \textcolor{keywordflow}{or} line.startswith(\textcolor{stringliteral}{"CONECT"})
+323             ):
+324                 \textcolor{keywordflow}{continue}
+325             \textcolor{keywordflow}{else}:
+326                 lines += line
+327 
+328         apo\_file = open(
+329             os.path.join(self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo.pdb"})), \textcolor{stringliteral}{"w+"}
+330         )
+331         apo\_file.write(str(lines))
+332         apo\_file.close()
+333         self.apo\_file = os.path.join(
+334             self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo.pdb"})
+335         )
+336 
+\end{DoxyCode}
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/sabs-\/r3/\+Documents/\+Fragalysis/fragalysis-\/api/fragalysis\+\_\+api/xcimporter/conversion\+\_\+pdb\+\_\+mol.\+py\end{DoxyCompactItemize}
+fragalysis\+\_\+api/xcimporter/conversion\+\_\+pdb\+\_\+mol.\+py\end{DoxyCompactItemize}

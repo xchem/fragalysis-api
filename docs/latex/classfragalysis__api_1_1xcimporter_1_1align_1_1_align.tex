@@ -16,6 +16,13 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5ac
 \end{DoxyCompactItemize}
 
 
+\subsection{Detailed Description}
+
+
+Definition at line 13 of file align.\+py.
+
+
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5acbc9f5e86bb668c49ea1254}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5acbc9f5e86bb668c49ea1254}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align}!align@{align}}
@@ -29,6 +36,36 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5ac
 \end{DoxyVerb}
  
 
+Definition at line 155 of file align.\+py.
+
+
+\begin{DoxyCode}
+155     \textcolor{keyword}{def }align(self, out\_dir):
+156         \textcolor{stringliteral}{"""}
+157 \textcolor{stringliteral}{        Aligns all pdbs in the pymol object to the pdb\_ref.}
+158 \textcolor{stringliteral}{        :param out\_dir: directory to save aligned pdbs in}
+159 \textcolor{stringliteral}{        :return: saves the pdbs}
+160 \textcolor{stringliteral}{        """}
+161 
+162         \textcolor{comment}{# Silently open PyMOL}
+163         pymol.pymol\_argv = [\textcolor{stringliteral}{'pymol'}, \textcolor{stringliteral}{'-qc'}]
+164         pymol.finish\_launching()
+165         pymol\_cmd = self.\_load\_objs()
+166 
+167         \textcolor{keywordflow}{for} num, name \textcolor{keywordflow}{in} enumerate(pymol\_cmd.get\_names()):  \textcolor{comment}{# Saves the aligned pdb files from the cmd as
+       pdb files}
+168 
+169             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} name == self.\_get\_ref:
+170                 pymol\_cmd.align(name, self.\_get\_ref)
+171                 self.\_save\_align(name, pymol\_cmd.get\_pdbstr(selection=name), out\_dir)
+172 
+173             \textcolor{keywordflow}{elif} name == self.\_get\_ref:
+174                 self.\_save\_align(name, pymol\_cmd.get\_pdbstr(selection=name), out\_dir)
+175 
+176 
+\end{DoxyCode}
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/sabs-\/r3/\+Documents/\+Fragalysis/fragalysis-\/api/fragalysis\+\_\+api/xcimporter/align.\+py\end{DoxyCompactItemize}
+fragalysis\+\_\+api/xcimporter/align.\+py\end{DoxyCompactItemize}

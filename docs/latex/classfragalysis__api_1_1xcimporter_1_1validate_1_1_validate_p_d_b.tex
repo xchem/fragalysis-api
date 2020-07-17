@@ -25,6 +25,13 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b
 \end{DoxyCompactItemize}
 
 
+\subsection{Detailed Description}
+
+
+Definition at line 66 of file validate.\+py.
+
+
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a0775261c2b35a1f1861dabccbba32d02}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a0775261c2b35a1f1861dabccbba32d02}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}!does\+\_\+pdb\+\_\+name\+\_\+contain\+\_\+only\+\_\+whitelist\+\_\+char@{does\+\_\+pdb\+\_\+name\+\_\+contain\+\_\+only\+\_\+whitelist\+\_\+char}}
@@ -36,7 +43,28 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b
 
 :return: name of pdb if it contains disallowed characters.
 \end{DoxyVerb}
- \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a9e9a8abbb1d90bb2cd17702178831f93}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a9e9a8abbb1d90bb2cd17702178831f93}} 
+ 
+
+Definition at line 108 of file validate.\+py.
+
+
+\begin{DoxyCode}
+108     \textcolor{keyword}{def }\hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a0775261c2b35a1f1861dabccbba32d02}{does\_pdb\_name\_contain\_only\_whitelist\_char}(self):
+109         \textcolor{stringliteral}{"""Checks whether a pdb files name contains characters which are not allowed.}
+110 \textcolor{stringliteral}{}
+111 \textcolor{stringliteral}{        :return: name of pdb if it contains disallowed characters.}
+112 \textcolor{stringliteral}{        """}
+113         \textcolor{keywordflow}{for} character \textcolor{keywordflow}{in} self.pdb\_name:
+114             \textcolor{keywordflow}{if} character \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} string.ascii\_letters+string.digits:
+115                 print(character)
+116                 print(f\textcolor{stringliteral}{'\{self.pdb\_name\} contains characters which are not allowed.\(\backslash\)n'}
+117                       f\textcolor{stringliteral}{'Please only use ASCII or digits.'})
+118                 \textcolor{keywordflow}{return} \textcolor{keyword}{False}
+119 
+120         \textcolor{keywordflow}{return} \textcolor{keyword}{True}
+121 
+\end{DoxyCode}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a9e9a8abbb1d90bb2cd17702178831f93}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a9e9a8abbb1d90bb2cd17702178831f93}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}!is\+\_\+pdb\+\_\+allowed\+\_\+size@{is\+\_\+pdb\+\_\+allowed\+\_\+size}}
 \index{is\+\_\+pdb\+\_\+allowed\+\_\+size@{is\+\_\+pdb\+\_\+allowed\+\_\+size}!fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}}
 \subsubsection{\texorpdfstring{is\+\_\+pdb\+\_\+allowed\+\_\+size()}{is\_pdb\_allowed\_size()}}
@@ -46,7 +74,31 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b
 
 :return: name of pdb if it failed to be smaller than the limit.
 \end{DoxyVerb}
- \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a23b89548ce5a6619636348c711b7b27e}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a23b89548ce5a6619636348c711b7b27e}} 
+ 
+
+Definition at line 90 of file validate.\+py.
+
+
+\begin{DoxyCode}
+90     \textcolor{keyword}{def }\hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a9e9a8abbb1d90bb2cd17702178831f93}{is\_pdb\_allowed\_size}(self):
+91         \textcolor{stringliteral}{"""Checks whether a pdb file is larger than the allowed file size limit.}
+92 \textcolor{stringliteral}{}
+93 \textcolor{stringliteral}{        :return: name of pdb if it failed to be smaller than the limit.}
+94 \textcolor{stringliteral}{        """}
+95         file\_size\_limit = 5.  \textcolor{comment}{# value in mb}
+96 
+97         \textcolor{keywordflow}{if} os.path.getsize(self.pdb\_file) <= 0:
+98             print(f\textcolor{stringliteral}{'\{self.pdb\_name\} file is to small.'})
+99             \textcolor{keywordflow}{return} \textcolor{keyword}{False}
+100 
+101         \textcolor{keywordflow}{if} os.path.getsize(self.pdb\_file) / 1000000 > file\_size\_limit:
+102             print(f\textcolor{stringliteral}{'\{self.pdb\_name\} file larger than limit of \{file\_size\_limit\}mb.'})
+103             \textcolor{keywordflow}{return} \textcolor{keyword}{False}
+104 
+105         \textcolor{keywordflow}{return} \textcolor{keyword}{True}
+106 
+\end{DoxyCode}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a23b89548ce5a6619636348c711b7b27e}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a23b89548ce5a6619636348c711b7b27e}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}!is\+\_\+pdb\+\_\+name\+\_\+within\+\_\+size\+\_\+limit@{is\+\_\+pdb\+\_\+name\+\_\+within\+\_\+size\+\_\+limit}}
 \index{is\+\_\+pdb\+\_\+name\+\_\+within\+\_\+size\+\_\+limit@{is\+\_\+pdb\+\_\+name\+\_\+within\+\_\+size\+\_\+limit}!fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}}
 \subsubsection{\texorpdfstring{is\+\_\+pdb\+\_\+name\+\_\+within\+\_\+size\+\_\+limit()}{is\_pdb\_name\_within\_size\_limit()}}
@@ -56,7 +108,28 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b
 
 :return: name of pdb if it was outside the allowed range.
 \end{DoxyVerb}
- \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a7e6b2f1b0ea513e4485fabb411c5f3f5}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a7e6b2f1b0ea513e4485fabb411c5f3f5}} 
+ 
+
+Definition at line 123 of file validate.\+py.
+
+
+\begin{DoxyCode}
+123     \textcolor{keyword}{def }\hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a23b89548ce5a6619636348c711b7b27e}{is\_pdb\_name\_within\_size\_limit}(self):
+124         \textcolor{stringliteral}{"""Checks whether the name of a pdb file is within the allowed range.}
+125 \textcolor{stringliteral}{}
+126 \textcolor{stringliteral}{        :return: name of pdb if it was outside the allowed range.}
+127 \textcolor{stringliteral}{        """}
+128         char\_min = 4
+129         char\_max = 20
+130 
+131         \textcolor{keywordflow}{if} (len(self.pdb\_name) > char\_max) \textcolor{keywordflow}{or} (len(self.pdb\_name) < char\_min):
+132             print(f\textcolor{stringliteral}{'\{self.pdb\_name\} has a name outside the allowed length range.\(\backslash\)n'}
+133                   f\textcolor{stringliteral}{'Please keep names between \{char\_min\}-\{char\_max\} characters.'})
+134             \textcolor{keywordflow}{return} \textcolor{keyword}{False}
+135 
+136         \textcolor{keywordflow}{return} \textcolor{keyword}{True}
+137 \end{DoxyCode}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a7e6b2f1b0ea513e4485fabb411c5f3f5}\label{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a7e6b2f1b0ea513e4485fabb411c5f3f5}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}!is\+\_\+pdb\+\_\+valid@{is\+\_\+pdb\+\_\+valid}}
 \index{is\+\_\+pdb\+\_\+valid@{is\+\_\+pdb\+\_\+valid}!fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB@{fragalysis\+\_\+api\+::xcimporter\+::validate\+::\+Validate\+P\+DB}}
 \subsubsection{\texorpdfstring{is\+\_\+pdb\+\_\+valid()}{is\_pdb\_valid()}}
@@ -66,6 +139,19 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b
 \end{DoxyVerb}
  
 
+Definition at line 73 of file validate.\+py.
+
+
+\begin{DoxyCode}
+73     \textcolor{keyword}{def }\hyperlink{classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b_a7e6b2f1b0ea513e4485fabb411c5f3f5}{is\_pdb\_valid}(self):
+74         \textcolor{stringliteral}{"""}
+75 \textcolor{stringliteral}{        If the pdb has failed just 1 check return False}
+76 \textcolor{stringliteral}{        """}
+77         \textcolor{keywordflow}{return} \textcolor{keywordflow}{not} (\textcolor{keyword}{False} \textcolor{keywordflow}{in} self.\_PDB\_validations)
+78 
+\end{DoxyCode}
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/sabs-\/r3/\+Documents/\+Fragalysis/fragalysis-\/api/fragalysis\+\_\+api/xcimporter/validate.\+py\end{DoxyCompactItemize}
+fragalysis\+\_\+api/xcimporter/validate.\+py\end{DoxyCompactItemize}

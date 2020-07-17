@@ -22,9 +22,8 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Fragalysis API
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
-   <div id="projectbrief">&#39;Thisapiaimstoallowanyusertouploadpdbfilesfromthepdborthattheyhavecreatedthemselves,andanalysetheligandbindingusingthefragalysiswebpage(https://fragalysis.diamond.ac.uk).&#39;</div>
   </td>
  </tr>
  </tbody>
@@ -87,7 +86,10 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>directory</b></td></tr>
 <tr class="separator:aaa8ff46caee489ab4cab5279ac946bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="align_8py_source.html#l00013">13</a> of file <a class="el" href="align_8py_source.html">align.py</a>.</p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a554c8cc5acbc9f5e86bb668c49ea1254"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a554c8cc5acbc9f5e86bb668c49ea1254">&#9670;&nbsp;</a></span>align()</h2>
 
@@ -117,10 +119,12 @@ Public Attributes</h2></td></tr>
 :param out_dir: directory to save aligned pdbs in
 :return: saves the pdbs
 </pre> 
+<p class="definition">Definition at line <a class="el" href="align_8py_source.html#l00155">155</a> of file <a class="el" href="align_8py_source.html">align.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">def </span>align(self, out_dir):</div><div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="stringliteral">        Aligns all pdbs in the pymol object to the pdb_ref.</span></div><div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;<span class="stringliteral">        :param out_dir: directory to save aligned pdbs in</span></div><div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="stringliteral">        :return: saves the pdbs</span></div><div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div><div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <span class="comment"># Silently open PyMOL</span></div><div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        pymol.pymol_argv = [<span class="stringliteral">&#39;pymol&#39;</span>, <span class="stringliteral">&#39;-qc&#39;</span>]</div><div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        pymol.finish_launching()</div><div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        pymol_cmd = self._load_objs()</div><div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div><div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="keywordflow">for</span> num, name <span class="keywordflow">in</span> enumerate(pymol_cmd.get_names()):  <span class="comment"># Saves the aligned pdb files from the cmd as pdb files</span></div><div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div><div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <span class="keywordflow">if</span> <span class="keywordflow">not</span> name == self._get_ref:</div><div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;                pymol_cmd.align(name, self._get_ref)</div><div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)</div><div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;</div><div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keywordflow">elif</span> name == self._get_ref:</div><div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)</div><div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div><div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/sabs-r3/Documents/Fragalysis/fragalysis-api/fragalysis_api/xcimporter/align.py</li>
+<li>fragalysis_api/xcimporter/<a class="el" href="align_8py_source.html">align.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

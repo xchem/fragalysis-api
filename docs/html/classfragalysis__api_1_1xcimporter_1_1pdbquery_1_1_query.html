@@ -22,9 +22,8 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Fragalysis API
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
-   <div id="projectbrief">&#39;Thisapiaimstoallowanyusertouploadpdbfilesfromthepdborthattheyhavecreatedthemselves,andanalysetheligandbindingusingthefragalysiswebpage(https://fragalysis.diamond.ac.uk).&#39;</div>
   </td>
  </tr>
  </tbody>
@@ -111,7 +110,10 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>match_ligs</b></td></tr>
 <tr class="separator:a5162fe822deae38446960b3593b17aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="pdbquery_8py_source.html#l00010">10</a> of file <a class="el" href="pdbquery_8py_source.html">pdbquery.py</a>.</p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a0beef45de2126a3837b02050e1b90a74"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0beef45de2126a3837b02050e1b90a74">&#9670;&nbsp;</a></span>get_matching_proteins()</h2>
 
@@ -132,10 +134,12 @@ Public Attributes</h2></td></tr>
 params: pdb code, chain id
 returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
 </pre> 
+<p class="definition">Definition at line <a class="el" href="pdbquery_8py_source.html#l00018">18</a> of file <a class="el" href="pdbquery_8py_source.html">pdbquery.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">def </span>get_matching_proteins(self):</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="stringliteral">        queries the pdb for other files with similar protein structure but different ligands bound</span></div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="stringliteral">        params: pdb code, chain id</span></div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="stringliteral">        returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file</span></div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        result = get_blast2(self.pdb_code, chain_id=self.chain_id)</div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        codes = result[0]</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        info = result[1]</div><div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">for</span> i <span class="keywordflow">in</span> range(len(codes)):</div><div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <span class="keywordflow">if</span> <span class="stringliteral">&#39;100%&#39;</span> <span class="keywordflow">in</span> info[i].text:</div><div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                self.similar.append(codes[i])</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/sabs-r3/Documents/Fragalysis/fragalysis-api/fragalysis_api/xcimporter/pdbquery.py</li>
+<li>fragalysis_api/xcimporter/<a class="el" href="pdbquery_8py_source.html">pdbquery.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

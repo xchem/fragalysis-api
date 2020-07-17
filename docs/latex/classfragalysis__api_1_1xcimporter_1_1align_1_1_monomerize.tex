@@ -37,6 +37,13 @@ def {\bfseries monomerize\+\_\+all} (self)
 \end{DoxyCompactItemize}
 
 
+\subsection{Detailed Description}
+
+
+Definition at line 177 of file align.\+py.
+
+
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a95bebe718abd76f9546c67db4a1848b3}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a95bebe718abd76f9546c67db4a1848b3}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!find\+\_\+ligs@{find\+\_\+ligs}}
@@ -48,6 +55,34 @@ def {\bfseries monomerize\+\_\+all} (self)
 \end{DoxyVerb}
  
 
+Definition at line 189 of file align.\+py.
+
+
+\begin{DoxyCode}
+189     \textcolor{keyword}{def }find\_ligs(self, pdb\_lines):
+190         \textcolor{stringliteral}{"""}
+191 \textcolor{stringliteral}{        Finds list of ligands contained in the structure, including}
+192 \textcolor{stringliteral}{        """}
+193         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
+194         wanted\_ligs = []
+195         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} pdb\_lines:
+196             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+197                 all\_ligands.append(line)
+198 
+199         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
+200             \textcolor{keywordflow}{if} (
+201                     lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
+202             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
+203                 wanted\_ligs.append(lig[16:20] + lig[20:26])
+204                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
+205 
+206         wanted\_ligs = list(set(wanted\_ligs))
+207 
+208         \textcolor{keywordflow}{return} wanted\_ligs
+209 
+\end{DoxyCode}
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/sabs-\/r3/\+Documents/\+Fragalysis/fragalysis-\/api/fragalysis\+\_\+api/xcimporter/align.\+py\end{DoxyCompactItemize}
+fragalysis\+\_\+api/xcimporter/align.\+py\end{DoxyCompactItemize}

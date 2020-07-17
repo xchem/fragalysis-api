@@ -22,9 +22,8 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Fragalysis API
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
-   <div id="projectbrief">&#39;Thisapiaimstoallowanyusertouploadpdbfilesfromthepdborthattheyhavecreatedthemselves,andanalysetheligandbindingusingthefragalysiswebpage(https://fragalysis.diamond.ac.uk).&#39;</div>
   </td>
  </tr>
  </tbody>
@@ -101,7 +100,10 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>validate_pdbs</b></td></tr>
 <tr class="separator:a73358370d6a752874ee4641f4709eb67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="validate_8py_source.html#l00005">5</a> of file <a class="el" href="validate_8py_source.html">validate.py</a>.</p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a885f473957a347300395920895108c64"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a885f473957a347300395920895108c64">&#9670;&nbsp;</a></span>does_dir_exist()</h2>
 
@@ -121,6 +123,8 @@ Public Attributes</h2></td></tr>
 
 :return: boolean answer
 </pre> 
+<p class="definition">Definition at line <a class="el" href="validate_8py_source.html#l00048">48</a> of file <a class="el" href="validate_8py_source.html">validate.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">def </span>does_dir_exist(self):</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="stringliteral">        Checks if the directory exists.</span></div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="stringliteral">        :return: boolean answer</span></div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> bool(os.path.isdir(self.directory))</div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a0b6c43c8e26bc7b2bc5f2caf982f0a5e"></a>
@@ -142,6 +146,8 @@ Public Attributes</h2></td></tr>
 
 :return: list containing the path for each pdb in the given directory
 </pre> 
+<p class="definition">Definition at line <a class="el" href="validate_8py_source.html#l00040">40</a> of file <a class="el" href="validate_8py_source.html">validate.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">def </span>get_files(self):</div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;Extracts a list of paths for all pdbs within the given directory.</span></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="stringliteral">        :return: list containing the path for each pdb in the given directory</span></div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keywordflow">return</span> glob.glob(os.path.join(self.directory, <span class="stringliteral">&quot;*.pdb&quot;</span>))</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a174b180dade39cdd984389ab32ed3732"></a>
@@ -163,6 +169,8 @@ Public Attributes</h2></td></tr>
 
 :return: boolean answer
 </pre> 
+<p class="definition">Definition at line <a class="el" href="validate_8py_source.html#l00011">11</a> of file <a class="el" href="validate_8py_source.html">validate.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keyword">def </span>is_pdbs_valid(self):</div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="stringliteral">        Checks whether all pdbs are valid. If just one isn&#39;t it returns False</span></div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="stringliteral">        :return: boolean answer</span></div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">return</span> <span class="keywordflow">not</span> bool(self._fail_list)</div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a7203bedad575f779345a78f7880a58a2"></a>
@@ -184,6 +192,8 @@ Public Attributes</h2></td></tr>
 
 :return: boolean answer
 </pre> 
+<p class="definition">Definition at line <a class="el" href="validate_8py_source.html#l00057">57</a> of file <a class="el" href="validate_8py_source.html">validate.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">def </span>is_there_a_pdb_in_dir(self):</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="stringliteral">        Checks if there is at least one pdb file in the directory.</span></div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="stringliteral">        :return: boolean answer</span></div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keywordflow">return</span> bool(self.get_files)</div><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <a id="a1e2236300274a3e4c91944ff8a10f432"></a>
@@ -205,10 +215,12 @@ Public Attributes</h2></td></tr>
 
 :return: list of all pdbs which failed validation
 </pre> 
+<p class="definition">Definition at line <a class="el" href="validate_8py_source.html#l00020">20</a> of file <a class="el" href="validate_8py_source.html">validate.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">def </span>validate_pdbs(self):</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="stringliteral">        List of all pdbs which failed validation</span></div><div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="stringliteral">        :return: list of all pdbs which failed validation</span></div><div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">return</span> self._fail_list</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/sabs-r3/Documents/Fragalysis/fragalysis-api/fragalysis_api/xcimporter/validate.py</li>
+<li>fragalysis_api/xcimporter/<a class="el" href="validate_8py_source.html">validate.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

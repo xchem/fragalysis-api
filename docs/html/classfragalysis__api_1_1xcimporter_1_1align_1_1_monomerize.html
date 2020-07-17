@@ -22,9 +22,8 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Fragalysis API
-   &#160;<span id="projectnumber">1.0</span>
+   &#160;<span id="projectnumber">1.1</span>
    </div>
-   <div id="projectbrief">&#39;Thisapiaimstoallowanyusertouploadpdbfilesfromthepdborthattheyhavecreatedthemselves,andanalysetheligandbindingusingthefragalysiswebpage(https://fragalysis.diamond.ac.uk).&#39;</div>
   </td>
  </tr>
  </tbody>
@@ -108,7 +107,10 @@ Public Attributes</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>non_ligs</b></td></tr>
 <tr class="separator:ad165d10ed4bed3d12660094bcd82ea62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="align_8py_source.html#l00177">177</a> of file <a class="el" href="align_8py_source.html">align.py</a>.</p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a95bebe718abd76f9546c67db4a1848b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a95bebe718abd76f9546c67db4a1848b3">&#9670;&nbsp;</a></span>find_ligs()</h2>
 
@@ -136,10 +138,12 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 <pre class="fragment">Finds list of ligands contained in the structure, including
 </pre> 
+<p class="definition">Definition at line <a class="el" href="align_8py_source.html#l00189">189</a> of file <a class="el" href="align_8py_source.html">align.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keyword">def </span>find_ligs(self, pdb_lines):</div><div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;</span></div><div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="stringliteral">        Finds list of ligands contained in the structure, including</span></div><div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        all_ligands = []  <span class="comment"># all ligands go in here, including solvents and ions</span></div><div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        wanted_ligs = []</div><div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">for</span> line <span class="keywordflow">in</span> pdb_lines:</div><div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">if</span> line.startswith(<span class="stringliteral">&quot;HETATM&quot;</span>):</div><div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                all_ligands.append(line)</div><div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div><div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="keywordflow">for</span> lig <span class="keywordflow">in</span> all_ligands:</div><div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            <span class="keywordflow">if</span> (</div><div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                    lig.split()[3][-3:] <span class="keywordflow">not</span> <span class="keywordflow">in</span> self.non_ligs</div><div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;            ):  <span class="comment"># this takes out the solvents and ions a.k.a non-ligands</span></div><div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;                wanted_ligs.append(lig[16:20] + lig[20:26])</div><div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;                <span class="comment"># print(lig[16:20].strip() + lig[20:26])</span></div><div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;</div><div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        wanted_ligs = list(set(wanted_ligs))</div><div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;</div><div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        <span class="keywordflow">return</span> wanted_ligs</div><div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/sabs-r3/Documents/Fragalysis/fragalysis-api/fragalysis_api/xcimporter/align.py</li>
+<li>fragalysis_api/xcimporter/<a class="el" href="align_8py_source.html">align.py</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
