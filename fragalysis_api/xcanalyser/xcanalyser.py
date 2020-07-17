@@ -1,5 +1,3 @@
-from rdkit import Chem
-
 from fragalysis_api import xcgraphcreator
 
 def xcanalyser():
