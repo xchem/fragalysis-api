@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['find_5fligand_5fnames_5fnew_57',['find_ligand_names_new',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand.html#aa9601289368daa83655aa849041e7b63',1,'fragalysis_api::xcimporter::conversion_pdb_mol::Ligand']]]
+  ['find_5fligand_5fnames_5fnew',['find_ligand_names_new',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1Ligand.html#aa9601289368daa83655aa849041e7b63',1,'fragalysis_api::xcimporter::conversion_pdb_mol::Ligand']]],
+  ['find_5fligs',['find_ligs',['../classfragalysis__api_1_1xcimporter_1_1align_1_1Monomerize.html#a95bebe718abd76f9546c67db4a1848b3',1,'fragalysis_api::xcimporter::align::Monomerize']]],
+  ['flatten_5fjson',['flatten_json',['../namespacefragalysis__api_1_1xcanalyser_1_1graphcreator.html#a1c41339aa422a66c6dc643086aa5bfbb',1,'fragalysis_api::xcanalyser::graphcreator']]]
 ];

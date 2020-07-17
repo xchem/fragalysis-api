@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['set_5fmol_5fdata_72',['set_mol_data',['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data.html#ab1f0b5b8edbd496d800e08c7f8758a53',1,'fragalysis_api::xcextracter::getdata::GetMoleculesData']]],
-  ['set_5fmolecule_5furl_73',['set_molecule_url',['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data.html#a61f7510bc705fab0ee33128872619f40',1,'fragalysis_api::xcextracter::getdata::GetMoleculesData']]],
-  ['set_5ftarget_5fid_74',['set_target_id',['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data.html#acc782fb40405a434903f6d3e80624c9c',1,'fragalysis_api::xcextracter::getdata::GetMoleculesData']]],
-  ['set_5ftarget_5fname_5furl_75',['set_target_name_url',['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data.html#abf5179a2489b7edaa16dc6bc8c89f051',1,'fragalysis_api::xcextracter::getdata::GetTargetsData']]]
+  ['pdb_5fimporter',['pdb_importer',['../classfragalysis__api_1_1xcimporter_1_1pdbimporter_1_1ImportPdb.html#acd432818f58309c5a65c92db9ca08ada',1,'fragalysis_api::xcimporter::pdbimporter::ImportPdb']]],
+  ['print_5fnumber_5fligs',['print_number_ligs',['../classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1Query.html#a36dfa365ad219285d470107eba4e7080',1,'fragalysis_api::xcimporter::pdbquery::Query']]],
+  ['process_5fligs',['process_ligs',['../classfragalysis__api_1_1xcimporter_1_1align_1_1Monomerize.html#a182c0cf1af3303f6c13d5160c6c0ff8e',1,'fragalysis_api::xcimporter::align::Monomerize']]]
 ];
