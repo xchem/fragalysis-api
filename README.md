@@ -101,7 +101,7 @@ We are the Fragment 5, a group of students at the University of Oxford.
 
 Anna :whale:   
 Maranga :fire:  
-George a.k.a Joff Boff :squirrel:  
+George a.k.a Joff Boff 
 Tobias :cow:  
 Alister :panda_face:  
 
