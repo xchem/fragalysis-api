@@ -87,9 +87,6 @@ class Ligand:
         returns: .pdb file for ligand
         """
 
-        # making ligand name which identifies type of ligand and location, so is specific to the particular ligand
-        ligand_name = "".join(ligand.split())
-
         # out directory and filename for lig pdb
         if not self.target_name in os.path.abspath(self.infile):
             if not monomerize:
@@ -203,7 +200,7 @@ class Ligand:
             self.mol_dict["mol"].append(m)
             self.mol_dict["file_base"].append(file_base)
 
-        except:
+        except AssertionError:
             print(file_base, 'is unable to produce a ligand file')
 
     def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):

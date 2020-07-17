@@ -1,7 +1,6 @@
 import urllib
 import json
 from fragalysis_api import ConfigSetup
-import pandas as pd
 
 
 class GetTargetsData:
