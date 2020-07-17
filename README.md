@@ -105,7 +105,7 @@ George a.k.a Joff Boff :poop:
 Tobias :cow:  
 Alister :panda_face:  
 
-We are looked after by Rachael :crown:
+We are looked after by Rachael :crown:. 
 
 
 
