@@ -4,12 +4,10 @@ import os
 
 from shutil import copyfile
 
-from fragalysis_api import Validate, Align, set_up, to_fragalysis_dir, Monomerize
+from fragalysis_api import Validate, Align, set_up, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
 from distutils.dir_util import copy_tree
-
-import csv
 
 
 def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomerize=False):
@@ -97,8 +95,11 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
             if smiles:
                 new = set_up(target_name=target, infile=os.path.abspath(aligned),
                              out_dir=out_dir, monomerize=monomerize, smiles_file=os.path.abspath(smiles))
+                del new
             else:
-                new = set_up(target_name=target, infile=os.path.abspath(aligned), out_dir=out_dir, monomerize=monomerize)
+                new = set_up(target_name=target, infile=os.path.abspath(aligned),
+                out_dir=out_dir, monomerize=monomerize)
+                del new
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
             for file in os.listdir(os.path.join(out_dir, "tmp")):
