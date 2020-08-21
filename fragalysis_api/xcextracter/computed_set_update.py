@@ -30,7 +30,8 @@ def get_csrf(REQ_URL):
 
 def update_cset(REQ_URL, target_name, submit_choice, upload_key, update_set, sdf_path, pdb_zip_path=None):
     """Send data to <root_url>/viewer/upload_cset/ to update an existing computed set. The existing
-    data will be removed, and the new data added. Any molecules not re-uploaded will disappear.
+    data will be removed, and the new data added. Any molecules not re-uploaded will disappear. Can
+    also be used to do the first upload of a computed set by setting update_set to None
 
     Parameters
     ----------
