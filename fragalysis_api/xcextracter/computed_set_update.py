@@ -11,12 +11,12 @@ def get_csrf(REQ_URL):
     """Get a csrf token from the request url to authenticate further requests
     Parameters
     ----------
-    REQ_URL: string
+    REQ_URL string
         The URL that you want to make a request against after getting the token
     
     Returns
     -------
-    csrftoken: str
+    csrftoken
         csrf token to use for further requests against the same URL
     """
     client = requests.session()
@@ -59,7 +59,7 @@ def update_cset(REQ_URL, target_name, update_set, sdf_path, submit_choice=None, 
         
     Returns
     -------
-    taskurl: str
+    taskurl str
         the URL to check for the status of the upload
     """
     print(f'Submitting files to update {update_set}...')
@@ -113,7 +113,7 @@ def quit_function(fn_name):
     """Quit a function and return an error
     Parameters
     ----------
-    fn_name: str
+    fn_name:
         name of function to apply to
     """
     # print to stderr, unbuffered in Python 2.
@@ -158,7 +158,7 @@ def get_task_response(taskurl):
     Returns
     -------
     status: str
-        SUCCESS or FAILED
+        SUCCESS or FAILURE
     """
     print('pinging task to check status...')
     requests.request("GET", taskurl)
@@ -171,7 +171,7 @@ def get_task_response(taskurl):
             status = task_response.json()['update_task_status']
         if status == "SUCCESS":
             complete=True
-        if status == "FAILED":
+        if status == "FAILURE":
             complete=True
         time.sleep(5)
     return status, task_response.json()
@@ -182,7 +182,7 @@ def get_task_response(taskurl):
 #
 # to overwrite an existing cset:
 # ------------------------------
-# taskurl = update_cset(REQ_URL='https://fragalysis.diamonda.ac.uk/viewer/upload_cset/',
+# taskurl = update_cset(REQ_URL='https://fragalysis.diamond.ac.uk/viewer/upload_cset/',
 #                       target_name='Mpro',
 #                       submit_choice='1',
 #                       upload_key='1',
@@ -195,7 +195,7 @@ def get_task_response(taskurl):
 #
 # to update an existing cset:
 # ---------------------------
-# taskurl = update_cset(REQ_URL='https://fragalysis.diamonda.ac.uk/viewer/update_cset/',
+# taskurl = update_cset(REQ_URL='https://fragalysis.diamond.ac.uk/viewer/update_cset/',
 #                       target_name='Mpro',
 #                       update_set='WT-xCOS3-ThreeHop',
 #                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28 copy.sdf',
