@@ -168,7 +168,7 @@ if __name__ == "__main__":
 
     xcimporter(in_dir=in_dir, out_dir=out_dir, target=target, validate=validate, monomerize=monomerize, metadata=metadata)
 
-    fix_pdb = open(os.path.join(out_dir, 'aligned', target, 'pdb_file_failures.txt'), 'w')
+    fix_pdb = open(os.path.join(out_dir, target, 'aligned', 'pdb_file_failures.txt'), 'w')
 
     for target_file in os.listdir(os.path.join(out_dir, target)):
         if target_file != 'pdb_file_failures.txt' and len(os.listdir(os.path.join(out_dir, target, target_file))) < 2:
