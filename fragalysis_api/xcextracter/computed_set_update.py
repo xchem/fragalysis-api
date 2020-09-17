@@ -104,8 +104,9 @@ def update_cset(REQ_URL, target_name, sdf_path, update_set=None, submit_choice=N
             if taskurl:
                 break
     if not taskurl:
-        raise Exception('Something went wrong with the upload/update request! \
-                        Please try again or email rachael.skyner@diamond.ac.uk for help.')
+        raise Exception(f'Something went wrong with the upload/update request! \
+                        Please try again or email rachael.skyner@diamond.ac.uk for help.\
+                        Response: {response.text}')
 
     return taskurl
 
