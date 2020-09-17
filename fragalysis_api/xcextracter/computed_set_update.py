@@ -5,7 +5,7 @@ import time
 import threading
 import _thread as thread
 
-REQ_URL = 'https://fagalysis.diamond.ac.uk/viewer/upload_cset/'
+REQ_URL = 'https://fragalysis.diamond.ac.uk/viewer/upload_cset/'
 
 def get_csrf(REQ_URL):
     """Get a csrf token from the request url to authenticate further requests
@@ -31,7 +31,7 @@ def get_csrf(REQ_URL):
     return csrftoken
 
 
-def update_cset(REQ_URL, target_name, update_set, sdf_path, submit_choice=None, upload_key=None,pdb_zip_path=None, add=False):
+def update_cset(REQ_URL, target_name, sdf_path, update_set=None, submit_choice=None, upload_key=None, pdb_zip_path=None, add=False):
     """Send data to <root_url>/viewer/upload_cset/ to overwrite an existing computed set, or to 
     <root_url>/viewer/update_cset/ to add new molecules without deleting the old ones.
 
@@ -45,7 +45,8 @@ def update_cset(REQ_URL, target_name, update_set, sdf_path, submit_choice=None, 
         the name of the computed set you want to update 
         (can be found with: "".join(submitter_name.split()) + '-' + "".join(method.split()),
         where submitter_name is the name in the submitter_name field in the blank mol of the uploaded sdf file,
-        and method is the method field in the blank mol of the uploaded sdf file)
+        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding
+        a set for the first time
     sdf_path: str
         path to the sdf file to upload
     submit_choice: int
@@ -179,6 +180,8 @@ def get_task_response(taskurl):
 
 # EXAMPLES:
 # =========
+# ---- NB: The major difference here is the REQ_URL. For new data, or to overwrite data, use https://fragalysis.diamond.ac.uk/viewer/upload_cset/.
+#          To add new molecules to an existing set, use https://fragalysis.diamond.ac.uk/viewer/update_cset/. ----
 #
 # to overwrite an existing cset:
 # ------------------------------
