@@ -31,7 +31,7 @@ def get_csrf(REQ_URL):
     return csrftoken
 
 
-def update_cset(REQ_URL, target_name, sdf_path, update_set=None, submit_choice=None, upload_key=None, pdb_zip_path=None, add=False):
+def update_cset(REQ_URL, target_name, sdf_path, update_set='None', submit_choice=None, upload_key=None, pdb_zip_path=None, add=False):
     """Send data to <root_url>/viewer/upload_cset/ to overwrite an existing computed set, or to 
     <root_url>/viewer/update_cset/ to add new molecules without deleting the old ones.
 
