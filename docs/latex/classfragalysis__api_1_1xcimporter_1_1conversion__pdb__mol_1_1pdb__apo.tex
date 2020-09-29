@@ -36,7 +36,7 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb
 \subsection{Detailed Description}
 
 
-Definition at line 299 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 344 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 
@@ -55,42 +55,42 @@ _apo-solv - just the ions, solvent and buffers
 \end{DoxyVerb}
  
 
-Definition at line 337 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 382 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-337     \textcolor{keyword}{def }make\_apo\_desol\_files(self):
-338         \textcolor{stringliteral}{"""}
-339 \textcolor{stringliteral}{        Creates two files:}
-340 \textcolor{stringliteral}{        \_apo-desolv - as apo, but without solvent, ions and buffers;}
-341 \textcolor{stringliteral}{        \_apo-solv - just the ions, solvent and buffers}
-342 \textcolor{stringliteral}{}
-343 \textcolor{stringliteral}{        :returns: Created files}
-344 \textcolor{stringliteral}{        """}
-345         prot\_file = open(
-346             os.path.join(
-347                 self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo-desolv.pdb"})
-348             ),
-349             \textcolor{stringliteral}{"w+"},
-350         )
-351         solv\_file = open(
-352             os.path.join(self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo-solv.pdb"})),
-353             \textcolor{stringliteral}{"w+"},
-354         )
-355         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.apo\_file:
-356             \textcolor{keywordflow}{return} Warning(
-357                 \textcolor{stringliteral}{"Apo file has not been created. Use pdb\_apo().make\_apo\_file()"}
-358             )
-359         \textcolor{keywordflow}{else}:
-360             \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} open(self.apo\_file).readlines():
-361                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
-362                     solv\_file.write(line)
-363                 \textcolor{keywordflow}{else}:
-364                     prot\_file.write(line)
-365         solv\_file.close()
-366         prot\_file.close()
-367 
-368 
+382     \textcolor{keyword}{def }make\_apo\_desol\_files(self):
+383         \textcolor{stringliteral}{"""}
+384 \textcolor{stringliteral}{        Creates two files:}
+385 \textcolor{stringliteral}{        \_apo-desolv - as apo, but without solvent, ions and buffers;}
+386 \textcolor{stringliteral}{        \_apo-solv - just the ions, solvent and buffers}
+387 \textcolor{stringliteral}{}
+388 \textcolor{stringliteral}{        :returns: Created files}
+389 \textcolor{stringliteral}{        """}
+390         prot\_file = open(
+391             os.path.join(
+392                 self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo-desolv.pdb"})
+393             ),
+394             \textcolor{stringliteral}{"w+"},
+395         )
+396         solv\_file = open(
+397             os.path.join(self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo-solv.pdb"})),
+398             \textcolor{stringliteral}{"w+"},
+399         )
+400         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.apo\_file:
+401             \textcolor{keywordflow}{return} Warning(
+402                 \textcolor{stringliteral}{"Apo file has not been created. Use pdb\_apo().make\_apo\_file()"}
+403             )
+404         \textcolor{keywordflow}{else}:
+405             \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} open(self.apo\_file).readlines():
+406                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+407                     solv\_file.write(line)
+408                 \textcolor{keywordflow}{else}:
+409                     prot\_file.write(line)
+410         solv\_file.close()
+411         prot\_file.close()
+412 
+413 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_a08488b34eeb131d43d3139ecbbdb78fb}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo_a08488b34eeb131d43d3139ecbbdb78fb}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::pdb\+\_\+apo}!make\+\_\+apo\+\_\+file@{make\+\_\+apo\+\_\+file}}
@@ -105,37 +105,37 @@ Definition at line 337 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 \end{DoxyVerb}
  
 
-Definition at line 310 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 355 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-310     \textcolor{keyword}{def }make\_apo\_file(self):
-311         \textcolor{stringliteral}{"""}
-312 \textcolor{stringliteral}{        Keeps anything other than unique ligands}
-313 \textcolor{stringliteral}{}
-314 \textcolor{stringliteral}{        :param: pdb file}
-315 \textcolor{stringliteral}{        :returns: created XXX\_apo.pdb file}
-316 \textcolor{stringliteral}{        """}
-317         lines = \textcolor{stringliteral}{""}
-318         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
-319             \textcolor{keywordflow}{if} (
-320                 line.startswith(\textcolor{stringliteral}{"HETATM"})
-321                 \textcolor{keywordflow}{and} line.split()[3] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
-322                 \textcolor{keywordflow}{or} line.startswith(\textcolor{stringliteral}{"CONECT"})
-323             ):
-324                 \textcolor{keywordflow}{continue}
-325             \textcolor{keywordflow}{else}:
-326                 lines += line
-327 
-328         apo\_file = open(
-329             os.path.join(self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo.pdb"})), \textcolor{stringliteral}{"w+"}
-330         )
-331         apo\_file.write(str(lines))
-332         apo\_file.close()
-333         self.apo\_file = os.path.join(
-334             self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo.pdb"})
-335         )
-336 
+355     \textcolor{keyword}{def }make\_apo\_file(self):
+356         \textcolor{stringliteral}{"""}
+357 \textcolor{stringliteral}{        Keeps anything other than unique ligands}
+358 \textcolor{stringliteral}{}
+359 \textcolor{stringliteral}{        :param: pdb file}
+360 \textcolor{stringliteral}{        :returns: created XXX\_apo.pdb file}
+361 \textcolor{stringliteral}{        """}
+362         lines = \textcolor{stringliteral}{""}
+363         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
+364             \textcolor{keywordflow}{if} (
+365                 line.startswith(\textcolor{stringliteral}{"HETATM"})
+366                 \textcolor{keywordflow}{and} line.split()[3] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
+367                 \textcolor{keywordflow}{or} line.startswith(\textcolor{stringliteral}{"CONECT"})
+368             ):
+369                 \textcolor{keywordflow}{continue}
+370             \textcolor{keywordflow}{else}:
+371                 lines += line
+372 
+373         apo\_file = open(
+374             os.path.join(self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo.pdb"})), \textcolor{stringliteral}{"w+"}
+375         )
+376         apo\_file.write(str(lines))
+377         apo\_file.close()
+378         self.apo\_file = os.path.join(
+379             self.RESULTS\_DIRECTORY, str(self.filebase + \textcolor{stringliteral}{"\_apo.pdb"})
+380         )
+381 
 \end{DoxyCode}
 
 

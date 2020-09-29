@@ -12,7 +12,9 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_li
 \item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_aa9601289368daa83655aa849041e7b63}{find\+\_\+ligand\+\_\+names\+\_\+new} (self)
 \item 
-def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a1f1e4e6058646f97f6fba517f187b64c}{create\+\_\+pdb\+\_\+for\+\_\+ligand} (self, ligand, count, monomerize)
+def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a4603fdd993d7b6b4cebea13a5ada16c2}{create\+\_\+pdb\+\_\+mol} (self, file\+\_\+base, lig\+\_\+out\+\_\+dir, smiles\+\_\+file)
+\item 
+def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_ada1d85b43009efb4da6cf5b17c851783}{create\+\_\+pdb\+\_\+for\+\_\+ligand} (self, ligand, count, monomerize, smiles\+\_\+file)
 \item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a811498c568a5f12e8047ced3640a3c90}{create\+\_\+mol\+\_\+file} (self, directory, file\+\_\+base, mol\+\_\+obj, smiles\+\_\+file=None)
 \item 
@@ -64,7 +66,7 @@ def \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_li
 \subsection{Detailed Description}
 
 
-Definition at line 12 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 13 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 
@@ -81,58 +83,56 @@ returns: .mol file for the ligand
 \end{DoxyVerb}
  
 
-Definition at line 251 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 298 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-251     \textcolor{keyword}{def }create\_metadata\_file(self, directory, file\_base, mol\_obj, smiles\_file=None):
-252         \textcolor{stringliteral}{"""}
-253 \textcolor{stringliteral}{        Metadata .csv file prepared for each ligand}
-254 \textcolor{stringliteral}{        params: file\_base and smiles}
-255 \textcolor{stringliteral}{        returns: .mol file for the ligand}
-256 \textcolor{stringliteral}{        """}
-257 
-258         meta\_out\_file = os.path.join(directory, str(file\_base + \textcolor{stringliteral}{"\_meta.csv"}))
-259         smiles\_out\_file = os.path.join(directory, str(file\_base + \textcolor{stringliteral}{"\_smiles.txt"}))
-260 
-261         \textcolor{keywordflow}{if} smiles\_file:
-262             \textcolor{keywordflow}{try}:
-263                 smiles = open(smiles\_file, \textcolor{stringliteral}{'r').readlines()[0].rstrip()}
-264 \textcolor{stringliteral}{                }\textcolor{comment}{# write to .txt file}
-265                 smiles\_txt = open(smiles\_out\_file, \textcolor{stringliteral}{"w+"})
-266                 smiles\_txt.write(smiles)
-267                 smiles\_txt.close()
-268 
-269             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
-270                 print(e)
-271                 print(\textcolor{stringliteral}{'failed to open smiles file '} + smiles\_file)
-272 
-273         \textcolor{keywordflow}{else}:
-274             print(f\textcolor{stringliteral}{'Warning: No smiles file: \{file\_base\}'})
-275             \textcolor{comment}{# Try use mol\_obj if no smiles file}
-276             \textcolor{keywordflow}{try}:
-277                 smiles = Chem.MolToSmiles(mol\_obj)
-278             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
-279                 print(e)
-280                 print(\textcolor{stringliteral}{'failed to convert mol obj to smiles'} + smiles\_file)
-281 
-282                 smiles = \textcolor{stringliteral}{"NA"}
-283 
-284         meta\_data\_dict = \{\textcolor{stringliteral}{'Blank'}:\textcolor{stringliteral}{''},
-285                           \textcolor{stringliteral}{'fragalysis\_name'}: file\_base,
-286                           \textcolor{stringliteral}{'crystal\_name'}: file\_base.rsplit(\textcolor{stringliteral}{'\_'}, 1)[0],
-287                           \textcolor{stringliteral}{'smiles'}: smiles,
-288                           \textcolor{stringliteral}{'new\_smiles'}:\textcolor{stringliteral}{''},
-289                           \textcolor{stringliteral}{'alternate\_name'}:\textcolor{stringliteral}{''},
-290                           \textcolor{stringliteral}{'site\_name'}:\textcolor{stringliteral}{''},
-291                           \textcolor{stringliteral}{'pdb\_entry'}:\textcolor{stringliteral}{''}\}
-292 
-293         \textcolor{comment}{# Write dict to csv}
-294         meta\_data\_file = open(meta\_out\_file, \textcolor{stringliteral}{'w+'})
-295         w = csv.DictWriter(meta\_data\_file, meta\_data\_dict.keys())
-296         w.writerow(meta\_data\_dict)
-297         meta\_data\_file.close()
-298 
+298     \textcolor{keyword}{def }create\_metadata\_file(self, directory, file\_base, mol\_obj, smiles\_file=None):
+299         \textcolor{stringliteral}{"""}
+300 \textcolor{stringliteral}{        Metadata .csv file prepared for each ligand}
+301 \textcolor{stringliteral}{        params: file\_base and smiles}
+302 \textcolor{stringliteral}{        returns: .mol file for the ligand}
+303 \textcolor{stringliteral}{        """}
+304 
+305         meta\_out\_file = os.path.join(directory, str(file\_base + \textcolor{stringliteral}{"\_meta.csv"}))
+306         smiles\_out\_file = os.path.join(directory, str(file\_base + \textcolor{stringliteral}{"\_smiles.txt"}))
+307 
+308         \textcolor{keywordflow}{if} smiles\_file:
+309             \textcolor{keywordflow}{try}:
+310                 smiles = open(smiles\_file, \textcolor{stringliteral}{'r').readlines()[0].rstrip()}
+311 \textcolor{stringliteral}{                }\textcolor{comment}{# write to .txt file}
+312                 smiles\_txt = open(smiles\_out\_file, \textcolor{stringliteral}{"w+"})
+313                 smiles\_txt.write(smiles)
+314                 smiles\_txt.close()
+315 
+316             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
+317                 print(e)
+318                 print(\textcolor{stringliteral}{'failed to open smiles file '} + smiles\_file)
+319                 smiles = \textcolor{stringliteral}{'NA'}
+320 
+321         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} smiles\_file:
+322             \textcolor{keywordflow}{try}:
+323                 smiles = Chem.MolToSmiles(mol\_obj)
+324             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
+325                 print(e)
+326                 print(\textcolor{stringliteral}{'failed to convert mol obj to smiles'} + smiles\_file)
+327                 smiles = \textcolor{stringliteral}{"NA"}
+328 
+329         meta\_data\_dict = \{\textcolor{stringliteral}{'Blank'}:\textcolor{stringliteral}{''},
+330                           \textcolor{stringliteral}{'fragalysis\_name'}: file\_base,
+331                           \textcolor{stringliteral}{'crystal\_name'}: file\_base.rsplit(\textcolor{stringliteral}{'\_'}, 1)[0],
+332                           \textcolor{stringliteral}{'smiles'}: smiles,
+333                           \textcolor{stringliteral}{'new\_smiles'}:\textcolor{stringliteral}{''},
+334                           \textcolor{stringliteral}{'alternate\_name'}:\textcolor{stringliteral}{''},
+335                           \textcolor{stringliteral}{'site\_name'}:\textcolor{stringliteral}{''},
+336                           \textcolor{stringliteral}{'pdb\_entry'}:\textcolor{stringliteral}{''}\}
+337 
+338         \textcolor{comment}{# Write dict to csv}
+339         meta\_data\_file = open(meta\_out\_file, \textcolor{stringliteral}{'w+'})
+340         w = csv.DictWriter(meta\_data\_file, meta\_data\_dict.keys())
+341         w.writerow(meta\_data\_dict)
+342         meta\_data\_file.close()
+343 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a811498c568a5f12e8047ced3640a3c90}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a811498c568a5f12e8047ced3640a3c90}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!create\+\_\+mol\+\_\+file@{create\+\_\+mol\+\_\+file}}
@@ -147,48 +147,48 @@ returns: .mol file for the ligand
 \end{DoxyVerb}
  
 
-Definition at line 209 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 256 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-209     \textcolor{keyword}{def }create\_mol\_file(self, directory, file\_base, mol\_obj, smiles\_file=None):
-210         \textcolor{stringliteral}{"""}
-211 \textcolor{stringliteral}{        a .mol file is produced for an individual ligand}
-212 \textcolor{stringliteral}{}
-213 \textcolor{stringliteral}{        params: ligand definition, pdb file, pdb conversion}
-214 \textcolor{stringliteral}{        returns: .mol file for the ligand}
-215 \textcolor{stringliteral}{        """}
-216 
-217         out\_file = os.path.join(directory, str(file\_base + \textcolor{stringliteral}{".mol"}))
-218 
-219         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} mol\_obj:
-220             print(f\textcolor{stringliteral}{'WARNING: mol object is empty: \{file\_base\}'})
-221 
-222         \textcolor{keywordflow}{if} smiles\_file:
-223             \textcolor{keywordflow}{try}:
-224                 smiles = open(smiles\_file, \textcolor{stringliteral}{'r').readlines()[0].rstrip()}
-225 \textcolor{stringliteral}{                template = AllChem.MolFromSmiles(smiles)}
-226 \textcolor{stringliteral}{                new\_mol = AllChem.AssignBondOrdersFromTemplate(template, mol\_obj)}
-227 \textcolor{stringliteral}{}
-228 \textcolor{stringliteral}{                }\textcolor{keywordflow}{return} Chem.rdmolfiles.MolToMolFile(new\_mol, out\_file)
-229             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
-230                 print(e)
-231                 print(\textcolor{stringliteral}{'failed to fit template '} + smiles\_file)
-232                 print(f\textcolor{stringliteral}{'template smiles: \{smiles\}'})
-233                 \textcolor{keywordflow}{return} Chem.rdmolfiles.MolToMolFile(mol\_obj, out\_file)
-234 
-235         \textcolor{keywordflow}{else}:
-236             print(f\textcolor{stringliteral}{'Warning: No smiles file: \{file\_base\}'} )
-237 
-238         \textcolor{comment}{# creating mol file}
-239         \textcolor{keywordflow}{return} Chem.rdmolfiles.MolToMolFile(mol\_obj, out\_file)
-240 
+256     \textcolor{keyword}{def }create\_mol\_file(self, directory, file\_base, mol\_obj, smiles\_file=None):
+257         \textcolor{stringliteral}{"""}
+258 \textcolor{stringliteral}{        a .mol file is produced for an individual ligand}
+259 \textcolor{stringliteral}{}
+260 \textcolor{stringliteral}{        params: ligand definition, pdb file, pdb conversion}
+261 \textcolor{stringliteral}{        returns: .mol file for the ligand}
+262 \textcolor{stringliteral}{        """}
+263 
+264         out\_file = os.path.join(directory, str(file\_base + \textcolor{stringliteral}{".mol"}))
+265 
+266         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} mol\_obj:
+267             print(f\textcolor{stringliteral}{'WARNING: mol object is empty: \{file\_base\}'})
+268 
+269         \textcolor{keywordflow}{if} smiles\_file:
+270             \textcolor{keywordflow}{try}:
+271                 smiles = open(smiles\_file, \textcolor{stringliteral}{'r').readlines()[0].rstrip()}
+272 \textcolor{stringliteral}{                template = AllChem.MolFromSmiles(smiles)}
+273 \textcolor{stringliteral}{                new\_mol = AllChem.AssignBondOrdersFromTemplate(template, mol\_obj)}
+274 \textcolor{stringliteral}{}
+275 \textcolor{stringliteral}{                }\textcolor{keywordflow}{return} Chem.rdmolfiles.MolToMolFile(new\_mol, out\_file)
+276             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
+277                 print(e)
+278                 print(\textcolor{stringliteral}{'failed to fit template '} + smiles\_file)
+279                 print(f\textcolor{stringliteral}{'template smiles: \{smiles\}'})
+280                 \textcolor{keywordflow}{return} Chem.rdmolfiles.MolToMolFile(mol\_obj, out\_file)
+281 
+282         \textcolor{keywordflow}{else}:
+283             print(f\textcolor{stringliteral}{'Warning: No smiles file: \{file\_base\}'} )
+284 
+285         \textcolor{comment}{# creating mol file}
+286         \textcolor{keywordflow}{return} Chem.rdmolfiles.MolToMolFile(mol\_obj, out\_file)
+287 
 \end{DoxyCode}
-\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a1f1e4e6058646f97f6fba517f187b64c}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a1f1e4e6058646f97f6fba517f187b64c}} 
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_ada1d85b43009efb4da6cf5b17c851783}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_ada1d85b43009efb4da6cf5b17c851783}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!create\+\_\+pdb\+\_\+for\+\_\+ligand@{create\+\_\+pdb\+\_\+for\+\_\+ligand}}
 \index{create\+\_\+pdb\+\_\+for\+\_\+ligand@{create\+\_\+pdb\+\_\+for\+\_\+ligand}!fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}}
 \subsubsection{\texorpdfstring{create\+\_\+pdb\+\_\+for\+\_\+ligand()}{create\_pdb\_for\_ligand()}}
-{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+conversion\+\_\+pdb\+\_\+mol.\+Ligand.\+create\+\_\+pdb\+\_\+for\+\_\+ligand (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{ligand,  }\item[{}]{count,  }\item[{}]{monomerize }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+conversion\+\_\+pdb\+\_\+mol.\+Ligand.\+create\+\_\+pdb\+\_\+for\+\_\+ligand (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{ligand,  }\item[{}]{count,  }\item[{}]{monomerize,  }\item[{}]{smiles\+\_\+file }\end{DoxyParamCaption})}
 
 \begin{DoxyVerb}A pdb file is produced for an individual ligand, containing atomic and connection information
 
@@ -197,139 +197,203 @@ returns: .pdb file for ligand
 \end{DoxyVerb}
  
 
-Definition at line 82 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 146 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-82     \textcolor{keyword}{def }create\_pdb\_for\_ligand(self, ligand, count, monomerize):
-83         \textcolor{stringliteral}{"""}
-84 \textcolor{stringliteral}{        A pdb file is produced for an individual ligand, containing atomic and connection information}
-85 \textcolor{stringliteral}{}
-86 \textcolor{stringliteral}{        params: vari pdb conversion, ligand definition, list of ligand heteroatoms and information,
+146     \textcolor{keyword}{def }create\_pdb\_for\_ligand(self, ligand, count, monomerize, smiles\_file):
+147         \textcolor{stringliteral}{"""}
+148 \textcolor{stringliteral}{        A pdb file is produced for an individual ligand, containing atomic and connection information}
+149 \textcolor{stringliteral}{}
+150 \textcolor{stringliteral}{        params: vari pdb conversion, ligand definition, list of ligand heteroatoms and information,
        connection information}
-87 \textcolor{stringliteral}{        returns: .pdb file for ligand}
-88 \textcolor{stringliteral}{        """}
-89 
-90         \textcolor{comment}{# making ligand name which identifies type of ligand and location, so is specific to the particular
-       ligand}
-91         ligand\_name = \textcolor{stringliteral}{""}.join(ligand.split())
-92 
-93         \textcolor{comment}{# out directory and filename for lig pdb}
-94         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.target\_name \textcolor{keywordflow}{in} os.path.abspath(self.infile):
-95             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} monomerize:
-96                 file\_base = str(
-97                     self.target\_name
-98                     + \textcolor{stringliteral}{"-"}
-99                     + os.path.abspath(self.infile)
-100                     .split(\textcolor{stringliteral}{"/"})[-1]
-101                     .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
-102                     .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
-103                     + \textcolor{stringliteral}{"\_"}
-104                     + str(count)
-105                 )
-106             \textcolor{keywordflow}{if} monomerize:
-107                 file\_base = str(self.target\_name
-108                                 + \textcolor{stringliteral}{"-"}
-109                                 + os.path.abspath(self.infile)
-110                                 .split(\textcolor{stringliteral}{"/"})[-1]
-111                                 .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
-112                                 .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
-113                                 )
-114                 chain = file\_base.split(\textcolor{stringliteral}{"\_"})[-1]
-115                 file\_base = file\_base[:-2] + \textcolor{stringliteral}{"\_"} + str(count) + chain
-116 
-117         \textcolor{keywordflow}{else}:
-118             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} monomerize:
-119                 file\_base = str(
-120                                 os.path.abspath(self.infile)
-121                                 .split(\textcolor{stringliteral}{"/"})[-1]
-122                                 .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
-123                                 .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
-124                                 + \textcolor{stringliteral}{"\_"}
-125                                 + str(count)
-126                             )
-127             \textcolor{keywordflow}{if} monomerize:
-128                 file\_base = str(
-129                                 os.path.abspath(self.infile)
-130                                 .split(\textcolor{stringliteral}{"/"})[-1]
-131                                 .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
-132                                 .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
-133                             )
-134                 chain = file\_base.split(\textcolor{stringliteral}{"\_"})[-1]
-135                 file\_base = file\_base[:-2] + \textcolor{stringliteral}{"\_"} + str(count) + chain
-136 
-137         lig\_out\_dir = os.path.join(self.RESULTS\_DIRECTORY, file\_base)
-138 
-139         individual\_ligand = []
-140         individual\_ligand\_conect = []
-141         \textcolor{comment}{# adding atom information for each specific ligand to a list}
-142         \textcolor{keywordflow}{for} atom \textcolor{keywordflow}{in} self.final\_hets:
-143             \textcolor{keywordflow}{if} str(atom[16:20].strip() + atom[20:26]) == str(ligand):
-144                 individual\_ligand.append(atom)
-145 
-146         con\_num = 0
-147         \textcolor{keywordflow}{for} atom \textcolor{keywordflow}{in} individual\_ligand:
-148             atom\_number = atom.split()[1]
-149             \textcolor{keywordflow}{for} conection \textcolor{keywordflow}{in} self.conects:
-150                 \textcolor{keywordflow}{if} (
-151                     atom\_number \textcolor{keywordflow}{in} conection
-152                     \textcolor{keywordflow}{and} conection \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} individual\_ligand\_conect
-153                 ):
-154                     individual\_ligand\_conect.append(conection)
-155                     con\_num += 1
-156 
-157         \textcolor{comment}{# checking that the number of conect files and number of atoms are almost the same}
-158         \textcolor{comment}{# (taking into account ligands that are covalently bound to the protein}
-159 
-160         \textcolor{comment}{# assert 0 <= con\_num - len(individual\_ligand) <= 1}
-161 
-162         \textcolor{comment}{# making into one list that is compatible with conversion to mol object}
-163         ligand\_het\_con = individual\_ligand + individual\_ligand\_conect
-164 
-165         \textcolor{comment}{# make a pdb file for the ligand molecule}
-166 
-167         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(lig\_out\_dir):
-168             os.makedirs(lig\_out\_dir)
-169 
-170         ligands\_connections = open(
-171             os.path.join(lig\_out\_dir, (file\_base + \textcolor{stringliteral}{".pdb"})), \textcolor{stringliteral}{"w+"}
-172         )
-173         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} ligand\_het\_con:
-174             ligands\_connections.write(str(line))
-175         ligands\_connections.close()
-176 
-177         \textcolor{comment}{# making pdb file into mol object}
-178 
-179         pdb\_block = open(os.path.join(lig\_out\_dir, (file\_base + \textcolor{stringliteral}{".pdb"})), \textcolor{stringliteral}{'r').read()}
-180 \textcolor{stringliteral}{}
-181 \textcolor{stringliteral}{        new\_pdb\_block = ''}
-182 
-183         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} pdb\_block.split(\textcolor{stringliteral}{'\(\backslash\)n'}):
-184             \textcolor{keywordflow}{if} \textcolor{stringliteral}{'ATM'} \textcolor{keywordflow}{in} lig:
-185                 pos = 16
-186                 s = lig[:pos] + \textcolor{stringliteral}{' '} + lig[pos + 1:]
-187                 new\_pdb\_block += s
-188             \textcolor{keywordflow}{else}:
-189                 new\_pdb\_block += lig
-190 
-191             new\_pdb\_block += \textcolor{stringliteral}{'\(\backslash\)n'}
-192 
-193         m = Chem.rdmolfiles.MolFromPDBBlock(new\_pdb\_block)
-194 
-195         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} m:
-196             print(f\textcolor{stringliteral}{'WARNING: \{file\_base\} did not produce a mol object from its pdb lig file!'})
+151 \textcolor{stringliteral}{        returns: .pdb file for ligand}
+152 \textcolor{stringliteral}{        """}
+153 
+154         \textcolor{comment}{# out directory and filename for lig pdb}
+155         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.target\_name \textcolor{keywordflow}{in} os.path.abspath(self.infile):
+156             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} monomerize:
+157                 file\_base = str(
+158                     self.target\_name
+159                     + \textcolor{stringliteral}{"-"}
+160                     + os.path.abspath(self.infile)
+161                     .split(\textcolor{stringliteral}{"/"})[-1]
+162                     .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
+163                     .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
+164                     + \textcolor{stringliteral}{"\_"}
+165                     + str(count)
+166                 )
+167             \textcolor{keywordflow}{if} monomerize:
+168                 file\_base = str(self.target\_name
+169                                 + \textcolor{stringliteral}{"-"}
+170                                 + os.path.abspath(self.infile)
+171                                 .split(\textcolor{stringliteral}{"/"})[-1]
+172                                 .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
+173                                 .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
+174                                 )
+175                 chain = file\_base.split(\textcolor{stringliteral}{"\_"})[-1]
+176                 file\_base = file\_base[:-2] + \textcolor{stringliteral}{"\_"} + str(count) + chain
+177 
+178         \textcolor{keywordflow}{else}:
+179             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} monomerize:
+180                 file\_base = str(
+181                                 os.path.abspath(self.infile)
+182                                 .split(\textcolor{stringliteral}{"/"})[-1]
+183                                 .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
+184                                 .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
+185                                 + \textcolor{stringliteral}{"\_"}
+186                                 + str(count)
+187                             )
+188             \textcolor{keywordflow}{if} monomerize:
+189                 file\_base = str(
+190                                 os.path.abspath(self.infile)
+191                                 .split(\textcolor{stringliteral}{"/"})[-1]
+192                                 .replace(\textcolor{stringliteral}{".pdb"}, \textcolor{stringliteral}{""})
+193                                 .replace(\textcolor{stringliteral}{"\_bound"}, \textcolor{stringliteral}{""})
+194                             )
+195                 chain = file\_base.split(\textcolor{stringliteral}{"\_"})[-1]
+196                 file\_base = file\_base[:-2] + \textcolor{stringliteral}{"\_"} + str(count) + chain
 197 
-198         \textcolor{keywordflow}{try}:
-199             Chem.AddHs(m)
-200 
-201             self.mol\_lst.append(m)
-202             self.mol\_dict[\textcolor{stringliteral}{"directory"}].append(lig\_out\_dir)
-203             self.mol\_dict[\textcolor{stringliteral}{"mol"}].append(m)
-204             self.mol\_dict[\textcolor{stringliteral}{"file\_base"}].append(file\_base)
-205 
-206         \textcolor{keywordflow}{except}:
-207             print(file\_base, \textcolor{stringliteral}{'is unable to produce a ligand file'})
-208 
+198         lig\_out\_dir = os.path.join(self.RESULTS\_DIRECTORY, file\_base)
+199 
+200         individual\_ligand = []
+201         individual\_ligand\_conect = []
+202         \textcolor{comment}{# adding atom information for each specific ligand to a list}
+203         \textcolor{keywordflow}{for} atom \textcolor{keywordflow}{in} self.final\_hets:
+204             \textcolor{keywordflow}{if} str(atom[16:20].strip() + atom[20:26]) == str(ligand):
+205                 individual\_ligand.append(atom)
+206 
+207         con\_num = 0
+208         \textcolor{keywordflow}{for} atom \textcolor{keywordflow}{in} individual\_ligand:
+209             atom\_number = atom.split()[1]
+210             \textcolor{keywordflow}{for} conection \textcolor{keywordflow}{in} self.conects:
+211                 \textcolor{keywordflow}{if} (
+212                     atom\_number \textcolor{keywordflow}{in} conection
+213                     \textcolor{keywordflow}{and} conection \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} individual\_ligand\_conect
+214                 ):
+215                     individual\_ligand\_conect.append(conection)
+216                     con\_num += 1
+217 
+218         \textcolor{comment}{# checking that the number of conect files and number of atoms are almost the same}
+219         \textcolor{comment}{# (taking into account ligands that are covalently bound to the protein}
+220 
+221         \textcolor{comment}{# assert 0 <= con\_num - len(individual\_ligand) <= 1}
+222 
+223         \textcolor{comment}{# making into one list that is compatible with conversion to mol object}
+224         ligand\_het\_con = individual\_ligand + individual\_ligand\_conect
+225 
+226         \textcolor{comment}{# make a pdb file for the ligand molecule}
+227 
+228         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(lig\_out\_dir):
+229             os.makedirs(lig\_out\_dir)
+230 
+231         ligands\_connections = open(
+232             os.path.join(lig\_out\_dir, (file\_base + \textcolor{stringliteral}{".pdb"})), \textcolor{stringliteral}{"w+"}
+233         )
+234         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} ligand\_het\_con:
+235             ligands\_connections.write(str(line))
+236         ligands\_connections.close()
+237 
+238         \textcolor{comment}{# making pdb file into mol object}
+239         mol = self.create\_pdb\_mol(file\_base=file\_base, lig\_out\_dir=lig\_out\_dir, smiles\_file=smiles\_file)
+240 
+241         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} mol:
+242             print(f\textcolor{stringliteral}{'WARNING: \{file\_base\} did not produce a mol object from its pdb lig file!'})
+243 
+244         \textcolor{keywordflow}{try}:
+245             Chem.AddHs(mol)
+246 
+247             self.mol\_lst.append(mol)
+248             self.mol\_dict[\textcolor{stringliteral}{"directory"}].append(lig\_out\_dir)
+249             self.mol\_dict[\textcolor{stringliteral}{"mol"}].append(mol)
+250             self.mol\_dict[\textcolor{stringliteral}{"file\_base"}].append(file\_base)
+251 
+252         \textcolor{keywordflow}{except} AssertionError:
+253             print(file\_base, \textcolor{stringliteral}{'is unable to produce a ligand file'})
+254 
+255 
+\end{DoxyCode}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a4603fdd993d7b6b4cebea13a5ada16c2}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a4603fdd993d7b6b4cebea13a5ada16c2}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!create\+\_\+pdb\+\_\+mol@{create\+\_\+pdb\+\_\+mol}}
+\index{create\+\_\+pdb\+\_\+mol@{create\+\_\+pdb\+\_\+mol}!fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}}
+\subsubsection{\texorpdfstring{create\+\_\+pdb\+\_\+mol()}{create\_pdb\_mol()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+conversion\+\_\+pdb\+\_\+mol.\+Ligand.\+create\+\_\+pdb\+\_\+mol (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{file\+\_\+base,  }\item[{}]{lig\+\_\+out\+\_\+dir,  }\item[{}]{smiles\+\_\+file }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}:param file_base: fragalysis crystal name
+:param lig_out_dir: output directory
+:param smiles_file: smiles file associated with pdb
+:return: mol object that attempts to correct bond order if PDB entry
+or mol object extracted from pdb file
+\end{DoxyVerb}
+ 
+
+Definition at line 83 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+
+
+\begin{DoxyCode}
+83     \textcolor{keyword}{def }create\_pdb\_mol(self, file\_base, lig\_out\_dir, smiles\_file):
+84         \textcolor{stringliteral}{"""}
+85 \textcolor{stringliteral}{        :param file\_base: fragalysis crystal name}
+86 \textcolor{stringliteral}{        :param lig\_out\_dir: output directory}
+87 \textcolor{stringliteral}{        :param smiles\_file: smiles file associated with pdb}
+88 \textcolor{stringliteral}{        :return: mol object that attempts to correct bond order if PDB entry}
+89 \textcolor{stringliteral}{                or mol object extracted from pdb file}
+90 \textcolor{stringliteral}{        """}
+91         pdb\_block = open(os.path.join(lig\_out\_dir, (file\_base + \textcolor{stringliteral}{".pdb"})), \textcolor{stringliteral}{'r').read()}
+92 \textcolor{stringliteral}{}
+93 \textcolor{stringliteral}{        }\textcolor{comment}{# Look for PDB entries in PDB bank and use residue name to get bond order}
+94         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} smiles\_file:
+95             \textcolor{keywordflow}{try}:
+96                 lig\_line = open(os.path.join(lig\_out\_dir, (file\_base + \textcolor{stringliteral}{".pdb"})), \textcolor{stringliteral}{'r').readline()}
+97 \textcolor{stringliteral}{                res\_name = lig\_line[16:20].replace(' '}, \textcolor{stringliteral}{''})
+98 
+99                 mol = Chem.MolFromPDBBlock(pdb\_block)
+100                 chem\_desc = pypdb.describe\_chemical(f\textcolor{stringliteral}{"\{res\_name\}"})
+101                 new\_smiles = chem\_desc[\textcolor{stringliteral}{"describeHet"}][\textcolor{stringliteral}{"ligandInfo"}][\textcolor{stringliteral}{"ligand"}][\textcolor{stringliteral}{"smiles"}]
+102 
+103                 template = Chem.MolFromSmiles(new\_smiles)
+104                 new\_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
+105 
+106                 \textcolor{keywordflow}{return} new\_mol
+107 
+108             \textcolor{keywordflow}{except} Exception \textcolor{keyword}{as} e:
+109                 new\_pdb\_block = \textcolor{stringliteral}{''}
+110 
+111                 \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} pdb\_block.split(\textcolor{stringliteral}{'\(\backslash\)n'}):
+112                     \textcolor{keywordflow}{if} \textcolor{stringliteral}{'ATM'} \textcolor{keywordflow}{in} lig:
+113                         pos = 16
+114                         s = lig[:pos] + \textcolor{stringliteral}{' '} + lig[pos + 1:]
+115                         new\_pdb\_block += s
+116                     \textcolor{keywordflow}{else}:
+117                         new\_pdb\_block += lig
+118 
+119                     new\_pdb\_block += \textcolor{stringliteral}{'\(\backslash\)n'}
+120 
+121                 mol = Chem.rdmolfiles.MolFromPDBBlock(new\_pdb\_block)
+122 
+123                 \textcolor{keywordflow}{return} mol
+124 
+125         \textcolor{comment}{# Look for new XChem data - new XChem data must have associated smile.txt file}
+126         \textcolor{comment}{# Need to do this to catch corner case - x0685 from mArh residue}
+127         \textcolor{comment}{# name NHE was found ----> yielded wrong mol/smiles}
+128         \textcolor{keywordflow}{if} smiles\_file:
+129             new\_pdb\_block = \textcolor{stringliteral}{''}
+130 
+131             \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} pdb\_block.split(\textcolor{stringliteral}{'\(\backslash\)n'}):
+132                 \textcolor{keywordflow}{if} \textcolor{stringliteral}{'ATM'} \textcolor{keywordflow}{in} lig:
+133                     pos = 16
+134                     s = lig[:pos] + \textcolor{stringliteral}{' '} + lig[pos + 1:]
+135                     new\_pdb\_block += s
+136                 \textcolor{keywordflow}{else}:
+137                     new\_pdb\_block += lig
+138 
+139                 new\_pdb\_block += \textcolor{stringliteral}{'\(\backslash\)n'}
+140 
+141             mol = Chem.rdmolfiles.MolFromPDBBlock(new\_pdb\_block)
+142 
+143             \textcolor{keywordflow}{return} mol
+144 
+145 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a9985de5dae739f11768aa6985ccd94bd}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_a9985de5dae739f11768aa6985ccd94bd}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!create\+\_\+sd\+\_\+file@{create\+\_\+sd\+\_\+file}}
@@ -344,20 +408,20 @@ returns: .sdf file with all input molecules from each time the function is calle
 \end{DoxyVerb}
  
 
-Definition at line 241 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 288 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-241     \textcolor{keyword}{def }create\_sd\_file(self, mol\_obj, writer):
-242         \textcolor{stringliteral}{"""}
-243 \textcolor{stringliteral}{        a molecular object defined in the pdb file is used to produce a .sdf file}
-244 \textcolor{stringliteral}{}
-245 \textcolor{stringliteral}{        params: pdb file for the molecule, SDWriter from rdkit}
-246 \textcolor{stringliteral}{        returns: .sdf file with all input molecules from each time the function is called}
-247 \textcolor{stringliteral}{        """}
-248         \textcolor{comment}{# creating sd file with all mol files}
-249         \textcolor{keywordflow}{return} writer.write(mol\_obj)
-250 
+288     \textcolor{keyword}{def }create\_sd\_file(self, mol\_obj, writer):
+289         \textcolor{stringliteral}{"""}
+290 \textcolor{stringliteral}{        a molecular object defined in the pdb file is used to produce a .sdf file}
+291 \textcolor{stringliteral}{}
+292 \textcolor{stringliteral}{        params: pdb file for the molecule, SDWriter from rdkit}
+293 \textcolor{stringliteral}{        returns: .sdf file with all input molecules from each time the function is called}
+294 \textcolor{stringliteral}{        """}
+295         \textcolor{comment}{# creating sd file with all mol files}
+296         \textcolor{keywordflow}{return} writer.write(mol\_obj)
+297 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_aa9601289368daa83655aa849041e7b63}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_aa9601289368daa83655aa849041e7b63}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!find\+\_\+ligand\+\_\+names\+\_\+new@{find\+\_\+ligand\+\_\+names\+\_\+new}}
@@ -369,31 +433,31 @@ Definition at line 241 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 \end{DoxyVerb}
  
 
-Definition at line 61 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 62 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-61     \textcolor{keyword}{def }find\_ligand\_names\_new(self):
-62         \textcolor{stringliteral}{"""}
-63 \textcolor{stringliteral}{        Finds list of ligands contained in the structure, including}
-64 \textcolor{stringliteral}{        """}
-65         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
-66         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
-67             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
-68                 all\_ligands.append(line)
-69 
-70         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
-71             \textcolor{keywordflow}{if} (
-72                 lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
-73             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
-74                 self.wanted\_ligs.append(lig[16:20].strip() + lig[20:26])
-75                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
-76 
-77         self.wanted\_ligs = list(set(self.wanted\_ligs))
-78         \textcolor{comment}{# print(self.wanted\_ligs)}
-79 
-80         \textcolor{keywordflow}{return} self.wanted\_ligs
-81 
+62     \textcolor{keyword}{def }find\_ligand\_names\_new(self):
+63         \textcolor{stringliteral}{"""}
+64 \textcolor{stringliteral}{        Finds list of ligands contained in the structure, including}
+65 \textcolor{stringliteral}{        """}
+66         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
+67         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
+68             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+69                 all\_ligands.append(line)
+70 
+71         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
+72             \textcolor{keywordflow}{if} (
+73                 lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
+74             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
+75                 self.wanted\_ligs.append(lig[16:20].strip() + lig[20:26])
+76                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
+77 
+78         self.wanted\_ligs = list(set(self.wanted\_ligs))
+79         \textcolor{comment}{# print(self.wanted\_ligs)}
+80 
+81         \textcolor{keywordflow}{return} self.wanted\_ligs
+82 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_af0d3d0b75f9f10f0f50cba06017c4ba6}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_af0d3d0b75f9f10f0f50cba06017c4ba6}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!hets\+\_\+and\+\_\+cons@{hets\+\_\+and\+\_\+cons}}
@@ -408,26 +472,26 @@ returns: lists of hetatomic information and connection information
 \end{DoxyVerb}
  
 
-Definition at line 29 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 30 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-29     \textcolor{keyword}{def }hets\_and\_cons(self):
-30         \textcolor{stringliteral}{"""}
-31 \textcolor{stringliteral}{        Heteroatoms and connect files are pulled out from full pdb file}
-32 \textcolor{stringliteral}{}
-33 \textcolor{stringliteral}{        param: pdb file in .readlines() format}
-34 \textcolor{stringliteral}{        returns: lists of hetatomic information and connection information}
-35 \textcolor{stringliteral}{        """}
-36 
-37         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
-38             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
-39                 self.hetatms.append(line)
-40             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"CONECT"}):
-41                 self.conects.append(line)
-42 
-43         \textcolor{keywordflow}{return} self.hetatms, self.conects
-44 
+30     \textcolor{keyword}{def }hets\_and\_cons(self):
+31         \textcolor{stringliteral}{"""}
+32 \textcolor{stringliteral}{        Heteroatoms and connect files are pulled out from full pdb file}
+33 \textcolor{stringliteral}{}
+34 \textcolor{stringliteral}{        param: pdb file in .readlines() format}
+35 \textcolor{stringliteral}{        returns: lists of hetatomic information and connection information}
+36 \textcolor{stringliteral}{        """}
+37 
+38         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.pdbfile:
+39             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+40                 self.hetatms.append(line)
+41             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"CONECT"}):
+42                 self.conects.append(line)
+43 
+44         \textcolor{keywordflow}{return} self.hetatms, self.conects
+45 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_af21865a4bb9be6aab21bfc82668ba25e}\label{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand_af21865a4bb9be6aab21bfc82668ba25e}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand@{fragalysis\+\_\+api\+::xcimporter\+::conversion\+\_\+pdb\+\_\+mol\+::\+Ligand}!remove\+\_\+nonligands@{remove\+\_\+nonligands}}
@@ -444,26 +508,26 @@ returns: list of heteroatoms that are not contained in the non_ligs list
 \end{DoxyVerb}
  
 
-Definition at line 45 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+Definition at line 46 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-45     \textcolor{keyword}{def }remove\_nonligands(self):
-46         \textcolor{stringliteral}{"""}
-47 \textcolor{stringliteral}{        Non-ligands such as solvents and ions are removed from the list of heteroatoms,}
-48 \textcolor{stringliteral}{        to ideally leave only the target ligand}
-49 \textcolor{stringliteral}{}
-50 \textcolor{stringliteral}{        params: list of heteroatoms and their information, list of non-ligand small molecules}
-51 \textcolor{stringliteral}{            that could be in crystal structure}
-52 \textcolor{stringliteral}{        returns: list of heteroatoms that are not contained in the non\_ligs list}
-53 \textcolor{stringliteral}{        """}
-54 
-55         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.hetatms:
-56             ligand\_name = line[17:20].strip()
-57             \textcolor{keywordflow}{if} ligand\_name \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs:
-58                 self.final\_hets.append(line)
-59         \textcolor{keywordflow}{return} self.final\_hets
-60 
+46     \textcolor{keyword}{def }remove\_nonligands(self):
+47         \textcolor{stringliteral}{"""}
+48 \textcolor{stringliteral}{        Non-ligands such as solvents and ions are removed from the list of heteroatoms,}
+49 \textcolor{stringliteral}{        to ideally leave only the target ligand}
+50 \textcolor{stringliteral}{}
+51 \textcolor{stringliteral}{        params: list of heteroatoms and their information, list of non-ligand small molecules}
+52 \textcolor{stringliteral}{            that could be in crystal structure}
+53 \textcolor{stringliteral}{        returns: list of heteroatoms that are not contained in the non\_ligs list}
+54 \textcolor{stringliteral}{        """}
+55 
+56         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} self.hetatms:
+57             ligand\_name = line[17:20].strip()
+58             \textcolor{keywordflow}{if} ligand\_name \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs:
+59                 self.final\_hets.append(line)
+60         \textcolor{keywordflow}{return} self.final\_hets
+61 
 \end{DoxyCode}
 
 

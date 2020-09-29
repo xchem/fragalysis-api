@@ -15,6 +15,11 @@ def xcgraphcreator(target_smiles):
 
 class GraphRequest:
     def __init__(self):
+        '''! Initialtion of new graph request object
+
+        @param self self
+        @return new graph request object
+        '''
         settings = ConfigSetup()
 
         # get url pieces
@@ -30,6 +35,12 @@ class GraphRequest:
         self.graph_json = None
 
     def set_smiles_url(self, smiles):
+        """! Add smile to URL for search
+
+        @param smiles SMILE to search
+        @return New URL, search URL + smile
+        
+        """
         # set full search url
         self.smiles_url = str(self.search_url + smiles)
 

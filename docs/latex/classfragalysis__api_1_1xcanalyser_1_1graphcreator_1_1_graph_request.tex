@@ -3,12 +3,10 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac2cce029ca7a29dab5625823e2eb92c2}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac2cce029ca7a29dab5625823e2eb92c2}} 
-def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self)
-\item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}} 
-def {\bfseries set\+\_\+smiles\+\_\+url} (self, smiles)
-\item 
+def \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac2cce029ca7a29dab5625823e2eb92c2}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self)
+\begin{DoxyCompactList}\small\item\em Initialtion of new graph request object. \end{DoxyCompactList}\item 
+def \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}{set\+\_\+smiles\+\_\+url} (self, smiles)
+\begin{DoxyCompactList}\small\item\em Add smile to U\+RL for search. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}} 
 def {\bfseries get\+\_\+new\+\_\+smiles} (self, smiles)
 \end{DoxyCompactItemize}
@@ -40,6 +38,92 @@ def {\bfseries get\+\_\+new\+\_\+smiles} (self, smiles)
 
 Definition at line 16 of file graphcreator.\+py.
 
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac2cce029ca7a29dab5625823e2eb92c2}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac2cce029ca7a29dab5625823e2eb92c2}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
+
+
+
+Initialtion of new graph request object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & self \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+new graph request object 
+\end{DoxyReturn}
+
+
+Definition at line 17 of file graphcreator.\+py.
+
+
+\begin{DoxyCode}
+17     \textcolor{keyword}{def }\_\_init\_\_(self):
+18         \textcolor{stringliteral}{'''! Initialtion of new graph request object}
+19 \textcolor{stringliteral}{}
+20 \textcolor{stringliteral}{        @param self self}
+21 \textcolor{stringliteral}{        @return new graph request object}
+22 \textcolor{stringliteral}{        '''}
+23         settings = ConfigSetup()
+24 
+25         \textcolor{comment}{# get url pieces}
+26         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
+27         self.graph\_url = settings.get(\textcolor{stringliteral}{'graph'}, \textcolor{stringliteral}{'search'})
+28         self.query = settings.get(\textcolor{stringliteral}{'graph'}, \textcolor{stringliteral}{'query'})
+29 
+30         \textcolor{comment}{# get full url}
+31         self.search\_url = str(self.frag\_url + self.graph\_url + self.query)
+32 
+33         \textcolor{comment}{# set blanks for smiles search and json to handle later}
+34         self.smiles\_url = \textcolor{keywordtype}{None}
+35         self.graph\_json = \textcolor{keywordtype}{None}
+36 
+\end{DoxyCode}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!set\+\_\+smiles\+\_\+url@{set\+\_\+smiles\+\_\+url}}
+\index{set\+\_\+smiles\+\_\+url@{set\+\_\+smiles\+\_\+url}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{set\+\_\+smiles\+\_\+url()}{set\_smiles\_url()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+set\+\_\+smiles\+\_\+url (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{smiles }\end{DoxyParamCaption})}
+
+
+
+Add smile to U\+RL for search. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em smiles} & S\+M\+I\+LE to search \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New U\+RL, search U\+RL + smile 
+\end{DoxyReturn}
+
+
+Definition at line 37 of file graphcreator.\+py.
+
+
+\begin{DoxyCode}
+37     \textcolor{keyword}{def }set\_smiles\_url(self, smiles):
+38         \textcolor{stringliteral}{"""! Add smile to URL for search}
+39 \textcolor{stringliteral}{}
+40 \textcolor{stringliteral}{        @param smiles SMILE to search}
+41 \textcolor{stringliteral}{        @return New URL, search URL + smile}
+42 \textcolor{stringliteral}{        }
+43 \textcolor{stringliteral}{        """}
+44         \textcolor{comment}{# set full search url}
+45         self.smiles\_url = str(self.search\_url + smiles)
+46 
+\end{DoxyCode}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
