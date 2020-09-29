@@ -39,12 +39,19 @@ class GraphRequest:
 
         @param smiles SMILE to search
         @return New URL, search URL + smile
-        
+
         """
         # set full search url
         self.smiles_url = str(self.search_url + smiles)
 
     def get_new_smiles(self, smiles):
+        """! Get smiles 
+
+        Will check if SMILE is not null, then pull informtion to graph (as json) for processing.
+        @param smiles SMILES string of molecule
+        @return function process returned json 
+
+        """
         # check for a smiles url
         smiles_url = str(self.search_url + smiles)
         if not smiles_url:
@@ -60,8 +67,14 @@ class GraphRequest:
                 return graph_dict_to_df(response).reset_index(drop=True).copy()
 
 
-# to flatten into a list for processing
+
 def flatten_json(y):
+    """! Flatten JSON into list for processing
+
+    @param y input json
+    @return list from processed json
+
+    """
     out = {}
 
     def flatten(x, name=''):
@@ -81,11 +94,12 @@ def flatten_json(y):
 
 
 def graph_dict_to_df(graph_dict):
-    """
-    This is the staircase to heaven
+    """! Convert JSON response to Pandas Dataframe
     
-    :param graph_dict:
-    :return:
+    (This is the staircase to heaven - R Skyner)
+    
+    @param graph_dict 
+    @return Pandas DataFrame
     """
     a_df = pd.DataFrame()
     columns = ['type', 'insert_smiles', 'new_smiles', 'insertion']

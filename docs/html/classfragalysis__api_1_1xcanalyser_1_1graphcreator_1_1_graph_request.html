@@ -80,8 +80,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac47f4baba7c0cdefd43bb0c7e17646c9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request.html#ac47f4baba7c0cdefd43bb0c7e17646c9">set_smiles_url</a> (self, smiles)</td></tr>
 <tr class="memdesc:ac47f4baba7c0cdefd43bb0c7e17646c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add smile to URL for search.  <a href="#ac47f4baba7c0cdefd43bb0c7e17646c9">More...</a><br /></td></tr>
 <tr class="separator:ac47f4baba7c0cdefd43bb0c7e17646c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ca3ed55492a1722ef0feb76c7fba43f"><td class="memItemLeft" align="right" valign="top"><a id="a1ca3ed55492a1722ef0feb76c7fba43f"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><b>get_new_smiles</b> (self, smiles)</td></tr>
+<tr class="memitem:a1ca3ed55492a1722ef0feb76c7fba43f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request.html#a1ca3ed55492a1722ef0feb76c7fba43f">get_new_smiles</a> (self, smiles)</td></tr>
+<tr class="memdesc:a1ca3ed55492a1722ef0feb76c7fba43f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get smiles.  <a href="#a1ca3ed55492a1722ef0feb76c7fba43f">More...</a><br /></td></tr>
 <tr class="separator:a1ca3ed55492a1722ef0feb76c7fba43f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -139,6 +139,45 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1ca3ed55492a1722ef0feb76c7fba43f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1ca3ed55492a1722ef0feb76c7fba43f">&#9670;&nbsp;</a></span>get_new_smiles()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def fragalysis_api.xcanalyser.graphcreator.GraphRequest.get_new_smiles </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>smiles</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get smiles. </p>
+<p>Will check if SMILE is not null, then pull informtion to graph (as json) for processing. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">smiles</td><td>SMILES string of molecule </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>function process returned json </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="graphcreator_8py_source.html#l00047">47</a> of file <a class="el" href="graphcreator_8py_source.html">graphcreator.py</a>.</p>
+<div class="fragment"><div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">def </span>get_new_smiles(self, smiles):</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;! Get smiles </span></div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="stringliteral">        Will check if SMILE is not null, then pull informtion to graph (as json) for processing.</span></div><div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="stringliteral">        @param smiles SMILES string of molecule</span></div><div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="stringliteral">        @return function process returned json </span></div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="comment"># check for a smiles url</span></div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        smiles_url = str(self.search_url + smiles)</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">if</span> <span class="keywordflow">not</span> smiles_url:</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;            <span class="keywordflow">raise</span> Exception(<span class="stringliteral">&#39;Please initiate smiles url with set_smiles_url(&lt;smiles&gt;)!&#39;</span>)</div><div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div><div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="comment"># get response from url and decode -&gt; json</span></div><div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        with urllib.urlopen(smiles_url) <span class="keyword">as</span> f:</div><div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            result = f.read().decode(<span class="stringliteral">&#39;utf-8&#39;</span>)</div><div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">if</span> <span class="keywordflow">not</span> result == <span class="stringliteral">&#39;EMPTY RESULT SET&#39;</span>:</div><div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                response = json.loads(result)</div><div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div><div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                <span class="comment"># set json as decoded response for processing</span></div><div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                <span class="keywordflow">return</span> graph_dict_to_df(response).reset_index(drop=<span class="keyword">True</span>).copy()</div><div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div><div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div><div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div></div><!-- fragment -->
+</div>
+</div>
 <a id="ac47f4baba7c0cdefd43bb0c7e17646c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac47f4baba7c0cdefd43bb0c7e17646c9">&#9670;&nbsp;</a></span>set_smiles_url()</h2>
 
@@ -175,7 +214,7 @@ Public Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>New URL, search URL + smile </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="graphcreator_8py_source.html#l00037">37</a> of file <a class="el" href="graphcreator_8py_source.html">graphcreator.py</a>.</p>
-<div class="fragment"><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">def </span>set_smiles_url(self, smiles):</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;! Add smile to URL for search</span></div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="stringliteral">        @param smiles SMILE to search</span></div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="stringliteral">        @return New URL, search URL + smile</span></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="stringliteral">        </span></div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="comment"># set full search url</span></div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        self.smiles_url = str(self.search_url + smiles)</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div></div><!-- fragment -->
+<div class="fragment"><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">def </span>set_smiles_url(self, smiles):</div><div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="stringliteral">&quot;&quot;&quot;! Add smile to URL for search</span></div><div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="stringliteral">        @param smiles SMILE to search</span></div><div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="stringliteral">        @return New URL, search URL + smile</span></div><div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="stringliteral"></span></div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="stringliteral">        &quot;&quot;&quot;</span></div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        <span class="comment"># set full search url</span></div><div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        self.smiles_url = str(self.search_url + smiles)</div><div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div></div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

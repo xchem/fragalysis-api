@@ -7,9 +7,8 @@ def \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_requ
 \begin{DoxyCompactList}\small\item\em Initialtion of new graph request object. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}{set\+\_\+smiles\+\_\+url} (self, smiles)
 \begin{DoxyCompactList}\small\item\em Add smile to U\+RL for search. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}} 
-def {\bfseries get\+\_\+new\+\_\+smiles} (self, smiles)
-\end{DoxyCompactItemize}
+def \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}{get\+\_\+new\+\_\+smiles} (self, smiles)
+\begin{DoxyCompactList}\small\item\em Get smiles. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -89,6 +88,55 @@ Definition at line 17 of file graphcreator.\+py.
 
 
 \subsection{Member Function Documentation}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a1ca3ed55492a1722ef0feb76c7fba43f}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!get\+\_\+new\+\_\+smiles@{get\+\_\+new\+\_\+smiles}}
+\index{get\+\_\+new\+\_\+smiles@{get\+\_\+new\+\_\+smiles}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{get\+\_\+new\+\_\+smiles()}{get\_new\_smiles()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+get\+\_\+new\+\_\+smiles (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{smiles }\end{DoxyParamCaption})}
+
+
+
+Get smiles. 
+
+Will check if S\+M\+I\+LE is not null, then pull informtion to graph (as json) for processing. 
+\begin{DoxyParams}{Parameters}
+{\em smiles} & S\+M\+I\+L\+ES string of molecule \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function process returned json 
+\end{DoxyReturn}
+
+
+Definition at line 47 of file graphcreator.\+py.
+
+
+\begin{DoxyCode}
+47     \textcolor{keyword}{def }get\_new\_smiles(self, smiles):
+48         \textcolor{stringliteral}{"""! Get smiles }
+49 \textcolor{stringliteral}{}
+50 \textcolor{stringliteral}{        Will check if SMILE is not null, then pull informtion to graph (as json) for processing.}
+51 \textcolor{stringliteral}{        @param smiles SMILES string of molecule}
+52 \textcolor{stringliteral}{        @return function process returned json }
+53 \textcolor{stringliteral}{}
+54 \textcolor{stringliteral}{        """}
+55         \textcolor{comment}{# check for a smiles url}
+56         smiles\_url = str(self.search\_url + smiles)
+57         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} smiles\_url:
+58             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please initiate smiles url with set\_smiles\_url(<smiles>)!'})
+59 
+60         \textcolor{comment}{# get response from url and decode -> json}
+61         with urllib.urlopen(smiles\_url) \textcolor{keyword}{as} f:
+62             result = f.read().decode(\textcolor{stringliteral}{'utf-8'})
+63             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} result == \textcolor{stringliteral}{'EMPTY RESULT SET'}:
+64                 response = json.loads(result)
+65 
+66                 \textcolor{comment}{# set json as decoded response for processing}
+67                 \textcolor{keywordflow}{return} graph\_dict\_to\_df(response).reset\_index(drop=\textcolor{keyword}{True}).copy()
+68 
+69 
+70 
+\end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac47f4baba7c0cdefd43bb0c7e17646c9}} 
 \index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!set\+\_\+smiles\+\_\+url@{set\+\_\+smiles\+\_\+url}}
 \index{set\+\_\+smiles\+\_\+url@{set\+\_\+smiles\+\_\+url}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
@@ -118,7 +166,7 @@ Definition at line 37 of file graphcreator.\+py.
 39 \textcolor{stringliteral}{}
 40 \textcolor{stringliteral}{        @param smiles SMILE to search}
 41 \textcolor{stringliteral}{        @return New URL, search URL + smile}
-42 \textcolor{stringliteral}{        }
+42 \textcolor{stringliteral}{}
 43 \textcolor{stringliteral}{        """}
 44         \textcolor{comment}{# set full search url}
 45         self.smiles\_url = str(self.search\_url + smiles)
