@@ -45,10 +45,10 @@ Other functionalities that are available:
 
 Starting out by initialising an environment and activating it. Clone the repository and cd to the relevant directory. Install pymol and rdkit via conda, and the other dependcies via the setup.py file:
 ```python
-conda create -n fragalysis_env2 anaconda -y
-conda activate fragalysis_env2
+conda create -n fragalysis_env anaconda -y
+conda activate fragalysis_env
 conda install -c schrodinger pymol -y
-conda install -c rdkit rdkit -y
+conda install -c conda-forge rdkit -y
 git clone "https://github.com/xchem/fragalysis-api.git"
 cd fragalysis-api/
 pip install -e .
