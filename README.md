@@ -53,7 +53,6 @@ git clone "https://github.com/xchem/fragalysis-api.git"
 cd fragalysis-api/
 pip install -e .
 cd ..
-rm -rf fragalysis-api/
 
 ```
 You can check if it has installed using:    ```conda list```
