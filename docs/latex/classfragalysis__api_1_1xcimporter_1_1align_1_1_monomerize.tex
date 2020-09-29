@@ -40,7 +40,7 @@ def {\bfseries monomerize\+\_\+all} (self)
 \subsection{Detailed Description}
 
 
-Definition at line 177 of file align.\+py.
+Definition at line 192 of file align.\+py.
 
 
 
@@ -55,31 +55,31 @@ Definition at line 177 of file align.\+py.
 \end{DoxyVerb}
  
 
-Definition at line 189 of file align.\+py.
+Definition at line 204 of file align.\+py.
 
 
 \begin{DoxyCode}
-189     \textcolor{keyword}{def }find\_ligs(self, pdb\_lines):
-190         \textcolor{stringliteral}{"""}
-191 \textcolor{stringliteral}{        Finds list of ligands contained in the structure, including}
-192 \textcolor{stringliteral}{        """}
-193         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
-194         wanted\_ligs = []
-195         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} pdb\_lines:
-196             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
-197                 all\_ligands.append(line)
-198 
-199         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
-200             \textcolor{keywordflow}{if} (
-201                     lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
-202             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
-203                 wanted\_ligs.append(lig[16:20] + lig[20:26])
-204                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
-205 
-206         wanted\_ligs = list(set(wanted\_ligs))
-207 
-208         \textcolor{keywordflow}{return} wanted\_ligs
-209 
+204     \textcolor{keyword}{def }find\_ligs(self, pdb\_lines):
+205         \textcolor{stringliteral}{"""}
+206 \textcolor{stringliteral}{        Finds list of ligands contained in the structure, including}
+207 \textcolor{stringliteral}{        """}
+208         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
+209         wanted\_ligs = []
+210         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} pdb\_lines:
+211             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+212                 all\_ligands.append(line)
+213 
+214         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
+215             \textcolor{keywordflow}{if} (
+216                     lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
+217             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
+218                 wanted\_ligs.append(lig[16:20] + lig[20:26])
+219                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
+220 
+221         wanted\_ligs = list(set(wanted\_ligs))
+222 
+223         \textcolor{keywordflow}{return} wanted\_ligs
+224 
 \end{DoxyCode}
 
 

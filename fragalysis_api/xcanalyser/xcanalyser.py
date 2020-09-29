@@ -1,7 +1,6 @@
 from fragalysis_api import xcgraphcreator
 
 def xcanalyser():
-    
     #def __init__(self, graphs):        
     #    self.graphs = graphs
         

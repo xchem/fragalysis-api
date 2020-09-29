@@ -3,9 +3,8 @@
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a28e5edc1a05680d36665012eff20a271}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a28e5edc1a05680d36665012eff20a271}} 
-def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, directory, pdb\+\_\+ref=\textquotesingle{}\textquotesingle{})
-\item 
+def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a28e5edc1a05680d36665012eff20a271}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, directory, pdb\+\_\+ref=\textquotesingle{}\textquotesingle{})
+\begin{DoxyCompactList}\small\item\em Create new \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align}{Align} object. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5acbc9f5e86bb668c49ea1254}{align} (self, out\+\_\+dir)
 \end{DoxyCompactItemize}
 \subsection*{Public Attributes}
@@ -23,6 +22,48 @@ Definition at line 13 of file align.\+py.
 
 
 
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a28e5edc1a05680d36665012eff20a271}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a28e5edc1a05680d36665012eff20a271}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align}!\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}}
+\index{\+\_\+\+\_\+init\+\_\+\+\_\+@{\+\_\+\+\_\+init\+\_\+\+\_\+}!fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+align.\+Align.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{directory,  }\item[{}]{pdb\+\_\+ref = {\ttfamily \textquotesingle{}\textquotesingle{}} }\end{DoxyParamCaption})}
+
+
+
+Create new \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align}{Align} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em directory} & location of P\+DB files \\
+\hline
+{\em pdb} & ref pdb reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align}{Align} object with directory and pdb ref parameters 
+\end{DoxyReturn}
+
+
+Definition at line 15 of file align.\+py.
+
+
+\begin{DoxyCode}
+15     \textcolor{keyword}{def }\_\_init\_\_(self, directory, pdb\_ref=''):
+16         \textcolor{stringliteral}{"""! Create new Align object}
+17 \textcolor{stringliteral}{}
+18 \textcolor{stringliteral}{        @param directory location of PDB files}
+19 \textcolor{stringliteral}{        @param pdb ref pdb reference}
+20 \textcolor{stringliteral}{        @return New Align object with directory and pdb ref parameters}
+21 \textcolor{stringliteral}{        """}
+22 
+23 
+24         self.directory = directory
+25         self.\_get\_ref = pdb\_ref
+26 
+\end{DoxyCode}
+
+
 \subsection{Member Function Documentation}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5acbc9f5e86bb668c49ea1254}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5acbc9f5e86bb668c49ea1254}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Align}!align@{align}}
@@ -36,33 +77,33 @@ Definition at line 13 of file align.\+py.
 \end{DoxyVerb}
  
 
-Definition at line 155 of file align.\+py.
+Definition at line 170 of file align.\+py.
 
 
 \begin{DoxyCode}
-155     \textcolor{keyword}{def }align(self, out\_dir):
-156         \textcolor{stringliteral}{"""}
-157 \textcolor{stringliteral}{        Aligns all pdbs in the pymol object to the pdb\_ref.}
-158 \textcolor{stringliteral}{        :param out\_dir: directory to save aligned pdbs in}
-159 \textcolor{stringliteral}{        :return: saves the pdbs}
-160 \textcolor{stringliteral}{        """}
-161 
-162         \textcolor{comment}{# Silently open PyMOL}
-163         pymol.pymol\_argv = [\textcolor{stringliteral}{'pymol'}, \textcolor{stringliteral}{'-qc'}]
-164         pymol.finish\_launching()
-165         pymol\_cmd = self.\_load\_objs()
-166 
-167         \textcolor{keywordflow}{for} num, name \textcolor{keywordflow}{in} enumerate(pymol\_cmd.get\_names()):  \textcolor{comment}{# Saves the aligned pdb files from the cmd as
-       pdb files}
-168 
-169             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} name == self.\_get\_ref:
-170                 pymol\_cmd.align(name, self.\_get\_ref)
-171                 self.\_save\_align(name, pymol\_cmd.get\_pdbstr(selection=name), out\_dir)
-172 
-173             \textcolor{keywordflow}{elif} name == self.\_get\_ref:
-174                 self.\_save\_align(name, pymol\_cmd.get\_pdbstr(selection=name), out\_dir)
-175 
+170     \textcolor{keyword}{def }align(self, out\_dir):
+171         \textcolor{stringliteral}{"""}
+172 \textcolor{stringliteral}{        Aligns all pdbs in the pymol object to the pdb\_ref.}
+173 \textcolor{stringliteral}{        :param out\_dir: directory to save aligned pdbs in}
+174 \textcolor{stringliteral}{        :return: saves the pdbs}
+175 \textcolor{stringliteral}{        """}
 176 
+177         \textcolor{comment}{# Silently open PyMOL}
+178         pymol.pymol\_argv = [\textcolor{stringliteral}{'pymol'}, \textcolor{stringliteral}{'-qc'}]
+179         pymol.finish\_launching()
+180         pymol\_cmd = self.\_load\_objs()
+181 
+182         \textcolor{keywordflow}{for} num, name \textcolor{keywordflow}{in} enumerate(pymol\_cmd.get\_names()):  \textcolor{comment}{# Saves the aligned pdb files from the cmd as
+       pdb files}
+183 
+184             \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} name == self.\_get\_ref:
+185                 pymol\_cmd.align(name, self.\_get\_ref)
+186                 self.\_save\_align(name, pymol\_cmd.get\_pdbstr(selection=name), out\_dir)
+187 
+188             \textcolor{keywordflow}{elif} name == self.\_get\_ref:
+189                 self.\_save\_align(name, pymol\_cmd.get\_pdbstr(selection=name), out\_dir)
+190 
+191 
 \end{DoxyCode}
 
 
