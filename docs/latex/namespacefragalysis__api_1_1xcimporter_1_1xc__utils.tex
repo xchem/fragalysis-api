@@ -1,0 +1,75 @@
+\hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xc__utils}{}\section{fragalysis\+\_\+api.\+xcimporter.\+xc\+\_\+utils Namespace Reference}
+\label{namespacefragalysis__api_1_1xcimporter_1_1xc__utils}\index{fragalysis\+\_\+api.\+xcimporter.\+xc\+\_\+utils@{fragalysis\+\_\+api.\+xcimporter.\+xc\+\_\+utils}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a20b9e349b37bfbf70c38bfaf1a42876f}{to\+\_\+fragalysis\+\_\+dir} (pdb\+\_\+id, data\+\_\+dir)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+string \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a8e1ebabddefaec139b57091c2aee7c87}{input\+\_\+dir} = \textquotesingle{}../../tests/data\+\_\+for\+\_\+tests/tmp/\textquotesingle{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a20b9e349b37bfbf70c38bfaf1a42876f}\label{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a20b9e349b37bfbf70c38bfaf1a42876f}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils@{fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils}!to\+\_\+fragalysis\+\_\+dir@{to\+\_\+fragalysis\+\_\+dir}}
+\index{to\+\_\+fragalysis\+\_\+dir@{to\+\_\+fragalysis\+\_\+dir}!fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils@{fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils}}
+\subsubsection{\texorpdfstring{to\+\_\+fragalysis\+\_\+dir()}{to\_fragalysis\_dir()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+xc\+\_\+utils.\+to\+\_\+fragalysis\+\_\+dir (\begin{DoxyParamCaption}\item[{}]{pdb\+\_\+id,  }\item[{}]{data\+\_\+dir }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Creates a Fragalysis friendly directory out of a directory with the needed
+files (.sdf, .mol, _bounded.pdb and _apo.pdb). Names this new directory with the
+pdb_id name.
+
+:param pdb_id: ID (name) of the directory with the data
+:param data_dir: Directory which contains the data (ID directory)
+:return: Reordered directory
+\end{DoxyVerb}
+ 
+
+Definition at line 6 of file xc\+\_\+utils.\+py.
+
+
+\begin{DoxyCode}
+6 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a20b9e349b37bfbf70c38bfaf1a42876f}{to\_fragalysis\_dir}(pdb\_id, data\_dir):
+7     \textcolor{stringliteral}{"""}
+8 \textcolor{stringliteral}{    Creates a Fragalysis friendly directory out of a directory with the needed}
+9 \textcolor{stringliteral}{    files (.sdf, .mol, \_bounded.pdb and \_apo.pdb). Names this new directory with the}
+10 \textcolor{stringliteral}{    pdb\_id name.}
+11 \textcolor{stringliteral}{}
+12 \textcolor{stringliteral}{    :param pdb\_id: ID (name) of the directory with the data}
+13 \textcolor{stringliteral}{    :param data\_dir: Directory which contains the data (ID directory)}
+14 \textcolor{stringliteral}{    :return: Reordered directory}
+15 \textcolor{stringliteral}{    """}
+16     \textcolor{comment}{# Creates list of different PDBs in the directory}
+17     pdb\_aligned\_files = glob.glob(os.path.join(data\_dir, \textcolor{stringliteral}{"*\_bound.pdb"}))
+18 
+19     \textcolor{comment}{# For each pdb extract the different file types of that PDB and put them in their own directory}
+20     \textcolor{keywordflow}{for} pdb \textcolor{keywordflow}{in} [os.path.basename(pdb\_file)[:-10] \textcolor{keywordflow}{for} pdb\_file \textcolor{keywordflow}{in} pdb\_aligned\_files]:
+21 
+22         \textcolor{comment}{# Create directory if it doesn't exist}
+23         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'}+pdb)):
+24             os.makedirs(os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'} + pdb))
+25 
+26         src = glob.glob(os.path.join(data\_dir, \textcolor{stringliteral}{"*"} + pdb + \textcolor{stringliteral}{"*"}))
+27         new\_dir = os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'} + pdb)
+28 
+29         [copyfile(i, os.path.join(new\_dir, os.path.basename(i))) \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} src]
+30 
+31 
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a8e1ebabddefaec139b57091c2aee7c87}\label{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a8e1ebabddefaec139b57091c2aee7c87}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils@{fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils}!input\+\_\+dir@{input\+\_\+dir}}
+\index{input\+\_\+dir@{input\+\_\+dir}!fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils@{fragalysis\+\_\+api\+::xcimporter\+::xc\+\_\+utils}}
+\subsubsection{\texorpdfstring{input\+\_\+dir}{input\_dir}}
+{\footnotesize\ttfamily string fragalysis\+\_\+api.\+xcimporter.\+xc\+\_\+utils.\+input\+\_\+dir = \textquotesingle{}../../tests/data\+\_\+for\+\_\+tests/tmp/\textquotesingle{}}
+
+
+
+Definition at line 33 of file xc\+\_\+utils.\+py.
+

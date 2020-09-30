@@ -1,0 +1,70 @@
+\hypertarget{namespacefragalysis__api_1_1xcextracter_1_1xcextracter}{}\section{fragalysis\+\_\+api.\+xcextracter.\+xcextracter Namespace Reference}
+\label{namespacefragalysis__api_1_1xcextracter_1_1xcextracter}\index{fragalysis\+\_\+api.\+xcextracter.\+xcextracter@{fragalysis\+\_\+api.\+xcextracter.\+xcextracter}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}{xcextracter} (target\+\_\+name)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a72e0abb30ca031f003e991a2d76b1040}{results} = \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}{xcextracter}(target\+\_\+name=\textquotesingle{}N\+U\+D\+T5A\textquotesingle{})
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}\label{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}} 
+\index{fragalysis\+\_\+api\+::xcextracter\+::xcextracter@{fragalysis\+\_\+api\+::xcextracter\+::xcextracter}!xcextracter@{xcextracter}}
+\index{xcextracter@{xcextracter}!fragalysis\+\_\+api\+::xcextracter\+::xcextracter@{fragalysis\+\_\+api\+::xcextracter\+::xcextracter}}
+\subsubsection{\texorpdfstring{xcextracter()}{xcextracter()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+xcextracter.\+xcextracter (\begin{DoxyParamCaption}\item[{}]{target\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 8 of file xcextracter.\+py.
+
+
+\begin{DoxyCode}
+8 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}{xcextracter}(target\_name):
+9 
+10     \textcolor{comment}{#checking the fragalysis website is live}
+11     \textcolor{keywordflow}{if} \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}{can\_connect}():
+12         print(\textcolor{stringliteral}{'Can connect to Fragalysis'})
+13     \textcolor{keywordflow}{else}:
+14         print(\textcolor{stringliteral}{'Cannot connect to Fragalysis'})
+15         sys.exit()
+16 
+17     search = GetMoleculesData()
+18 
+19     \textcolor{comment}{# get the target id's for further operations for NUDT5A}
+20     search.set\_target\_id(target=target\_name)
+21 
+22     \textcolor{comment}{# set the molecule url for the current instance of GetMoleculesData to the first id in the id\_list from
+       above}
+23     search.set\_molecule\_url()
+24 
+25     \textcolor{comment}{# get a json response from the url we set above}
+26     search.set\_mol\_data()
+27 
+28     \textcolor{comment}{# get all molecule data (json) related to all of the ids in id\_list}
+29     search.set\_complete\_mol\_data()
+30 
+31     a\_df = pd.DataFrame(search.get\_complete\_mol\_data)
+32 
+33     \textcolor{keywordflow}{return} a\_df
+34 
+35 
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a72e0abb30ca031f003e991a2d76b1040}\label{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a72e0abb30ca031f003e991a2d76b1040}} 
+\index{fragalysis\+\_\+api\+::xcextracter\+::xcextracter@{fragalysis\+\_\+api\+::xcextracter\+::xcextracter}!results@{results}}
+\index{results@{results}!fragalysis\+\_\+api\+::xcextracter\+::xcextracter@{fragalysis\+\_\+api\+::xcextracter\+::xcextracter}}
+\subsubsection{\texorpdfstring{results}{results}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+xcextracter.\+results = \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}{xcextracter}(target\+\_\+name=\textquotesingle{}N\+U\+D\+T5A\textquotesingle{})}
+
+
+
+Definition at line 38 of file xcextracter.\+py.
+

@@ -1,0 +1,45 @@
+\hypertarget{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live}{}\section{fragalysis\+\_\+api.\+xcextracter.\+frag\+\_\+web\+\_\+live Namespace Reference}
+\label{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live}\index{fragalysis\+\_\+api.\+xcextracter.\+frag\+\_\+web\+\_\+live@{fragalysis\+\_\+api.\+xcextracter.\+frag\+\_\+web\+\_\+live}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}{can\+\_\+connect} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}\label{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}} 
+\index{fragalysis\+\_\+api\+::xcextracter\+::frag\+\_\+web\+\_\+live@{fragalysis\+\_\+api\+::xcextracter\+::frag\+\_\+web\+\_\+live}!can\+\_\+connect@{can\+\_\+connect}}
+\index{can\+\_\+connect@{can\+\_\+connect}!fragalysis\+\_\+api\+::xcextracter\+::frag\+\_\+web\+\_\+live@{fragalysis\+\_\+api\+::xcextracter\+::frag\+\_\+web\+\_\+live}}
+\subsubsection{\texorpdfstring{can\+\_\+connect()}{can\_connect()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+frag\+\_\+web\+\_\+live.\+can\+\_\+connect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Function to check if the fragalysis website specified in the config.ini is live
+return status: boolean specifying if fragalysis is live
+\end{DoxyVerb}
+ 
+
+Definition at line 6 of file frag\+\_\+web\+\_\+live.\+py.
+
+
+\begin{DoxyCode}
+6 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}{can\_connect}():
+7     \textcolor{stringliteral}{'''}
+8 \textcolor{stringliteral}{    Function to check if the fragalysis website specified in the config.ini is live}
+9 \textcolor{stringliteral}{    return status: boolean specifying if fragalysis is live}
+10 \textcolor{stringliteral}{    '''}
+11 
+12     settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
+13     \textcolor{comment}{#defining the fragalysis url}
+14     url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
+15 
+16     status = \textcolor{stringliteral}{''}
+17     \textcolor{keywordflow}{try}:
+18         \textcolor{comment}{#checking it responses in a certain time}
+19         urlopen(url, timeout=1)
+20         status = \textcolor{keyword}{True}
+21     \textcolor{keywordflow}{except} URLError \textcolor{keyword}{as} err:
+22         status = \textcolor{keyword}{False}
+23 
+24     \textcolor{keywordflow}{return} status
+\end{DoxyCode}

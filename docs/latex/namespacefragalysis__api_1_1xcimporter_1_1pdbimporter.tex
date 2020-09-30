@@ -1,0 +1,121 @@
+\hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter}{}\section{fragalysis\+\_\+api.\+xcimporter.\+pdbimporter Namespace Reference}
+\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter}\index{fragalysis\+\_\+api.\+xcimporter.\+pdbimporter@{fragalysis\+\_\+api.\+xcimporter.\+pdbimporter}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbimporter_1_1_import_pdb}{Import\+Pdb}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a5b23293cbebeaca77c09ce42825f5193}{parser} = argparse.\+Argument\+Parser()
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a883e1e2ba2b22247199b8820ae5f9178}{required}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_aa4558e839590268b25cacf39bc287d43}{True}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a149a72a87e486442ab858e40cec92690}{help}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}{args} = vars(parser.\+parse\+\_\+args())
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9cee2acc4fc991cee1a09431247027f9}{user\+\_\+id} = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}{args}\mbox{[}\textquotesingle{}user\+\_\+id\textquotesingle{}\mbox{]}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a1bf97f08674fecb515e86341fcdbd853}{data\+\_\+dir} = os.\+path.\+abspath(os.\+path.\+join(\textquotesingle{}..\textquotesingle{}, \textquotesingle{}..\textquotesingle{}, \textquotesingle{}data\textquotesingle{}, \textquotesingle{}xcimporter\textquotesingle{}, \textquotesingle{}input\textquotesingle{}))
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9610d6769273d7c05f68e92148450263}{pdb\+\_\+code} = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}{args}\mbox{[}\textquotesingle{}pdb\textquotesingle{}\mbox{]}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a3ad00a74050cce6bc31b2b0c736ba739}{init} = \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbimporter_1_1_import_pdb}{Import\+Pdb}(\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a1bf97f08674fecb515e86341fcdbd853}{data\+\_\+dir}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9cee2acc4fc991cee1a09431247027f9}{user\+\_\+id}, pdb\+\_\+code.\+lower())
+\end{DoxyCompactItemize}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!args@{args}}
+\index{args@{args}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{args}{args}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+args = vars(parser.\+parse\+\_\+args())}
+
+
+
+Definition at line 37 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a1bf97f08674fecb515e86341fcdbd853}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a1bf97f08674fecb515e86341fcdbd853}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!data\+\_\+dir@{data\+\_\+dir}}
+\index{data\+\_\+dir@{data\+\_\+dir}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{data\+\_\+dir}{data\_dir}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+data\+\_\+dir = os.\+path.\+abspath(os.\+path.\+join(\textquotesingle{}..\textquotesingle{}, \textquotesingle{}..\textquotesingle{}, \textquotesingle{}data\textquotesingle{}, \textquotesingle{}xcimporter\textquotesingle{}, \textquotesingle{}input\textquotesingle{}))}
+
+
+
+Definition at line 40 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a149a72a87e486442ab858e40cec92690}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a149a72a87e486442ab858e40cec92690}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!help@{help}}
+\index{help@{help}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{help}{help}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+help}
+
+
+
+Definition at line 35 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a3ad00a74050cce6bc31b2b0c736ba739}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a3ad00a74050cce6bc31b2b0c736ba739}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!init@{init}}
+\index{init@{init}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{init}{init}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+init = \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbimporter_1_1_import_pdb}{Import\+Pdb}(\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a1bf97f08674fecb515e86341fcdbd853}{data\+\_\+dir}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9cee2acc4fc991cee1a09431247027f9}{user\+\_\+id}, pdb\+\_\+code.\+lower())}
+
+
+
+Definition at line 43 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a5b23293cbebeaca77c09ce42825f5193}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a5b23293cbebeaca77c09ce42825f5193}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!parser@{parser}}
+\index{parser@{parser}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{parser}{parser}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+parser = argparse.\+Argument\+Parser()}
+
+
+
+Definition at line 34 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9610d6769273d7c05f68e92148450263}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9610d6769273d7c05f68e92148450263}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!pdb\+\_\+code@{pdb\+\_\+code}}
+\index{pdb\+\_\+code@{pdb\+\_\+code}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{pdb\+\_\+code}{pdb\_code}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+pdb\+\_\+code = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}{args}\mbox{[}\textquotesingle{}pdb\textquotesingle{}\mbox{]}}
+
+
+
+Definition at line 41 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a883e1e2ba2b22247199b8820ae5f9178}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a883e1e2ba2b22247199b8820ae5f9178}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!required@{required}}
+\index{required@{required}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{required}{required}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+required}
+
+
+
+Definition at line 35 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_aa4558e839590268b25cacf39bc287d43}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_aa4558e839590268b25cacf39bc287d43}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!True@{True}}
+\index{True@{True}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{True}{True}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+True}
+
+
+
+Definition at line 35 of file pdbimporter.\+py.
+
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9cee2acc4fc991cee1a09431247027f9}\label{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a9cee2acc4fc991cee1a09431247027f9}} 
+\index{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}!user\+\_\+id@{user\+\_\+id}}
+\index{user\+\_\+id@{user\+\_\+id}!fragalysis\+\_\+api\+::xcimporter\+::pdbimporter@{fragalysis\+\_\+api\+::xcimporter\+::pdbimporter}}
+\subsubsection{\texorpdfstring{user\+\_\+id}{user\_id}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcimporter.\+pdbimporter.\+user\+\_\+id = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbimporter_a98658023f7019ff38aa6fc1beb1be986}{args}\mbox{[}\textquotesingle{}user\+\_\+id\textquotesingle{}\mbox{]}}
+
+
+
+Definition at line 39 of file pdbimporter.\+py.
+

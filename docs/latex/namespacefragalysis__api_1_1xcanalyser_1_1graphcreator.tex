@@ -1,0 +1,144 @@
+\hypertarget{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator}{}\section{fragalysis\+\_\+api.\+xcanalyser.\+graphcreator Namespace Reference}
+\label{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator}\index{fragalysis\+\_\+api.\+xcanalyser.\+graphcreator@{fragalysis\+\_\+api.\+xcanalyser.\+graphcreator}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request}{Graph\+Request}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a028827844f85500b1fab4ff79cc7718c}{xcgraphcreator} (target\+\_\+smiles)
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a1c41339aa422a66c6dc643086aa5bfbb}{flatten\+\_\+json} (y)
+\begin{DoxyCompactList}\small\item\em Flatten J\+S\+ON into list for processing. \end{DoxyCompactList}\item 
+def \hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a029a9d7dda209fb27d4268599330e8d3}{graph\+\_\+dict\+\_\+to\+\_\+df} (graph\+\_\+dict)
+\begin{DoxyCompactList}\small\item\em Convert J\+S\+ON response to Pandas Dataframe. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a1c41339aa422a66c6dc643086aa5bfbb}\label{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a1c41339aa422a66c6dc643086aa5bfbb}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator}!flatten\+\_\+json@{flatten\+\_\+json}}
+\index{flatten\+\_\+json@{flatten\+\_\+json}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator}}
+\subsubsection{\texorpdfstring{flatten\+\_\+json()}{flatten\_json()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+flatten\+\_\+json (\begin{DoxyParamCaption}\item[{}]{y }\end{DoxyParamCaption})}
+
+
+
+Flatten J\+S\+ON into list for processing. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & input json \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+list from processed json 
+\end{DoxyReturn}
+
+
+Definition at line 71 of file graphcreator.\+py.
+
+
+\begin{DoxyCode}
+71 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a1c41339aa422a66c6dc643086aa5bfbb}{flatten\_json}(y):
+72     \textcolor{stringliteral}{"""! Flatten JSON into list for processing}
+73 \textcolor{stringliteral}{}
+74 \textcolor{stringliteral}{    @param y input json}
+75 \textcolor{stringliteral}{    @return list from processed json}
+76 \textcolor{stringliteral}{}
+77 \textcolor{stringliteral}{    """}
+78     out = \{\}
+79 
+80     \textcolor{keyword}{def }flatten(x, name=''):
+81         \textcolor{keywordflow}{if} type(x) \textcolor{keywordflow}{is} dict:
+82             \textcolor{keywordflow}{for} a \textcolor{keywordflow}{in} x:
+83                 flatten(x[a], name + a + \textcolor{stringliteral}{'\_'})
+84         \textcolor{keywordflow}{elif} type(x) \textcolor{keywordflow}{is} list:
+85             i = 0
+86             \textcolor{keywordflow}{for} a \textcolor{keywordflow}{in} x:
+87                 flatten(a, name + str(i) + \textcolor{stringliteral}{'\_'})
+88                 i += 1
+89         \textcolor{keywordflow}{else}:
+90             out[name[:-1]] = x
+91     flatten(y)
+92 
+93     \textcolor{keywordflow}{return} out
+94 
+95 
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a029a9d7dda209fb27d4268599330e8d3}\label{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a029a9d7dda209fb27d4268599330e8d3}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator}!graph\+\_\+dict\+\_\+to\+\_\+df@{graph\+\_\+dict\+\_\+to\+\_\+df}}
+\index{graph\+\_\+dict\+\_\+to\+\_\+df@{graph\+\_\+dict\+\_\+to\+\_\+df}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator}}
+\subsubsection{\texorpdfstring{graph\+\_\+dict\+\_\+to\+\_\+df()}{graph\_dict\_to\_df()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+graph\+\_\+dict\+\_\+to\+\_\+df (\begin{DoxyParamCaption}\item[{}]{graph\+\_\+dict }\end{DoxyParamCaption})}
+
+
+
+Convert J\+S\+ON response to Pandas Dataframe. 
+
+(This is the staircase to heaven -\/ R Skyner)
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph\+\_\+dict} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pandas Data\+Frame 
+\end{DoxyReturn}
+
+
+Definition at line 96 of file graphcreator.\+py.
+
+
+\begin{DoxyCode}
+96 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a029a9d7dda209fb27d4268599330e8d3}{graph\_dict\_to\_df}(graph\_dict):
+97     \textcolor{stringliteral}{"""! Convert JSON response to Pandas Dataframe}
+98 \textcolor{stringliteral}{    }
+99 \textcolor{stringliteral}{    (This is the staircase to heaven - R Skyner)}
+100 \textcolor{stringliteral}{    }
+101 \textcolor{stringliteral}{    @param graph\_dict }
+102 \textcolor{stringliteral}{    @return Pandas DataFrame}
+103 \textcolor{stringliteral}{    """}
+104     a\_df = pd.DataFrame()
+105     columns = [\textcolor{stringliteral}{'type'}, \textcolor{stringliteral}{'insert\_smiles'}, \textcolor{stringliteral}{'new\_smiles'}, \textcolor{stringliteral}{'insertion'}]
+106 
+107     start = \textcolor{stringliteral}{'2'}
+108 
+109     \textcolor{keywordflow}{for} i1 \textcolor{keywordflow}{in} graph\_dict[start].keys():
+110         \textcolor{keywordflow}{for} i2 \textcolor{keywordflow}{in} graph\_dict[start][i1].keys():
+111             \textcolor{keywordflow}{if} isinstance(graph\_dict[start][i1][i2], dict):
+112                 \textcolor{keywordflow}{for} i3 \textcolor{keywordflow}{in} graph\_dict[start][i1][i2].keys():
+113                     \textcolor{keywordflow}{if} isinstance(graph\_dict[start][i1][i2][i3], dict):
+114                         \textcolor{keywordflow}{for} i4 \textcolor{keywordflow}{in} graph\_dict[start][i1][i2][i3].keys():
+115                             \textcolor{keywordflow}{if} isinstance(graph\_dict[start][i1][i2][i3][i4], list):
+116                                 \textcolor{keywordflow}{for} i5 \textcolor{keywordflow}{in} graph\_dict[start][i1][i2][i3][i4]:
+117                                     tmp\_df = pd.DataFrame([[i1, i2, i5[\textcolor{stringliteral}{'end'}], i5[\textcolor{stringliteral}{'change'}]]], columns=
+      columns)
+118                                     a\_df = pd.concat([a\_df, tmp\_df])
+119 
+120     \textcolor{keywordflow}{return} a\_df
+121 \end{DoxyCode}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a028827844f85500b1fab4ff79cc7718c}\label{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a028827844f85500b1fab4ff79cc7718c}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator}!xcgraphcreator@{xcgraphcreator}}
+\index{xcgraphcreator@{xcgraphcreator}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator}}
+\subsubsection{\texorpdfstring{xcgraphcreator()}{xcgraphcreator()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+xcgraphcreator (\begin{DoxyParamCaption}\item[{}]{target\+\_\+smiles }\end{DoxyParamCaption})}
+
+
+
+Definition at line 7 of file graphcreator.\+py.
+
+
+\begin{DoxyCode}
+7 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a028827844f85500b1fab4ff79cc7718c}{xcgraphcreator}(target\_smiles):
+8 
+9     search = GraphRequest()
+10 
+11     new\_smiles = search.get\_new\_smiles(smiles=target\_smiles)
+12     
+13     \textcolor{keywordflow}{return} new\_smiles
+14 
+15 
+\end{DoxyCode}

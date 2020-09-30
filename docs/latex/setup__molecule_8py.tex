@@ -1,0 +1,30 @@
+\hypertarget{setup__molecule_8py}{}\section{fragalysis\+\_\+api/xcextracter/setup\+\_\+molecule.py File Reference}
+\label{setup__molecule_8py}\index{fragalysis\+\_\+api/xcextracter/setup\+\_\+molecule.\+py@{fragalysis\+\_\+api/xcextracter/setup\+\_\+molecule.\+py}}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule}
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a6e5d977af2f726b7652115974b6172e3}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+node}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_ac62c39b5dae94c0398b926ebef77705a}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+name}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a52d423c9b038caf4d18a97b1715abcc8}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+email}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_aad4256bab5f5df14668e7ccba1d9b463}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+affiliation}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a6555fe58d1cb225eee77d0e74dd1f7bb}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+is\+Verbose} = node.\+get\+Input(\char`\"{}verbose\char`\"{})
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_acab61f5fcadc9988846e8ca1dab4024e}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+system} = B\+S\+S.\+I\+O.\+read\+Molecules(node.\+get\+Input(\char`\"{}molecule\char`\"{}))
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a737c18eeb7107a1b05493ef1af79a42f}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+molecule} = system.\+get\+Molecules()\mbox{[}0\mbox{]}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a3eab3585c91264e66a041fdb0932fd48}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+system\+\_\+solvated}
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a60658f36df878e49b5cef0787f10b91a}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+protocol} = B\+S\+S.\+Protocol.\+Minimisation(steps=node.\+get\+Input(\char`\"{}minimisation\+\_\+steps\char`\"{}))
+\item 
+\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1setup__molecule_a2cff9ddb655b70c89221382a00670e45}{fragalysis\+\_\+api.\+xcextracter.\+setup\+\_\+molecule.\+process} = B\+S\+S.\+M\+D.\+run(system\+\_\+solvated, protocol)
+\end{DoxyCompactItemize}

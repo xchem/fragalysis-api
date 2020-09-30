@@ -1,6 +1,16 @@
 var searchData=
 [
-  ['make_5fapo_5fdesol_5ffiles',['make_apo_desol_files',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo.html#ab88e88fe9d512e1635e5f1d61040f9f6',1,'fragalysis_api::xcimporter::conversion_pdb_mol::pdb_apo']]],
-  ['make_5fapo_5ffile',['make_apo_file',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo.html#a08488b34eeb131d43d3139ecbbdb78fb',1,'fragalysis_api::xcimporter::conversion_pdb_mol::pdb_apo']]],
-  ['monomerize',['Monomerize',['../classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize.html',1,'fragalysis_api::xcimporter::align']]]
+  ['import_5fpdb',['import_pdb',['../namespacefragalysis__api_1_1xcimporter_1_1pdbquery.html#a79bb87d0ca3ad7b21d937ab25dc37b21',1,'fragalysis_api::xcimporter::pdbquery']]],
+  ['import_5fpdbs',['import_pdbs',['../classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query.html#a5be8d71963fc482622a0b1167636718c',1,'fragalysis_api::xcimporter::pdbquery::Query']]],
+  ['importpdb',['ImportPdb',['../classfragalysis__api_1_1xcimporter_1_1pdbimporter_1_1_import_pdb.html',1,'fragalysis_api::xcimporter::pdbimporter']]],
+  ['in_5fdir',['in_dir',['../namespacefragalysis__api_1_1xcimporter_1_1xcimporter.html#a7795d815fddc45b40750fc66e5d8ac4f',1,'fragalysis_api::xcimporter::xcimporter']]],
+  ['infile',['infile',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand.html#a32128e8047085e698f5ca00f3c5272a9',1,'fragalysis_api::xcimporter::conversion_pdb_mol::Ligand']]],
+  ['init',['init',['../namespacefragalysis__api_1_1xcimporter_1_1pdbimporter.html#a3ad00a74050cce6bc31b2b0c736ba739',1,'fragalysis_api::xcimporter::pdbimporter']]],
+  ['input_5fdir',['input_dir',['../namespacefragalysis__api_1_1xcimporter_1_1xc__utils.html#a8e1ebabddefaec139b57091c2aee7c87',1,'fragalysis_api::xcimporter::xc_utils']]],
+  ['is_5fpdb_5fallowed_5fsize',['is_pdb_allowed_size',['../classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b.html#a9e9a8abbb1d90bb2cd17702178831f93',1,'fragalysis_api::xcimporter::validate::ValidatePDB']]],
+  ['is_5fpdb_5fname_5fwithin_5fsize_5flimit',['is_pdb_name_within_size_limit',['../classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b.html#a23b89548ce5a6619636348c711b7b27e',1,'fragalysis_api::xcimporter::validate::ValidatePDB']]],
+  ['is_5fpdb_5fvalid',['is_pdb_valid',['../classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate_p_d_b.html#a7e6b2f1b0ea513e4485fabb411c5f3f5',1,'fragalysis_api::xcimporter::validate::ValidatePDB']]],
+  ['is_5fpdbs_5fvalid',['is_pdbs_valid',['../classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate.html#a174b180dade39cdd984389ab32ed3732',1,'fragalysis_api::xcimporter::validate::Validate']]],
+  ['is_5fthere_5fa_5fpdb_5fin_5fdir',['is_there_a_pdb_in_dir',['../classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate.html#a7203bedad575f779345a78f7880a58a2',1,'fragalysis_api::xcimporter::validate::Validate']]],
+  ['isverbose',['isVerbose',['../namespacefragalysis__api_1_1xcextracter_1_1setup__molecule.html#a6555fe58d1cb225eee77d0e74dd1f7bb',1,'fragalysis_api::xcextracter::setup_molecule']]]
 ];

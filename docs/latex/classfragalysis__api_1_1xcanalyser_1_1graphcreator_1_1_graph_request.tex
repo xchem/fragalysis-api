@@ -12,23 +12,17 @@ def \hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_requ
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac1d452fb3f9d6e80ba3a31e02145d043}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac1d452fb3f9d6e80ba3a31e02145d043}} 
-{\bfseries frag\+\_\+url}
+\hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac1d452fb3f9d6e80ba3a31e02145d043}{frag\+\_\+url}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a8c195076876c81b0beada67b8757caf2}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a8c195076876c81b0beada67b8757caf2}} 
-{\bfseries graph\+\_\+url}
+\hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a8c195076876c81b0beada67b8757caf2}{graph\+\_\+url}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a6f74c9499e8e158b9416880b3c7133a6}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a6f74c9499e8e158b9416880b3c7133a6}} 
-{\bfseries query}
+\hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a6f74c9499e8e158b9416880b3c7133a6}{query}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a212573c4bde168c0fd5563124284e569}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a212573c4bde168c0fd5563124284e569}} 
-{\bfseries search\+\_\+url}
+\hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a212573c4bde168c0fd5563124284e569}{search\+\_\+url}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a9659e3db8ca34a5f3bb7c3186df87fe0}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a9659e3db8ca34a5f3bb7c3186df87fe0}} 
-{\bfseries smiles\+\_\+url}
+\hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a9659e3db8ca34a5f3bb7c3186df87fe0}{smiles\+\_\+url}
 \item 
-\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a564113897c119dfd6dcd066b12d1f481}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a564113897c119dfd6dcd066b12d1f481}} 
-{\bfseries graph\+\_\+json}
+\hyperlink{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a564113897c119dfd6dcd066b12d1f481}{graph\+\_\+json}
 \end{DoxyCompactItemize}
 
 
@@ -70,7 +64,7 @@ Definition at line 17 of file graphcreator.\+py.
 20 \textcolor{stringliteral}{        @param self self}
 21 \textcolor{stringliteral}{        @return new graph request object}
 22 \textcolor{stringliteral}{        '''}
-23         settings = ConfigSetup()
+23         settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
 24 
 25         \textcolor{comment}{# get url pieces}
 26         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
@@ -132,7 +126,7 @@ Definition at line 47 of file graphcreator.\+py.
 64                 response = json.loads(result)
 65 
 66                 \textcolor{comment}{# set json as decoded response for processing}
-67                 \textcolor{keywordflow}{return} graph\_dict\_to\_df(response).reset\_index(drop=\textcolor{keyword}{True}).copy()
+67                 \textcolor{keywordflow}{return} \hyperlink{namespacefragalysis__api_1_1xcanalyser_1_1graphcreator_a029a9d7dda209fb27d4268599330e8d3}{graph\_dict\_to\_df}(response).reset\_index(drop=\textcolor{keyword}{True}).copy()
 68 
 69 
 70 
@@ -174,6 +168,69 @@ Definition at line 37 of file graphcreator.\+py.
 \end{DoxyCode}
 
 
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac1d452fb3f9d6e80ba3a31e02145d043}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_ac1d452fb3f9d6e80ba3a31e02145d043}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!frag\+\_\+url@{frag\+\_\+url}}
+\index{frag\+\_\+url@{frag\+\_\+url}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{frag\+\_\+url}{frag\_url}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+frag\+\_\+url}
+
+
+
+Definition at line 26 of file graphcreator.\+py.
+
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a564113897c119dfd6dcd066b12d1f481}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a564113897c119dfd6dcd066b12d1f481}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!graph\+\_\+json@{graph\+\_\+json}}
+\index{graph\+\_\+json@{graph\+\_\+json}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{graph\+\_\+json}{graph\_json}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+graph\+\_\+json}
+
+
+
+Definition at line 35 of file graphcreator.\+py.
+
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a8c195076876c81b0beada67b8757caf2}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a8c195076876c81b0beada67b8757caf2}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!graph\+\_\+url@{graph\+\_\+url}}
+\index{graph\+\_\+url@{graph\+\_\+url}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{graph\+\_\+url}{graph\_url}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+graph\+\_\+url}
+
+
+
+Definition at line 27 of file graphcreator.\+py.
+
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a6f74c9499e8e158b9416880b3c7133a6}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a6f74c9499e8e158b9416880b3c7133a6}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!query@{query}}
+\index{query@{query}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{query}{query}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+query}
+
+
+
+Definition at line 28 of file graphcreator.\+py.
+
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a212573c4bde168c0fd5563124284e569}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a212573c4bde168c0fd5563124284e569}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!search\+\_\+url@{search\+\_\+url}}
+\index{search\+\_\+url@{search\+\_\+url}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{search\+\_\+url}{search\_url}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+search\+\_\+url}
+
+
+
+Definition at line 31 of file graphcreator.\+py.
+
+\mbox{\Hypertarget{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a9659e3db8ca34a5f3bb7c3186df87fe0}\label{classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request_a9659e3db8ca34a5f3bb7c3186df87fe0}} 
+\index{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}!smiles\+\_\+url@{smiles\+\_\+url}}
+\index{smiles\+\_\+url@{smiles\+\_\+url}!fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request@{fragalysis\+\_\+api\+::xcanalyser\+::graphcreator\+::\+Graph\+Request}}
+\subsubsection{\texorpdfstring{smiles\+\_\+url}{smiles\_url}}
+{\footnotesize\ttfamily fragalysis\+\_\+api.\+xcanalyser.\+graphcreator.\+Graph\+Request.\+smiles\+\_\+url}
+
+
+
+Definition at line 34 of file graphcreator.\+py.
+
+
+
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-fragalysis\+\_\+api/xcanalyser/graphcreator.\+py\end{DoxyCompactItemize}
+fragalysis\+\_\+api/xcanalyser/\hyperlink{graphcreator_8py}{graphcreator.\+py}\end{DoxyCompactItemize}

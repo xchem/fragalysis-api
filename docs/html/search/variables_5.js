@@ -1,0 +1,8 @@
+var searchData=
+[
+  ['false',['False',['../namespacefragalysis__api_1_1xcimporter_1_1pdbquery.html#a3770b11dc2a201e36e0dc3fee520208b',1,'fragalysis_api.xcimporter.pdbquery.False()'],['../namespacefragalysis__api_1_1xcimporter_1_1xcimporter.html#a7b54c2ad280b13dc0833892106613e4c',1,'fragalysis_api.xcimporter.xcimporter.False()']]],
+  ['filebase',['filebase',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1pdb__apo.html#a120a453eb2a3608650eda92ee0dc9ef9',1,'fragalysis_api::xcimporter::conversion_pdb_mol::pdb_apo']]],
+  ['final_5fhets',['final_hets',['../classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1_ligand.html#ad7639b1a8c8c767a298eb7454bf5e3fd',1,'fragalysis_api::xcimporter::conversion_pdb_mol::Ligand']]],
+  ['fix_5fpdb',['fix_pdb',['../namespacefragalysis__api_1_1xcimporter_1_1xcimporter.html#abbbe817fae311228915dac1ff528045e',1,'fragalysis_api::xcimporter::xcimporter']]],
+  ['frag_5furl',['frag_url',['../classfragalysis__api_1_1xcanalyser_1_1graphcreator_1_1_graph_request.html#ac1d452fb3f9d6e80ba3a31e02145d043',1,'fragalysis_api.xcanalyser.graphcreator.GraphRequest.frag_url()'],['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data.html#afa8f34da2572edae8988c21829ce9c3e',1,'fragalysis_api.xcextracter.getdata.GetTargetsData.frag_url()'],['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data.html#a2cbb80e8804df35ddc3907e128bf5611',1,'fragalysis_api.xcextracter.getdata.GetPdbData.frag_url()'],['../classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data.html#a3a27004f4ee3a723e84d65065f0a1c6c',1,'fragalysis_api.xcextracter.getdata.GetMoleculesData.frag_url()']]]
+];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['validate_5fpdbs',['validate_pdbs',['../classfragalysis__api_1_1xcimporter_1_1validate_1_1_validate.html#a1e2236300274a3e4c91944ff8a10f432',1,'fragalysis_api::xcimporter::validate::Validate']]]
+  ['quit_5ffunction',['quit_function',['../namespacefragalysis__api_1_1xcextracter_1_1computed__set__update.html#a9a7a1666e3c737a48bc3ebfe981adeef',1,'fragalysis_api::xcextracter::computed_set_update']]]
 ];
