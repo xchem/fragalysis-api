@@ -133,14 +133,14 @@ if __name__ == "__main__":
         "--in_dir",
         default=os.path.join("..", "..", "data", "xcimporter", "input"),
         help="Input directory",
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-o",
         "--out_dir",
         default=os.path.join("..", "..", "data", "xcimporter", "output"),
         help="Output directory",
-        required=True,
+        required=False,
     )
     parser.add_argument(
         "-v", "--validate", action="store_true", default=False, help="Validate input"
