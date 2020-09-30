@@ -93,7 +93,7 @@ Once you have the files downloaded, they need to be processed before they can be
 ```
 python xcimporter -i [path to input directory] -t [target name]
 ```
-Default directories are used. These can however be changed by using ```-i [input directory] ``` or   ```-o [output directory] ``` if this is required.
+A default output directory is used. This can however be changed by using ```-o [output directory] ``` if this is required.
 
 The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
 
