@@ -6,6 +6,11 @@ from fragalysis_api import GetMoleculesData, can_connect
 
 
 def xcextracter(target_name):
+    """! Extract data from the fragalaysis data base on the protein target of interest
+
+    @param target_name name of the target
+    @return a_df Complete molecule data in panda dataframe
+    """
 
     #checking the fragalysis website is live
     if can_connect():

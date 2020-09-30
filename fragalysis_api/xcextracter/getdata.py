@@ -31,8 +31,7 @@ class GetTargetsData:
         self.target_id_list = None
 
     def set_target_name_url(self, target):
-        """!
-        Setting target name url
+        """! Setting target name url
 
         @param target: Target name of the target
         """
@@ -58,9 +57,8 @@ class GetTargetsData:
         return response
 
     def get_target_id_list(self):
-        """!
-        Gets the target_id_ from self.target_json associated with the queried target in the 
-        fragalysis database
+        """! Gets the target_id_ from self.target_json associated with the queried target in the 
+            fragalysis database
 
         @returns id_list The ID number associated with the target.
         """
@@ -73,8 +71,7 @@ class GetTargetsData:
 
 
 class GetPdbData:
-    """!
-    Getting protine data from the fragalysis website in the pdb file format
+    """! Getting protine data from the fragalysis website in the pdb file format
     """
     def __init__(self):
         """!
@@ -95,8 +92,8 @@ class GetPdbData:
         self.query = settings.get('pdb', 'query')
 
     def get_apo_pdb_file(self, code):
-        """!
-        Function to search fragalysis for PDB file.
+        """! Function to search fragalysis for PDB file.
+
         @param code The code associated with the protein on the fragalysis website.
         @return response Response from the API = pdb file
         """
@@ -110,8 +107,8 @@ class GetPdbData:
         return response['results'][0]['pdb_data']
 
     def get_bound_pdb_file(self, code):
-        """!
-        Function to search fragalysis for PDB file.
+        """! Function to search fragalysis for PDB file.
+
         @param code The code associated with the protein on the fragalysis website.
         @return response Response from the API = pdb file
         """
@@ -152,8 +149,8 @@ class GetMoleculesData:
         self.get_complete_mol_data = ''
 
     def set_target_id(self, target):
-        """!
-        Gets the targets fragalysis ID (a number) based on the target
+        """! Gets the targets fragalysis ID (a number) based on the target
+
         @param target name of target (e.g. ATAD)
         @return initializes the target ID in self.taget_ids
         """
@@ -164,16 +161,14 @@ class GetMoleculesData:
         self.get_target_id = id_list[0]  # Change id_list to be a single id (will never be more than 1)
 
     def set_molecule_url(self):
-        """!
-        Sets the molecule url based on the targets fragalysis ID
+        """! Sets the molecule url based on the targets fragalysis ID
         """
         url = str(self.search_url + str(self.get_target_id))
 
         self.get_molecule_url = url
 
     def set_mol_data(self):
-        """!
-        Sets the molecule data in json format
+        """! Sets the molecule data in json format
         """
 
         # get response from url and decode -> json

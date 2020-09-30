@@ -4,8 +4,8 @@ from fragalysis_api import ConfigSetup
 
 
 def can_connect():
-    """!
-    Function to check if the fragalysis website specified in the config.ini is live
+    """! Function to check if the fragalysis website specified in the config.ini is live
+
     @return status boolean specifying if fragalysis is live
     """
 
