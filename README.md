@@ -89,7 +89,7 @@ The API will then query the PDB for structures of the same protein that also hav
 
 Once you have the files downloaded, they need to be processed before they can be visualised in fragalysis. This is done using
 ```
-python xcimporter -id [user id] 
+python xcimporter -i [path to input directory] -t [target name]
 ```
 Default directories are used. These can however be changed by using ```-i [input directory] ``` or   ```-o [output directory] ``` if this is required.
 
