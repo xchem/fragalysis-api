@@ -4,13 +4,28 @@ from Bio.PDB import PDBList
 
 
 class ImportPdb:
+    
     def __init__(self, dir, user, pdb):
+        """! Creates new ImportPDB object
+
+        @param self self
+        @param dir directory
+        @param user USER ID
+        @param pdb pdb file
+        @return new ImportPDB object
+        """
         self.data_dir = dir
         self.user_id = user
         self.pdb_code = pdb.lower()
         self.pdb_exists = False
 
     def pdb_importer(self):
+        """! imports .pdb files
+
+        @param self self
+        @return imports .pdb files
+        """
+
         if not os.path.exists(os.path.join(self.data_dir, self.user_id)):
             os.makedirs(os.path.join(self.data_dir, self.user_id))
             print('making directory')

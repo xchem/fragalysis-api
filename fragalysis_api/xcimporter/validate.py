@@ -9,19 +9,19 @@ class Validate:
 
     @property
     def is_pdbs_valid(self):
-        """
-        Checks whether all pdbs are valid. If just one isn't it returns False
-
-        :return: boolean answer
+        """!Checks whether all pdbs are valid. If just one isn't it returns False
+        
+        @param self self
+        @return boolean answer
         """
         return not bool(self._fail_list)
 
     @property
     def validate_pdbs(self):
-        """
-        List of all pdbs which failed validation
+        """!List of all pdbs which failed validation
 
-        :return: list of all pdbs which failed validation
+        @param self self
+        @return list of all pdbs which failed validation
         """
         return self._fail_list
 
@@ -38,27 +38,28 @@ class Validate:
 
     @property
     def get_files(self):
-        """Extracts a list of paths for all pdbs within the given directory.
-
-        :return: list containing the path for each pdb in the given directory
+        """!Extracts a list of paths for all pdbs within the given directory.
+        
+        @param self self 
+        @return list containing the path for each pdb in the given directory
         """
         return glob.glob(os.path.join(self.directory, "*.pdb"))
 
     @property
     def does_dir_exist(self):
-        """
-        Checks if the directory exists.
-
-        :return: boolean answer
+        """!Checks if the directory exists.
+        
+        @param self self
+        @return boolean answer
         """
         return bool(os.path.isdir(self.directory))
 
     @property
     def is_there_a_pdb_in_dir(self):
-        """
-        Checks if there is at least one pdb file in the directory.
+        """!Checks if there is at least one pdb file in the directory.
 
-        :return: boolean answer
+        @param self self
+        @return boolean answer
         """
         return bool(self.get_files)
 
@@ -71,15 +72,19 @@ class ValidatePDB:
 
     @property
     def is_pdb_valid(self):
-        """
+        """! Checks if .pdb is valid
+        
         If the pdb has failed just 1 check return False
+        
+        @param self self
+        @return true or false
         """
         return not (False in self._PDB_validations)
 
     @property
     def _PDB_validations(self):
-        """
-        Yields the results from the different types of validations.
+        """Yields the results from the different types of validations.
+        
         """
         yield self.is_pdb_allowed_size
         yield self.does_pdb_name_contain_only_whitelist_char
@@ -88,9 +93,9 @@ class ValidatePDB:
 
     @property
     def is_pdb_allowed_size(self):
-        """Checks whether a pdb file is larger than the allowed file size limit.
+        """!Checks whether a pdb file is larger than the allowed file size limit.
 
-        :return: name of pdb if it failed to be smaller than the limit.
+        @return name of pdb if it failed to be smaller than the limit.
         """
         file_size_limit = 5.  # value in mb
 
@@ -106,9 +111,9 @@ class ValidatePDB:
 
     @property
     def does_pdb_name_contain_only_whitelist_char(self):
-        """Checks whether a pdb files name contains characters which are not allowed.
+        """!Checks whether a pdb files name contains characters which are not allowed.
 
-        :return: name of pdb if it contains disallowed characters.
+        @return name of pdb if it contains disallowed characters.
         """
         for character in self.pdb_name:
             if character not in string.ascii_letters+string.digits:
@@ -121,9 +126,9 @@ class ValidatePDB:
 
     @property
     def is_pdb_name_within_size_limit(self):
-        """Checks whether the name of a pdb file is within the allowed range.
+        """!Checks whether the name of a pdb file is within the allowed range.
 
-        :return: name of pdb if it was outside the allowed range.
+        @return name of pdb if it was outside the allowed range.
         """
         char_min = 4
         char_max = 20

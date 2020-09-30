@@ -16,11 +16,10 @@ class Query:
 
 
     def get_matching_proteins(self):
-        """
-        queries the pdb for other files with similar protein structure but different ligands bound
+        """!Queries the pdb for other files with similar protein structure but different ligands bound
 
-        params: pdb code, chain id
-        returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
+        @params self (pdb code, chain id)
+        @returns prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
         """
         result = get_blast2(self.pdb_code, chain_id=self.chain_id)
         codes = result[0]
@@ -30,7 +29,12 @@ class Query:
                 self.similar.append(codes[i])
 
     def get_ligands(self):
+        """! Finds ligands bount to the protein in .pdb file
 
+        @param self self
+        @return ligands bou to protein
+
+        """
         for i in self.similar:
             ligands = get_ligands(i)  # finds ligands bound to the protein in that particular pdb file
             try:
@@ -47,17 +51,33 @@ class Query:
                 pass
 
     def print_number_ligs(self):
+        """! Returns number of ligands
+
+        @param self self
+        @return Number of ligands
+        """
         for i in self.match_ligs:
             self.match_ligs[i] = list(set(self.match_ligs[i]))
         print(len(self.match_ligs)-1, 'different ligands have been found to bind to this protein')
         return len(self.match_ligs)
 
     def view_ligands(self):
+        """! Returns ligands
+        
+        @param self self
+        @return Ligands view
+        """
         for i in self.match_ligs:
             print(i, self.match_ligs[i])
         return len(self.match_ligs)
 
     def save_dictionary(self, user):
+        """! Saves dictionary to JSON 
+
+        @param self self
+        @param user userID
+        @return dictionary as JSON
+        """
         otherpath = os.path.abspath(os.path.join('..', '..', 'data', 'xcimporter', 'other'))
         userpath = os.path.abspath(os.path.join(otherpath, user))
         if not os.path.exists(otherpath):
@@ -67,6 +87,12 @@ class Query:
         json.dump(self.match_ligs, open(os.path.join(userpath, self.pdb_code+'.json'), 'w'))
 
     def import_pdbs(self, user, out=None):
+        """! Imports pdbs
+
+        @param self self
+        @parm user user ID 
+        @return imports pdbs
+        """
         if not out:
             data_dir = os.path.join('..', '..', 'data', 'xcimporter', 'input')
         else:

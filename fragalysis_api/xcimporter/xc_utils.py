@@ -4,14 +4,13 @@ from shutil import copyfile
 
 
 def to_fragalysis_dir(pdb_id, data_dir):
-    """
-    Creates a Fragalysis friendly directory out of a directory with the needed
+    """!Creates a Fragalysis friendly directory out of a directory with the needed
     files (.sdf, .mol, _bounded.pdb and _apo.pdb). Names this new directory with the
     pdb_id name.
 
-    :param pdb_id: ID (name) of the directory with the data
-    :param data_dir: Directory which contains the data (ID directory)
-    :return: Reordered directory
+    @param pdb_id ID (name) of the directory with the data
+    @param data_dir Directory which contains the data (ID directory)
+    @return Reordered directory
     """
     # Creates list of different PDBs in the directory
     pdb_aligned_files = glob.glob(os.path.join(data_dir, "*_bound.pdb"))
