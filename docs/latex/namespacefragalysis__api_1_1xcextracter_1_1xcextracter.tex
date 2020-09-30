@@ -4,7 +4,7 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}{xcextracter} (target\+\_\+name)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Extract data from the fragalaysis data base on the protein target of interest. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -21,39 +21,56 @@ def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a72e0abb30
 
 
 
+Extract data from the fragalaysis data base on the protein target of interest. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target\+\_\+name} & name of the target \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a\+\_\+df Complete molecule data in panda dataframe 
+\end{DoxyReturn}
+
+
 Definition at line 8 of file xcextracter.\+py.
 
 
 \begin{DoxyCode}
 8 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1xcextracter_a9aad6a3badcb479c966f153ce6b87126}{xcextracter}(target\_name):
-9 
-10     \textcolor{comment}{#checking the fragalysis website is live}
-11     \textcolor{keywordflow}{if} \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}{can\_connect}():
-12         print(\textcolor{stringliteral}{'Can connect to Fragalysis'})
-13     \textcolor{keywordflow}{else}:
-14         print(\textcolor{stringliteral}{'Cannot connect to Fragalysis'})
-15         sys.exit()
-16 
-17     search = GetMoleculesData()
-18 
-19     \textcolor{comment}{# get the target id's for further operations for NUDT5A}
-20     search.set\_target\_id(target=target\_name)
+9     \textcolor{stringliteral}{"""! Extract data from the fragalaysis data base on the protein target of interest}
+10 \textcolor{stringliteral}{}
+11 \textcolor{stringliteral}{    @param target\_name name of the target}
+12 \textcolor{stringliteral}{    @return a\_df Complete molecule data in panda dataframe}
+13 \textcolor{stringliteral}{    """}
+14 
+15     \textcolor{comment}{#checking the fragalysis website is live}
+16     \textcolor{keywordflow}{if} \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1frag__web__live_a0c358bb08db16e67b947ea3e06a2516c}{can\_connect}():
+17         print(\textcolor{stringliteral}{'Can connect to Fragalysis'})
+18     \textcolor{keywordflow}{else}:
+19         print(\textcolor{stringliteral}{'Cannot connect to Fragalysis'})
+20         sys.exit()
 21 
-22     \textcolor{comment}{# set the molecule url for the current instance of GetMoleculesData to the first id in the id\_list from
+22     search = GetMoleculesData()
+23 
+24     \textcolor{comment}{# get the target id's for further operations for NUDT5A}
+25     search.set\_target\_id(target=target\_name)
+26 
+27     \textcolor{comment}{# set the molecule url for the current instance of GetMoleculesData to the first id in the id\_list from
        above}
-23     search.set\_molecule\_url()
-24 
-25     \textcolor{comment}{# get a json response from the url we set above}
-26     search.set\_mol\_data()
-27 
-28     \textcolor{comment}{# get all molecule data (json) related to all of the ids in id\_list}
-29     search.set\_complete\_mol\_data()
-30 
-31     a\_df = pd.DataFrame(search.get\_complete\_mol\_data)
+28     search.set\_molecule\_url()
+29 
+30     \textcolor{comment}{# get a json response from the url we set above}
+31     search.set\_mol\_data()
 32 
-33     \textcolor{keywordflow}{return} a\_df
-34 
+33     \textcolor{comment}{# get all molecule data (json) related to all of the ids in id\_list}
+34     search.set\_complete\_mol\_data()
 35 
+36     a\_df = pd.DataFrame(search.get\_complete\_mol\_data)
+37 
+38     \textcolor{keywordflow}{return} a\_df
+39 
+40 
 \end{DoxyCode}
 
 
@@ -66,5 +83,5 @@ Definition at line 8 of file xcextracter.\+py.
 
 
 
-Definition at line 38 of file xcextracter.\+py.
+Definition at line 43 of file xcextracter.\+py.
 

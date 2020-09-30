@@ -6,13 +6,13 @@
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a11e4a33bfbb0ff558ef33a0e8a46c76b}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self)
 \item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_acc782fb40405a434903f6d3e80624c9c}{set\+\_\+target\+\_\+id} (self, target)
-\item 
+\begin{DoxyCompactList}\small\item\em Gets the targets fragalysis ID (a number) based on the target. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a61f7510bc705fab0ee33128872619f40}{set\+\_\+molecule\+\_\+url} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Sets the molecule url based on the targets fragalysis ID. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_ab1f0b5b8edbd496d800e08c7f8758a53}{set\+\_\+mol\+\_\+data} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Sets the molecule data in json format. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a5bf2f4562196e169f76aa30cdcd9029d}{set\+\_\+complete\+\_\+mol\+\_\+data} (self)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Extracting the results from the url query i.\+e self.\+get\+\_\+complete\+\_\+mol\+\_\+data contains only the results of the query on te molecule. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -37,7 +37,7 @@ def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_
 \subsection{Detailed Description}
 
 
-Definition at line 124 of file getdata.\+py.
+Definition at line 125 of file getdata.\+py.
 
 
 
@@ -48,46 +48,56 @@ Definition at line 124 of file getdata.\+py.
 \subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Molecules\+Data.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}:param self.frag_url: URL of the fragalysis website
-:param self.moleclues_url: URL of extention for the moleclue on the fragalysis website
-:param self.query: URL to tell the restfull API how to do the query
-:param self.search_url: URL for the query 
-:param self.get_molecule_url: Molecule URL for the fragalysis website
-:param self.get_target_id: Target's fragalysis ID 
-:param self.get_mol_data: Molecule data in json format
-:param self.get_complete_mol_data: Complete molecule data in json format
-\end{DoxyVerb}
- 
 
-Definition at line 125 of file getdata.\+py.
+\begin{DoxyParams}{Parameters}
+{\em self.\+frag\+\_\+url} & U\+RL of the fragalysis website \\
+\hline
+{\em self.\+moleclues\+\_\+url} & U\+RL of extention for the moleclue on the fragalysis website \\
+\hline
+{\em self.\+query} & U\+RL to tell the restfull A\+PI how to do the query \\
+\hline
+{\em self.\+search\+\_\+url} & U\+RL for the query \\
+\hline
+{\em self.\+get\+\_\+molecule\+\_\+url} & Molecule U\+RL for the fragalysis website \\
+\hline
+{\em self.\+get\+\_\+target\+\_\+id} & Target\textquotesingle{}s fragalysis ID \\
+\hline
+{\em self.\+get\+\_\+mol\+\_\+data} & Molecule data in json format \\
+\hline
+{\em self.\+get\+\_\+complete\+\_\+mol\+\_\+data} & Complete molecule data in json format \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 126 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-125     \textcolor{keyword}{def }\_\_init\_\_(self):
-126         \textcolor{stringliteral}{'''}
-127 \textcolor{stringliteral}{        :param self.frag\_url: URL of the fragalysis website}
-128 \textcolor{stringliteral}{        :param self.moleclues\_url: URL of extention for the moleclue on the fragalysis website}
-129 \textcolor{stringliteral}{        :param self.query: URL to tell the restfull API how to do the query}
-130 \textcolor{stringliteral}{        :param self.search\_url: URL for the query }
-131 \textcolor{stringliteral}{        :param self.get\_molecule\_url: Molecule URL for the fragalysis website}
-132 \textcolor{stringliteral}{        :param self.get\_target\_id: Target's fragalysis ID }
-133 \textcolor{stringliteral}{        :param self.get\_mol\_data: Molecule data in json format}
-134 \textcolor{stringliteral}{        :param self.get\_complete\_mol\_data: Complete molecule data in json format}
-135 \textcolor{stringliteral}{        '''}
-136         settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
-137 
+126     \textcolor{keyword}{def }\_\_init\_\_(self):
+127         \textcolor{stringliteral}{"""!}
+128 \textcolor{stringliteral}{        @param self.frag\_url URL of the fragalysis website}
+129 \textcolor{stringliteral}{        @param self.moleclues\_url URL of extention for the moleclue on the fragalysis website}
+130 \textcolor{stringliteral}{        @param self.query URL to tell the restfull API how to do the query}
+131 \textcolor{stringliteral}{        @param self.search\_url URL for the query }
+132 \textcolor{stringliteral}{        @param self.get\_molecule\_url Molecule URL for the fragalysis website}
+133 \textcolor{stringliteral}{        @param self.get\_target\_id Target's fragalysis ID }
+134 \textcolor{stringliteral}{        @param self.get\_mol\_data Molecule data in json format}
+135 \textcolor{stringliteral}{        @param self.get\_complete\_mol\_data Complete molecule data in json format}
+136 \textcolor{stringliteral}{        """}
+137         settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
 138 
-139         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
-140         self.molecules\_url = settings.get(\textcolor{stringliteral}{'molecules'}, \textcolor{stringliteral}{'search'})
-141         self.query = settings.get(\textcolor{stringliteral}{'molecules'}, \textcolor{stringliteral}{'query'})
-142 
-143         self.search\_url = str(self.frag\_url + self.molecules\_url + self.query)
-144 
-145         self.get\_molecule\_url = \textcolor{stringliteral}{''}
-146         self.get\_target\_id = \textcolor{stringliteral}{''}
-147         self.get\_mol\_data = \textcolor{stringliteral}{''}
-148         self.get\_complete\_mol\_data = \textcolor{stringliteral}{''}
-149 
+139 
+140         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
+141         self.molecules\_url = settings.get(\textcolor{stringliteral}{'molecules'}, \textcolor{stringliteral}{'search'})
+142         self.query = settings.get(\textcolor{stringliteral}{'molecules'}, \textcolor{stringliteral}{'query'})
+143 
+144         self.search\_url = str(self.frag\_url + self.molecules\_url + self.query)
+145 
+146         self.get\_molecule\_url = \textcolor{stringliteral}{''}
+147         self.get\_target\_id = \textcolor{stringliteral}{''}
+148         self.get\_mol\_data = \textcolor{stringliteral}{''}
+149         self.get\_complete\_mol\_data = \textcolor{stringliteral}{''}
+150 
 \end{DoxyCode}
 
 
@@ -98,34 +108,32 @@ Definition at line 125 of file getdata.\+py.
 \subsubsection{\texorpdfstring{set\+\_\+complete\+\_\+mol\+\_\+data()}{set\_complete\_mol\_data()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Molecules\+Data.\+set\+\_\+complete\+\_\+mol\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Extracting the results from the url query
-i.e self.get_complete_mol_data contains only
-the results of the query on te molecule.
-:return:
-\end{DoxyVerb}
- 
 
-Definition at line 182 of file getdata.\+py.
+
+Extracting the results from the url query i.\+e self.\+get\+\_\+complete\+\_\+mol\+\_\+data contains only the results of the query on te molecule. 
+
+
+
+Definition at line 179 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-182     \textcolor{keyword}{def }set\_complete\_mol\_data(self):
-183         \textcolor{stringliteral}{'''}
-184 \textcolor{stringliteral}{        Extracting the results from the url query}
-185 \textcolor{stringliteral}{        i.e self.get\_complete\_mol\_data contains only}
-186 \textcolor{stringliteral}{        the results of the query on te molecule.}
-187 \textcolor{stringliteral}{        :return:}
-188 \textcolor{stringliteral}{        '''}
-189 
-190         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.get\_target\_id:
-191             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please get the target ids with get\_target\_ids!'})
+179     \textcolor{keyword}{def }set\_complete\_mol\_data(self):
+180         \textcolor{stringliteral}{'''!}
+181 \textcolor{stringliteral}{        Extracting the results from the url query}
+182 \textcolor{stringliteral}{        i.e self.get\_complete\_mol\_data contains only}
+183 \textcolor{stringliteral}{        the results of the query on te molecule.}
+184 \textcolor{stringliteral}{        '''}
+185 
+186         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.get\_target\_id:
+187             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please get the target ids with get\_target\_ids!'})
+188 
+189         json\_list = []
+190 
+191         json\_list.extend(self.get\_mol\_data[\textcolor{stringliteral}{'results'}])
 192 
-193         json\_list = []
-194 
-195         json\_list.extend(self.get\_mol\_data[\textcolor{stringliteral}{'results'}])
-196 
-197         self.get\_complete\_mol\_data = json\_list
-198         
+193         self.get\_complete\_mol\_data = json\_list
+194         
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_ab1f0b5b8edbd496d800e08c7f8758a53}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_ab1f0b5b8edbd496d800e08c7f8758a53}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!set\+\_\+mol\+\_\+data@{set\+\_\+mol\+\_\+data}}
@@ -133,26 +141,25 @@ Definition at line 182 of file getdata.\+py.
 \subsubsection{\texorpdfstring{set\+\_\+mol\+\_\+data()}{set\_mol\_data()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Molecules\+Data.\+set\+\_\+mol\+\_\+data (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Sets the molecule data in json format
-:return:
-\end{DoxyVerb}
- 
 
-Definition at line 171 of file getdata.\+py.
+
+Sets the molecule data in json format. 
+
+
+
+Definition at line 170 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-171     \textcolor{keyword}{def }set\_mol\_data(self):
-172         \textcolor{stringliteral}{"""}
-173 \textcolor{stringliteral}{        Sets the molecule data in json format}
-174 \textcolor{stringliteral}{        :return:}
-175 \textcolor{stringliteral}{        """}
-176 
-177         \textcolor{comment}{# get response from url and decode -> json}
-178         print(self.get\_molecule\_url)
-179         with urllib.request.urlopen(self.get\_molecule\_url) \textcolor{keyword}{as} f:
-180             self.get\_mol\_data = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
-181 
+170     \textcolor{keyword}{def }set\_mol\_data(self):
+171         \textcolor{stringliteral}{"""! Sets the molecule data in json format}
+172 \textcolor{stringliteral}{        """}
+173 
+174         \textcolor{comment}{# get response from url and decode -> json}
+175         print(self.get\_molecule\_url)
+176         with urllib.request.urlopen(self.get\_molecule\_url) \textcolor{keyword}{as} f:
+177             self.get\_mol\_data = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
+178 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a61f7510bc705fab0ee33128872619f40}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a61f7510bc705fab0ee33128872619f40}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!set\+\_\+molecule\+\_\+url@{set\+\_\+molecule\+\_\+url}}
@@ -160,24 +167,23 @@ Definition at line 171 of file getdata.\+py.
 \subsubsection{\texorpdfstring{set\+\_\+molecule\+\_\+url()}{set\_molecule\_url()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Molecules\+Data.\+set\+\_\+molecule\+\_\+url (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Sets the molecule url based on the targets fragalysis ID
-:return:
-\end{DoxyVerb}
- 
 
-Definition at line 162 of file getdata.\+py.
+
+Sets the molecule url based on the targets fragalysis ID. 
+
+
+
+Definition at line 163 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-162     \textcolor{keyword}{def }set\_molecule\_url(self):
-163         \textcolor{stringliteral}{"""}
-164 \textcolor{stringliteral}{        Sets the molecule url based on the targets fragalysis ID}
-165 \textcolor{stringliteral}{        :return:}
-166 \textcolor{stringliteral}{        """}
-167         url = str(self.search\_url + str(self.get\_target\_id))
-168 
-169         self.get\_molecule\_url = url
-170 
+163     \textcolor{keyword}{def }set\_molecule\_url(self):
+164         \textcolor{stringliteral}{"""! Sets the molecule url based on the targets fragalysis ID}
+165 \textcolor{stringliteral}{        """}
+166         url = str(self.search\_url + str(self.get\_target\_id))
+167 
+168         self.get\_molecule\_url = url
+169 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_acc782fb40405a434903f6d3e80624c9c}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_acc782fb40405a434903f6d3e80624c9c}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!set\+\_\+target\+\_\+id@{set\+\_\+target\+\_\+id}}
@@ -185,28 +191,36 @@ Definition at line 162 of file getdata.\+py.
 \subsubsection{\texorpdfstring{set\+\_\+target\+\_\+id()}{set\_target\_id()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Molecules\+Data.\+set\+\_\+target\+\_\+id (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{target }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Gets the targets fragalysis ID (a number) based on the target
-:param target: name of target (e.g. ATAD)
-:return: initializes the target ID in self.taget_ids
-\end{DoxyVerb}
- 
 
-Definition at line 150 of file getdata.\+py.
+
+Gets the targets fragalysis ID (a number) based on the target. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & name of target (e.\+g. A\+T\+AD) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+initializes the target ID in self.\+taget\+\_\+ids 
+\end{DoxyReturn}
+
+
+Definition at line 151 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-150     \textcolor{keyword}{def }set\_target\_id(self, target):
-151         \textcolor{stringliteral}{"""}
-152 \textcolor{stringliteral}{        Gets the targets fragalysis ID (a number) based on the target}
-153 \textcolor{stringliteral}{        :param target: name of target (e.g. ATAD)}
-154 \textcolor{stringliteral}{        :return: initializes the target ID in self.taget\_ids}
-155 \textcolor{stringliteral}{        """}
-156         search = GetTargetsData()
-157         search.set\_target\_name\_url(target)
-158         search.get\_target\_json()
-159         id\_list = search.get\_target\_id\_list()
-160         self.get\_target\_id = id\_list[0]  \textcolor{comment}{# Change id\_list to be a single id (will never be more than 1)}
-161 
+151     \textcolor{keyword}{def }set\_target\_id(self, target):
+152         \textcolor{stringliteral}{"""! Gets the targets fragalysis ID (a number) based on the target}
+153 \textcolor{stringliteral}{}
+154 \textcolor{stringliteral}{        @param target name of target (e.g. ATAD)}
+155 \textcolor{stringliteral}{        @return initializes the target ID in self.taget\_ids}
+156 \textcolor{stringliteral}{        """}
+157         search = GetTargetsData()
+158         search.set\_target\_name\_url(target)
+159         search.get\_target\_json()
+160         id\_list = search.get\_target\_id\_list()
+161         self.get\_target\_id = id\_list[0]  \textcolor{comment}{# Change id\_list to be a single id (will never be more than 1)}
+162 
 \end{DoxyCode}
 
 
@@ -219,7 +233,7 @@ Definition at line 150 of file getdata.\+py.
 
 
 
-Definition at line 139 of file getdata.\+py.
+Definition at line 140 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a10d64bb77ee5a46626b7ee644a48c818}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a10d64bb77ee5a46626b7ee644a48c818}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!get\+\_\+complete\+\_\+mol\+\_\+data@{get\+\_\+complete\+\_\+mol\+\_\+data}}
@@ -229,7 +243,7 @@ Definition at line 139 of file getdata.\+py.
 
 
 
-Definition at line 148 of file getdata.\+py.
+Definition at line 149 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a4f1564c52821f30324558b7d4205752b}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a4f1564c52821f30324558b7d4205752b}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!get\+\_\+mol\+\_\+data@{get\+\_\+mol\+\_\+data}}
@@ -239,7 +253,7 @@ Definition at line 148 of file getdata.\+py.
 
 
 
-Definition at line 147 of file getdata.\+py.
+Definition at line 148 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_acc15aef3cffb79b292088e22c876f300}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_acc15aef3cffb79b292088e22c876f300}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!get\+\_\+molecule\+\_\+url@{get\+\_\+molecule\+\_\+url}}
@@ -249,7 +263,7 @@ Definition at line 147 of file getdata.\+py.
 
 
 
-Definition at line 145 of file getdata.\+py.
+Definition at line 146 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a488df8e18c47c75a3409932a19daaa0f}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a488df8e18c47c75a3409932a19daaa0f}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!get\+\_\+target\+\_\+id@{get\+\_\+target\+\_\+id}}
@@ -259,7 +273,7 @@ Definition at line 145 of file getdata.\+py.
 
 
 
-Definition at line 146 of file getdata.\+py.
+Definition at line 147 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a01793eb7293e0ae72bbf87afc2105b99}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a01793eb7293e0ae72bbf87afc2105b99}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!molecules\+\_\+url@{molecules\+\_\+url}}
@@ -269,7 +283,7 @@ Definition at line 146 of file getdata.\+py.
 
 
 
-Definition at line 140 of file getdata.\+py.
+Definition at line 141 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a7c5fd4724cd4758048ae1a6974341ffa}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_a7c5fd4724cd4758048ae1a6974341ffa}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!query@{query}}
@@ -279,7 +293,7 @@ Definition at line 140 of file getdata.\+py.
 
 
 
-Definition at line 141 of file getdata.\+py.
+Definition at line 142 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_ac2b899060aa81350219dcca84a0393e9}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_molecules_data_ac2b899060aa81350219dcca84a0393e9}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Molecules\+Data}!search\+\_\+url@{search\+\_\+url}}
@@ -289,7 +303,7 @@ Definition at line 141 of file getdata.\+py.
 
 
 
-Definition at line 143 of file getdata.\+py.
+Definition at line 144 of file getdata.\+py.
 
 
 

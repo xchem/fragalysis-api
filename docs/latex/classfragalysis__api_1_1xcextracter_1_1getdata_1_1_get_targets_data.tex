@@ -1,16 +1,21 @@
 \hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data}{}\section{fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data Class Reference}
 \label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data}\index{fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data@{fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data}}
+
+
+Class to contain and get data on the protein target of interest.  
+
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_a40260f1d84f75c354f8b1b7124732b3a}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self)
 \item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_abf5179a2489b7edaa16dc6bc8c89f051}{set\+\_\+target\+\_\+name\+\_\+url} (self, target)
-\item 
+\begin{DoxyCompactList}\small\item\em Setting target name url. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_ab67e7a9bfced7f671422ef8f4b6997c9}{get\+\_\+target\+\_\+json} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Gets the json output of the lists of all the proteins associated with the target from fragalysis. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_af26e1f97fa431c2bb490985e7af0eb45}{get\+\_\+target\+\_\+id\+\_\+list} (self)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Gets the target\+\_\+id\+\_\+ from self.\+target\+\_\+json associated with the queried target in the fragalysis database. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -31,9 +36,7 @@ def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_da
 
 
 \subsection{Detailed Description}
-\begin{DoxyVerb}Class to contain and get data on the protein target of interest
-\end{DoxyVerb}
- 
+Class to contain and get data on the protein target of interest. 
 
 Definition at line 6 of file getdata.\+py.
 
@@ -46,30 +49,39 @@ Definition at line 6 of file getdata.\+py.
 \subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}:param self.frag_url: URL of the fragalysis website
-:param self.target_url: URL of extention for the target of fragalysis website
-:param self.query: URL to tell the restfull API how to do the query
-:param self.search_url: URL for the query 
-:param self.target_name_url: Lists of all the proteins associated with the target
-:param self.target_json: Json of the query
-:param self.target_id_list: list of the ID numbers/number for the targets/target
-\end{DoxyVerb}
- 
+
+\begin{DoxyParams}{Parameters}
+{\em self.\+frag\+\_\+url} & U\+RL of the fragalysis website \\
+\hline
+{\em self.\+target\+\_\+url} & U\+RL of extention for the target of fragalysis website \\
+\hline
+{\em self.\+query} & U\+RL to tell the restfull A\+PI how to do the query \\
+\hline
+{\em self.\+search\+\_\+url} & U\+RL for the query \\
+\hline
+{\em self.\+target\+\_\+name\+\_\+url} & Lists of all the proteins associated with the target \\
+\hline
+{\em self.\+target\+\_\+json} & Json of the query \\
+\hline
+{\em self.\+target\+\_\+id\+\_\+list} & list of the ID numbers/number for the targets/target \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line 10 of file getdata.\+py.
 
 
 \begin{DoxyCode}
 10     \textcolor{keyword}{def }\_\_init\_\_(self):
-11         \textcolor{stringliteral}{'''}
-12 \textcolor{stringliteral}{        :param self.frag\_url: URL of the fragalysis website}
-13 \textcolor{stringliteral}{        :param self.target\_url: URL of extention for the target of fragalysis website}
-14 \textcolor{stringliteral}{        :param self.query: URL to tell the restfull API how to do the query}
-15 \textcolor{stringliteral}{        :param self.search\_url: URL for the query }
-16 \textcolor{stringliteral}{        :param self.target\_name\_url: Lists of all the proteins associated with the target}
-17 \textcolor{stringliteral}{        :param self.target\_json: Json of the query}
-18 \textcolor{stringliteral}{        :param self.target\_id\_list: list of the ID numbers/number for the targets/target}
-19 \textcolor{stringliteral}{        '''}
+11         \textcolor{stringliteral}{"""!}
+12 \textcolor{stringliteral}{        @param self.frag\_url URL of the fragalysis website}
+13 \textcolor{stringliteral}{        @param self.target\_url URL of extention for the target of fragalysis website}
+14 \textcolor{stringliteral}{        @param self.query: URL to tell the restfull API how to do the query}
+15 \textcolor{stringliteral}{        @param self.search\_url URL for the query }
+16 \textcolor{stringliteral}{        @param self.target\_name\_url Lists of all the proteins associated with the target}
+17 \textcolor{stringliteral}{        @param self.target\_json Json of the query}
+18 \textcolor{stringliteral}{        @param self.target\_id\_list list of the ID numbers/number for the targets/target}
+19 \textcolor{stringliteral}{        """}
 20         settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
 21 
 22         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
@@ -93,32 +105,33 @@ Definition at line 10 of file getdata.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+target\+\_\+id\+\_\+list()}{get\_target\_id\_list()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data.\+get\+\_\+target\+\_\+id\+\_\+list (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Gets the target_id_ from self.target_json associated with the queried target in the 
-fragalysis database
 
-:returns id_list: The ID number associated with the target.
-\end{DoxyVerb}
- 
 
-Definition at line 60 of file getdata.\+py.
+Gets the target\+\_\+id\+\_\+ from self.\+target\+\_\+json associated with the queried target in the fragalysis database. 
+
+\begin{DoxyReturn}{Returns}
+id\+\_\+list The ID number associated with the target. 
+\end{DoxyReturn}
+
+
+Definition at line 59 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-60     \textcolor{keyword}{def }get\_target\_id\_list(self):
-61         \textcolor{stringliteral}{'''}
-62 \textcolor{stringliteral}{        Gets the target\_id\_ from self.target\_json associated with the queried target in the }
-63 \textcolor{stringliteral}{        fragalysis database}
-64 \textcolor{stringliteral}{}
-65 \textcolor{stringliteral}{        :returns id\_list: The ID number associated with the target.}
-66 \textcolor{stringliteral}{        '''}
-67         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.target\_json:
-68             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please get data with get\_target\_json!'})
-69 
-70         id\_list = [result[\textcolor{stringliteral}{'id'}] \textcolor{keywordflow}{for} result \textcolor{keywordflow}{in} self.target\_json[\textcolor{stringliteral}{'results'}]]
-71         self.target\_id\_list = id\_list
-72         \textcolor{keywordflow}{return} id\_list
-73 
-74 
+59     \textcolor{keyword}{def }get\_target\_id\_list(self):
+60         \textcolor{stringliteral}{"""! Gets the target\_id\_ from self.target\_json associated with the queried target in the }
+61 \textcolor{stringliteral}{            fragalysis database}
+62 \textcolor{stringliteral}{}
+63 \textcolor{stringliteral}{        @returns id\_list The ID number associated with the target.}
+64 \textcolor{stringliteral}{        """}
+65         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.target\_json:
+66             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please get data with get\_target\_json!'})
+67 
+68         id\_list = [result[\textcolor{stringliteral}{'id'}] \textcolor{keywordflow}{for} result \textcolor{keywordflow}{in} self.target\_json[\textcolor{stringliteral}{'results'}]]
+69         self.target\_id\_list = id\_list
+70         \textcolor{keywordflow}{return} id\_list
+71 
+72 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_ab67e7a9bfced7f671422ef8f4b6997c9}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_ab67e7a9bfced7f671422ef8f4b6997c9}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Targets\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Targets\+Data}!get\+\_\+target\+\_\+json@{get\+\_\+target\+\_\+json}}
@@ -126,36 +139,38 @@ Definition at line 60 of file getdata.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+target\+\_\+json()}{get\_target\_json()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data.\+get\+\_\+target\+\_\+json (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Gets the json output of the lists of all the proteins associated with the target
-from fragalysis
 
-:returns response: Json response from the restful API
-\end{DoxyVerb}
- 
 
-Definition at line 41 of file getdata.\+py.
+Gets the json output of the lists of all the proteins associated with the target from fragalysis. 
+
+\begin{DoxyReturn}{Returns}
+response Json response from the restful A\+PI 
+\end{DoxyReturn}
+
+
+Definition at line 40 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-41     \textcolor{keyword}{def }get\_target\_json(self):
-42         \textcolor{stringliteral}{'''}
-43 \textcolor{stringliteral}{        Gets the json output of the lists of all the proteins associated with the target}
-44 \textcolor{stringliteral}{        from fragalysis}
-45 \textcolor{stringliteral}{}
-46 \textcolor{stringliteral}{        :returns response: Json response from the restful API}
-47 \textcolor{stringliteral}{        '''}
-48         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.target\_name\_url:
-49             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please initiate target\_name url with set\_target\_name\_url(<target>)!'})
-50 
-51         \textcolor{comment}{# get response from url and decode -> json}
-52         with urllib.request.urlopen(self.target\_name\_url) \textcolor{keyword}{as} f:
-53             response = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
-54 
-55         \textcolor{comment}{# set json as decoded response for processing}
-56         self.target\_json = response
-57 
-58         \textcolor{keywordflow}{return} response
-59 
+40     \textcolor{keyword}{def }get\_target\_json(self):
+41         \textcolor{stringliteral}{"""!}
+42 \textcolor{stringliteral}{        Gets the json output of the lists of all the proteins associated with the target}
+43 \textcolor{stringliteral}{        from fragalysis}
+44 \textcolor{stringliteral}{}
+45 \textcolor{stringliteral}{        @returns response Json response from the restful API}
+46 \textcolor{stringliteral}{        """}
+47         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} self.target\_name\_url:
+48             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'Please initiate target\_name url with set\_target\_name\_url(<target>)!'})
+49 
+50         \textcolor{comment}{# get response from url and decode -> json}
+51         with urllib.request.urlopen(self.target\_name\_url) \textcolor{keyword}{as} f:
+52             response = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
+53 
+54         \textcolor{comment}{# set json as decoded response for processing}
+55         self.target\_json = response
+56 
+57         \textcolor{keywordflow}{return} response
+58 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_abf5179a2489b7edaa16dc6bc8c89f051}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_targets_data_abf5179a2489b7edaa16dc6bc8c89f051}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Targets\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Targets\+Data}!set\+\_\+target\+\_\+name\+\_\+url@{set\+\_\+target\+\_\+name\+\_\+url}}
@@ -163,24 +178,28 @@ Definition at line 41 of file getdata.\+py.
 \subsubsection{\texorpdfstring{set\+\_\+target\+\_\+name\+\_\+url()}{set\_target\_name\_url()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Targets\+Data.\+set\+\_\+target\+\_\+name\+\_\+url (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{target }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Setting target name url
 
-:param target: Target name
-\end{DoxyVerb}
- 
+
+Setting target name url. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & Target name of the target \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line 33 of file getdata.\+py.
 
 
 \begin{DoxyCode}
 33     \textcolor{keyword}{def }set\_target\_name\_url(self, target):
-34         \textcolor{stringliteral}{'''}
-35 \textcolor{stringliteral}{        Setting target name url}
-36 \textcolor{stringliteral}{}
-37 \textcolor{stringliteral}{        :param target: Target name}
-38 \textcolor{stringliteral}{        '''}
-39         self.target\_name\_url = str(self.search\_url + target)
-40 
+34         \textcolor{stringliteral}{"""! Setting target name url}
+35 \textcolor{stringliteral}{}
+36 \textcolor{stringliteral}{        @param target: Target name of the target}
+37 \textcolor{stringliteral}{        """}
+38         self.target\_name\_url = str(self.search\_url + target)
+39 
 \end{DoxyCode}
 
 

@@ -4,15 +4,15 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5737d189121121fcfc89d399bf38e877}{get\+\_\+csrf} (\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_adefba58b79837d4e7133a92963544f3f}{R\+E\+Q\+\_\+\+U\+RL})
-\item 
+\begin{DoxyCompactList}\small\item\em Get a csrf token from the request url to authenticate further requests. \end{DoxyCompactList}\item 
 def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a3fd757f4575c325be0c0288fa1f0738d}{update\+\_\+cset} (\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_adefba58b79837d4e7133a92963544f3f}{R\+E\+Q\+\_\+\+U\+RL}, target\+\_\+name, sdf\+\_\+path, update\+\_\+set=\textquotesingle{}None\textquotesingle{}, submit\+\_\+choice=None, upload\+\_\+key=None, pdb\+\_\+zip\+\_\+path=None, add=False)
-\item 
+\begin{DoxyCompactList}\small\item\em Send data to $<$root\+\_\+url$>$/viewer/upload\+\_\+cset/ to overwrite an existing computed set, or to $<$root\+\_\+url$>$/viewer/update\+\_\+cset/ to add new molecules without deleting the old ones. \end{DoxyCompactList}\item 
 def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a9a7a1666e3c737a48bc3ebfe981adeef}{quit\+\_\+function} (fn\+\_\+name)
-\item 
+\begin{DoxyCompactList}\small\item\em Quit a function and return an error. \end{DoxyCompactList}\item 
 def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_ab6ecfd5eeae5a05ee20fa0d19c798f48}{exit\+\_\+after} (s)
-\item 
+\begin{DoxyCompactList}\small\item\em use as decorator to exit process if function takes longer than s seconds \end{DoxyCompactList}\item 
 def \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5065036bae4e3eea5df321d366767d29}{get\+\_\+task\+\_\+response} (taskurl)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Check a task url to get it\textquotesingle{}s status. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,42 +27,40 @@ string \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__upda
 \subsubsection{\texorpdfstring{exit\+\_\+after()}{exit\_after()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+computed\+\_\+set\+\_\+update.\+exit\+\_\+after (\begin{DoxyParamCaption}\item[{}]{s }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}use as decorator to exit process if function takes longer than s seconds
 
-Parameters
-----------
-s: int
-    number of seconds to exit after
-\end{DoxyVerb}
- 
 
-Definition at line 128 of file computed\+\_\+set\+\_\+update.\+py.
+use as decorator to exit process if function takes longer than s seconds 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & integer number of seconds to exit after \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 107 of file computed\+\_\+set\+\_\+update.\+py.
 
 
 \begin{DoxyCode}
-128 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_ab6ecfd5eeae5a05ee20fa0d19c798f48}{exit\_after}(s):
-129     \textcolor{stringliteral}{'''}
-130 \textcolor{stringliteral}{    use as decorator to exit process if function takes longer than s seconds}
-131 \textcolor{stringliteral}{    }
-132 \textcolor{stringliteral}{    Parameters}
-133 \textcolor{stringliteral}{    ----------}
-134 \textcolor{stringliteral}{    s: int}
-135 \textcolor{stringliteral}{        number of seconds to exit after}
-136 \textcolor{stringliteral}{    '''}
-137     \textcolor{keyword}{def }outer(fn):
-138         \textcolor{keyword}{def }inner(*args, **kwargs):
-139             timer = threading.Timer(s, quit\_function, args=[fn.\_\_name\_\_])
-140             timer.start()
-141             \textcolor{keywordflow}{try}:
-142                 result = fn(*args, **kwargs)
-143             \textcolor{keywordflow}{finally}:
-144                 timer.cancel()
-145             \textcolor{keywordflow}{return} result
-146         \textcolor{keywordflow}{return} inner
-147     \textcolor{keywordflow}{return} outer
-148 
-149 
-150 @\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_ab6ecfd5eeae5a05ee20fa0d19c798f48}{exit\_after}(600)
+107 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_ab6ecfd5eeae5a05ee20fa0d19c798f48}{exit\_after}(s):
+108     \textcolor{stringliteral}{"""! use as decorator to exit process if function takes longer than s seconds}
+109 \textcolor{stringliteral}{    }
+110 \textcolor{stringliteral}{    @param s integer number of seconds to exit after}
+111 \textcolor{stringliteral}{    """}
+112     \textcolor{keyword}{def }outer(fn):
+113         \textcolor{keyword}{def }inner(*args, **kwargs):
+114             timer = threading.Timer(s, quit\_function, args=[fn.\_\_name\_\_])
+115             timer.start()
+116             \textcolor{keywordflow}{try}:
+117                 result = fn(*args, **kwargs)
+118             \textcolor{keywordflow}{finally}:
+119                 timer.cancel()
+120             \textcolor{keywordflow}{return} result
+121         \textcolor{keywordflow}{return} inner
+122     \textcolor{keywordflow}{return} outer
+123 
+124 
+125 @\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_ab6ecfd5eeae5a05ee20fa0d19c798f48}{exit\_after}(600)
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5737d189121121fcfc89d399bf38e877}\label{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5737d189121121fcfc89d399bf38e877}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update@{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update}!get\+\_\+csrf@{get\+\_\+csrf}}
@@ -70,47 +68,43 @@ Definition at line 128 of file computed\+\_\+set\+\_\+update.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+csrf()}{get\_csrf()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+computed\+\_\+set\+\_\+update.\+get\+\_\+csrf (\begin{DoxyParamCaption}\item[{}]{R\+E\+Q\+\_\+\+U\+RL }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Get a csrf token from the request url to authenticate further requests
-Parameters
-----------
-REQ_URL string
-    The URL that you want to make a request against after getting the token
 
-Returns
--------
-csrftoken
-    csrf token to use for further requests against the same URL
-\end{DoxyVerb}
- 
+
+Get a csrf token from the request url to authenticate further requests. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R\+E\+Q\+\_\+\+U\+RL} & The U\+RL that you want to make a request against after getting the token \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+csrftoken csrf token to use for further requests against the same U\+RL 
+\end{DoxyReturn}
+
 
 Definition at line 10 of file computed\+\_\+set\+\_\+update.\+py.
 
 
 \begin{DoxyCode}
 10 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5737d189121121fcfc89d399bf38e877}{get\_csrf}(REQ\_URL):
-11     \textcolor{stringliteral}{"""Get a csrf token from the request url to authenticate further requests}
-12 \textcolor{stringliteral}{    Parameters}
-13 \textcolor{stringliteral}{    ----------}
-14 \textcolor{stringliteral}{    REQ\_URL string}
-15 \textcolor{stringliteral}{        The URL that you want to make a request against after getting the token}
-16 \textcolor{stringliteral}{    }
-17 \textcolor{stringliteral}{    Returns}
-18 \textcolor{stringliteral}{    -------}
-19 \textcolor{stringliteral}{    csrftoken}
-20 \textcolor{stringliteral}{        csrf token to use for further requests against the same URL}
-21 \textcolor{stringliteral}{    """}
-22     client = requests.session()
-23     \textcolor{comment}{# Retrieve the CSRF token first}
-24     client.get(REQ\_URL)  \textcolor{comment}{# sets cookie}
-25     \textcolor{keywordflow}{if} \textcolor{stringliteral}{'csrftoken'} \textcolor{keywordflow}{in} client.cookies:
-26         \textcolor{comment}{# Django 1.6 and up}
-27         csrftoken = client.cookies[\textcolor{stringliteral}{'csrftoken'}]
-28     \textcolor{keywordflow}{else}:
-29         \textcolor{comment}{# older versions}
-30         csrftoken = client.cookies[\textcolor{stringliteral}{'csrf'}]
-31     \textcolor{keywordflow}{return} csrftoken
-32 
-33 
+11     \textcolor{stringliteral}{"""! Get a csrf token from the request url to authenticate further requests}
+12 \textcolor{stringliteral}{}
+13 \textcolor{stringliteral}{    @param REQ\_URL The URL that you want to make a request against after getting the token}
+14 \textcolor{stringliteral}{    @return csrftoken csrf token to use for further requests against the same URL}
+15 \textcolor{stringliteral}{    """}
+16 
+17     client = requests.session()
+18     \textcolor{comment}{# Retrieve the CSRF token first}
+19     client.get(REQ\_URL)  \textcolor{comment}{# sets cookie}
+20     \textcolor{keywordflow}{if} \textcolor{stringliteral}{'csrftoken'} \textcolor{keywordflow}{in} client.cookies:
+21         \textcolor{comment}{# Django 1.6 and up}
+22         csrftoken = client.cookies[\textcolor{stringliteral}{'csrftoken'}]
+23     \textcolor{keywordflow}{else}:
+24         \textcolor{comment}{# older versions}
+25         csrftoken = client.cookies[\textcolor{stringliteral}{'csrf'}]
+26     \textcolor{keywordflow}{return} csrftoken
+27 
+28 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5065036bae4e3eea5df321d366767d29}\label{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5065036bae4e3eea5df321d366767d29}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update@{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update}!get\+\_\+task\+\_\+response@{get\+\_\+task\+\_\+response}}
@@ -118,124 +112,85 @@ Definition at line 10 of file computed\+\_\+set\+\_\+update.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+task\+\_\+response()}{get\_task\_response()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+computed\+\_\+set\+\_\+update.\+get\+\_\+task\+\_\+response (\begin{DoxyParamCaption}\item[{}]{taskurl }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Check a task url to get it's status. Will return SUCCESS or FAILED, or timeout after 10 minutes (600s)
-   if the task is still pending
 
-Parameters
-----------
-taskurl: str
-    URL to ping
-    
-Returns
--------
-status: str
-    SUCCESS or FAILURE
-\end{DoxyVerb}
- 
 
-Definition at line 151 of file computed\+\_\+set\+\_\+update.\+py.
+Check a task url to get it\textquotesingle{}s status. 
+
+Will return S\+U\+C\+C\+E\+SS or F\+A\+I\+L\+ED, or timeout after 10 minutes (600s)if the task is still pending
+
+
+\begin{DoxyParams}{Parameters}
+{\em taskurl} & U\+RL to ping\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+status S\+U\+C\+C\+E\+SS or F\+A\+I\+L\+U\+RE 
+\end{DoxyReturn}
+
+
+Definition at line 126 of file computed\+\_\+set\+\_\+update.\+py.
 
 
 \begin{DoxyCode}
-151 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5065036bae4e3eea5df321d366767d29}{get\_task\_response}(taskurl):
-152     \textcolor{stringliteral}{"""Check a task url to get it's status. Will return SUCCESS or FAILED, or timeout after 10 minutes
-       (600s)}
-153 \textcolor{stringliteral}{       if the task is still pending}
-154 \textcolor{stringliteral}{    }
-155 \textcolor{stringliteral}{    Parameters}
-156 \textcolor{stringliteral}{    ----------}
-157 \textcolor{stringliteral}{    taskurl: str}
-158 \textcolor{stringliteral}{        URL to ping}
-159 \textcolor{stringliteral}{        }
-160 \textcolor{stringliteral}{    Returns}
-161 \textcolor{stringliteral}{    -------}
-162 \textcolor{stringliteral}{    status: str}
-163 \textcolor{stringliteral}{        SUCCESS or FAILURE}
-164 \textcolor{stringliteral}{    """}
-165     print(\textcolor{stringliteral}{'pinging task to check status...'})
-166     requests.request(\textcolor{stringliteral}{"GET"}, taskurl)
-167     complete=\textcolor{keyword}{False}
-168     \textcolor{keywordflow}{while} \textcolor{keywordflow}{not} complete:
-169         task\_response = requests.request(\textcolor{stringliteral}{"GET"}, taskurl)
-170         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'upload'} \textcolor{keywordflow}{in} taskurl:
-171             status = task\_response.json()[\textcolor{stringliteral}{'upload\_task\_status'}]
-172         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'update'} \textcolor{keywordflow}{in} taskurl:
-173             status = task\_response.json()[\textcolor{stringliteral}{'update\_task\_status'}]
-174         \textcolor{keywordflow}{if} status == \textcolor{stringliteral}{"SUCCESS"}:
-175             complete=\textcolor{keyword}{True}
-176         \textcolor{keywordflow}{if} status == \textcolor{stringliteral}{"FAILURE"}:
-177             complete=\textcolor{keyword}{True}
-178         time.sleep(5)
-179     \textcolor{keywordflow}{return} status, task\_response.json()
-180 
-181 
-182 \textcolor{comment}{# EXAMPLES:}
-183 \textcolor{comment}{# =========}
-184 \textcolor{comment}{# ---- NB: The major difference here is the REQ\_URL. For new data, or to overwrite data, use
-       https://fragalysis.diamond.ac.uk/viewer/upload\_cset/.}
-185 \textcolor{comment}{#          To add new molecules to an existing set, use
-       https://fragalysis.diamond.ac.uk/viewer/update\_cset/. ----}
-186 \textcolor{comment}{#}
-187 \textcolor{comment}{# to overwrite an existing cset:}
-188 \textcolor{comment}{# ------------------------------}
-189 \textcolor{comment}{# taskurl = update\_cset(REQ\_URL='https://fragalysis.diamond.ac.uk/viewer/upload\_cset/',}
-190 \textcolor{comment}{#                       target\_name='Mpro',}
-191 \textcolor{comment}{#                       submit\_choice='1',}
-192 \textcolor{comment}{#                       upload\_key='1',}
-193 \textcolor{comment}{#                       update\_set='WT-xCOS3-ThreeHop',}
-194 \textcolor{comment}{#                      
-       sdf\_path='/Users/uzw12877/Downloads/Test\_upload/Top\_100\_three\_hop\_XCOS\_1.4\_2020-07-28.sdf',}
-195 \textcolor{comment}{#                       pdb\_zip\_path='/Users/uzw12877/Downloads/Test\_upload/receptor\_pdbs.zip')}
-196 \textcolor{comment}{# task\_response, json\_results = get\_task\_response(taskurl)}
-197 \textcolor{comment}{# print(task\_response)}
-198 \textcolor{comment}{# print(json\_results)}
-199 \textcolor{comment}{#}
-200 \textcolor{comment}{# to update an existing cset:}
-201 \textcolor{comment}{# ---------------------------}
-202 \textcolor{comment}{# taskurl = update\_cset(REQ\_URL='https://fragalysis.diamond.ac.uk/viewer/update\_cset/',}
-203 \textcolor{comment}{#                       target\_name='Mpro',}
-204 \textcolor{comment}{#                       update\_set='WT-xCOS3-ThreeHop',}
-205 \textcolor{comment}{#                      
-       sdf\_path='/Users/uzw12877/Downloads/Test\_upload/Top\_100\_three\_hop\_XCOS\_1.4\_2020-07-28 copy.sdf',}
-206 \textcolor{comment}{#                       pdb\_zip\_path='/Users/uzw12877/Downloads/Test\_upload/receptor\_pdbs copy.zip',}
-207 \textcolor{comment}{#                       add=True)}
-208 \textcolor{comment}{# task\_response, json\_results = get\_task\_response(taskurl)}
-209 \textcolor{comment}{# print(task\_response)}
-210 \textcolor{comment}{# print(json\_results)}
-211 
-212 \end{DoxyCode}
+126 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5065036bae4e3eea5df321d366767d29}{get\_task\_response}(taskurl):
+127     \textcolor{stringliteral}{"""! Check a task url to get it's status. Will return SUCCESS or FAILED,}
+128 \textcolor{stringliteral}{        or timeout after 10 minutes (600s)if the task is still pending}
+129 \textcolor{stringliteral}{    }
+130 \textcolor{stringliteral}{        @param taskurl URL to ping}
+131 \textcolor{stringliteral}{        }
+132 \textcolor{stringliteral}{        @return status SUCCESS or FAILURE}
+133 \textcolor{stringliteral}{        """}
+134         
+135     print(\textcolor{stringliteral}{'pinging task to check status...'})
+136     requests.request(\textcolor{stringliteral}{"GET"}, taskurl)
+137     complete=\textcolor{keyword}{False}
+138     \textcolor{keywordflow}{while} \textcolor{keywordflow}{not} complete:
+139         task\_response = requests.request(\textcolor{stringliteral}{"GET"}, taskurl)
+140         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'upload'} \textcolor{keywordflow}{in} taskurl:
+141             status = task\_response.json()[\textcolor{stringliteral}{'upload\_task\_status'}]
+142         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'update'} \textcolor{keywordflow}{in} taskurl:
+143             status = task\_response.json()[\textcolor{stringliteral}{'update\_task\_status'}]
+144         \textcolor{keywordflow}{if} status == \textcolor{stringliteral}{"SUCCESS"}:
+145             complete=\textcolor{keyword}{True}
+146         \textcolor{keywordflow}{if} status == \textcolor{stringliteral}{"FAILURE"}:
+147             complete=\textcolor{keyword}{True}
+148         time.sleep(5)
+149     \textcolor{keywordflow}{return} status, task\_response.json()
+150 
+151 \end{DoxyCode}
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a9a7a1666e3c737a48bc3ebfe981adeef}\label{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a9a7a1666e3c737a48bc3ebfe981adeef}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update@{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update}!quit\+\_\+function@{quit\+\_\+function}}
 \index{quit\+\_\+function@{quit\+\_\+function}!fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update@{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update}}
 \subsubsection{\texorpdfstring{quit\+\_\+function()}{quit\_function()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+computed\+\_\+set\+\_\+update.\+quit\+\_\+function (\begin{DoxyParamCaption}\item[{}]{fn\+\_\+name }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Quit a function and return an error
-Parameters
-----------
-fn_name:
-    name of function to apply to
-\end{DoxyVerb}
- 
 
-Definition at line 114 of file computed\+\_\+set\+\_\+update.\+py.
+
+Quit a function and return an error. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fn\+\_\+name} & name of function to apply to \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 95 of file computed\+\_\+set\+\_\+update.\+py.
 
 
 \begin{DoxyCode}
-114 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a9a7a1666e3c737a48bc3ebfe981adeef}{quit\_function}(fn\_name):
-115     \textcolor{stringliteral}{"""Quit a function and return an error}
-116 \textcolor{stringliteral}{    Parameters}
-117 \textcolor{stringliteral}{    ----------}
-118 \textcolor{stringliteral}{    fn\_name:}
-119 \textcolor{stringliteral}{        name of function to apply to}
-120 \textcolor{stringliteral}{    """}
-121     \textcolor{comment}{# print to stderr, unbuffered in Python 2.}
-122     print(\textcolor{stringliteral}{'\{0\} took too long. The task has probably not worked, but is left in a PENDING state. \(\backslash\)}
-123 \textcolor{stringliteral}{    Please try again or email rachael.skyner@diamond.ac.uk for help.'}.format(fn\_name), file=sys.stderr)
-124     sys.stderr.flush() \textcolor{comment}{# Python 3 stderr is likely buffered.}
-125     thread.interrupt\_main() \textcolor{comment}{# raises KeyboardInterrupt}
-126     
-127 
+95 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a9a7a1666e3c737a48bc3ebfe981adeef}{quit\_function}(fn\_name):
+96     \textcolor{stringliteral}{"""! Quit a function and return an error}
+97 \textcolor{stringliteral}{    }
+98 \textcolor{stringliteral}{    @param fn\_name name of function to apply to}
+99 \textcolor{stringliteral}{    """}
+100     \textcolor{comment}{# print to stderr, unbuffered in Python 2.}
+101     print(\textcolor{stringliteral}{'\{0\} took too long. The task has probably not worked, but is left in a PENDING state. \(\backslash\)}
+102 \textcolor{stringliteral}{    Please try again or email rachael.skyner@diamond.ac.uk for help.'}.format(fn\_name), file=sys.stderr)
+103     sys.stderr.flush() \textcolor{comment}{# Python 3 stderr is likely buffered.}
+104     thread.interrupt\_main() \textcolor{comment}{# raises KeyboardInterrupt}
+105     
+106 
 \end{DoxyCode}
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a3fd757f4575c325be0c0288fa1f0738d}\label{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a3fd757f4575c325be0c0288fa1f0738d}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update@{fragalysis\+\_\+api\+::xcextracter\+::computed\+\_\+set\+\_\+update}!update\+\_\+cset@{update\+\_\+cset}}
@@ -243,128 +198,111 @@ Definition at line 114 of file computed\+\_\+set\+\_\+update.\+py.
 \subsubsection{\texorpdfstring{update\+\_\+cset()}{update\_cset()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+computed\+\_\+set\+\_\+update.\+update\+\_\+cset (\begin{DoxyParamCaption}\item[{}]{R\+E\+Q\+\_\+\+U\+RL,  }\item[{}]{target\+\_\+name,  }\item[{}]{sdf\+\_\+path,  }\item[{}]{update\+\_\+set = {\ttfamily \textquotesingle{}None\textquotesingle{}},  }\item[{}]{submit\+\_\+choice = {\ttfamily None},  }\item[{}]{upload\+\_\+key = {\ttfamily None},  }\item[{}]{pdb\+\_\+zip\+\_\+path = {\ttfamily None},  }\item[{}]{add = {\ttfamily False} }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Send data to <root_url>/viewer/upload_cset/ to overwrite an existing computed set, or to 
-<root_url>/viewer/update_cset/ to add new molecules without deleting the old ones.
 
-Parameters
-----------
-REQ_URL: str
-    request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload_cset/ or viewer/update_cset)
-target_name: str
-    the name of the target in Fragalysis that the computed set is for
-update_set: str
-    the name of the computed set you want to update 
-    (can be found with: "".join(submitter_name.split()) + '-' + "".join(method.split()),
-    where submitter_name is the name in the submitter_name field in the blank mol of the uploaded sdf file,
-    and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding
-    a set for the first time
-sdf_path: str
-    path to the sdf file to upload
-submit_choice: int
-    0 for validate, 1 for upload (not required for update - ie. viewer/update_cset)
-upload_key: str
-    upload key, not currently turned on, so can be any value, but not blank or null (optional)
-pdb_zip_path: str
-    path to the zip file of pdb's to upload (optional)
-add: bool
-    set to True if updating a computed set without overwriting it completely (for <root_url>/viewer/update_cset/)
-    
-Returns
--------
-taskurl str
-    the URL to check for the status of the upload
-\end{DoxyVerb}
- 
 
-Definition at line 34 of file computed\+\_\+set\+\_\+update.\+py.
+Send data to $<$root\+\_\+url$>$/viewer/upload\+\_\+cset/ to overwrite an existing computed set, or to $<$root\+\_\+url$>$/viewer/update\+\_\+cset/ to add new molecules without deleting the old ones. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em R\+E\+Q\+\_\+\+U\+RL} & request U\+RL for the upload (e.\+g. \href{https://fagalysis.diamond.ac.uk/viewer/upload_cset/}{\tt https\+://fagalysis.\+diamond.\+ac.\+uk/viewer/upload\+\_\+cset/} or viewer/update\+\_\+cset) \\
+\hline
+{\em target\+\_\+name} & the name of the target in Fragalysis that the computed set is for \\
+\hline
+{\em update\+\_\+set} & the name of the computed set you want to update (can be found with\+: \char`\"{}\char`\"{}.join(submitter\+\_\+name.\+split()) + \textquotesingle{}-\/\textquotesingle{} + \char`\"{}\char`\"{}.join(method.\+split()), where submitter\+\_\+name is the name in the submitter\+\_\+name field in the blank mol of the uploaded sdf file, and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding a set for the first time \\
+\hline
+{\em sdf\+\_\+path} & str path to the sdf file to upload \\
+\hline
+{\em submit\+\_\+choice} & int 0 for validate, 1 for upload (not required for update -\/ ie. viewer/update\+\_\+cset) \\
+\hline
+{\em upload\+\_\+key} & upload key, not currently turned on, so can be any value, but not blank or null (optional) \\
+\hline
+{\em pdb\+\_\+zip\+\_\+path} & path to the zip file of pdb\textquotesingle{}s to upload (optional) \\
+\hline
+{\em add} & bool set to True if updating a computed set without overwriting it completely (for $<$root\+\_\+url$>$/viewer/update\+\_\+cset/) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+taskurl the U\+RL to check for the status of the upload 
+\end{DoxyReturn}
+
+
+Definition at line 29 of file computed\+\_\+set\+\_\+update.\+py.
 
 
 \begin{DoxyCode}
-34 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a3fd757f4575c325be0c0288fa1f0738d}{update\_cset}(REQ\_URL, target\_name, sdf\_path, update\_set='None', submit\_choice=None, 
+29 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a3fd757f4575c325be0c0288fa1f0738d}{update\_cset}(REQ\_URL, target\_name, sdf\_path, update\_set='None', submit\_choice=None, 
       upload\_key=None, pdb\_zip\_path=None, add=False):
-35     \textcolor{stringliteral}{"""Send data to <root\_url>/viewer/upload\_cset/ to overwrite an existing computed set, or to }
-36 \textcolor{stringliteral}{    <root\_url>/viewer/update\_cset/ to add new molecules without deleting the old ones.}
-37 \textcolor{stringliteral}{}
-38 \textcolor{stringliteral}{    Parameters}
-39 \textcolor{stringliteral}{    ----------}
-40 \textcolor{stringliteral}{    REQ\_URL: str}
-41 \textcolor{stringliteral}{        request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload\_cset/ or
+30     \textcolor{stringliteral}{"""! Send data to <root\_url>/viewer/upload\_cset/ to overwrite an existing computed set, or to }
+31 \textcolor{stringliteral}{    <root\_url>/viewer/update\_cset/ to add new molecules without deleting the old ones.}
+32 \textcolor{stringliteral}{}
+33 \textcolor{stringliteral}{    @param REQ\_URL request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload\_cset/ or
        viewer/update\_cset)}
-42 \textcolor{stringliteral}{    target\_name: str}
-43 \textcolor{stringliteral}{        the name of the target in Fragalysis that the computed set is for}
-44 \textcolor{stringliteral}{    update\_set: str}
-45 \textcolor{stringliteral}{        the name of the computed set you want to update }
-46 \textcolor{stringliteral}{        (can be found with: "".join(submitter\_name.split()) + '-' + "".join(method.split()),}
-47 \textcolor{stringliteral}{        where submitter\_name is the name in the submitter\_name field in the blank mol of the uploaded sdf
+34 \textcolor{stringliteral}{    @param target\_name the name of the target in Fragalysis that the computed set is for}
+35 \textcolor{stringliteral}{    @param update\_set the name of the computed set you want to update }
+36 \textcolor{stringliteral}{        (can be found with: "".join(submitter\_name.split()) + '-' + "".join(method.split()),}
+37 \textcolor{stringliteral}{        where submitter\_name is the name in the submitter\_name field in the blank mol of the uploaded sdf
        file,}
-48 \textcolor{stringliteral}{        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are
+38 \textcolor{stringliteral}{        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are
        adding}
-49 \textcolor{stringliteral}{        a set for the first time}
-50 \textcolor{stringliteral}{    sdf\_path: str}
-51 \textcolor{stringliteral}{        path to the sdf file to upload}
-52 \textcolor{stringliteral}{    submit\_choice: int}
-53 \textcolor{stringliteral}{        0 for validate, 1 for upload (not required for update - ie. viewer/update\_cset)}
-54 \textcolor{stringliteral}{    upload\_key: str}
-55 \textcolor{stringliteral}{        upload key, not currently turned on, so can be any value, but not blank or null (optional)}
-56 \textcolor{stringliteral}{    pdb\_zip\_path: str}
-57 \textcolor{stringliteral}{        path to the zip file of pdb's to upload (optional)}
-58 \textcolor{stringliteral}{    add: bool}
-59 \textcolor{stringliteral}{        set to True if updating a computed set without overwriting it completely (for
+39 \textcolor{stringliteral}{        a set for the first time}
+40 \textcolor{stringliteral}{    @param sdf\_path str path to the sdf file to upload}
+41 \textcolor{stringliteral}{    @param submit\_choice int 0 for validate, 1 for upload (not required for update - ie.
+       viewer/update\_cset)}
+42 \textcolor{stringliteral}{    @param upload\_key upload key, not currently turned on, so can be any value, but not blank or null
+       (optional)}
+43 \textcolor{stringliteral}{    @param pdb\_zip\_path path to the zip file of pdb's to upload (optional)}
+44 \textcolor{stringliteral}{    @param add: bool set to True if updating a computed set without overwriting it completely (for
        <root\_url>/viewer/update\_cset/)}
-60 \textcolor{stringliteral}{        }
-61 \textcolor{stringliteral}{    Returns}
-62 \textcolor{stringliteral}{    -------}
-63 \textcolor{stringliteral}{    taskurl str}
-64 \textcolor{stringliteral}{        the URL to check for the status of the upload}
-65 \textcolor{stringliteral}{    """}
-66     print(f\textcolor{stringliteral}{'Submitting files to update \{update\_set\}...'})
-67     
-68     csrf\_token = \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5737d189121121fcfc89d399bf38e877}{get\_csrf}(REQ\_URL)
-69     
-70     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} add:
-71         payload = \{\textcolor{stringliteral}{'target\_name'}: target\_name,
-72                    \textcolor{stringliteral}{'submit\_choice'}: submit\_choice,
-73                    \textcolor{stringliteral}{'upload\_key'}: upload\_key,
-74                    \textcolor{stringliteral}{'update\_set'}: update\_set\}
-75     \textcolor{keywordflow}{else}:
-76         payload = \{\textcolor{stringliteral}{'target\_name'}: target\_name,
-77                    \textcolor{stringliteral}{'update\_set'}: update\_set\}
-78 
-79     files = [
-80         (\textcolor{stringliteral}{'sdf\_file'}, open(sdf\_path,\textcolor{stringliteral}{'rb'})),
-81         
-82     ]
-83     
-84     \textcolor{keywordflow}{if} pdb\_zip\_path:
-85         files.append((\textcolor{stringliteral}{'pdb\_zip'}, open(pdb\_zip\_path,\textcolor{stringliteral}{'rb'})))
-86 
-87     headers = \{\textcolor{stringliteral}{'X-CSRFToken'}: csrf\_token,
-88               \textcolor{stringliteral}{'Cookie'}: f\textcolor{stringliteral}{'csrftoken=\{csrf\_token\}'}\}
-89     
-90     response = requests.request(\textcolor{stringliteral}{"POST"}, REQ\_URL, headers=headers, data=payload, files=files)
-91     
-92     lines = response.text.split(\textcolor{stringliteral}{'\(\backslash\)n'})
-93     taskurl = \textcolor{keywordtype}{None}
-94     \textcolor{keywordflow}{for} l \textcolor{keywordflow}{in} lines:
-95         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'taskUrl = "/viewer/upload\_task/'} \textcolor{keywordflow}{in} l:
-96             taskid = l.split(\textcolor{stringliteral}{'/'})[-2]
-97             print(f\textcolor{stringliteral}{'upload task id: \{taskid\}'})
-98             taskurl = f\textcolor{stringliteral}{'\{REQ\_URL.replace("/viewer/upload\_cset/","/viewer/upload\_task/")\}\{taskid\}'}
-99         \textcolor{keywordflow}{elif} \textcolor{stringliteral}{'taskUrl = "/viewer/update\_task/'} \textcolor{keywordflow}{in} l:
-100             taskid = l.split(\textcolor{stringliteral}{'/'})[-2]
-101             print(f\textcolor{stringliteral}{'upload task id: \{taskid\}'})
-102             taskurl = f\textcolor{stringliteral}{'\{REQ\_URL.replace("/viewer/update\_cset/","/viewer/update\_task/")\}\{taskid\}'}
-103 
-104             \textcolor{keywordflow}{if} taskurl:
-105                 \textcolor{keywordflow}{break}
-106     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} taskurl:
-107         \textcolor{keywordflow}{raise} Exception(f\textcolor{stringliteral}{'Something went wrong with the upload/update request! \(\backslash\)}
-108 \textcolor{stringliteral}{                        Please try again or email rachael.skyner@diamond.ac.uk for help.\(\backslash\)}
-109 \textcolor{stringliteral}{                        Response: \{response.text\}'})
-110 
-111     \textcolor{keywordflow}{return} taskurl
-112 
-113 
+45 \textcolor{stringliteral}{    @return taskurl the URL to check for the status of the upload}
+46 \textcolor{stringliteral}{    """}
+47     print(f\textcolor{stringliteral}{'Submitting files to update \{update\_set\}...'})
+48     
+49     csrf\_token = \hyperlink{namespacefragalysis__api_1_1xcextracter_1_1computed__set__update_a5737d189121121fcfc89d399bf38e877}{get\_csrf}(REQ\_URL)
+50     
+51     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} add:
+52         payload = \{\textcolor{stringliteral}{'target\_name'}: target\_name,
+53                    \textcolor{stringliteral}{'submit\_choice'}: submit\_choice,
+54                    \textcolor{stringliteral}{'upload\_key'}: upload\_key,
+55                    \textcolor{stringliteral}{'update\_set'}: update\_set\}
+56     \textcolor{keywordflow}{else}:
+57         payload = \{\textcolor{stringliteral}{'target\_name'}: target\_name,
+58                    \textcolor{stringliteral}{'update\_set'}: update\_set\}
+59 
+60     files = [
+61         (\textcolor{stringliteral}{'sdf\_file'}, open(sdf\_path,\textcolor{stringliteral}{'rb'})),
+62         
+63     ]
+64     
+65     \textcolor{keywordflow}{if} pdb\_zip\_path:
+66         files.append((\textcolor{stringliteral}{'pdb\_zip'}, open(pdb\_zip\_path,\textcolor{stringliteral}{'rb'})))
+67 
+68     headers = \{\textcolor{stringliteral}{'X-CSRFToken'}: csrf\_token,
+69               \textcolor{stringliteral}{'Cookie'}: f\textcolor{stringliteral}{'csrftoken=\{csrf\_token\}'}\}
+70     
+71     response = requests.request(\textcolor{stringliteral}{"POST"}, REQ\_URL, headers=headers, data=payload, files=files)
+72     
+73     lines = response.text.split(\textcolor{stringliteral}{'\(\backslash\)n'})
+74     taskurl = \textcolor{keywordtype}{None}
+75     \textcolor{keywordflow}{for} l \textcolor{keywordflow}{in} lines:
+76         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'taskUrl = "/viewer/upload\_task/'} \textcolor{keywordflow}{in} l:
+77             taskid = l.split(\textcolor{stringliteral}{'/'})[-2]
+78             print(f\textcolor{stringliteral}{'upload task id: \{taskid\}'})
+79             taskurl = f\textcolor{stringliteral}{'\{REQ\_URL.replace("/viewer/upload\_cset/","/viewer/upload\_task/")\}\{taskid\}'}
+80         \textcolor{keywordflow}{elif} \textcolor{stringliteral}{'taskUrl = "/viewer/update\_task/'} \textcolor{keywordflow}{in} l:
+81             taskid = l.split(\textcolor{stringliteral}{'/'})[-2]
+82             print(f\textcolor{stringliteral}{'upload task id: \{taskid\}'})
+83             taskurl = f\textcolor{stringliteral}{'\{REQ\_URL.replace("/viewer/update\_cset/","/viewer/update\_task/")\}\{taskid\}'}
+84 
+85             \textcolor{keywordflow}{if} taskurl:
+86                 \textcolor{keywordflow}{break}
+87     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} taskurl:
+88         \textcolor{keywordflow}{raise} Exception(f\textcolor{stringliteral}{'Something went wrong with the upload/update request! \(\backslash\)}
+89 \textcolor{stringliteral}{                        Please try again or email rachael.skyner@diamond.ac.uk for help.\(\backslash\)}
+90 \textcolor{stringliteral}{                        Response: \{response.text\}'})
+91 
+92     \textcolor{keywordflow}{return} taskurl
+93 
+94 
 \end{DoxyCode}
 
 

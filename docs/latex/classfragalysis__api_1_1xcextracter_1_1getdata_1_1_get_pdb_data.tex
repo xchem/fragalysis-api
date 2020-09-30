@@ -1,14 +1,19 @@
 \hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data}{}\section{fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Pdb\+Data Class Reference}
 \label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data}\index{fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Pdb\+Data@{fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Pdb\+Data}}
+
+
+Getting protine data from the fragalysis website in the pdb file format.  
+
+
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_abe03d6df71459bf479db778df7122186}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self)
 \item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a1785640f7d8841b41773f04577065366}{get\+\_\+apo\+\_\+pdb\+\_\+file} (self, code)
-\item 
+\begin{DoxyCompactList}\small\item\em Function to search fragalysis for P\+DB file. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_afcb12b3a8f39a7d54917eefed0a1b4af}{get\+\_\+bound\+\_\+pdb\+\_\+file} (self, code)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Function to search fragalysis for P\+DB file. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -25,11 +30,9 @@ def \hyperlink{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a
 
 
 \subsection{Detailed Description}
-\begin{DoxyVerb}Getting protine data from the fragalysis website in the pdb file format
-\end{DoxyVerb}
- 
+Getting protine data from the fragalysis website in the pdb file format. 
 
-Definition at line 75 of file getdata.\+py.
+Definition at line 73 of file getdata.\+py.
 
 
 
@@ -40,30 +43,43 @@ Definition at line 75 of file getdata.\+py.
 \subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Pdb\+Data.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}:param self.frag_url: URL of the fragalysis website
-:param self.pdb_url: URL to search the fragalysis data base for the protein
-:param self.query: URL to tell the restfull API how to do the query
-\end{DoxyVerb}
- 
 
-Definition at line 79 of file getdata.\+py.
+\begin{DoxyParams}{Parameters}
+{\em self.\+frag\+\_\+url} & U\+RL of the fragalysis website \\
+\hline
+{\em self.\+pdb\+\_\+url} & U\+RL to search the fragalysis data base for the protein \\
+\hline
+{\em self.\+bound\+\_\+pdb\+\_\+url} & U\+RL to search the fragalysis data base for bound pdb i.\+e. the protein with associated ligands \\
+\hline
+{\em self.\+bound\+\_\+query} & U\+RL to tell the restfull A\+PI how to do query for the bound pdb i.\+e. the protein with associated ligands \\
+\hline
+{\em self.\+query} & U\+RL to tell the restfull A\+PI how to do the query \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 76 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-79     \textcolor{keyword}{def }\_\_init\_\_(self):
-80         \textcolor{stringliteral}{'''}
-81 \textcolor{stringliteral}{        :param self.frag\_url: URL of the fragalysis website}
-82 \textcolor{stringliteral}{        :param self.pdb\_url: URL to search the fragalysis data base for the protein}
-83 \textcolor{stringliteral}{        :param self.query: URL to tell the restfull API how to do the query}
-84 \textcolor{stringliteral}{        '''}
-85         settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
-86 
-87         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
-88         self.pdb\_url = settings.get(\textcolor{stringliteral}{'pdb'}, \textcolor{stringliteral}{'search'})
-89         self.bound\_pdb\_url = settings.get(\textcolor{stringliteral}{'bound\_pdb'}, \textcolor{stringliteral}{'search'})
-90         self.bound\_query = settings.get(\textcolor{stringliteral}{'bound\_pdb'}, \textcolor{stringliteral}{'query'})
-91         self.query = settings.get(\textcolor{stringliteral}{'pdb'}, \textcolor{stringliteral}{'query'})
-92 
+76     \textcolor{keyword}{def }\_\_init\_\_(self):
+77         \textcolor{stringliteral}{"""!}
+78 \textcolor{stringliteral}{        @param self.frag\_url URL of the fragalysis website}
+79 \textcolor{stringliteral}{        @param self.pdb\_url URL to search the fragalysis data base for the protein}
+80 \textcolor{stringliteral}{        @param self.bound\_pdb\_url URL to search the fragalysis data base for bound}
+81 \textcolor{stringliteral}{        pdb i.e. the protein with associated ligands}
+82 \textcolor{stringliteral}{        @param self.bound\_query URL to tell the restfull API how to do query for}
+83 \textcolor{stringliteral}{        the bound pdb i.e. the protein with associated ligands}
+84 \textcolor{stringliteral}{        @param self.query URL to tell the restfull API how to do the query}
+85 \textcolor{stringliteral}{        """}
+86         settings = \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}()
+87 
+88         self.frag\_url = settings.get(\textcolor{stringliteral}{'fragalysis'}, \textcolor{stringliteral}{'url'})
+89         self.pdb\_url = settings.get(\textcolor{stringliteral}{'pdb'}, \textcolor{stringliteral}{'search'})
+90         self.bound\_pdb\_url = settings.get(\textcolor{stringliteral}{'bound\_pdb'}, \textcolor{stringliteral}{'search'})
+91         self.bound\_query = settings.get(\textcolor{stringliteral}{'bound\_pdb'}, \textcolor{stringliteral}{'query'})
+92         self.query = settings.get(\textcolor{stringliteral}{'pdb'}, \textcolor{stringliteral}{'query'})
+93 
 \end{DoxyCode}
 
 
@@ -74,31 +90,39 @@ Definition at line 79 of file getdata.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+apo\+\_\+pdb\+\_\+file()}{get\_apo\_pdb\_file()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Pdb\+Data.\+get\+\_\+apo\+\_\+pdb\+\_\+file (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{code }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Function to search fragalysis for PDB file.
-:param code: The code associated with the protein on the fragalysis website.
-:return response: Response from the API = pdb file
-\end{DoxyVerb}
- 
 
-Definition at line 93 of file getdata.\+py.
+
+Function to search fragalysis for P\+DB file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & The code associated with the protein on the fragalysis website. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+response Response from the A\+PI = pdb file 
+\end{DoxyReturn}
+
+
+Definition at line 94 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-93     \textcolor{keyword}{def }get\_apo\_pdb\_file(self, code):
-94         \textcolor{stringliteral}{'''}
-95 \textcolor{stringliteral}{        Function to search fragalysis for PDB file.}
-96 \textcolor{stringliteral}{        :param code: The code associated with the protein on the fragalysis website.}
-97 \textcolor{stringliteral}{        :return response: Response from the API = pdb file}
-98 \textcolor{stringliteral}{        '''}
-99         url = str(self.frag\_url + self.pdb\_url + self.query + code)
-100         \textcolor{comment}{# get response from url and decode -> json}
-101         with urllib.request.urlopen(url) \textcolor{keyword}{as} f:
-102             response = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
-103 
-104         \textcolor{keywordflow}{if} len(response[\textcolor{stringliteral}{'results'}]) > 1:
-105             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'more than one pdb found... contact admin'})
-106         \textcolor{keywordflow}{return} response[\textcolor{stringliteral}{'results'}][0][\textcolor{stringliteral}{'pdb\_data'}]
-107 
+94     \textcolor{keyword}{def }get\_apo\_pdb\_file(self, code):
+95         \textcolor{stringliteral}{"""! Function to search fragalysis for PDB file.}
+96 \textcolor{stringliteral}{}
+97 \textcolor{stringliteral}{        @param code The code associated with the protein on the fragalysis website.}
+98 \textcolor{stringliteral}{        @return response Response from the API = pdb file}
+99 \textcolor{stringliteral}{        """}
+100         url = str(self.frag\_url + self.pdb\_url + self.query + code)
+101         \textcolor{comment}{# get response from url and decode -> json}
+102         with urllib.request.urlopen(url) \textcolor{keyword}{as} f:
+103             response = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
+104 
+105         \textcolor{keywordflow}{if} len(response[\textcolor{stringliteral}{'results'}]) > 1:
+106             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'more than one pdb found... contact admin'})
+107         \textcolor{keywordflow}{return} response[\textcolor{stringliteral}{'results'}][0][\textcolor{stringliteral}{'pdb\_data'}]
+108 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_afcb12b3a8f39a7d54917eefed0a1b4af}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_afcb12b3a8f39a7d54917eefed0a1b4af}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data}!get\+\_\+bound\+\_\+pdb\+\_\+file@{get\+\_\+bound\+\_\+pdb\+\_\+file}}
@@ -106,32 +130,40 @@ Definition at line 93 of file getdata.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+bound\+\_\+pdb\+\_\+file()}{get\_bound\_pdb\_file()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcextracter.\+getdata.\+Get\+Pdb\+Data.\+get\+\_\+bound\+\_\+pdb\+\_\+file (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{code }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Function to search fragalysis for PDB file.
-:param code: The code associated with the protein on the fragalysis website.
-:return response: Response from the API = pdb file
-\end{DoxyVerb}
- 
 
-Definition at line 108 of file getdata.\+py.
+
+Function to search fragalysis for P\+DB file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & The code associated with the protein on the fragalysis website. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+response Response from the A\+PI = pdb file 
+\end{DoxyReturn}
+
+
+Definition at line 109 of file getdata.\+py.
 
 
 \begin{DoxyCode}
-108     \textcolor{keyword}{def }get\_bound\_pdb\_file(self, code):
-109         \textcolor{stringliteral}{'''}
-110 \textcolor{stringliteral}{        Function to search fragalysis for PDB file.}
-111 \textcolor{stringliteral}{        :param code: The code associated with the protein on the fragalysis website.}
-112 \textcolor{stringliteral}{        :return response: Response from the API = pdb file}
-113 \textcolor{stringliteral}{        '''}
-114         url = str(self.frag\_url + self.bound\_pdb\_url + self.bound\_query + code)
-115         \textcolor{comment}{# get response from url and decode -> json}
-116         with urllib.request.urlopen(url) \textcolor{keyword}{as} f:
-117             response = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
-118 
-119         \textcolor{keywordflow}{if} len(response[\textcolor{stringliteral}{'results'}]) > 1:
-120             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'more than one pdb found... contact admin'})
-121         \textcolor{keywordflow}{return} response[\textcolor{stringliteral}{'results'}][0][\textcolor{stringliteral}{'bound\_pdb\_data'}]
-122 
+109     \textcolor{keyword}{def }get\_bound\_pdb\_file(self, code):
+110         \textcolor{stringliteral}{"""! Function to search fragalysis for PDB file.}
+111 \textcolor{stringliteral}{}
+112 \textcolor{stringliteral}{        @param code The code associated with the protein on the fragalysis website.}
+113 \textcolor{stringliteral}{        @return response Response from the API = pdb file}
+114 \textcolor{stringliteral}{        """}
+115         url = str(self.frag\_url + self.bound\_pdb\_url + self.bound\_query + code)
+116         \textcolor{comment}{# get response from url and decode -> json}
+117         with urllib.request.urlopen(url) \textcolor{keyword}{as} f:
+118             response = json.loads(f.read().decode(\textcolor{stringliteral}{'utf-8'}))
+119 
+120         \textcolor{keywordflow}{if} len(response[\textcolor{stringliteral}{'results'}]) > 1:
+121             \textcolor{keywordflow}{raise} Exception(\textcolor{stringliteral}{'more than one pdb found... contact admin'})
+122         \textcolor{keywordflow}{return} response[\textcolor{stringliteral}{'results'}][0][\textcolor{stringliteral}{'bound\_pdb\_data'}]
 123 
+124 
 \end{DoxyCode}
 
 
@@ -144,7 +176,7 @@ Definition at line 108 of file getdata.\+py.
 
 
 
-Definition at line 89 of file getdata.\+py.
+Definition at line 90 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a69a3d1dd7ec122a02aff1945b82ee432}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a69a3d1dd7ec122a02aff1945b82ee432}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data}!bound\+\_\+query@{bound\+\_\+query}}
@@ -154,7 +186,7 @@ Definition at line 89 of file getdata.\+py.
 
 
 
-Definition at line 90 of file getdata.\+py.
+Definition at line 91 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a2cbb80e8804df35ddc3907e128bf5611}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a2cbb80e8804df35ddc3907e128bf5611}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data}!frag\+\_\+url@{frag\+\_\+url}}
@@ -164,7 +196,7 @@ Definition at line 90 of file getdata.\+py.
 
 
 
-Definition at line 87 of file getdata.\+py.
+Definition at line 88 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a8b6633bc84797be7178323c1ff5d0474}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_a8b6633bc84797be7178323c1ff5d0474}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data}!pdb\+\_\+url@{pdb\+\_\+url}}
@@ -174,7 +206,7 @@ Definition at line 87 of file getdata.\+py.
 
 
 
-Definition at line 88 of file getdata.\+py.
+Definition at line 89 of file getdata.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_ad09eb6782120b4d3114a9e5c3f66f373}\label{classfragalysis__api_1_1xcextracter_1_1getdata_1_1_get_pdb_data_ad09eb6782120b4d3114a9e5c3f66f373}} 
 \index{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data@{fragalysis\+\_\+api\+::xcextracter\+::getdata\+::\+Get\+Pdb\+Data}!query@{query}}
@@ -184,7 +216,7 @@ Definition at line 88 of file getdata.\+py.
 
 
 
-Definition at line 91 of file getdata.\+py.
+Definition at line 92 of file getdata.\+py.
 
 
 
