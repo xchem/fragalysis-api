@@ -13,7 +13,7 @@ warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 class Align:
 
     def __init__(self, directory, pdb_ref=''):
-        """Create new Align object
+        """!Create new Align object
 
         @param directory location of PDB files
         @param pdb ref pdb reference
@@ -125,10 +125,10 @@ class Align:
                 return file
 
     def __get_header(self, pdb_file):
-        """
-        Identifies the section of a PDB which contains the headers ATOM/HETATM
-        :param pdb_file: The pdb to acquire the header locations of
-        :return: front locations of the ATOM/HETATM headers in the given pdb, end locations of the ATOM/HETATM headers in the given pdb       
+        """!Identifies the section of a PDB which contains the headers ATOM/HETATM
+
+        @param pdb_file The pdb to acquire the header locations of the ATOM/HETATM headers in the given pdb, end locations of the ATOM/HETATM headers in the given pdb       
+        @return locations of the ATOM/HETATM headers in the given pdb, end locations of the ATOM/HETATM headers in the given pdb
         """
         with open(pdb_file) as handle:
             switch = 0
@@ -147,12 +147,12 @@ class Align:
         return header_front, header_end
 
     def _save_align(self, name, pdb_base, out_dir):
-        """
-        Saves modified pdb as pdb file again. It also ensures the pdb header is kept in the new file.
-        :param name: name of pdb
-        :param pdb_base: coordinates of atom in the pdb format
-        :param out_dir: directory to save new pdb file in
-        :return: a saved pdb file
+        """!Saves modified pdb as pdb file again. It also ensures the pdb header is kept in the new file.
+
+        @param name name of pdb
+        @param pdb_base coordinates of atom in the pdb format
+        @param out_dir directory to save new pdb file in
+        @return: a saved pdb file
         """
         if not os.path.exists(out_dir):  # Creating output directory if it doesn't already exist
             os.makedirs(out_dir)
@@ -168,10 +168,10 @@ class Align:
                 handle.write(line)
 
     def align(self, out_dir):
-        """
-        Aligns all pdbs in the pymol object to the pdb_ref.
-        :param out_dir: directory to save aligned pdbs in
-        :return: saves the pdbs
+        """!Aligns all pdbs in the pymol object to the pdb_ref
+
+        @param out_dir directory to save aligned pdbs in
+        @return saves the pdbs
         """
 
         # Silently open PyMOL
@@ -192,6 +192,11 @@ class Align:
 class Monomerize:
 
     def __init__(self, directory, outdir):
+        """! Creates new monomerise object
+
+        @param directory directory location
+        @param outdir output directory
+        """
         self.directory = directory
         self.outdir = outdir
         self.non_ligs = json.load(
@@ -199,11 +204,18 @@ class Monomerize:
         )
 
     def get_filelist(self):
+        """! Returns list of .pdb files at directory location
+    
+        @param self sel
+        @return list od .pdb files
+        """
         return glob.glob(os.path.join(self.directory, '*.pdb'))
 
     def find_ligs(self, pdb_lines):
-        """
-        Finds list of ligands contained in the structure, including
+        """!Finds list of ligands contained in the structure including solvents and ions
+
+        @param pdb_lines section of .pdb file with ligand information 
+        @return list of wanted ligands
         """
         all_ligands = []  # all ligands go in here, including solvents and ions
         wanted_ligs = []
@@ -223,6 +235,12 @@ class Monomerize:
         return wanted_ligs
 
     def save_chain(self, lig, f):
+        """! Saves chain given ligand a filename
+
+        @param lig desired ligand
+        @param f filename
+        @return filename
+        """
         lig_chain = lig[5]
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')

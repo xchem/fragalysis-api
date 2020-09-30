@@ -11,7 +11,7 @@ class \hyperlink{classfragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_1_1p
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\+\_\+up} (target\+\_\+name, infile, out\+\_\+dir, monomerize, smiles\+\_\+file=None)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Creates new .pdb files. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Function Documentation}
@@ -21,98 +21,107 @@ def \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab
 \subsubsection{\texorpdfstring{set\+\_\+up()}{set\_up()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+conversion\+\_\+pdb\+\_\+mol.\+set\+\_\+up (\begin{DoxyParamCaption}\item[{}]{target\+\_\+name,  }\item[{}]{infile,  }\item[{}]{out\+\_\+dir,  }\item[{}]{monomerize,  }\item[{}]{smiles\+\_\+file = {\ttfamily None} }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}:param pdbcode: pdb code that has already been uploaded into directory of user ID
-:param USER_ID: User ID and timestamp that has been given to user when they upload their files
-:return: for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.
-\end{DoxyVerb}
- 
 
-Definition at line 414 of file conversion\+\_\+pdb\+\_\+mol.\+py.
+
+Creates new .pdb files. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdbcode} & pdb code that has already been uploaded into directory of user ID \\
+\hline
+{\em U\+S\+E\+R\+\_\+\+ID} & User ID and timestamp that has been given to user when they upload their files \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+for each ligand\+: pdb, mol files. For each pdb file\+: sdf and apo.\+pdb files. 
+\end{DoxyReturn}
+
+
+Definition at line 428 of file conversion\+\_\+pdb\+\_\+mol.\+py.
 
 
 \begin{DoxyCode}
-414 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\_up}(target\_name, infile, out\_dir, monomerize, smiles\_file=None):
-415 
-416     \textcolor{stringliteral}{"""}
-417 \textcolor{stringliteral}{}
-418 \textcolor{stringliteral}{    :param pdbcode: pdb code that has already been uploaded into directory of user ID}
-419 \textcolor{stringliteral}{    :param USER\_ID: User ID and timestamp that has been given to user when they upload their files}
-420 \textcolor{stringliteral}{    :return: for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.}
-421 \textcolor{stringliteral}{    """}
-422 
-423     RESULTS\_DIRECTORY = os.path.join(out\_dir, target\_name, \textcolor{stringliteral}{'aligned'})
-424 
-425     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(RESULTS\_DIRECTORY):
-426         os.makedirs(RESULTS\_DIRECTORY)
-427 
-428     print(RESULTS\_DIRECTORY)
-429 
-430     new = Ligand(
-431         target\_name, infile, RESULTS\_DIRECTORY
-432     )  \textcolor{comment}{# takes in pdb file and returns specific ligand files}
-433     new.hets\_and\_cons()  \textcolor{comment}{# takes only hetatm and conect file lines from pdb file}
-434     new.remove\_nonligands()  \textcolor{comment}{# removes ions and solvents from list of ligands}
-435     new.find\_ligand\_names\_new()  \textcolor{comment}{# finds the specific name and locations of desired ligands}
-436     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(len(new.wanted\_ligs)):
-437         new.create\_pdb\_for\_ligand(
-438             new.wanted\_ligs[i], count=i, monomerize=monomerize, smiles\_file=smiles\_file
-439         )  \textcolor{comment}{# creates pdb file and mol object for specific ligand}
+428 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\_up}(target\_name, infile, out\_dir, monomerize, smiles\_file=None):
+429     \textcolor{stringliteral}{"""! Creates new .pdb files}
+430 \textcolor{stringliteral}{}
+431 \textcolor{stringliteral}{    @param pdbcode pdb code that has already been uploaded into directory of user ID}
+432 \textcolor{stringliteral}{    @param USER\_ID User ID and timestamp that has been given to user when they upload their files}
+433 \textcolor{stringliteral}{    @return for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.}
+434 \textcolor{stringliteral}{    """}
+435 
+436     RESULTS\_DIRECTORY = os.path.join(out\_dir, target\_name, \textcolor{stringliteral}{'aligned'})
+437 
+438     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(RESULTS\_DIRECTORY):
+439         os.makedirs(RESULTS\_DIRECTORY)
 440 
-441     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(len(new.mol\_dict[\textcolor{stringliteral}{"directory"}])):
+441     print(RESULTS\_DIRECTORY)
 442 
-443         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} new.mol\_dict[\textcolor{stringliteral}{"mol"}][i]:
-444             warnings.warn(
-445                 str(
-446                     \textcolor{stringliteral}{"RDkit mol object for "}
-447                     + new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i]
-448                     + \textcolor{stringliteral}{" is None, please check the input. Will not write any files"}
-449                 )
-450             )
-451             \textcolor{keywordflow}{continue}
-452 
-453         shutil.copy(
-454             infile,
-455             os.path.join(
-456                 new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
-457                 str(new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i] + \textcolor{stringliteral}{"\_bound.pdb"}),
-458             ),
-459         )
-460 
-461         new.create\_mol\_file(
-462             directory=new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
-463             file\_base=new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i],
-464             mol\_obj=new.mol\_dict[\textcolor{stringliteral}{"mol"}][i],
-465             smiles\_file=smiles\_file,
-466         )  \textcolor{comment}{# creates mol file for each ligand}
-467 
-468         writer = Chem.rdmolfiles.SDWriter(
-469             os.path.join(
-470                 new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
-471                 str(new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i] + \textcolor{stringliteral}{".sdf"}),
-472             )
-473         )
-474 
-475         new.create\_sd\_file(
-476             new.mol\_lst[i], writer
-477         )  \textcolor{comment}{# creates sd file containing all mol files}
-478         writer.close()  \textcolor{comment}{# this is important to make sure the file overwrites each time}
-479 
-480         new.create\_metadata\_file(
-481             mol\_obj=new.mol\_dict[\textcolor{stringliteral}{"mol"}][i],
-482             directory=new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
-483             file\_base=new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i],
-484             smiles\_file=smiles\_file,
-485         )  \textcolor{comment}{# create metadata csv file for each ligand}
-486 
-487         new\_apo = pdb\_apo(
-488             infile,
-489             target\_name,
-490             new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
-491             new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i],
-492         )
-493         new\_apo.make\_apo\_file()  \textcolor{comment}{# creates pdb file that doesn't contain any ligand information}
-494         new\_apo.make\_apo\_desol\_files()  \textcolor{comment}{# makes apo file without solvent, ions and buffers, and file with
+443     new = Ligand(
+444         target\_name, infile, RESULTS\_DIRECTORY
+445     )  \textcolor{comment}{# takes in pdb file and returns specific ligand files}
+446     new.hets\_and\_cons()  \textcolor{comment}{# takes only hetatm and conect file lines from pdb file}
+447     new.remove\_nonligands()  \textcolor{comment}{# removes ions and solvents from list of ligands}
+448     new.find\_ligand\_names\_new()  \textcolor{comment}{# finds the specific name and locations of desired ligands}
+449     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(len(new.wanted\_ligs)):
+450         new.create\_pdb\_for\_ligand(
+451             new.wanted\_ligs[i], count=i, monomerize=monomerize, smiles\_file=smiles\_file
+452         )  \textcolor{comment}{# creates pdb file and mol object for specific ligand}
+453 
+454     \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(len(new.mol\_dict[\textcolor{stringliteral}{"directory"}])):
+455 
+456         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} new.mol\_dict[\textcolor{stringliteral}{"mol"}][i]:
+457             warnings.warn(
+458                 str(
+459                     \textcolor{stringliteral}{"RDkit mol object for "}
+460                     + new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i]
+461                     + \textcolor{stringliteral}{" is None, please check the input. Will not write any files"}
+462                 )
+463             )
+464             \textcolor{keywordflow}{continue}
+465 
+466         shutil.copy(
+467             infile,
+468             os.path.join(
+469                 new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
+470                 str(new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i] + \textcolor{stringliteral}{"\_bound.pdb"}),
+471             ),
+472         )
+473 
+474         new.create\_mol\_file(
+475             directory=new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
+476             file\_base=new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i],
+477             mol\_obj=new.mol\_dict[\textcolor{stringliteral}{"mol"}][i],
+478             smiles\_file=smiles\_file,
+479         )  \textcolor{comment}{# creates mol file for each ligand}
+480 
+481         writer = Chem.rdmolfiles.SDWriter(
+482             os.path.join(
+483                 new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
+484                 str(new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i] + \textcolor{stringliteral}{".sdf"}),
+485             )
+486         )
+487 
+488         new.create\_sd\_file(
+489             new.mol\_lst[i], writer
+490         )  \textcolor{comment}{# creates sd file containing all mol files}
+491         writer.close()  \textcolor{comment}{# this is important to make sure the file overwrites each time}
+492 
+493         new.create\_metadata\_file(
+494             mol\_obj=new.mol\_dict[\textcolor{stringliteral}{"mol"}][i],
+495             directory=new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
+496             file\_base=new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i],
+497             smiles\_file=smiles\_file,
+498         )  \textcolor{comment}{# create metadata csv file for each ligand}
+499 
+500         new\_apo = pdb\_apo(
+501             infile,
+502             target\_name,
+503             new.mol\_dict[\textcolor{stringliteral}{"directory"}][i],
+504             new.mol\_dict[\textcolor{stringliteral}{"file\_base"}][i],
+505         )
+506         new\_apo.make\_apo\_file()  \textcolor{comment}{# creates pdb file that doesn't contain any ligand information}
+507         new\_apo.make\_apo\_desol\_files()  \textcolor{comment}{# makes apo file without solvent, ions and buffers, and file with
        just those}
-495 
-496     \textcolor{keywordflow}{return} new
-497 \end{DoxyCode}
+508 
+509     \textcolor{keywordflow}{return} new
+510 \end{DoxyCode}

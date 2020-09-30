@@ -4,13 +4,13 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_ab3b407ab1e80bd20413390da2e92bc45}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a20636604f47438298d2420ce35297281}{directory}, \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a7d47cce7a11f51abbfc8b246b42f5181}{outdir})
-\item 
+\begin{DoxyCompactList}\small\item\em Creates new monomerise object. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_ae400c1aa47fa3a5fe32a3ade3f601582}{get\+\_\+filelist} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Returns list of .pdb files at directory location. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a95bebe718abd76f9546c67db4a1848b3}{find\+\_\+ligs} (self, pdb\+\_\+lines)
-\item 
+\begin{DoxyCompactList}\small\item\em Finds list of ligands contained in the structure including solvents and ions. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a7dc86cd770a6c7532e96b0f45d91dc2b}{save\+\_\+chain} (self, lig, f)
-\item 
+\begin{DoxyCompactList}\small\item\em Saves chain given ligand a filename. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a182c0cf1af3303f6c13d5160c6c0ff8e}{process\+\_\+ligs} (self, filename)
 \item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_aa97d5e71f2d0309e12bc4beafa5151fc}{write\+\_\+bound} (self, inname, outname)
@@ -44,17 +44,33 @@ Definition at line 192 of file align.\+py.
 
 
 
+Creates new monomerise object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em directory} & directory location \\
+\hline
+{\em outdir} & output directory \\
+\hline
+\end{DoxyParams}
+
+
 Definition at line 194 of file align.\+py.
 
 
 \begin{DoxyCode}
 194     \textcolor{keyword}{def }\_\_init\_\_(self, directory, outdir):
-195         self.directory = directory
-196         self.outdir = outdir
-197         self.non\_ligs = json.load(
-198             open(os.path.join(os.path.dirname(\_\_file\_\_), \textcolor{stringliteral}{"non\_ligs.json"}), \textcolor{stringliteral}{"r")}
-199 \textcolor{stringliteral}{        )}
-200 \textcolor{stringliteral}{}
+195         \textcolor{stringliteral}{"""! Creates new monomerise object}
+196 \textcolor{stringliteral}{}
+197 \textcolor{stringliteral}{        @param directory directory location}
+198 \textcolor{stringliteral}{        @param outdir output directory}
+199 \textcolor{stringliteral}{        """}
+200         self.directory = directory
+201         self.outdir = outdir
+202         self.non\_ligs = json.load(
+203             open(os.path.join(os.path.dirname(\_\_file\_\_), \textcolor{stringliteral}{"non\_ligs.json"}), \textcolor{stringliteral}{"r")}
+204 \textcolor{stringliteral}{        )}
+205 \textcolor{stringliteral}{}
 \textcolor{stringliteral}{\end{DoxyCode}
 
 
@@ -65,35 +81,47 @@ Definition at line 194 of file align.\+py.
 \subsubsection{\texorpdfstring{find\+\_\+ligs()}{find\_ligs()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+align.\+Monomerize.\+find\+\_\+ligs (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{pdb\+\_\+lines }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Finds list of ligands contained in the structure, including
-\end{DoxyVerb}
- 
 
-Definition at line 204 of file align.\+py.
+
+Finds list of ligands contained in the structure including solvents and ions. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdb\+\_\+lines} & section of .pdb file with ligand information \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+list of wanted ligands 
+\end{DoxyReturn}
+
+
+Definition at line 214 of file align.\+py.
 
 
 \begin{DoxyCode}
-204     \textcolor{keyword}{def }find\_ligs(self, pdb\_lines):
-205         \textcolor{stringliteral}{"""}
-206 \textcolor{stringliteral}{        Finds list of ligands contained in the structure, including}
-207 \textcolor{stringliteral}{        """}
-208         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
-209         wanted\_ligs = []
-210         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} pdb\_lines:
-211             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
-212                 all\_ligands.append(line)
-213 
-214         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
-215             \textcolor{keywordflow}{if} (
-216                     lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
-217             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
-218                 wanted\_ligs.append(lig[16:20] + lig[20:26])
-219                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
-220 
-221         wanted\_ligs = list(set(wanted\_ligs))
-222 
-223         \textcolor{keywordflow}{return} wanted\_ligs
-224 
+214     \textcolor{keyword}{def }find\_ligs(self, pdb\_lines):
+215         \textcolor{stringliteral}{"""!Finds list of ligands contained in the structure including solvents and ions}
+216 \textcolor{stringliteral}{}
+217 \textcolor{stringliteral}{        @param pdb\_lines section of .pdb file with ligand information }
+218 \textcolor{stringliteral}{        @return list of wanted ligands}
+219 \textcolor{stringliteral}{        """}
+220         all\_ligands = []  \textcolor{comment}{# all ligands go in here, including solvents and ions}
+221         wanted\_ligs = []
+222         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} pdb\_lines:
+223             \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{"HETATM"}):
+224                 all\_ligands.append(line)
+225 
+226         \textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} all\_ligands:
+227             \textcolor{keywordflow}{if} (
+228                     lig.split()[3][-3:] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.non\_ligs
+229             ):  \textcolor{comment}{# this takes out the solvents and ions a.k.a non-ligands}
+230                 wanted\_ligs.append(lig[16:20] + lig[20:26])
+231                 \textcolor{comment}{# print(lig[16:20].strip() + lig[20:26])}
+232 
+233         wanted\_ligs = list(set(wanted\_ligs))
+234 
+235         \textcolor{keywordflow}{return} wanted\_ligs
+236 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_ae400c1aa47fa3a5fe32a3ade3f601582}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_ae400c1aa47fa3a5fe32a3ade3f601582}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!get\+\_\+filelist@{get\+\_\+filelist}}
@@ -103,13 +131,30 @@ Definition at line 204 of file align.\+py.
 
 
 
-Definition at line 201 of file align.\+py.
+Returns list of .pdb files at directory location. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & sel \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+list od .pdb files 
+\end{DoxyReturn}
+
+
+Definition at line 206 of file align.\+py.
 
 
 \begin{DoxyCode}
-201     \textcolor{keyword}{def }get\_filelist(self):
-202         \textcolor{keywordflow}{return} glob.glob(os.path.join(self.directory, \textcolor{stringliteral}{'*.pdb'}))
-203 
+206     \textcolor{keyword}{def }get\_filelist(self):
+207         \textcolor{stringliteral}{"""! Returns list of .pdb files at directory location}
+208 \textcolor{stringliteral}{    }
+209 \textcolor{stringliteral}{        @param self sel}
+210 \textcolor{stringliteral}{        @return list od .pdb files}
+211 \textcolor{stringliteral}{        """}
+212         \textcolor{keywordflow}{return} glob.glob(os.path.join(self.directory, \textcolor{stringliteral}{'*.pdb'}))
+213 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a2418993e78b9269ecc5d4222a142261c}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a2418993e78b9269ecc5d4222a142261c}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!monomerize\+\_\+all@{monomerize\+\_\+all}}
@@ -119,20 +164,20 @@ Definition at line 201 of file align.\+py.
 
 
 
-Definition at line 271 of file align.\+py.
+Definition at line 289 of file align.\+py.
 
 
 \begin{DoxyCode}
-271     \textcolor{keyword}{def }monomerize\_all(self):
-272         \textcolor{keywordflow}{for} f \textcolor{keywordflow}{in} self.get\_filelist():
-273             print(f)
-274             outnames = self.process\_ligs(f)
-275             print(outnames)
-276             self.write\_bound(f, outnames)
-277             \textcolor{keywordflow}{for} o \textcolor{keywordflow}{in} outnames:
-278                 \textcolor{keywordflow}{if} os.path.isfile(o):
-279                     os.remove(o)
-280 \end{DoxyCode}
+289     \textcolor{keyword}{def }monomerize\_all(self):
+290         \textcolor{keywordflow}{for} f \textcolor{keywordflow}{in} self.get\_filelist():
+291             print(f)
+292             outnames = self.process\_ligs(f)
+293             print(outnames)
+294             self.write\_bound(f, outnames)
+295             \textcolor{keywordflow}{for} o \textcolor{keywordflow}{in} outnames:
+296                 \textcolor{keywordflow}{if} os.path.isfile(o):
+297                     os.remove(o)
+298 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a182c0cf1af3303f6c13d5160c6c0ff8e}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a182c0cf1af3303f6c13d5160c6c0ff8e}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!process\+\_\+ligs@{process\+\_\+ligs}}
 \index{process\+\_\+ligs@{process\+\_\+ligs}!fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}}
@@ -141,22 +186,22 @@ Definition at line 271 of file align.\+py.
 
 
 
-Definition at line 235 of file align.\+py.
+Definition at line 253 of file align.\+py.
 
 
 \begin{DoxyCode}
-235     \textcolor{keyword}{def }process\_ligs(self, filename):
-236         test\_block = open(filename, \textcolor{stringliteral}{'r').readlines()}
-237 \textcolor{stringliteral}{        ligs = self.find\_ligs(test\_block)}
-238 \textcolor{stringliteral}{        print(ligs)}
-239 \textcolor{stringliteral}{        outnames = []}
-240 \textcolor{stringliteral}{        }\textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} ligs:
-241             o = self.save\_chain(lig, filename)
-242             outnames.append(o)
-243             \textcolor{keywordflow}{if} os.path.isfile(filename.replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'})):
-244                 shutil.copy(filename.replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}), o.replace(\textcolor{stringliteral}{'\_mono.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}))
-245         \textcolor{keywordflow}{return} outnames
-246 
+253     \textcolor{keyword}{def }process\_ligs(self, filename):
+254         test\_block = open(filename, \textcolor{stringliteral}{'r').readlines()}
+255 \textcolor{stringliteral}{        ligs = self.find\_ligs(test\_block)}
+256 \textcolor{stringliteral}{        print(ligs)}
+257 \textcolor{stringliteral}{        outnames = []}
+258 \textcolor{stringliteral}{        }\textcolor{keywordflow}{for} lig \textcolor{keywordflow}{in} ligs:
+259             o = self.save\_chain(lig, filename)
+260             outnames.append(o)
+261             \textcolor{keywordflow}{if} os.path.isfile(filename.replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'})):
+262                 shutil.copy(filename.replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}), o.replace(\textcolor{stringliteral}{'\_mono.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}))
+263         \textcolor{keywordflow}{return} outnames
+264 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a7dc86cd770a6c7532e96b0f45d91dc2b}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a7dc86cd770a6c7532e96b0f45d91dc2b}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!save\+\_\+chain@{save\+\_\+chain}}
@@ -166,20 +211,40 @@ Definition at line 235 of file align.\+py.
 
 
 
-Definition at line 225 of file align.\+py.
+Saves chain given ligand a filename. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em lig} & desired ligand \\
+\hline
+{\em f} & filename \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+filename 
+\end{DoxyReturn}
+
+
+Definition at line 237 of file align.\+py.
 
 
 \begin{DoxyCode}
-225     \textcolor{keyword}{def }save\_chain(self, lig, f):
-226         lig\_chain = lig[5]
-227         name = os.path.splitext(os.path.basename(f))[0] + \textcolor{stringliteral}{'\_'} + str(lig\_chain)
-228         filename = os.path.join(self.outdir, f\textcolor{stringliteral}{'\{name\}\_mono.pdb'})
-229         pymol.cmd.load(f, name)
-230         pymol.cmd.save(filename, f\textcolor{stringliteral}{'chain \{lig\_chain\}'})
-231         pymol.cmd.reinitialize()
-232 
-233         \textcolor{keywordflow}{return} filename
-234 
+237     \textcolor{keyword}{def }save\_chain(self, lig, f):
+238         \textcolor{stringliteral}{"""! Saves chain given ligand a filename}
+239 \textcolor{stringliteral}{}
+240 \textcolor{stringliteral}{        @param lig desired ligand}
+241 \textcolor{stringliteral}{        @param f filename}
+242 \textcolor{stringliteral}{        @return filename}
+243 \textcolor{stringliteral}{        """}
+244         lig\_chain = lig[5]
+245         name = os.path.splitext(os.path.basename(f))[0] + \textcolor{stringliteral}{'\_'} + str(lig\_chain)
+246         filename = os.path.join(self.outdir, f\textcolor{stringliteral}{'\{name\}\_mono.pdb'})
+247         pymol.cmd.load(f, name)
+248         pymol.cmd.save(filename, f\textcolor{stringliteral}{'chain \{lig\_chain\}'})
+249         pymol.cmd.reinitialize()
+250 
+251         \textcolor{keywordflow}{return} filename
+252 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_aa97d5e71f2d0309e12bc4beafa5151fc}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_aa97d5e71f2d0309e12bc4beafa5151fc}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!write\+\_\+bound@{write\+\_\+bound}}
@@ -189,34 +254,34 @@ Definition at line 225 of file align.\+py.
 
 
 
-Definition at line 247 of file align.\+py.
+Definition at line 265 of file align.\+py.
 
 
 \begin{DoxyCode}
-247     \textcolor{keyword}{def }write\_bound(self, inname, outname):
-248         with open(inname, \textcolor{stringliteral}{'r') as handle:}
-249 \textcolor{stringliteral}{            switch = 0}
-250 \textcolor{stringliteral}{            header\_front, header\_end = [], []}
-251 \textcolor{stringliteral}{}
-252 \textcolor{stringliteral}{            }\textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} handle:
-253 
-254                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{'ATOM'}): switch = 1
-255 
-256                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{'HETATM'}): switch = 2
-257 
-258                 \textcolor{keywordflow}{if} switch == 0 \textcolor{keywordflow}{and} \textcolor{keywordflow}{not} line.startswith(\textcolor{stringliteral}{'REMARK 350'}): header\_front.append(line)
-259 
-260                 \textcolor{keywordflow}{if} (switch == 2) \textcolor{keywordflow}{and} \textcolor{keywordflow}{not} line.startswith(\textcolor{stringliteral}{'HETATM'}): header\_end.append(line)
-261 
-262         \textcolor{keywordflow}{for} o \textcolor{keywordflow}{in} outname:
-263             newfile\_contents = open(o, \textcolor{stringliteral}{'r').readlines()}
-264 \textcolor{stringliteral}{}
-265 \textcolor{stringliteral}{            with open(o.replace('\_mono.pdb'}, \textcolor{stringliteral}{'.pdb'}), \textcolor{stringliteral}{'w'}) \textcolor{keyword}{as} handle:
-266                 remark = [\textcolor{stringliteral}{'REMARK warning: chains may be ommitted for alignment\(\backslash\)n'}]
-267                 new\_pdb = \textcolor{stringliteral}{''}.join(remark + header\_front + newfile\_contents)
-268                 print(new\_pdb)
-269                 handle.write(new\_pdb)
-270 
+265     \textcolor{keyword}{def }write\_bound(self, inname, outname):
+266         with open(inname, \textcolor{stringliteral}{'r') as handle:}
+267 \textcolor{stringliteral}{            switch = 0}
+268 \textcolor{stringliteral}{            header\_front, header\_end = [], []}
+269 \textcolor{stringliteral}{}
+270 \textcolor{stringliteral}{            }\textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} handle:
+271 
+272                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{'ATOM'}): switch = 1
+273 
+274                 \textcolor{keywordflow}{if} line.startswith(\textcolor{stringliteral}{'HETATM'}): switch = 2
+275 
+276                 \textcolor{keywordflow}{if} switch == 0 \textcolor{keywordflow}{and} \textcolor{keywordflow}{not} line.startswith(\textcolor{stringliteral}{'REMARK 350'}): header\_front.append(line)
+277 
+278                 \textcolor{keywordflow}{if} (switch == 2) \textcolor{keywordflow}{and} \textcolor{keywordflow}{not} line.startswith(\textcolor{stringliteral}{'HETATM'}): header\_end.append(line)
+279 
+280         \textcolor{keywordflow}{for} o \textcolor{keywordflow}{in} outname:
+281             newfile\_contents = open(o, \textcolor{stringliteral}{'r').readlines()}
+282 \textcolor{stringliteral}{}
+283 \textcolor{stringliteral}{            with open(o.replace('\_mono.pdb'}, \textcolor{stringliteral}{'.pdb'}), \textcolor{stringliteral}{'w'}) \textcolor{keyword}{as} handle:
+284                 remark = [\textcolor{stringliteral}{'REMARK warning: chains may be ommitted for alignment\(\backslash\)n'}]
+285                 new\_pdb = \textcolor{stringliteral}{''}.join(remark + header\_front + newfile\_contents)
+286                 print(new\_pdb)
+287                 handle.write(new\_pdb)
+288 
 \end{DoxyCode}
 
 
@@ -229,7 +294,7 @@ Definition at line 247 of file align.\+py.
 
 
 
-Definition at line 195 of file align.\+py.
+Definition at line 200 of file align.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_ad165d10ed4bed3d12660094bcd82ea62}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_ad165d10ed4bed3d12660094bcd82ea62}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!non\+\_\+ligs@{non\+\_\+ligs}}
@@ -239,7 +304,7 @@ Definition at line 195 of file align.\+py.
 
 
 
-Definition at line 197 of file align.\+py.
+Definition at line 202 of file align.\+py.
 
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a7d47cce7a11f51abbfc8b246b42f5181}\label{classfragalysis__api_1_1xcimporter_1_1align_1_1_monomerize_a7d47cce7a11f51abbfc8b246b42f5181}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize@{fragalysis\+\_\+api\+::xcimporter\+::align\+::\+Monomerize}!outdir@{outdir}}
@@ -249,7 +314,7 @@ Definition at line 197 of file align.\+py.
 
 
 
-Definition at line 196 of file align.\+py.
+Definition at line 201 of file align.\+py.
 
 
 

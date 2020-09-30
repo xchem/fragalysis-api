@@ -12,6 +12,13 @@ import pypdb
 
 class Ligand:
     def __init__(self, target_name, infile, RESULTS_DIRECTORY):
+        """! Creates new Ligand object
+
+        @param target_name target name for ligand  
+        @param infile 
+        @param RESULTS_DIRECTORY location of results
+        @return new ligand object
+        """
         self.infile = infile
         self.target_name = target_name
         self.mol_lst = []
@@ -28,11 +35,12 @@ class Ligand:
         self.new_lig_name = "NONAME"
 
     def hets_and_cons(self):
-        """
-        Heteroatoms and connect files are pulled out from full pdb file
-
-        param: pdb file in .readlines() format
-        returns: lists of hetatomic information and connection information
+        """!Heteroatoms and connect files are pulled out from full .pdb file
+        
+        This function uses .pdb file in .readlines() format
+        
+        @param self self
+        @returns lists of hetatomic information and connection information
         """
 
         for line in self.pdbfile:
@@ -44,13 +52,13 @@ class Ligand:
         return self.hetatms, self.conects
 
     def remove_nonligands(self):
-        """
-        Non-ligands such as solvents and ions are removed from the list of heteroatoms,
+        """!Non-ligands such as solvents and ions are removed from the list of heteroatoms,
         to ideally leave only the target ligand
+        
+        This function uses a list of heteroatoms and their information, list of non-ligand small molecules that could be in crystal structure.
 
-        params: list of heteroatoms and their information, list of non-ligand small molecules
-            that could be in crystal structure
-        returns: list of heteroatoms that are not contained in the non_ligs list
+        @params self  
+        @returns list of heteroatoms that are not contained in the non_ligs list
         """
 
         for line in self.hetatms:
@@ -60,8 +68,10 @@ class Ligand:
         return self.final_hets
 
     def find_ligand_names_new(self):
-        """
-        Finds list of ligands contained in the structure, including
+        """!Finds list of ligands contained in the structure, including solvents and ions
+
+        @param self self
+        @return list of wanted lifands 
         """
         all_ligands = []  # all ligands go in here, including solvents and ions
         for line in self.pdbfile:
@@ -81,12 +91,12 @@ class Ligand:
         return self.wanted_ligs
 
     def create_pdb_mol(self, file_base, lig_out_dir, smiles_file):
-        """
-        :param file_base: fragalysis crystal name
-        :param lig_out_dir: output directory
-        :param smiles_file: smiles file associated with pdb
-        :return: mol object that attempts to correct bond order if PDB entry
-                or mol object extracted from pdb file
+        """! creates mol from .pdb file
+
+        @param file_base fragalysis crystal name
+        @param lig_out_dir output directory
+        @param smiles_file smiles file associated with pdb
+        @return mol object that attempts to correct bond order if PDB entry or mol object extracted from pdb file
         """
         pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
 
@@ -144,11 +154,11 @@ class Ligand:
 
 
     def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file):
-        """
-        A pdb file is produced for an individual ligand, containing atomic and connection information
+        """!A pdb file is produced for an individual ligand, containing atomic and connection information
 
-        params: vari pdb conversion, ligand definition, list of ligand heteroatoms and information, connection information
-        returns: .pdb file for ligand
+        @params ligand ligand object 
+        @param count  vari pdb conversion, ligand definition, list of ligand heteroatoms and information, connection information
+        @returns: .pdb file for ligand
         """
 
         # out directory and filename for lig pdb
@@ -254,11 +264,13 @@ class Ligand:
 
 
     def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
-        """
-        a .mol file is produced for an individual ligand
+        """!.mol file is produced for an individual ligand
 
-        params: ligand definition, pdb file, pdb conversion
-        returns: .mol file for the ligand
+        @params directory ligand definition, pdb file, pdb conversion
+        @param file_base inital location of mol file 
+        @param mol_obj mol object
+        @param smiles_file whether input is smiles file
+        @returns .mol file for the ligand
         """
 
         out_file = os.path.join(directory, str(file_base + ".mol"))
@@ -286,20 +298,21 @@ class Ligand:
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
     def create_sd_file(self, mol_obj, writer):
-        """
-        a molecular object defined in the pdb file is used to produce a .sdf file
+        """!A molecular object defined in the pdb file is used to produce a .sdf file
 
-        params: pdb file for the molecule, SDWriter from rdkit
-        returns: .sdf file with all input molecules from each time the function is called
+        @params: mol_obj pdb file for the molecule
+        @param writer SDWriter from rdkit
+        @returns: .sdf file with all input molecules from each time the function is called
         """
         # creating sd file with all mol files
         return writer.write(mol_obj)
 
     def create_metadata_file(self, directory, file_base, mol_obj, smiles_file=None):
-        """
-        Metadata .csv file prepared for each ligand
-        params: file_base and smiles
-        returns: .mol file for the ligand
+        """!Metadata .csv file prepared for each ligand
+
+        @param file_base file_base 
+        @param mol_obj mol object with smiles
+        @returns metadata as .csv file for the ligand
         """
 
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
@@ -353,11 +366,12 @@ class pdb_apo:
         self.apo_file = None
 
     def make_apo_file(self):
-        """
-        Keeps anything other than unique ligands
+        """!Keeps anything other than unique ligands
 
-        :param: pdb file
-        :returns: created XXX_apo.pdb file
+        Generates new .pdb file that removes everything except unique ligands
+
+        @param self with pdb file parameter 
+        @returns created XXX_apo.pdb file
         """
         lines = ""
         for line in self.pdbfile:
@@ -380,12 +394,12 @@ class pdb_apo:
         )
 
     def make_apo_desol_files(self):
-        """
-        Creates two files:
+        """!Creates two files:
         _apo-desolv - as apo, but without solvent, ions and buffers;
         _apo-solv - just the ions, solvent and buffers
 
-        :returns: Created files
+        @param self
+        @returns Created .pdb files
         """
         prot_file = open(
             os.path.join(
@@ -412,12 +426,11 @@ class pdb_apo:
 
 
 def set_up(target_name, infile, out_dir, monomerize, smiles_file=None):
+    """! Creates new .pdb files
 
-    """
-
-    :param pdbcode: pdb code that has already been uploaded into directory of user ID
-    :param USER_ID: User ID and timestamp that has been given to user when they upload their files
-    :return: for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.
+    @param pdbcode pdb code that has already been uploaded into directory of user ID
+    @param USER_ID User ID and timestamp that has been given to user when they upload their files
+    @return for each ligand: pdb, mol files. For each pdb file: sdf and apo.pdb files.
     """
 
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')

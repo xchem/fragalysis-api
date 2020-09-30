@@ -4,9 +4,9 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a28e5edc1a05680d36665012eff20a271}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_aaa8ff46caee489ab4cab5279ac946bcc}{directory}, pdb\+\_\+ref=\textquotesingle{}\textquotesingle{})
-\item 
+\begin{DoxyCompactList}\small\item\em Create new \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align}{Align} object. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align_a554c8cc5acbc9f5e86bb668c49ea1254}{align} (self, out\+\_\+dir)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Aligns all pdbs in the pymol object to the pdb\+\_\+ref. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -28,20 +28,28 @@ Definition at line 13 of file align.\+py.
 \subsubsection{\texorpdfstring{\+\_\+\+\_\+init\+\_\+\+\_\+()}{\_\_init\_\_()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+align.\+Align.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{directory,  }\item[{}]{pdb\+\_\+ref = {\ttfamily \textquotesingle{}\textquotesingle{}} }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Create new Align object
 
-@param directory location of PDB files
-@param pdb ref pdb reference
-@return New Align object with directory and pdb ref parameters
-\end{DoxyVerb}
- 
+
+Create new \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align}{Align} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em directory} & location of P\+DB files \\
+\hline
+{\em pdb} & ref pdb reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New \hyperlink{classfragalysis__api_1_1xcimporter_1_1align_1_1_align}{Align} object with directory and pdb ref parameters 
+\end{DoxyReturn}
+
 
 Definition at line 15 of file align.\+py.
 
 
 \begin{DoxyCode}
 15     \textcolor{keyword}{def }\_\_init\_\_(self, directory, pdb\_ref=''):
-16         \textcolor{stringliteral}{"""Create new Align object}
+16         \textcolor{stringliteral}{"""!Create new Align object}
 17 \textcolor{stringliteral}{}
 18 \textcolor{stringliteral}{        @param directory location of PDB files}
 19 \textcolor{stringliteral}{        @param pdb ref pdb reference}
@@ -62,21 +70,29 @@ Definition at line 15 of file align.\+py.
 \subsubsection{\texorpdfstring{align()}{align()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+align.\+Align.\+align (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{out\+\_\+dir }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Aligns all pdbs in the pymol object to the pdb_ref.
-:param out_dir: directory to save aligned pdbs in
-:return: saves the pdbs
-\end{DoxyVerb}
- 
+
+
+Aligns all pdbs in the pymol object to the pdb\+\_\+ref. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em out\+\_\+dir} & directory to save aligned pdbs in \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+saves the pdbs 
+\end{DoxyReturn}
+
 
 Definition at line 170 of file align.\+py.
 
 
 \begin{DoxyCode}
 170     \textcolor{keyword}{def }align(self, out\_dir):
-171         \textcolor{stringliteral}{"""}
-172 \textcolor{stringliteral}{        Aligns all pdbs in the pymol object to the pdb\_ref.}
-173 \textcolor{stringliteral}{        :param out\_dir: directory to save aligned pdbs in}
-174 \textcolor{stringliteral}{        :return: saves the pdbs}
+171         \textcolor{stringliteral}{"""!Aligns all pdbs in the pymol object to the pdb\_ref}
+172 \textcolor{stringliteral}{}
+173 \textcolor{stringliteral}{        @param out\_dir directory to save aligned pdbs in}
+174 \textcolor{stringliteral}{        @return saves the pdbs}
 175 \textcolor{stringliteral}{        """}
 176 
 177         \textcolor{comment}{# Silently open PyMOL}
