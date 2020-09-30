@@ -9,12 +9,16 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 
 ## Installation
 
-### Not recommended: pip
 To install with pip, you will need to install both pymol and rdkit separately, as these don't exist as pip packages. 
 
 To install fragalysis-api with pip:
-```
-pip install -e .
+```python
+conda create -n fragalysis_env anaconda -y
+conda activate fragalysis_env
+conda install -c schrodinger pymol -y
+conda install -c rdkit rdkit -y
+pip install fragalysis-api
+
 ```
 
 ### How to use API
@@ -45,15 +49,13 @@ Other functionalities that are available:
 
 Starting out by initialising an environment and activating it. Clone the repository and cd to the relevant directory. Install pymol and rdkit via conda, and the other dependcies via the setup.py file:
 ```python
-conda create -n fragalysis_env2 anaconda -y
-conda activate fragalysis_env2
+conda create -n fragalysis_env anaconda -y
+conda activate fragalysis_env
 conda install -c schrodinger pymol -y
 conda install -c rdkit rdkit -y
 git clone "https://github.com/xchem/fragalysis-api.git"
 cd fragalysis-api/
 pip install -e .
-cd ..
-rm -rf fragalysis-api/
 
 ```
 You can check if it has installed using:    ```conda list```
