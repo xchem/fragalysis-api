@@ -6,17 +6,17 @@
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a4c9143433e01d6c355246e1ea4f86265}{\+\_\+\+\_\+init\+\_\+\+\_\+} (self, pdb, chain)
 \item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a0beef45de2126a3837b02050e1b90a74}{get\+\_\+matching\+\_\+proteins} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Queries the pdb for other files with similar protein structure but different ligands bound. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a846d2bc401e56a452222d95b630fb9b0}{get\+\_\+ligands} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Finds ligands bount to the protein in .pdb file. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a36dfa365ad219285d470107eba4e7080}{print\+\_\+number\+\_\+ligs} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Returns number of ligands. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_ada4ce4d98d911a33baabe42bf38a4aa1}{view\+\_\+ligands} (self)
-\item 
+\begin{DoxyCompactList}\small\item\em Returns ligands. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a42babe6a340aaf0b2dcc84ea5d0c0b11}{save\+\_\+dictionary} (self, user)
-\item 
+\begin{DoxyCompactList}\small\item\em Saves dictionary to J\+S\+ON. \end{DoxyCompactList}\item 
 def \hyperlink{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a5be8d71963fc482622a0b1167636718c}{import\+\_\+pdbs} (self, user, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1pdbquery_a7e1833466eb7f1ed11f7bf148033aa2b}{out}=None)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Imports pdbs. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -69,29 +69,46 @@ Definition at line 11 of file pdbquery.\+py.
 
 
 
-Definition at line 32 of file pdbquery.\+py.
+Finds ligands bount to the protein in .pdb file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & self \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ligands bou to protein 
+\end{DoxyReturn}
+
+
+Definition at line 31 of file pdbquery.\+py.
 
 
 \begin{DoxyCode}
-32     \textcolor{keyword}{def }get\_ligands(self):
-33 
-34         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.similar:
-35             ligands = get\_ligands(i)  \textcolor{comment}{# finds ligands bound to the protein in that particular pdb file}
-36             \textcolor{keywordflow}{try}:
-37                 \textcolor{keywordflow}{if} ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][0][\textcolor{stringliteral}{'@chemicalID'}] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.match\_ligs:  \textcolor{comment}{# if ligand
+31     \textcolor{keyword}{def }get\_ligands(self):
+32         \textcolor{stringliteral}{"""! Finds ligands bount to the protein in .pdb file}
+33 \textcolor{stringliteral}{}
+34 \textcolor{stringliteral}{        @param self self}
+35 \textcolor{stringliteral}{        @return ligands bou to protein}
+36 \textcolor{stringliteral}{}
+37 \textcolor{stringliteral}{        """}
+38         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.similar:
+39             ligands = get\_ligands(i)  \textcolor{comment}{# finds ligands bound to the protein in that particular pdb file}
+40             \textcolor{keywordflow}{try}:
+41                 \textcolor{keywordflow}{if} ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][0][\textcolor{stringliteral}{'@chemicalID'}] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.match\_ligs:  \textcolor{comment}{# if ligand
        not already seen}
-38                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][0][\textcolor{stringliteral}{'@chemicalID'}]] = [i.lower()]   \textcolor{comment}{#
+42                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][0][\textcolor{stringliteral}{'@chemicalID'}]] = [i.lower()]   \textcolor{comment}{#
        save pdb code}
-39                 \textcolor{keywordflow}{else}:
-40                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][0][\textcolor{stringliteral}{'@chemicalID'}]].append(i.lower())
-41             \textcolor{keywordflow}{except} KeyError:
-42                 \textcolor{keywordflow}{if} ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][\textcolor{stringliteral}{'@chemicalID'}] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.match\_ligs:
-43                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][\textcolor{stringliteral}{'@chemicalID'}]] = [i.lower()]
-44                 \textcolor{keywordflow}{else}:
-45                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][\textcolor{stringliteral}{'@chemicalID'}]].append(i.lower())
-46             \textcolor{keywordflow}{except} TypeError:
-47                 \textcolor{keywordflow}{pass}
-48 
+43                 \textcolor{keywordflow}{else}:
+44                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][0][\textcolor{stringliteral}{'@chemicalID'}]].append(i.lower())
+45             \textcolor{keywordflow}{except} KeyError:
+46                 \textcolor{keywordflow}{if} ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][\textcolor{stringliteral}{'@chemicalID'}] \textcolor{keywordflow}{not} \textcolor{keywordflow}{in} self.match\_ligs:
+47                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][\textcolor{stringliteral}{'@chemicalID'}]] = [i.lower()]
+48                 \textcolor{keywordflow}{else}:
+49                     self.match\_ligs[ligands[\textcolor{stringliteral}{'ligandInfo'}][\textcolor{stringliteral}{'ligand'}][\textcolor{stringliteral}{'@chemicalID'}]].append(i.lower())
+50             \textcolor{keywordflow}{except} TypeError:
+51                 \textcolor{keywordflow}{pass}
+52 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a0beef45de2126a3837b02050e1b90a74}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a0beef45de2126a3837b02050e1b90a74}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query@{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query}!get\+\_\+matching\+\_\+proteins@{get\+\_\+matching\+\_\+proteins}}
@@ -99,32 +116,33 @@ Definition at line 32 of file pdbquery.\+py.
 \subsubsection{\texorpdfstring{get\+\_\+matching\+\_\+proteins()}{get\_matching\_proteins()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+pdbquery.\+Query.\+get\+\_\+matching\+\_\+proteins (\begin{DoxyParamCaption}\item[{}]{self }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}queries the pdb for other files with similar protein structure but different ligands bound
 
-params: pdb code, chain id
-returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file
-\end{DoxyVerb}
- 
+
+Queries the pdb for other files with similar protein structure but different ligands bound. 
+
+self (pdb code, chain id) \begin{DoxyReturn}{Returns}
+prints list of pdb codes and ligands of similar protein structures, or saves this as a dictionary in a json file 
+\end{DoxyReturn}
+
 
 Definition at line 18 of file pdbquery.\+py.
 
 
 \begin{DoxyCode}
 18     \textcolor{keyword}{def }get\_matching\_proteins(self):
-19         \textcolor{stringliteral}{"""}
-20 \textcolor{stringliteral}{        queries the pdb for other files with similar protein structure but different ligands bound}
-21 \textcolor{stringliteral}{}
-22 \textcolor{stringliteral}{        params: pdb code, chain id}
-23 \textcolor{stringliteral}{        returns: prints list of pdb codes and ligands of similar protein structures, or saves this as a
+19         \textcolor{stringliteral}{"""!Queries the pdb for other files with similar protein structure but different ligands bound}
+20 \textcolor{stringliteral}{}
+21 \textcolor{stringliteral}{        @params self (pdb code, chain id)}
+22 \textcolor{stringliteral}{        @returns prints list of pdb codes and ligands of similar protein structures, or saves this as a
        dictionary in a json file}
-24 \textcolor{stringliteral}{        """}
-25         result = get\_blast2(self.pdb\_code, chain\_id=self.chain\_id)
-26         codes = result[0]
-27         info = result[1]
-28         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(len(codes)):
-29             \textcolor{keywordflow}{if} \textcolor{stringliteral}{'100%'} \textcolor{keywordflow}{in} info[i].text:
-30                 self.similar.append(codes[i])
-31 
+23 \textcolor{stringliteral}{        """}
+24         result = get\_blast2(self.pdb\_code, chain\_id=self.chain\_id)
+25         codes = result[0]
+26         info = result[1]
+27         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} range(len(codes)):
+28             \textcolor{keywordflow}{if} \textcolor{stringliteral}{'100%'} \textcolor{keywordflow}{in} info[i].text:
+29                 self.similar.append(codes[i])
+30 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a5be8d71963fc482622a0b1167636718c}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a5be8d71963fc482622a0b1167636718c}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query@{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query}!import\+\_\+pdbs@{import\+\_\+pdbs}}
@@ -134,21 +152,39 @@ Definition at line 18 of file pdbquery.\+py.
 
 
 
-Definition at line 69 of file pdbquery.\+py.
+Imports pdbs. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & self  user user ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+imports pdbs 
+\end{DoxyReturn}
+
+
+Definition at line 89 of file pdbquery.\+py.
 
 
 \begin{DoxyCode}
-69     \textcolor{keyword}{def }import\_pdbs(self, user, out=None):
-70         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} out:
-71             data\_dir = os.path.join(\textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'data'}, \textcolor{stringliteral}{'xcimporter'}, \textcolor{stringliteral}{'input'})
-72         \textcolor{keywordflow}{else}:
-73             data\_dir = out
-74         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.match\_ligs:
-75             \textcolor{keywordflow}{for} j \textcolor{keywordflow}{in} self.match\_ligs[i]:
-76                 initial = ImportPdb(data\_dir, user, j)
-77                 initial.pdb\_importer()
-78 
-79 
+89     \textcolor{keyword}{def }import\_pdbs(self, user, out=None):
+90         \textcolor{stringliteral}{"""! Imports pdbs}
+91 \textcolor{stringliteral}{}
+92 \textcolor{stringliteral}{        @param self self}
+93 \textcolor{stringliteral}{        @parm user user ID }
+94 \textcolor{stringliteral}{        @return imports pdbs}
+95 \textcolor{stringliteral}{        """}
+96         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} out:
+97             data\_dir = os.path.join(\textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'data'}, \textcolor{stringliteral}{'xcimporter'}, \textcolor{stringliteral}{'input'})
+98         \textcolor{keywordflow}{else}:
+99             data\_dir = out
+100         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.match\_ligs:
+101             \textcolor{keywordflow}{for} j \textcolor{keywordflow}{in} self.match\_ligs[i]:
+102                 initial = ImportPdb(data\_dir, user, j)
+103                 initial.pdb\_importer()
+104 
+105 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a36dfa365ad219285d470107eba4e7080}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a36dfa365ad219285d470107eba4e7080}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query@{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query}!print\+\_\+number\+\_\+ligs@{print\+\_\+number\+\_\+ligs}}
@@ -158,16 +194,33 @@ Definition at line 69 of file pdbquery.\+py.
 
 
 
-Definition at line 49 of file pdbquery.\+py.
+Returns number of ligands. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & self \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of ligands 
+\end{DoxyReturn}
+
+
+Definition at line 53 of file pdbquery.\+py.
 
 
 \begin{DoxyCode}
-49     \textcolor{keyword}{def }print\_number\_ligs(self):
-50         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.match\_ligs:
-51             self.match\_ligs[i] = list(set(self.match\_ligs[i]))
-52         print(len(self.match\_ligs)-1, \textcolor{stringliteral}{'different ligands have been found to bind to this protein'})
-53         \textcolor{keywordflow}{return} len(self.match\_ligs)
-54 
+53     \textcolor{keyword}{def }print\_number\_ligs(self):
+54         \textcolor{stringliteral}{"""! Returns number of ligands}
+55 \textcolor{stringliteral}{}
+56 \textcolor{stringliteral}{        @param self self}
+57 \textcolor{stringliteral}{        @return Number of ligands}
+58 \textcolor{stringliteral}{        """}
+59         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.match\_ligs:
+60             self.match\_ligs[i] = list(set(self.match\_ligs[i]))
+61         print(len(self.match\_ligs)-1, \textcolor{stringliteral}{'different ligands have been found to bind to this protein'})
+62         \textcolor{keywordflow}{return} len(self.match\_ligs)
+63 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a42babe6a340aaf0b2dcc84ea5d0c0b11}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_a42babe6a340aaf0b2dcc84ea5d0c0b11}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query@{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query}!save\+\_\+dictionary@{save\+\_\+dictionary}}
@@ -177,19 +230,39 @@ Definition at line 49 of file pdbquery.\+py.
 
 
 
-Definition at line 60 of file pdbquery.\+py.
+Saves dictionary to J\+S\+ON. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & self \\
+\hline
+{\em user} & user\+ID \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+dictionary as J\+S\+ON 
+\end{DoxyReturn}
+
+
+Definition at line 74 of file pdbquery.\+py.
 
 
 \begin{DoxyCode}
-60     \textcolor{keyword}{def }save\_dictionary(self, user):
-61         otherpath = os.path.abspath(os.path.join(\textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'data'}, \textcolor{stringliteral}{'xcimporter'}, \textcolor{stringliteral}{'other'}))
-62         userpath = os.path.abspath(os.path.join(otherpath, user))
-63         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(otherpath):
-64             os.makedirs(otherpath)
-65         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(os.path.join(userpath)):
-66             os.mkdir(os.path.join(userpath))
-67         json.dump(self.match\_ligs, open(os.path.join(userpath, self.pdb\_code+\textcolor{stringliteral}{'.json'}), \textcolor{stringliteral}{'w'}))
-68 
+74     \textcolor{keyword}{def }save\_dictionary(self, user):
+75         \textcolor{stringliteral}{"""! Saves dictionary to JSON }
+76 \textcolor{stringliteral}{}
+77 \textcolor{stringliteral}{        @param self self}
+78 \textcolor{stringliteral}{        @param user userID}
+79 \textcolor{stringliteral}{        @return dictionary as JSON}
+80 \textcolor{stringliteral}{        """}
+81         otherpath = os.path.abspath(os.path.join(\textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'..'}, \textcolor{stringliteral}{'data'}, \textcolor{stringliteral}{'xcimporter'}, \textcolor{stringliteral}{'other'}))
+82         userpath = os.path.abspath(os.path.join(otherpath, user))
+83         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(otherpath):
+84             os.makedirs(otherpath)
+85         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(os.path.join(userpath)):
+86             os.mkdir(os.path.join(userpath))
+87         json.dump(self.match\_ligs, open(os.path.join(userpath, self.pdb\_code+\textcolor{stringliteral}{'.json'}), \textcolor{stringliteral}{'w'}))
+88 
 \end{DoxyCode}
 \mbox{\Hypertarget{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_ada4ce4d98d911a33baabe42bf38a4aa1}\label{classfragalysis__api_1_1xcimporter_1_1pdbquery_1_1_query_ada4ce4d98d911a33baabe42bf38a4aa1}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query@{fragalysis\+\_\+api\+::xcimporter\+::pdbquery\+::\+Query}!view\+\_\+ligands@{view\+\_\+ligands}}
@@ -199,15 +272,32 @@ Definition at line 60 of file pdbquery.\+py.
 
 
 
-Definition at line 55 of file pdbquery.\+py.
+Returns ligands. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em self} & self \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ligands view 
+\end{DoxyReturn}
+
+
+Definition at line 64 of file pdbquery.\+py.
 
 
 \begin{DoxyCode}
-55     \textcolor{keyword}{def }view\_ligands(self):
-56         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.match\_ligs:
-57             print(i, self.match\_ligs[i])
-58         \textcolor{keywordflow}{return} len(self.match\_ligs)
-59 
+64     \textcolor{keyword}{def }view\_ligands(self):
+65         \textcolor{stringliteral}{"""! Returns ligands}
+66 \textcolor{stringliteral}{        }
+67 \textcolor{stringliteral}{        @param self self}
+68 \textcolor{stringliteral}{        @return Ligands view}
+69 \textcolor{stringliteral}{        """}
+70         \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} self.match\_ligs:
+71             print(i, self.match\_ligs[i])
+72         \textcolor{keywordflow}{return} len(self.match\_ligs)
+73 
 \end{DoxyCode}
 
 

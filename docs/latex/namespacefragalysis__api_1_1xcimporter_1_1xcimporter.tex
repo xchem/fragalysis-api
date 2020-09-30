@@ -4,7 +4,7 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a673f390dc6b7d0062ec8d9510079dded}{xcimporter} (\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7795d815fddc45b40750fc66e5d8ac4f}{in\+\_\+dir}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a48b550a7c1c2ca499d6f204c133ae41d}{out\+\_\+dir}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a2c93b8722226ac96f6668b2fc07515e8}{target}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a3414d616d16bdcc9b7bbfd56591a406d}{metadata}=\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}{False}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a07274a26173246021e82b830b0ab30e6}{validate}=\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}{False}, \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_ad083b3fa69a0bec8eb92ccb08911f2ef}{monomerize}=\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}{False})
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Formats a lists of P\+DB files into fragalysis friendly format. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -45,139 +45,153 @@ def \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a673f390dc6b
 \subsubsection{\texorpdfstring{xcimporter()}{xcimporter()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+xcimporter.\+xcimporter (\begin{DoxyParamCaption}\item[{}]{in\+\_\+dir,  }\item[{}]{out\+\_\+dir,  }\item[{}]{target,  }\item[{}]{metadata = {\ttfamily \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}{False}},  }\item[{}]{validate = {\ttfamily \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}{False}},  }\item[{}]{monomerize = {\ttfamily \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}{False}} }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Formats a lists of PDB files into fragalysis friendly format.
-1. Validates the naming of the pdbs.
-2. It aligns the pdbs (_bound.pdb file).
-3. It cleans the pdbs (removes solvents and ions).
-4. Splits the pdbs into ligands (.mol, .sdf and .pdb formats) and protein files (_apo.pdb file).
-5. Orders all the files into the correct directory structure required for fragalysis.
 
-:param user_id: data ID given to the input. Should be present in in_dir.
-:param in_dir: Directory containing data ID directories.
-:param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
-:return:
-\end{DoxyVerb}
- 
+
+Formats a lists of P\+DB files into fragalysis friendly format. 
+
+
+\begin{DoxyEnumerate}
+\item Validates the naming of the pdbs.
+\item It aligns the pdbs (\+\_\+bound.\+pdb file).
+\item It cleans the pdbs (removes solvents and ions).
+\item Splits the pdbs into ligands (.mol, .sdf and .pdb formats) and protein files (\+\_\+apo.\+pdb file).
+\item Orders all the files into the correct directory structure required for fragalysis.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyParams}{Parameters}
+{\em user\+\_\+id} & data ID given to the input. Should be present in in\+\_\+dir. \\
+\hline
+{\em in\+\_\+dir} & Directory containing data ID directories. \\
+\hline
+{\em out\+\_\+dir} & Directory containing processed pdbs (will be created if it doesn\textquotesingle{}t exists). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+validated, aligned, cleaned, and split .pdbs into directory 
+\end{DoxyReturn}
+
 
 Definition at line 14 of file xcimporter.\+py.
 
 
 \begin{DoxyCode}
 14 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a673f390dc6b7d0062ec8d9510079dded}{xcimporter}(in\_dir, out\_dir, target, metadata=False, validate=False, monomerize=False):
-15     \textcolor{stringliteral}{"""Formats a lists of PDB files into fragalysis friendly format.}
-16 \textcolor{stringliteral}{    1. Validates the naming of the pdbs.}
-17 \textcolor{stringliteral}{    2. It aligns the pdbs (\_bound.pdb file).}
-18 \textcolor{stringliteral}{    3. It cleans the pdbs (removes solvents and ions).}
-19 \textcolor{stringliteral}{    4. Splits the pdbs into ligands (.mol, .sdf and .pdb formats) and protein files (\_apo.pdb file).}
-20 \textcolor{stringliteral}{    5. Orders all the files into the correct directory structure required for fragalysis.}
-21 \textcolor{stringliteral}{}
-22 \textcolor{stringliteral}{    :param user\_id: data ID given to the input. Should be present in in\_dir.}
-23 \textcolor{stringliteral}{    :param in\_dir: Directory containing data ID directories.}
-24 \textcolor{stringliteral}{    :param out\_dir: Directory containing processed pdbs (will be created if it doesn't exists).}
-25 \textcolor{stringliteral}{    :return:}
-26 \textcolor{stringliteral}{    """}
-27 
-28     \textcolor{keywordflow}{if} validate:
-29         validation = Validate(in\_dir)
-30 
-31         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} bool(validation.is\_pdbs\_valid):
-32             print(\textcolor{stringliteral}{"Input files are invalid!!"})
-33             exit
-34 
-35         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} validation.does\_dir\_exist:
-36             print(\textcolor{stringliteral}{"Input dir doesn't exist."})
-37             exit
-38 
-39         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} validation.is\_there\_a\_pdb\_in\_dir:
-40             print(\textcolor{stringliteral}{"No PDB file in input dir."})
-41             exit
-42 
-43     print(\textcolor{stringliteral}{"Making output directories"})
-44     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(out\_dir):
-45         os.makedirs(out\_dir)
-46         os.makedirs(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}))
-47 
-48     \textcolor{keywordflow}{if} monomerize:
-49         print(\textcolor{stringliteral}{"Monomerizing input structures"})
-50         out = os.path.join(out\_dir, \textcolor{stringliteral}{'mono/'})
-51         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(out):
-52             os.makedirs(out)
-53         mono = Monomerize(directory=in\_dir, outdir=out)
-54         mono.monomerize\_all()
-55         in\_dir = out
-56 
-57     pdb\_smiles\_dict = \{\textcolor{stringliteral}{'pdb'}: [], \textcolor{stringliteral}{'smiles'}: []\}
-58 
-59     \textcolor{keywordflow}{for} f \textcolor{keywordflow}{in} os.listdir(in\_dir):
-60         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'.pdb'} \textcolor{keywordflow}{in} f:
-61             pdb\_smiles\_dict[\textcolor{stringliteral}{'pdb'}].append(os.path.join(in\_dir, f))
-62             print(os.path.join(in\_dir, f).replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}))
-63             \textcolor{keywordflow}{if} os.path.isfile(os.path.join(in\_dir, f).replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'})):
-64                 pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}].append(os.path.join(in\_dir, f).replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}))
-65             \textcolor{keywordflow}{else}:
-66                 pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}].append(\textcolor{keywordtype}{None})
-67 
-68     print(pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}])
-69 
-70     print(\textcolor{stringliteral}{"Aligning protein structures"})
-71     structure = Align(in\_dir, pdb\_ref=\textcolor{stringliteral}{""})
-72     structure.align(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}))
-73 
-74     \textcolor{keywordflow}{for} smiles\_file \textcolor{keywordflow}{in} pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}]:
-75         \textcolor{keywordflow}{if} smiles\_file:
-76             print(smiles\_file)
-77             copyfile(smiles\_file, os.path.join(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}, smiles\_file.split(\textcolor{stringliteral}{'/'})[-1])))
-78             print(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}, smiles\_file.split(\textcolor{stringliteral}{'/'})[-1]))
-79 
-80     aligned\_dict = \{\textcolor{stringliteral}{'bound\_pdb'}:[], \textcolor{stringliteral}{'smiles'}:[]\}
-81 
-82     \textcolor{keywordflow}{for} f \textcolor{keywordflow}{in} os.listdir(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"})):
-83         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'.pdb'} \textcolor{keywordflow}{in} f:
-84             aligned\_dict[\textcolor{stringliteral}{'bound\_pdb'}].append(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"},f))
-85             \textcolor{keywordflow}{if} os.path.isfile(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"},f).replace(\textcolor{stringliteral}{'\_bound.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'})):
-86                 aligned\_dict[\textcolor{stringliteral}{'smiles'}].append(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"},f).replace(\textcolor{stringliteral}{'\_bound.pdb'}, \textcolor{stringliteral}{'
+15     \textcolor{stringliteral}{"""!Formats a lists of PDB files into fragalysis friendly format.}
+16 \textcolor{stringliteral}{    }
+17 \textcolor{stringliteral}{    1. Validates the naming of the pdbs.}
+18 \textcolor{stringliteral}{    2. It aligns the pdbs (\_bound.pdb file).}
+19 \textcolor{stringliteral}{    3. It cleans the pdbs (removes solvents and ions).}
+20 \textcolor{stringliteral}{    4. Splits the pdbs into ligands (.mol, .sdf and .pdb formats) and protein files (\_apo.pdb file).}
+21 \textcolor{stringliteral}{    5. Orders all the files into the correct directory structure required for fragalysis.}
+22 \textcolor{stringliteral}{}
+23 \textcolor{stringliteral}{    @param user\_id data ID given to the input. Should be present in in\_dir.}
+24 \textcolor{stringliteral}{    @param in\_dir Directory containing data ID directories.}
+25 \textcolor{stringliteral}{    @param out\_dir Directory containing processed pdbs (will be created if it doesn't exists).}
+26 \textcolor{stringliteral}{    @return validated, aligned, cleaned, and split .pdbs into directory}
+27 \textcolor{stringliteral}{    """}
+28 
+29     \textcolor{keywordflow}{if} validate:
+30         validation = Validate(in\_dir)
+31 
+32         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} bool(validation.is\_pdbs\_valid):
+33             print(\textcolor{stringliteral}{"Input files are invalid!!"})
+34             exit
+35 
+36         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} validation.does\_dir\_exist:
+37             print(\textcolor{stringliteral}{"Input dir doesn't exist."})
+38             exit
+39 
+40         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} validation.is\_there\_a\_pdb\_in\_dir:
+41             print(\textcolor{stringliteral}{"No PDB file in input dir."})
+42             exit
+43 
+44     print(\textcolor{stringliteral}{"Making output directories"})
+45     \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(out\_dir):
+46         os.makedirs(out\_dir)
+47         os.makedirs(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}))
+48 
+49     \textcolor{keywordflow}{if} monomerize:
+50         print(\textcolor{stringliteral}{"Monomerizing input structures"})
+51         out = os.path.join(out\_dir, \textcolor{stringliteral}{'mono/'})
+52         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.isdir(out):
+53             os.makedirs(out)
+54         mono = Monomerize(directory=in\_dir, outdir=out)
+55         mono.monomerize\_all()
+56         in\_dir = out
+57 
+58     pdb\_smiles\_dict = \{\textcolor{stringliteral}{'pdb'}: [], \textcolor{stringliteral}{'smiles'}: []\}
+59 
+60     \textcolor{keywordflow}{for} f \textcolor{keywordflow}{in} os.listdir(in\_dir):
+61         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'.pdb'} \textcolor{keywordflow}{in} f:
+62             pdb\_smiles\_dict[\textcolor{stringliteral}{'pdb'}].append(os.path.join(in\_dir, f))
+63             print(os.path.join(in\_dir, f).replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}))
+64             \textcolor{keywordflow}{if} os.path.isfile(os.path.join(in\_dir, f).replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'})):
+65                 pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}].append(os.path.join(in\_dir, f).replace(\textcolor{stringliteral}{'.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'}))
+66             \textcolor{keywordflow}{else}:
+67                 pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}].append(\textcolor{keywordtype}{None})
+68 
+69     print(pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}])
+70 
+71     print(\textcolor{stringliteral}{"Aligning protein structures"})
+72     structure = Align(in\_dir, pdb\_ref=\textcolor{stringliteral}{""})
+73     structure.align(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}))
+74 
+75     \textcolor{keywordflow}{for} smiles\_file \textcolor{keywordflow}{in} pdb\_smiles\_dict[\textcolor{stringliteral}{'smiles'}]:
+76         \textcolor{keywordflow}{if} smiles\_file:
+77             print(smiles\_file)
+78             copyfile(smiles\_file, os.path.join(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}, smiles\_file.split(\textcolor{stringliteral}{'/'})[-1])))
+79             print(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}, smiles\_file.split(\textcolor{stringliteral}{'/'})[-1]))
+80 
+81     aligned\_dict = \{\textcolor{stringliteral}{'bound\_pdb'}:[], \textcolor{stringliteral}{'smiles'}:[]\}
+82 
+83     \textcolor{keywordflow}{for} f \textcolor{keywordflow}{in} os.listdir(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"})):
+84         \textcolor{keywordflow}{if} \textcolor{stringliteral}{'.pdb'} \textcolor{keywordflow}{in} f:
+85             aligned\_dict[\textcolor{stringliteral}{'bound\_pdb'}].append(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"},f))
+86             \textcolor{keywordflow}{if} os.path.isfile(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"},f).replace(\textcolor{stringliteral}{'\_bound.pdb'}, \textcolor{stringliteral}{'\_smiles.txt'})):
+87                 aligned\_dict[\textcolor{stringliteral}{'smiles'}].append(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"},f).replace(\textcolor{stringliteral}{'\_bound.pdb'}, \textcolor{stringliteral}{'
       \_smiles.txt'}))
-87             \textcolor{keywordflow}{else}:
-88                 aligned\_dict[\textcolor{stringliteral}{'smiles'}].append(\textcolor{keywordtype}{None})
-89 
+88             \textcolor{keywordflow}{else}:
+89                 aligned\_dict[\textcolor{stringliteral}{'smiles'}].append(\textcolor{keywordtype}{None})
 90 
-91     print(aligned\_dict[\textcolor{stringliteral}{'smiles'}])
-92 
-93     print(\textcolor{stringliteral}{"Identifying ligands"})
-94     \textcolor{keywordflow}{for} aligned, smiles \textcolor{keywordflow}{in} list(zip(aligned\_dict[\textcolor{stringliteral}{'bound\_pdb'}], aligned\_dict[\textcolor{stringliteral}{'smiles'}])):
-95         \textcolor{keywordflow}{try}:
-96             \textcolor{keywordflow}{if} smiles:
-97                 \_ = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\_up}(target\_name=target, infile=os.path.abspath(aligned),
-98                              out\_dir=out\_dir, monomerize=monomerize, smiles\_file=os.path.abspath(smiles))
-99                 
-100             \textcolor{keywordflow}{else}:
-101                 \_ = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\_up}(target\_name=target, infile=os.path.abspath(aligned),
-102                 out\_dir=out\_dir, monomerize=monomerize)
-103                 
-104         \textcolor{keywordflow}{except} AssertionError:
-105             print(aligned, \textcolor{stringliteral}{"is not suitable, please consider removal or editing"})
-106             \textcolor{keywordflow}{for} file \textcolor{keywordflow}{in} os.listdir(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"})):
-107                 \textcolor{keywordflow}{if} str(aligned) \textcolor{keywordflow}{in} file:
-108                     os.remove(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}, str(file)))
-109 
-110     \textcolor{keywordflow}{if} metadata == \textcolor{stringliteral}{'1'}:
-111         print(\textcolor{stringliteral}{"Preparing metadata file"})
-112         metadata\_fp = os.path.join(out\_dir, target, \textcolor{stringliteral}{"metadata.csv"})
-113         path = os.path.join(out\_dir, target)
-114 
-115         with open(metadata\_fp, \textcolor{stringliteral}{'w+'}) \textcolor{keyword}{as} f:
-116             \textcolor{keywordflow}{for} root, dirs\_list, files\_list \textcolor{keywordflow}{in} os.walk(path):
-117                 \textcolor{keywordflow}{for} file\_name \textcolor{keywordflow}{in} files\_list:
-118                     \textcolor{keywordflow}{if} file\_name.endswith(\textcolor{stringliteral}{'meta.csv'}):
-119                         csv\_path = os.path.join(root, file\_name)
-120                         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} open(csv\_path, \textcolor{stringliteral}{'r'):                            f.write(line)}
-121 \textcolor{stringliteral}{}
-122 \textcolor{stringliteral}{    }\textcolor{comment}{# Move input files into Target/crystallographic folder}
-123     copy\_tree(in\_dir, os.path.join(out\_dir, target, \textcolor{stringliteral}{'crystallographic'}) )
-124 
-125     print(\textcolor{stringliteral}{"Files are now in a fragalysis friendly format!"})
-126 
-127 \end{DoxyCode}
+91 
+92     print(aligned\_dict[\textcolor{stringliteral}{'smiles'}])
+93 
+94     print(\textcolor{stringliteral}{"Identifying ligands"})
+95     \textcolor{keywordflow}{for} aligned, smiles \textcolor{keywordflow}{in} list(zip(aligned\_dict[\textcolor{stringliteral}{'bound\_pdb'}], aligned\_dict[\textcolor{stringliteral}{'smiles'}])):
+96         \textcolor{keywordflow}{try}:
+97             \textcolor{keywordflow}{if} smiles:
+98                 \_ = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\_up}(target\_name=target, infile=os.path.abspath(aligned),
+99                              out\_dir=out\_dir, monomerize=monomerize, smiles\_file=os.path.abspath(smiles))
+100                 
+101             \textcolor{keywordflow}{else}:
+102                 \_ = \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1conversion__pdb__mol_ab8fa8ff14ff0439b99603cbbd33472e2}{set\_up}(target\_name=target, infile=os.path.abspath(aligned),
+103                 out\_dir=out\_dir, monomerize=monomerize)
+104                 
+105         \textcolor{keywordflow}{except} AssertionError:
+106             print(aligned, \textcolor{stringliteral}{"is not suitable, please consider removal or editing"})
+107             \textcolor{keywordflow}{for} file \textcolor{keywordflow}{in} os.listdir(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"})):
+108                 \textcolor{keywordflow}{if} str(aligned) \textcolor{keywordflow}{in} file:
+109                     os.remove(os.path.join(out\_dir, \textcolor{stringliteral}{"tmp"}, str(file)))
+110 
+111     \textcolor{keywordflow}{if} metadata == \textcolor{stringliteral}{'1'}:
+112         print(\textcolor{stringliteral}{"Preparing metadata file"})
+113         metadata\_fp = os.path.join(out\_dir, target, \textcolor{stringliteral}{"metadata.csv"})
+114         path = os.path.join(out\_dir, target)
+115 
+116         with open(metadata\_fp, \textcolor{stringliteral}{'w+'}) \textcolor{keyword}{as} f:
+117             \textcolor{keywordflow}{for} root, dirs\_list, files\_list \textcolor{keywordflow}{in} os.walk(path):
+118                 \textcolor{keywordflow}{for} file\_name \textcolor{keywordflow}{in} files\_list:
+119                     \textcolor{keywordflow}{if} file\_name.endswith(\textcolor{stringliteral}{'meta.csv'}):
+120                         csv\_path = os.path.join(root, file\_name)
+121                         \textcolor{keywordflow}{for} line \textcolor{keywordflow}{in} open(csv\_path, \textcolor{stringliteral}{'r'):                            f.write(line)}
+122 \textcolor{stringliteral}{}
+123 \textcolor{stringliteral}{    }\textcolor{comment}{# Move input files into Target/crystallographic folder}
+124     copy\_tree(in\_dir, os.path.join(out\_dir, target, \textcolor{stringliteral}{'crystallographic'}) )
+125 
+126     print(\textcolor{stringliteral}{"Files are now in a fragalysis friendly format!"})
+127 
+128 \end{DoxyCode}
 
 
 \subsection{Variable Documentation}
@@ -189,7 +203,7 @@ Definition at line 14 of file xcimporter.\+py.
 
 
 
-Definition at line 146 of file xcimporter.\+py.
+Definition at line 147 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a3ad0db7b1c2c8a00d4963bf5f7dd21bc}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a3ad0db7b1c2c8a00d4963bf5f7dd21bc}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!args@{args}}
@@ -199,7 +213,7 @@ Definition at line 146 of file xcimporter.\+py.
 
 
 
-Definition at line 154 of file xcimporter.\+py.
+Definition at line 155 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_affb75cb39147ca518b191eda12300cc2}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_affb75cb39147ca518b191eda12300cc2}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!default@{default}}
@@ -209,7 +223,7 @@ Definition at line 154 of file xcimporter.\+py.
 
 
 
-Definition at line 134 of file xcimporter.\+py.
+Definition at line 135 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7b54c2ad280b13dc0833892106613e4c}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!False@{False}}
@@ -219,7 +233,7 @@ Definition at line 134 of file xcimporter.\+py.
 
 
 
-Definition at line 146 of file xcimporter.\+py.
+Definition at line 147 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_abbbe817fae311228915dac1ff528045e}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_abbbe817fae311228915dac1ff528045e}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!fix\+\_\+pdb@{fix\+\_\+pdb}}
@@ -229,7 +243,7 @@ Definition at line 146 of file xcimporter.\+py.
 
 
 
-Definition at line 171 of file xcimporter.\+py.
+Definition at line 172 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a4b7ac84012a4d34a67d027c7f6491460}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a4b7ac84012a4d34a67d027c7f6491460}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!help@{help}}
@@ -239,7 +253,7 @@ Definition at line 171 of file xcimporter.\+py.
 
 
 
-Definition at line 135 of file xcimporter.\+py.
+Definition at line 136 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7795d815fddc45b40750fc66e5d8ac4f}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a7795d815fddc45b40750fc66e5d8ac4f}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!in\+\_\+dir@{in\+\_\+dir}}
@@ -249,7 +263,7 @@ Definition at line 135 of file xcimporter.\+py.
 
 
 
-Definition at line 157 of file xcimporter.\+py.
+Definition at line 158 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a3414d616d16bdcc9b7bbfd56591a406d}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a3414d616d16bdcc9b7bbfd56591a406d}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!metadata@{metadata}}
@@ -259,7 +273,7 @@ Definition at line 157 of file xcimporter.\+py.
 
 
 
-Definition at line 162 of file xcimporter.\+py.
+Definition at line 163 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_ad083b3fa69a0bec8eb92ccb08911f2ef}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_ad083b3fa69a0bec8eb92ccb08911f2ef}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!monomerize@{monomerize}}
@@ -269,7 +283,7 @@ Definition at line 162 of file xcimporter.\+py.
 
 
 
-Definition at line 160 of file xcimporter.\+py.
+Definition at line 161 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a48b550a7c1c2ca499d6f204c133ae41d}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a48b550a7c1c2ca499d6f204c133ae41d}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!out\+\_\+dir@{out\+\_\+dir}}
@@ -279,7 +293,7 @@ Definition at line 160 of file xcimporter.\+py.
 
 
 
-Definition at line 158 of file xcimporter.\+py.
+Definition at line 159 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_ad764999225e2a1dfc2f4836ecc63b81f}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_ad764999225e2a1dfc2f4836ecc63b81f}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!parser@{parser}}
@@ -289,7 +303,7 @@ Definition at line 158 of file xcimporter.\+py.
 
 
 
-Definition at line 129 of file xcimporter.\+py.
+Definition at line 130 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a66aaa38b6f4001d8075cea92cacce666}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a66aaa38b6f4001d8075cea92cacce666}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!required@{required}}
@@ -299,7 +313,7 @@ Definition at line 129 of file xcimporter.\+py.
 
 
 
-Definition at line 136 of file xcimporter.\+py.
+Definition at line 137 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a2c93b8722226ac96f6668b2fc07515e8}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a2c93b8722226ac96f6668b2fc07515e8}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!target@{target}}
@@ -309,7 +323,7 @@ Definition at line 136 of file xcimporter.\+py.
 
 
 
-Definition at line 161 of file xcimporter.\+py.
+Definition at line 162 of file xcimporter.\+py.
 
 \mbox{\Hypertarget{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a07274a26173246021e82b830b0ab30e6}\label{namespacefragalysis__api_1_1xcimporter_1_1xcimporter_a07274a26173246021e82b830b0ab30e6}} 
 \index{fragalysis\+\_\+api\+::xcimporter\+::xcimporter@{fragalysis\+\_\+api\+::xcimporter\+::xcimporter}!validate@{validate}}
@@ -319,5 +333,5 @@ Definition at line 161 of file xcimporter.\+py.
 
 
 
-Definition at line 159 of file xcimporter.\+py.
+Definition at line 160 of file xcimporter.\+py.
 

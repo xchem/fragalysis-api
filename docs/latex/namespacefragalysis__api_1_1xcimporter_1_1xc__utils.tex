@@ -4,7 +4,7 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a20b9e349b37bfbf70c38bfaf1a42876f}{to\+\_\+fragalysis\+\_\+dir} (pdb\+\_\+id, data\+\_\+dir)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Creates a Fragalysis friendly directory out of a directory with the needed files (.sdf, .mol, \+\_\+bounded.\+pdb and \+\_\+apo.\+pdb). \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -19,46 +19,53 @@ string \hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a8e1ebabdd
 \subsubsection{\texorpdfstring{to\+\_\+fragalysis\+\_\+dir()}{to\_fragalysis\_dir()}}
 {\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcimporter.\+xc\+\_\+utils.\+to\+\_\+fragalysis\+\_\+dir (\begin{DoxyParamCaption}\item[{}]{pdb\+\_\+id,  }\item[{}]{data\+\_\+dir }\end{DoxyParamCaption})}
 
-\begin{DoxyVerb}Creates a Fragalysis friendly directory out of a directory with the needed
-files (.sdf, .mol, _bounded.pdb and _apo.pdb). Names this new directory with the
-pdb_id name.
 
-:param pdb_id: ID (name) of the directory with the data
-:param data_dir: Directory which contains the data (ID directory)
-:return: Reordered directory
-\end{DoxyVerb}
- 
+
+Creates a Fragalysis friendly directory out of a directory with the needed files (.sdf, .mol, \+\_\+bounded.\+pdb and \+\_\+apo.\+pdb). 
+
+Names this new directory with the pdb\+\_\+id name.
+
+
+\begin{DoxyParams}{Parameters}
+{\em pdb\+\_\+id} & ID (name) of the directory with the data \\
+\hline
+{\em data\+\_\+dir} & Directory which contains the data (ID directory) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reordered directory 
+\end{DoxyReturn}
+
 
 Definition at line 6 of file xc\+\_\+utils.\+py.
 
 
 \begin{DoxyCode}
 6 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcimporter_1_1xc__utils_a20b9e349b37bfbf70c38bfaf1a42876f}{to\_fragalysis\_dir}(pdb\_id, data\_dir):
-7     \textcolor{stringliteral}{"""}
-8 \textcolor{stringliteral}{    Creates a Fragalysis friendly directory out of a directory with the needed}
-9 \textcolor{stringliteral}{    files (.sdf, .mol, \_bounded.pdb and \_apo.pdb). Names this new directory with the}
-10 \textcolor{stringliteral}{    pdb\_id name.}
-11 \textcolor{stringliteral}{}
-12 \textcolor{stringliteral}{    :param pdb\_id: ID (name) of the directory with the data}
-13 \textcolor{stringliteral}{    :param data\_dir: Directory which contains the data (ID directory)}
-14 \textcolor{stringliteral}{    :return: Reordered directory}
-15 \textcolor{stringliteral}{    """}
-16     \textcolor{comment}{# Creates list of different PDBs in the directory}
-17     pdb\_aligned\_files = glob.glob(os.path.join(data\_dir, \textcolor{stringliteral}{"*\_bound.pdb"}))
-18 
-19     \textcolor{comment}{# For each pdb extract the different file types of that PDB and put them in their own directory}
-20     \textcolor{keywordflow}{for} pdb \textcolor{keywordflow}{in} [os.path.basename(pdb\_file)[:-10] \textcolor{keywordflow}{for} pdb\_file \textcolor{keywordflow}{in} pdb\_aligned\_files]:
-21 
-22         \textcolor{comment}{# Create directory if it doesn't exist}
-23         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'}+pdb)):
-24             os.makedirs(os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'} + pdb))
-25 
-26         src = glob.glob(os.path.join(data\_dir, \textcolor{stringliteral}{"*"} + pdb + \textcolor{stringliteral}{"*"}))
-27         new\_dir = os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'} + pdb)
-28 
-29         [copyfile(i, os.path.join(new\_dir, os.path.basename(i))) \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} src]
+7     \textcolor{stringliteral}{"""!Creates a Fragalysis friendly directory out of a directory with the needed}
+8 \textcolor{stringliteral}{    files (.sdf, .mol, \_bounded.pdb and \_apo.pdb). Names this new directory with the}
+9 \textcolor{stringliteral}{    pdb\_id name.}
+10 \textcolor{stringliteral}{}
+11 \textcolor{stringliteral}{    @param pdb\_id ID (name) of the directory with the data}
+12 \textcolor{stringliteral}{    @param data\_dir Directory which contains the data (ID directory)}
+13 \textcolor{stringliteral}{    @return Reordered directory}
+14 \textcolor{stringliteral}{    """}
+15     \textcolor{comment}{# Creates list of different PDBs in the directory}
+16     pdb\_aligned\_files = glob.glob(os.path.join(data\_dir, \textcolor{stringliteral}{"*\_bound.pdb"}))
+17 
+18     \textcolor{comment}{# For each pdb extract the different file types of that PDB and put them in their own directory}
+19     \textcolor{keywordflow}{for} pdb \textcolor{keywordflow}{in} [os.path.basename(pdb\_file)[:-10] \textcolor{keywordflow}{for} pdb\_file \textcolor{keywordflow}{in} pdb\_aligned\_files]:
+20 
+21         \textcolor{comment}{# Create directory if it doesn't exist}
+22         \textcolor{keywordflow}{if} \textcolor{keywordflow}{not} os.path.exists(os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'}+pdb)):
+23             os.makedirs(os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'} + pdb))
+24 
+25         src = glob.glob(os.path.join(data\_dir, \textcolor{stringliteral}{"*"} + pdb + \textcolor{stringliteral}{"*"}))
+26         new\_dir = os.path.join(data\_dir, \textcolor{stringliteral}{'..'}, pdb\_id + \textcolor{stringliteral}{'\_'} + pdb)
+27 
+28         [copyfile(i, os.path.join(new\_dir, os.path.basename(i))) \textcolor{keywordflow}{for} i \textcolor{keywordflow}{in} src]
+29 
 30 
-31 
 \end{DoxyCode}
 
 
@@ -71,5 +78,5 @@ Definition at line 6 of file xc\+\_\+utils.\+py.
 
 
 
-Definition at line 33 of file xc\+\_\+utils.\+py.
+Definition at line 32 of file xc\+\_\+utils.\+py.
 
