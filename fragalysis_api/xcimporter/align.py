@@ -13,7 +13,7 @@ warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 class Align:
 
     def __init__(self, directory, pdb_ref=''):
-        """! Create new Align object
+        """Create new Align object
 
         @param directory location of PDB files
         @param pdb ref pdb reference
@@ -96,10 +96,10 @@ class Align:
         return a_df.sort_values(by=['p_len', 'resolution'], ascending=[False, True]).pdb[0]
 
     def __get_length_and_resolution(self, file):
-        """
-        Determine resolution, sequence and length of .pdb file.
-        :param file:
-        :return pandas series with resolution, sequence and length and .pdb filename:
+        """!Determine resolution, sequence and length of each .pdb file.
+
+        @param file .pdb file
+        @return pandas series with resolution, sequence and length and .pdb filename
         """
         parser = bp.PDBParser()
         ppb = bp.PPBuilder()
@@ -114,10 +114,10 @@ class Align:
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
     def __get_pdb_file(self, pdb_name):
-        """
-        Returns the pdb file path for a given pdb name.
-        :param pdb_name: name of pdb
-        :return: file path to the pdb with the given name
+        """!Returns the pdb file path for a given pdb name.
+
+        @param pdb_name name of pdb file
+        @return file path to the pdb with the given name
         """
 
         for file in self._get_files:

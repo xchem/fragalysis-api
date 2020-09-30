@@ -9,12 +9,16 @@ This api aims to allow any user to upload pdb files from the pdb or that they ha
 
 ## Installation
 
-### Not recommended: pip
 To install with pip, you will need to install both pymol and rdkit separately, as these don't exist as pip packages. 
 
 To install fragalysis-api with pip:
-```
-pip install -e .
+```python
+conda create -n fragalysis_env anaconda -y
+conda activate fragalysis_env
+conda install -c schrodinger pymol -y
+conda install -c rdkit rdkit -y
+pip install fragalysis-api
+
 ```
 
 ### How to use API
@@ -45,15 +49,13 @@ Other functionalities that are available:
 
 Starting out by initialising an environment and activating it. Clone the repository and cd to the relevant directory. Install pymol and rdkit via conda, and the other dependcies via the setup.py file:
 ```python
-conda create -n fragalysis_env2 anaconda -y
-conda activate fragalysis_env2
+conda create -n fragalysis_env anaconda -y
+conda activate fragalysis_env
 conda install -c schrodinger pymol -y
 conda install -c rdkit rdkit -y
 git clone "https://github.com/xchem/fragalysis-api.git"
 cd fragalysis-api/
 pip install -e .
-cd ..
-rm -rf fragalysis-api/
 
 ```
 You can check if it has installed using:    ```conda list```
@@ -89,9 +91,9 @@ The API will then query the PDB for structures of the same protein that also hav
 
 Once you have the files downloaded, they need to be processed before they can be visualised in fragalysis. This is done using
 ```
-python xcimporter -id [user id] 
+python xcimporter -i [path to input directory] -t [target name]
 ```
-Default directories are used. These can however be changed by using ```-i [input directory] ``` or   ```-o [output directory] ``` if this is required.
+A default output directory is used. This can however be changed by using ```-o [output directory] ``` if this is required.
 
 The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
 

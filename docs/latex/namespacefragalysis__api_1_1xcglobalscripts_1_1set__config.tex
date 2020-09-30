@@ -1,0 +1,30 @@
+\hypertarget{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config}{}\section{fragalysis\+\_\+api.\+xcglobalscripts.\+set\+\_\+config Namespace Reference}
+\label{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config}\index{fragalysis\+\_\+api.\+xcglobalscripts.\+set\+\_\+config@{fragalysis\+\_\+api.\+xcglobalscripts.\+set\+\_\+config}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{Config\+Setup} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}\label{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}} 
+\index{fragalysis\+\_\+api\+::xcglobalscripts\+::set\+\_\+config@{fragalysis\+\_\+api\+::xcglobalscripts\+::set\+\_\+config}!Config\+Setup@{Config\+Setup}}
+\index{Config\+Setup@{Config\+Setup}!fragalysis\+\_\+api\+::xcglobalscripts\+::set\+\_\+config@{fragalysis\+\_\+api\+::xcglobalscripts\+::set\+\_\+config}}
+\subsubsection{\texorpdfstring{Config\+Setup()}{ConfigSetup()}}
+{\footnotesize\ttfamily def fragalysis\+\_\+api.\+xcglobalscripts.\+set\+\_\+config.\+Config\+Setup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 5 of file set\+\_\+config.\+py.
+
+
+\begin{DoxyCode}
+5 \textcolor{keyword}{def }\hyperlink{namespacefragalysis__api_1_1xcglobalscripts_1_1set__config_a9b5445f82604ad45c1e85e2b07e4a317}{ConfigSetup}():
+6     \textcolor{comment}{# use config parser to get settings from config.ini}
+7     settings\_file = os.path.join(os.path.dirname(\_\_file\_\_), \textcolor{stringliteral}{"config.ini"})
+8     settings = configparser.ConfigParser()
+9     settings.\_interpolation = configparser.ExtendedInterpolation()
+10     settings.read(settings\_file)
+11     \textcolor{keywordflow}{return} settings
+12 \end{DoxyCode}
