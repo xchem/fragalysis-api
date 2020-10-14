@@ -23,8 +23,9 @@ class Align:
         Extracts a list of paths for all PDBs within the given directory.
         :return: list of .pdb file names in directory
         """
-
-        return glob.glob(os.path.join(self.directory, "*.pdb"))
+        all_files = set(glob.glob(os.path.join(self.directory, '*')))
+        txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
+        return list(all_files-txt_files)
 
     def _load_objs(self):
         """
@@ -64,9 +65,9 @@ class Align:
                 self.__pdb_ref = pdb_ref
             except AssertionError:
                 print('pdb desired as reference does not exists. Default pdb chosen.')
-                self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
+                self.__pdb_ref = self.__best_length_and_resolution([i for i in self._get_files if 'pdb' in i])
         else:
-            self.__pdb_ref = self.__best_length_and_resolution(self._get_files)
+            self.__pdb_ref = self.__best_length_and_resolution([i for i in self._get_files if 'pdb' in i])
 
     def __best_length_and_resolution(self, pdb_files):
         """
