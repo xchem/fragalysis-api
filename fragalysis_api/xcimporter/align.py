@@ -7,6 +7,7 @@ import warnings
 import Bio.PDB.PDBExceptions as bpp
 import json
 import shutil
+import gemmi # Oh boy...
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
@@ -164,15 +165,22 @@ class Align:
         pymol.pymol_argv = ['pymol', '-qc']
         pymol.finish_launching()
         pymol_cmd = self._load_objs()
-
-        for num, name in enumerate(pymol_cmd.get_names()):  # Saves the aligned pdb files from the cmd as pdb files
+        all_targs = pymol_cmd.get_names()
+        crys = [y for y in [x for x in all_targs if 'event' not in x] if 'fofc' not in y]
+        for num, name in enumerate(crys):  # Saves the aligned pdb files from the cmd as pdb files
             print(name)
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
-                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
+                # Now we do fofc and 2fofc?
+                pymol_cmd.matrix_copy(name, f"{name}_fofc")
+                pymol_cmd.matrix_copy(name, f"{name}_2fofc")
+                # do some saving...
+                events = [i for i in all_targs if f'{name}_event' in i]
+                for i in events:
+                    pymol_cmd.matrix_copy(name, i)
 
-            elif name == self._get_ref:
-                self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
+            # Move saving to outside of if...
+            self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
 
 
 class Monomerize:
