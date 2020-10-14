@@ -166,7 +166,7 @@ class Align:
         pymol_cmd = self._load_objs()
 
         for num, name in enumerate(pymol_cmd.get_names()):  # Saves the aligned pdb files from the cmd as pdb files
-
+            print(name)
             if not name == self._get_ref:
                 pymol_cmd.align(name, self._get_ref)
                 self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
