@@ -193,6 +193,9 @@ class Align:
                 [matric_vector[4], matric_vector[5], matric_vector[6]],
                 [matric_vector[8], matric_vector[9], matric_vector[10]]
             ]
+            print(os.path.join(self.directory, f"{name}_fofc.map"))
+            print(rotmat)
+            print(os.path.join(out_dir, f'{name}_fofc.map'))
             # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
             prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
             tr = gemmi.Transform()
@@ -217,6 +220,9 @@ class Align:
             tr.vec.fromlist(prov)
             map.grid.interpolate_values(np_array, tr)
             map.write_ccp4_map(os.path.join(out_dir, f'{name}_2fofc.map'))
+            print(os.path.join(self.directory, f"{name}_2fofc.map"))
+            print(rotmat)
+            print(os.path.join(out_dir, f'{name}_2fofc.map'))
 
             # event_map(s)
             events = [i for i in all_targs if f'{name}_event' in i]
@@ -235,7 +241,10 @@ class Align:
                 tr.mat.fromlist(rotmat)
                 tr.vec.fromlist(prov)
                 map.grid.interpolate_values(np_array, tr)
-                map.write_ccp4_map(os.path.join(out_dir, f'{i}.ccp4'))
+                map.write_ccp4_map(os.path.join(out_dir, f"{i}.ccp4"))
+                print(os.path.join(self.directory, f"{i}.ccp4"))
+                print(rotmat)
+                print(os.path.join(out_dir, f"{i}.ccp4"))
 
 
 # save transformations?
