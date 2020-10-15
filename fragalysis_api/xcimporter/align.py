@@ -7,7 +7,9 @@ import warnings
 import Bio.PDB.PDBExceptions as bpp
 import json
 import shutil
-import gemmi # Oh boy...
+import gemmi  # Oh boy...
+import numpy
+
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
@@ -26,7 +28,7 @@ class Align:
         """
         all_files = set(glob.glob(os.path.join(self.directory, '*')))
         txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
-        return list(all_files-txt_files)
+        return list(all_files - txt_files)
 
     def _load_objs(self):
         """
@@ -62,7 +64,7 @@ class Align:
         """
         if pdb_ref != '':
             try:
-                assert(os.path.isfile(os.path.join(self.directory, pdb_ref+".pdb")) == 1)
+                assert (os.path.isfile(os.path.join(self.directory, pdb_ref + ".pdb")) == 1)
                 self.__pdb_ref = pdb_ref
             except AssertionError:
                 print('pdb desired as reference does not exists. Default pdb chosen.')
@@ -160,11 +162,11 @@ class Align:
         :param out_dir: directory to save aligned pdbs in
         :return: saves the pdbs
         """
-
         # Silently open PyMOL
         pymol.pymol_argv = ['pymol', '-qc']
         pymol.finish_launching()
         pymol_cmd = self._load_objs()
+        input_files = self._get_files
         all_targs = pymol_cmd.get_names()
         crys = [y for y in [x for x in all_targs if 'event' not in x] if 'fofc' not in y]
         for num, name in enumerate(crys):  # Saves the aligned pdb files from the cmd as pdb files
@@ -178,9 +180,77 @@ class Align:
                 events = [i for i in all_targs if f'{name}_event' in i]
                 for i in events:
                     pymol_cmd.matrix_copy(name, i)
-
-            # Move saving to outside of if...
+            # pdb...
             self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
+
+            # Refactor this in the future... Probably slot it as a class method... as it is repeated code...
+            # fofc
+            matric_vector = pymol_cmd.get_object_matrix(f"{name}_fofc")
+            map = gemmi.read_ccp4_map(os.path.join(self.directory, f"{name}_fofc.map"))
+            np_array = numpy.array(map.grid, copy=False)
+            rotmat = [
+                [matric_vector[0], matric_vector[1], matric_vector[2]],
+                [matric_vector[4], matric_vector[5], matric_vector[6]],
+                [matric_vector[8], matric_vector[9], matric_vector[10]]
+            ]
+            # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
+            prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
+            tr = gemmi.Transform()
+            tr.mat.fromlist(rotmat)
+            tr.vec.fromlist(prov)
+            map.grid.interpolate_values(np_array, tr)
+            map.write_ccp4_map(os.path.join(out_dir, f'{name}_fofc.map'))
+
+            # 2fofc
+            matric_vector = pymol_cmd.get_object_matrix(f"{name}_2fofc")
+            map = gemmi.read_ccp4_map(os.path.join(self.directory, f"{name}_2fofc.map"))
+            np_array = numpy.array(map.grid, copy=False)
+            rotmat = [
+                [matric_vector[0], matric_vector[1], matric_vector[2]],
+                [matric_vector[4], matric_vector[5], matric_vector[6]],
+                [matric_vector[8], matric_vector[9], matric_vector[10]]
+            ]
+            # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
+            prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
+            tr = gemmi.Transform()
+            tr.mat.fromlist(rotmat)
+            tr.vec.fromlist(prov)
+            map.grid.interpolate_values(np_array, tr)
+            map.write_ccp4_map(os.path.join(out_dir, f'{name}_2fofc.map'))
+
+            # event_map(s)
+            events = [i for i in all_targs if f'{name}_event' in i]
+            for i in events:
+                matric_vector = pymol_cmd.get_object_matrix(i)
+                map = gemmi.read_ccp4_map(os.path.join(self.directory, f"{i}.ccp4"))
+                np_array = numpy.array(map.grid, copy=False)
+                rotmat = [
+                    [matric_vector[0], matric_vector[1], matric_vector[2]],
+                    [matric_vector[4], matric_vector[5], matric_vector[6]],
+                    [matric_vector[8], matric_vector[9], matric_vector[10]]
+                ]
+                # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
+                prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
+                tr = gemmi.Transform()
+                tr.mat.fromlist(rotmat)
+                tr.vec.fromlist(prov)
+                map.grid.interpolate_values(np_array, tr)
+                map.write_ccp4_map(os.path.join(out_dir, f'{i}.ccp4'))
+
+
+# save transformations?
+# transformation = pymol_cmd.get_object_matrix(<object>)
+#paths = self._get_files
+#pdb_paths = [i for i in paths if 'pdb' in i]
+#crystals = [os.path.basename(i).rsplit('.')[0] for i in pdb_paths]
+# #ref_pdb_path = [i for i in pdb_paths if self._get_ref in i][0]
+#reference = gemmi.read_pdb(ref_pdb_path)
+# alignment here
+# Movement goes here:
+# ccp4_map = gemmi.read_ccp4_map('path')
+# ccp4_map.setup()
+# np_array = numpy.array(ccp4_map.grid, copy=False)
+# ccp4_map.write_ccp4_map('out.ccp4')
 
 
 class Monomerize:
@@ -271,3 +341,4 @@ class Monomerize:
             for o in outnames:
                 if os.path.isfile(o):
                     os.remove(o)
+
