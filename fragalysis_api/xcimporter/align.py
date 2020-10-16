@@ -272,11 +272,11 @@ class Transform:
 
 @dataclasses.dataclass()
 class Structure:
-    
+
     structure: gemmi.Structure
 
     @staticmethod
-    def from_file(file: Path) -> Structure:
+    def from_file(file):
         structure = gemmi.read_structure(str(file))
         return Structure(structure)
 
@@ -373,7 +373,7 @@ class Xmap:
     xmap: gemmi.FloatGrid
 
     @staticmethod
-    def from_file(file: Path) -> Xmap:
+    def from_file(file):
         ccp4 = gemmi.read_ccp4_map(str(file))
         ccp4.setup()
         return Xmap(ccp4.grid)
