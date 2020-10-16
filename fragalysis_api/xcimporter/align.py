@@ -200,8 +200,8 @@ class Align:
                                 os.path.join(out_dir, f'{name}_2fofc.map'))
                 events = [i for i in basenames if f'{name}_event' in i]
                 for i in events:
-                    shutil.copyfile(os.path.join(self.directory, f'{i}.cpp4'),
-                                    os.path.join(out_dir, f'{i}.cpp4'))
+                    shutil.copyfile(os.path.join(self.directory, f'{i}.ccp4'),
+                                    os.path.join(out_dir, f'{i}.ccp4'))
 
 # Conor's stuff
 @dataclasses.dataclass()
