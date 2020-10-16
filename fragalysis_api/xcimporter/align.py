@@ -223,7 +223,7 @@ class RFree:
     rfree: float
 
     @staticmethod
-    def from_structure(structure: Structure):
+    def from_structure(structure):
         rfree = structure.structure.make_mmcif_document()[0].find_loop("_refine.ls_R_factor_R_free")[0]
         return RFree(float(rfree))
 
