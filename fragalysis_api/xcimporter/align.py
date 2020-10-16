@@ -272,6 +272,7 @@ class Transform:
 
 @dataclasses.dataclass()
 class Structure:
+    
     structure: gemmi.Structure
 
     @staticmethod
@@ -368,6 +369,7 @@ class Structure:
 
 @dataclasses.dataclass()
 class Xmap:
+
     xmap: gemmi.FloatGrid
 
     @staticmethod
