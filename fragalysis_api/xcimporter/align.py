@@ -310,7 +310,7 @@ class Structure:
                     for atom in residue:
                         yield atom
 
-    def align_to(self, other: Structure):
+    def align_to(self, other):
         # Warning: inplace!
         # Aligns structures usings carbon alphas and transform self into the frame of the other
 
@@ -380,8 +380,8 @@ class Xmap:
 
     def resample(
             self,
-            xmap: Xmap,
-            transform: Transform,  # tranfrom FROM the frame of xmap TO the frame of self
+            xmap,
+            transform,  # tranfrom FROM the frame of xmap TO the frame of self
             sample_rate: float = 3.0,
     ):
 
