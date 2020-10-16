@@ -1,6 +1,10 @@
 import glob
 import Bio.PDB as bp
 import pymol
+from pathlib import Path
+import scipy
+import typing
+import dataclasses
 import pandas as pd
 import os
 import warnings
@@ -156,110 +160,294 @@ class Align:
             for line in new_pdb:
                 handle.write(line)
 
+    def read_reshape_resave(self, name, out_dir, ext, transform):
+        map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
+        map.resample(xmap=map, transform=transform)
+        map.save(path=Path(os.path.join(out_dir, f'{name}_fofc.map')))
+
     def align(self, out_dir):
         """
         Aligns all pdbs in the pymol object to the pdb_ref.
         :param out_dir: directory to save aligned pdbs in
         :return: saves the pdbs
         """
-        # Silently open PyMOL
-        pymol.pymol_argv = ['pymol', '-qc']
-        pymol.finish_launching()
-        pymol_cmd = self._load_objs()
+        # load ref
+        reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
+        reference_fofc = Xmap.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}_fofc.map')))
         input_files = self._get_files
-        all_targs = pymol_cmd.get_names()
-        crys = [y for y in [x for x in all_targs if 'event' not in x] if 'fofc' not in y]
-        for num, name in enumerate(crys):  # Saves the aligned pdb files from the cmd as pdb files
-            print(name)
+        basenames = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
+        crys = [y for y in [x for x in basenames if 'event' not in x] if 'fofc' not in y]
+
+        for num, name in enumerate(crys):
             if not name == self._get_ref:
-                pymol_cmd.align(name, self._get_ref)
-                # Now we do fofc and 2fofc?
-                pymol_cmd.matrix_copy(name, f"{name}_fofc")
-                pymol_cmd.matrix_copy(name, f"{name}_2fofc")
-                # do some saving...
-                events = [i for i in all_targs if f'{name}_event' in i]
+                # Do an alignment + save
+                current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
+                current_pdb, transform = current_pdb.align_to(other=reference_pdb)
+
+                # Align Xmaps + save!
+                self.read_reshape_resave(name=name, out_dir=out_dir, ext='_fofc.map', transform=transform)
+                self.read_reshape_resave(name=name, out_dir=out_dir, ext='_2fofc.map', transform=transform)
+                events = [i for i in basenames if f'{name}_event' in i]
                 for i in events:
-                    pymol_cmd.matrix_copy(name, i)
-            # pdb...
-            self._save_align(name, pymol_cmd.get_pdbstr(selection=name), out_dir)
+                    self.read_reshape_resave(name=i, out_dir=out_dir, ext='.ccp4', transform=transform)
 
-            # Refactor this in the future... Probably slot it as a class method... as it is repeated code...
-            # fofc
-            matric_vector = pymol_cmd.get_object_matrix(f"{name}_fofc")
-            map = gemmi.read_ccp4_map(os.path.join(self.directory, f"{name}_fofc.map"))
-            np_array = numpy.array(map.grid, copy=False)
-            rotmat = [
-                [matric_vector[0], matric_vector[1], matric_vector[2]],
-                [matric_vector[4], matric_vector[5], matric_vector[6]],
-                [matric_vector[8], matric_vector[9], matric_vector[10]]
-            ]
-            print(os.path.join(self.directory, f"{name}_fofc.map"))
-            print(rotmat)
-            print(os.path.join(out_dir, f'{name}_fofc.map'))
-            # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
-            prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
-            tr = gemmi.Transform()
-            tr.mat.fromlist(rotmat)
-            tr.vec.fromlist(prov)
-            map.grid.interpolate_values(np_array, tr)
-            map.write_ccp4_map(os.path.join(out_dir, f'{name}_fofc.map'))
+            else:
+                shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
+                                os.path.join(out_dir, f'{name}_bound.pdb'))
+                shutil.copyfile(os.path.join(self.directory, f'{name}_fofc.map'),
+                                os.path.join(out_dir, f'{name}_fofc.map'))
+                shutil.copyfile(os.path.join(self.directory, f'{name}_2fofc.map'),
+                                os.path.join(out_dir, f'{name}_2fofc.map'))
+                events = [i for i in basenames if f'{name}_event' in i]
+                for i in events:
+                    shutil.copyfile(os.path.join(self.directory, f'{i}.cpp4'),
+                                    os.path.join(out_dir, f'{i}.cpp4'))
 
-            # 2fofc
-            matric_vector = pymol_cmd.get_object_matrix(f"{name}_2fofc")
-            map = gemmi.read_ccp4_map(os.path.join(self.directory, f"{name}_2fofc.map"))
-            np_array = numpy.array(map.grid, copy=False)
-            rotmat = [
-                [matric_vector[0], matric_vector[1], matric_vector[2]],
-                [matric_vector[4], matric_vector[5], matric_vector[6]],
-                [matric_vector[8], matric_vector[9], matric_vector[10]]
-            ]
-            # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
-            prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
-            tr = gemmi.Transform()
-            tr.mat.fromlist(rotmat)
-            tr.vec.fromlist(prov)
-            map.grid.interpolate_values(np_array, tr)
-            map.write_ccp4_map(os.path.join(out_dir, f'{name}_2fofc.map'))
-            print(os.path.join(self.directory, f"{name}_2fofc.map"))
-            print(rotmat)
-            print(os.path.join(out_dir, f'{name}_2fofc.map'))
+# Conor's stuff
+@dataclasses.dataclass()
+class ResidueID:
+    model: str
+    chain: str
+    insertion: str
 
-            # event_map(s)
-            events = [i for i in all_targs if f'{name}_event' in i]
-            for i in events:
-                matric_vector = pymol_cmd.get_object_matrix(i)
-                map = gemmi.read_ccp4_map(os.path.join(self.directory, f"{i}.ccp4"))
-                np_array = numpy.array(map.grid, copy=False)
-                rotmat = [
-                    [matric_vector[0], matric_vector[1], matric_vector[2]],
-                    [matric_vector[4], matric_vector[5], matric_vector[6]],
-                    [matric_vector[8], matric_vector[9], matric_vector[10]]
-                ]
-                # prev = [matric_vector[3], matric_vector[7], matric_vector[11]]
-                prov = [matric_vector[12], matric_vector[13], matric_vector[14]]
-                tr = gemmi.Transform()
-                tr.mat.fromlist(rotmat)
-                tr.vec.fromlist(prov)
-                map.grid.interpolate_values(np_array, tr)
-                map.write_ccp4_map(os.path.join(out_dir, f"{i}.ccp4"))
-                print(os.path.join(self.directory, f"{i}.ccp4"))
-                print(rotmat)
-                print(os.path.join(out_dir, f"{i}.ccp4"))
+    @staticmethod
+    def from_residue_chain(model: gemmi.Model, chain: gemmi.Chain, res: gemmi.Residue):
+        return ResidueID(model.name, chain.name, str(res.seqid.num))
+
+    def __hash__(self):
+        return hash((self.model, self.chain, self.insertion))
 
 
-# save transformations?
-# transformation = pymol_cmd.get_object_matrix(<object>)
-#paths = self._get_files
-#pdb_paths = [i for i in paths if 'pdb' in i]
-#crystals = [os.path.basename(i).rsplit('.')[0] for i in pdb_paths]
-# #ref_pdb_path = [i for i in pdb_paths if self._get_ref in i][0]
-#reference = gemmi.read_pdb(ref_pdb_path)
-# alignment here
-# Movement goes here:
-# ccp4_map = gemmi.read_ccp4_map('path')
-# ccp4_map.setup()
-# np_array = numpy.array(ccp4_map.grid, copy=False)
-# ccp4_map.write_ccp4_map('out.ccp4')
+@dataclasses.dataclass()
+class RFree:
+    rfree: float
+
+    @staticmethod
+    def from_structure(structure: Structure):
+        rfree = structure.structure.make_mmcif_document()[0].find_loop("_refine.ls_R_factor_R_free")[0]
+        return RFree(float(rfree))
+
+    def to_float(self):
+        return self.rfree
+
+
+@dataclasses.dataclass()
+class Transform:
+    transform: gemmi.Transform
+    com_reference: numpy.array
+    com_moving: numpy.array
+
+    def apply(self, position: gemmi.Position) -> gemmi.Position:
+        rotation_frame_position = gemmi.Position(position[0] - self.com_reference[0],
+                                                 position[1] - self.com_reference[1],
+                                                 position[2] - self.com_reference[2])
+        transformed_vector = self.transform.apply(rotation_frame_position)
+        transformed_position = gemmi.Position(transformed_vector[0] + self.com_moving[0],
+                                              transformed_vector[1] + self.com_reference[1],
+                                              transformed_vector[2] + self.com_reference[2])
+        return transformed_position
+
+    def apply_inverse(self, position: gemmi.Position) -> gemmi.Position:
+        rotation_frame_position = gemmi.Position(position[0] - self.com_moving[0],
+                                                 position[1] - self.com_moving[1],
+                                                 position[2] - self.com_moving[2])
+        transformed_vector = self.transform.inverse().apply(rotation_frame_position)
+        transformed_position = gemmi.Position(transformed_vector[0] + self.com_reference[0],
+                                              transformed_vector[1] + self.com_reference[1],
+                                              transformed_vector[2] + self.com_reference[2])
+        return transformed_position
+
+    @staticmethod
+    def from_translation_rotation(translation, rotation, com_reference, com_moving):
+        transform = gemmi.Transform()
+        transform.vec.fromlist(translation.tolist())
+        transform.mat.fromlist(rotation.as_matrix().tolist())
+
+        return Transform(transform, com_reference, com_moving)
+
+    @staticmethod
+    def pos_to_list(pos: gemmi.Position):
+        return [pos[0], pos[1], pos[2]]
+
+
+@dataclasses.dataclass()
+class Structure:
+    structure: gemmi.Structure
+
+    @staticmethod
+    def from_file(file: Path) -> Structure:
+        structure = gemmi.read_structure(str(file))
+        return Structure(structure)
+
+    def rfree(self):
+        return RFree.from_structure(self)
+
+    def __getitem__(self, item: ResidueID):
+        return self.structure[item.model][item.chain][item.insertion]
+
+    def residue_ids(self):
+        residue_ids = []
+        for model in self.structure:
+            for chain in model:
+                for residue in chain.get_polymer():
+                    resid = ResidueID.from_residue_chain(model, chain, residue)
+                    residue_ids.append(resid)
+
+        return residue_ids
+
+    def protein_atoms(self):
+        for model in self.structure:
+            for chain in model:
+                for residue in chain.get_polymer():
+                    for atom in residue:
+                        yield atom
+
+    def all_atoms(self):
+        for model in self.structure:
+            for chain in model:
+                for residue in chain:
+                    for atom in residue:
+                        yield atom
+
+    def align_to(self, other: Structure):
+        # Warning: inplace!
+        # Aligns structures usings carbon alphas and transform self into the frame of the other
+
+        ca_self = []
+        ca_other = []
+
+        # Get CAs
+        for model in self.structure:
+            for chain in model:
+                for res_self in chain.get_polymer():
+                    current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
+
+                    res_other = other.structure[current_res_id][0]
+
+                    self_ca_pos = res_self["CA"][0].pos
+                    other_ca_pos = res_other["CA"][0].pos
+
+                    ca_list_self = Transform.pos_to_list(self_ca_pos)
+                    ca_list_other = Transform.pos_to_list(other_ca_pos)
+
+                    ca_self.append(ca_list_self)
+                    ca_other.append(ca_list_other)
+
+        # Make coord matricies
+        matrix_self = numpy.array(ca_self)
+        matrix_other = numpy.array(ca_other)
+
+        # Find means
+        mean_self = numpy.mean(matrix_self, axis=0)
+        mean_other = numpy.mean(matrix_other, axis=0)
+
+        # demaen
+        de_meaned_self = matrix_self - mean_self
+        de_meaned_other = matrix_other - mean_other
+
+        # Align
+        rotation, rmsd = scipy.spatial.transform.Rotation.align_vectors(de_meaned_self,
+                                                                        de_meaned_other,
+                                                                        )
+
+        # Get transform
+        vec = numpy.array([0.0, 0.0, 0.0])
+        # Transform is from other frame to self frame
+        transform = Transform.from_translation_rotation(vec,
+                                                        rotation,
+                                                        mean_other,
+                                                        mean_self,
+                                                        )
+
+        # Transform positions
+        for atom in self.all_atoms():
+            atom.pos = transform.apply_inverse(atom.pos)
+
+        return self, transform
+
+
+@dataclasses.dataclass()
+class Xmap:
+    xmap: gemmi.FloatGrid
+
+    @staticmethod
+    def from_file(file: Path) -> Xmap:
+        ccp4 = gemmi.read_ccp4_map(str(file))
+        ccp4.setup()
+        return Xmap(ccp4.grid)
+
+    def resample(
+            self,
+            xmap: Xmap,
+            transform: Transform,  # tranfrom FROM the frame of xmap TO the frame of self
+            sample_rate: float = 3.0,
+    ):
+
+        unaligned_xmap: gemmi.FloatGrid = self.xmap
+
+        unaligned_xmap_array = numpy.array(unaligned_xmap, copy=False)
+        std = numpy.std(unaligned_xmap_array)
+
+        unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
+
+        interpolated_values_tuple = ([], [], [], [])
+
+        alignment_positions: typing.Dict[typing.Tuple[int], gemmi.Position] = {
+            point: unaligned_xmap.point_to_position(unaligned_xmap.get_point(*point))
+            for point, value
+            in numpy.ndenumerate(unaligned_xmap_array)
+        }
+
+        transformed_positions: typing.Dict[typing.Tuple[int], gemmi.Position] = {
+            point: transform.apply(position) for point, position in alignment_positions.items()
+        }
+
+        transformed_positions_fractional: typing.Dict[typing.Tuple[int], gemmi.Fractional] = {
+            point: unaligned_xmap.unit_cell.fractionalize(pos) for point, pos in transformed_positions.items()}
+
+        interpolated_values: typing.Dict[typing.Tuple[int],
+                                         float] = Xmap.interpolate_grid(unaligned_xmap,
+                                                                        transformed_positions_fractional)
+
+        interpolated_values_tuple = (interpolated_values_tuple[0] + [index[0] for index in interpolated_values],
+                                     interpolated_values_tuple[1] + [index[1] for index in interpolated_values],
+                                     interpolated_values_tuple[2] + [index[2] for index in interpolated_values],
+                                     interpolated_values_tuple[3] + [interpolated_values[index] for index in
+                                                                     interpolated_values],
+                                     )
+
+        # Copy data into new grid
+        new_grid = xmap.new_grid()
+        grid_array = numpy.array(new_grid, copy=False)
+        grid_array[interpolated_values_tuple[0:3]] = interpolated_values_tuple[3]
+        return Xmap(new_grid)
+
+    def new_grid(self):
+        spacing = [self.xmap.nu, self.xmap.nv, self.xmap.nw]
+        unit_cell = self.xmap.unit_cell
+        grid = gemmi.FloatGrid(spacing[0], spacing[1], spacing[2])
+        grid.unit_cell = unit_cell
+        grid.spacegroup = self.xmap.spacegroup
+        return grid
+
+    @staticmethod
+    def interpolate_grid(grid: gemmi.FloatGrid,
+                         positions: typing.Dict[typing.Tuple[int],
+                                                gemmi.Position]) -> typing.Dict[typing.Tuple[int], float]:
+        return {coord: grid.interpolate_value(pos) for coord, pos in positions.items()}
+
+    def to_array(self, copy=True):
+        return numpy.array(self.xmap, copy=copy)
+
+    def save(self, path: Path, p1: bool = True):
+        ccp4 = gemmi.Ccp4Map()
+        ccp4.grid = self.xmap
+        if p1:
+            ccp4.grid.spacegroup = gemmi.find_spacegroup_by_name("P 1")
+        else:
+            ccp4.grid.symmetrize_max()
+        ccp4.update_ccp4_header(2, True)
+        ccp4.write_ccp4_map(str(path))
 
 
 class Monomerize:
@@ -350,4 +538,5 @@ class Monomerize:
             for o in outnames:
                 if os.path.isfile(o):
                     os.remove(o)
+
 
