@@ -162,6 +162,8 @@ class Align:
 
     def read_reshape_resave(self, name, out_dir, ext, transform):
         map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
+        # Cut Map!
+
         map.resample(xmap=map, transform=transform)
         map.save(path=Path(os.path.join(out_dir, f'{name}_fofc.map')))
 
@@ -183,6 +185,7 @@ class Align:
                 # Do an alignment + save
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
                 current_pdb, transform = current_pdb.align_to(other=reference_pdb)
+                current_pdb.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
 
                 # Align Xmaps + save!
                 self.read_reshape_resave(name=name, out_dir=out_dir, ext='_fofc.map', transform=transform)
@@ -202,6 +205,7 @@ class Align:
                 for i in events:
                     shutil.copyfile(os.path.join(self.directory, f'{i}.ccp4'),
                                     os.path.join(out_dir, f'{i}.ccp4'))
+
 
 # Conor's stuff
 @dataclasses.dataclass()
@@ -272,7 +276,6 @@ class Transform:
 
 @dataclasses.dataclass()
 class Structure:
-
     structure: gemmi.Structure
 
     @staticmethod
@@ -323,14 +326,15 @@ class Structure:
                 for res_self in chain.get_polymer():
                     if 'LIG' in str(res_self):
                         continue
-                    current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
-                    res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
-                    print(f'{self.structure}|{res_self}')
-                    print(f'{other.structure}|{res_other}')
 
                     try:
+                        current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
+                        res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
+                        print(f'{self.structure}|{res_self}')
+                        print(f'{other.structure}|{res_other}')
                         self_ca_pos = res_self["CA"][0].pos
                         other_ca_pos = res_other["CA"][0].pos
+
                     except:
                         continue
 
@@ -374,7 +378,6 @@ class Structure:
 
 @dataclasses.dataclass()
 class Xmap:
-
     xmap: gemmi.FloatGrid
 
     @staticmethod
@@ -545,5 +548,3 @@ class Monomerize:
             for o in outnames:
                 if os.path.isfile(o):
                     os.remove(o)
-
-
