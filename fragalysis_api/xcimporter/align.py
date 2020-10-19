@@ -182,10 +182,10 @@ class Align:
 
         # This is hot garbage...
         for name in crys:
-            print(f'Cutting {i}...')
-            basepdb = os.path.join(self.directory, f'{i}.pdb')
-            fofcmap = os.path.join(self.directory, f'{i}_fofc.map')
-            fofc2map = os.path.join(self.directory, f'{i}_2fofc.map')
+            print(f'Cutting {name}...')
+            basepdb = os.path.join(self.directory, f'{name}.pdb')
+            fofcmap = os.path.join(self.directory, f'{name}_fofc.map')
+            fofc2map = os.path.join(self.directory, f'{name}_2fofc.map')
             cmd = (f"mapmask mapin {fofcmap} mapout {fofcmap} xyzin {basepdb} << eof\n border 0\n end\n eof")
             os.system(cmd)
             cmd = (f"mapmask mapin {fofc2map} mapout {fofc2map} xyzin {basepdb} << eof\n border 0\n end\n eof")
