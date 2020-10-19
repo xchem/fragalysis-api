@@ -321,6 +321,8 @@ class Structure:
         for model in self.structure:
             for chain in model:
                 for res_self in chain.get_polymer():
+                    if 'LIG' in str(res_self):
+                        continue
                     current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
                     res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
                     print(f'{self.structure}|{res_self}')
