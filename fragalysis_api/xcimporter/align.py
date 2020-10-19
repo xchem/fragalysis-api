@@ -366,6 +366,7 @@ class Structure:
 
         # Transform positions
         for atom in self.all_atoms():
+            print(str(atom))
             atom.pos = transform.apply_inverse(atom.pos)
 
         return self, transform
@@ -388,7 +389,7 @@ class Xmap:
             transform,  # tranfrom FROM the frame of xmap TO the frame of self
             sample_rate: float = 3.0,
     ):
-
+        print('Map XForm!!!')
         unaligned_xmap: gemmi.FloatGrid = self.xmap
 
         unaligned_xmap_array = numpy.array(unaligned_xmap, copy=False)
