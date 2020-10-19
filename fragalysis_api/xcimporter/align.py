@@ -185,7 +185,7 @@ class Align:
                 # Do an alignment + save
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
                 current_pdb, transform = current_pdb.align_to(other=reference_pdb)
-                current_pdb.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
+                current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
 
                 # Align Xmaps + save!
                 self.read_reshape_resave(name=name, out_dir=out_dir, ext='_fofc.map', transform=transform)
