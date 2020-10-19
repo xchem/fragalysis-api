@@ -176,12 +176,27 @@ class Align:
         :return: saves the pdbs
         """
         # load ref
-        reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
-        reference_fofc = Xmap.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}_fofc.map')))
         input_files = self._get_files
         basenames = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
         crys = [y for y in [x for x in basenames if 'event' not in x] if 'fofc' not in y]
 
+        # This is hot garbage...
+        for name in crys:
+            print(f'Cutting {i}...')
+            basepdb = os.path.join(self.directory, f'{i}.pdb')
+            fofcmap = os.path.join(self.directory, f'{i}_fofc.map')
+            fofc2map = os.path.join(self.directory, f'{i}_2fofc.map')
+            cmd = (f"mapmask mapin {fofcmap} mapout {fofcmap} xyzin {basepdb} << eof\n border 0\n end\n eof")
+            os.system(cmd)
+            cmd = (f"mapmask mapin {fofc2map} mapout {fofc2map} xyzin {basepdb} << eof\n border 0\n end\n eof")
+            os.system(cmd)
+            events = [i for i in basenames if f'{name}_event' in i]
+            for j in events:
+                eventmap = os.path.join(self.directory, f'{j}.ccp4')
+                cmd = (f"mapmask mapin {eventmap} mapout {eventmap} xyzin {basepdb} << eof\n border 0\n end\n eof")
+                os.system(cmd)
+
+        reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
         for num, name in enumerate(crys):
             if not name == self._get_ref:
                 # Do an alignment + save
