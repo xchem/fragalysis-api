@@ -322,7 +322,7 @@ class Structure:
             for chain in model:
                 for res_self in chain.get_polymer():
                     current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
-                    res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion]
+                    res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
                     #res_other = other.structure[current_res_id][0]
 
                     self_ca_pos = res_self["CA"][0].pos
