@@ -161,11 +161,13 @@ class Align:
                 handle.write(line)
 
     def read_reshape_resave(self, name, out_dir, ext, transform):
+        print(str(Path(os.path.join(self.directory, f'{name}{ext}'))))
         map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
         # Cut Map!
 
         map.resample(xmap=map, transform=transform)
-        map.save(path=Path(os.path.join(out_dir, f'{name}_fofc.map')))
+        print(str(Path(os.path.join(out_dir, f'{name}{ext}'))))
+        map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
 
     def align(self, out_dir):
         """
@@ -188,10 +190,12 @@ class Align:
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
 
                 # Align Xmaps + save!
+                print(name)
                 self.read_reshape_resave(name=name, out_dir=out_dir, ext='_fofc.map', transform=transform)
                 self.read_reshape_resave(name=name, out_dir=out_dir, ext='_2fofc.map', transform=transform)
                 events = [i for i in basenames if f'{name}_event' in i]
                 for i in events:
+                    print(i)
                     self.read_reshape_resave(name=i, out_dir=out_dir, ext='.ccp4', transform=transform)
 
             else:
