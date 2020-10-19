@@ -326,12 +326,12 @@ class Structure:
                     print(f'{self.structure}|{res_self}')
                     print(f'{other.structure}|{res_other}')
 
-                    self_ca_pos = res_self["CA"][0].pos
                     try:
+                        self_ca_pos = res_self["CA"][0].pos
                         other_ca_pos = res_other["CA"][0].pos
                     except:
                         continue
-                        
+
                     ca_list_self = Transform.pos_to_list(self_ca_pos)
                     ca_list_other = Transform.pos_to_list(other_ca_pos)
 
