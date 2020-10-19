@@ -2,7 +2,7 @@ import glob
 import Bio.PDB as bp
 import pymol
 from pathlib import Path
-import scipy
+from scipy import spatial
 import typing
 import dataclasses
 import pandas as pd
@@ -353,9 +353,7 @@ class Structure:
         de_meaned_other = matrix_other - mean_other
 
         # Align
-        rotation, rmsd = scipy.spatial.transform.Rotation.align_vectors(de_meaned_self,
-                                                                        de_meaned_other,
-                                                                        )
+        rotation, rmsd = spatial.transform.Rotation.align_vectors(de_meaned_self, de_meaned_other)
 
         # Get transform
         vec = numpy.array([0.0, 0.0, 0.0])
