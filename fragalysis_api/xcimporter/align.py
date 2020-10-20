@@ -3,6 +3,7 @@ import Bio.PDB as bp
 import pymol
 from pathlib import Path
 from scipy import spatial
+from fragalysis_api.xcimporter.conversion_pdb_mol import Ligand
 import typing
 import dataclasses
 import pandas as pd
@@ -180,22 +181,6 @@ class Align:
         basenames = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
         crys = [y for y in [x for x in basenames if 'event' not in x] if 'fofc' not in y]
 
-        # This is hot garbage...
-        for name in crys:
-            print(f'Cutting {name}...')
-            basepdb = os.path.join(self.directory, f'{name}.pdb')
-            fofcmap = os.path.join(self.directory, f'{name}_fofc.map')
-            fofc2map = os.path.join(self.directory, f'{name}_2fofc.map')
-            cmd = (f"mapmask mapin {fofcmap} mapout {fofcmap} xyzin {basepdb} << eof\n border 0\n end\n eof")
-            os.system(cmd)
-            cmd = (f"mapmask mapin {fofc2map} mapout {fofc2map} xyzin {basepdb} << eof\n border 0\n end\n eof")
-            os.system(cmd)
-            events = [i for i in basenames if f'{name}_event' in i]
-            for j in events:
-                eventmap = os.path.join(self.directory, f'{j}.ccp4')
-                cmd = (f"mapmask mapin {eventmap} mapout {eventmap} xyzin {basepdb} << eof\n border 0\n end\n eof")
-                os.system(cmd)
-
         reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
         for num, name in enumerate(crys):
             if not name == self._get_ref:
@@ -224,6 +209,62 @@ class Align:
                 for i in events:
                     shutil.copyfile(os.path.join(self.directory, f'{i}.ccp4'),
                                     os.path.join(out_dir, f'{i}.ccp4'))
+
+
+class CutMaps:
+
+    def __init__(self, in_dir, out_dir, monomerize):
+
+        self.in_dir = in_dir
+        self.out_dir = out_dir
+        self.monomerize = monomerize
+
+    @property
+    def _get_files(self):
+        """
+        Extracts a list of paths for all PDBs within the given directory.
+        :return: list of .pdb file names in directory
+        """
+        all_files = set(glob.glob(os.path.join(self.in_dir, '*')))
+        txt_files = set(glob.glob(os.path.join(self.in_dir, '*.txt')))
+        return list(all_files - txt_files)
+
+    def cut_maps(self):
+        input_files = self._get_files
+        basenames = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
+        crys = [y for y in [x for x in basenames if 'event' not in x] if 'fofc' not in y]
+
+        for name in crys:
+            print(f'Cutting {name}...')
+            basepdb = os.path.join(self.indir, f'{name}.pdb')
+            new = Ligand(name, basepdb, self.out_dir)
+            new.hets_and_cons()
+            new.remove_nonligands()
+            new.find_ligand_names_new()
+            fofcmap = os.path.join(self.indir, f'{name}_fofc.map')
+            fofc2map = os.path.join(self.indir, f'{name}_2fofc.map')
+            events = [i for i in basenames if f'{name}_event' in i]
+            for i, lig_name in enumerate(new.wanted_ligs):
+                print(lig_name)
+                xyzin, base = new.create_pdb_for_ligand2(lig_name, count=i, monomerize=self.monomerize, smiles_file=None)
+                print(xyzin)
+                fofcout = os.path.join(self.out_dir, f'{base}_fofc.map')
+                fofc2out = os.path.join(self.out_dir, f'{base}_2fofc.map')
+                # Now cut the maps and copy the files
+                cmd = (f"module load ccp4 && mapmask mapin {fofcmap} mapout {fofcout} xyzin {xyzin} << eof\n border 0\n end\n eof")
+                os.system(cmd)
+                cmd = (f"module load ccp4 && mapmask mapin {fofc2map} mapout {fofc2out} xyzin {xyzin} << eof\n border 0\n end\n eof")
+                os.system(cmd)
+                for num, j in enumerate(events):
+                    eventmap = os.path.join(self.indir, f'{j}.ccp4')
+                    eventout = os.path.join(self.out_dir, f'{base}_event_{num}.cpp4')
+                    cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 0\n end\n eof")
+                    os.system(cmd)
+                # clean-up
+                os.remove(xyzin)
+                # copy txt file?
+                shutil.copyfile(os.path.join(self.in_dir, f'{name}_smiles.txt'),
+                                os.path.join(self.out_dir, f'{name}_smiles.txt'))
 
 
 # Conor's stuff

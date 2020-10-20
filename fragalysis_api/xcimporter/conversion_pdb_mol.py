@@ -341,6 +341,60 @@ class Ligand:
         w.writerow(meta_data_dict)
         meta_data_file.close()
 
+    def create_pdb_for_ligand2(self, ligand, count, monomerize, smiles_file):
+        """
+        A pdb file is produced for an individual ligand, containing atomic and connection information
+
+        params: vari pdb conversion, ligand definition, list of ligand heteroatoms and information, connection information
+        returns: .pdb file for ligand
+        """
+        # just create filename in dir...
+        if not monomerize:
+            file_base = str(
+                os.path.abspath(self.infile)
+                .split("/")[-1]
+                .replace(".pdb", "")
+                .replace("_bound", "")
+                + "_"
+                + str(count)
+            )
+        if monomerize:
+            file_base = str(
+            os.path.abspath(self.infile)
+                .split("/")[-1]
+                .replace(".pdb", "")
+                .replace("_bound", "")
+            )
+            chain = file_base.split("_")[-1]
+            file_base = file_base[:-2] + "_" + str(count) + chain
+
+        individual_ligand = []
+        individual_ligand_conect = []
+        for atom in self.final_hets:
+            if str(atom[16:20].strip() + atom[20:26]) == str(ligand):
+                individual_ligand.append(atom)
+
+        con_num = 0
+        for atom in individual_ligand:
+            atom_number = atom.split()[1]
+            for conection in self.conects:
+                if (
+                        atom_number in conection
+                        and conection not in individual_ligand_conect
+                    ):
+                    individual_ligand_conect.append(conection)
+                    con_num += 1
+
+        ligand_het_con = individual_ligand + individual_ligand_conect
+        ligands_connections = open(
+            os.path.join(os.path.abspath(self.infile), (file_base + ".pdb")), "w+"
+        )
+        for line in ligand_het_con:
+            ligands_connections.write(str(line))
+        ligands_connections.close()
+        return os.path.join(os.path.abspath(self.infile), (file_base + ".pdb")), file_base
+
+
 class pdb_apo:
     def __init__(self, infile, target_name, RESULTS_DIRECTORY, filebase):
         self.target_name = target_name

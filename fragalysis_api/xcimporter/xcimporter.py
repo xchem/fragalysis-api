@@ -5,7 +5,7 @@ import os
 from shutil import copyfile
 
 from fragalysis_api import Validate, Align, Monomerize
-
+from fragalysis_api.xcimporter.align import CutMaps
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
 from distutils.dir_util import copy_tree
@@ -45,6 +45,15 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
         os.makedirs(out_dir)
         os.makedirs(os.path.join(out_dir, "tmp"))
 
+    # Mad.
+    print("Cutting Maps around ligands")
+    out = os.path.join(out_dir, 'cut/')
+    if not os.path.isdir(out):
+        os.makedirs(out)
+    cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
+    cutmaps.cut_maps()
+    in_dir = out
+
     if monomerize:
         print("Monomerizing input structures")
         out = os.path.join(out_dir, 'mono/')
@@ -66,7 +75,6 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                 pdb_smiles_dict['smiles'].append(None)
 
     print(pdb_smiles_dict['smiles'])
-
     print("Aligning protein structures")
     structure = Align(in_dir, pdb_ref="")
     structure.align(os.path.join(out_dir, "tmp"))
