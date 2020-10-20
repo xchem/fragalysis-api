@@ -244,7 +244,8 @@ class CutMaps:
         for name in crys:
             print(f'Cutting {name}...')
             basepdb = os.path.join(self.in_dir, f'{name}.pdb')
-            name = basepdb.replace('_bound.pdb', '')
+            # remove _bound...?
+            name = name.replace('_bound', '')
             new = Ligand(name, basepdb, self.out_dir)
             new.hets_and_cons()
             new.remove_nonligands()
@@ -271,6 +272,7 @@ class CutMaps:
                     os.system(cmd)
                 # clean-up
                 os.remove(xyzin)
+
                 # copy txt file?
                 shutil.copyfile(os.path.join(self.in_dir, f'{name}_smiles.txt'),
                                 os.path.join(self.out_dir, name, f'{name}_smiles.txt'))
