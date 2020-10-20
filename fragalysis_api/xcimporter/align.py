@@ -244,11 +244,12 @@ class CutMaps:
         for name in crys:
             print(f'Cutting {name}...')
             basepdb = os.path.join(self.in_dir, f'{name}.pdb')
-            name = basepdb.replace('_bound', '')
+            name = basepdb.replace('_bound.pdb', '')
             new = Ligand(name, basepdb, self.out_dir)
             new.hets_and_cons()
             new.remove_nonligands()
             new.find_ligand_names_new()
+            # Change how files are found...
             fofcmap = os.path.join(self.in_dir, f'{name}_fofc.map')
             fofc2map = os.path.join(self.in_dir, f'{name}_2fofc.map')
             events = [i for i in basenames if f'{name}_event' in i]
