@@ -341,7 +341,7 @@ class Ligand:
         w.writerow(meta_data_dict)
         meta_data_file.close()
 
-    def create_pdb_for_ligand2(self, ligand, count, monomerize, smiles_file):
+    def create_pdb_for_ligand2(self, ligand, count, monomerize, smiles_file, out_dir):
         """
         A pdb file is produced for an individual ligand, containing atomic and connection information
 
@@ -387,12 +387,12 @@ class Ligand:
 
         ligand_het_con = individual_ligand + individual_ligand_conect
         ligands_connections = open(
-            os.path.join(os.path.abspath(self.infile), (file_base + ".pdb")), "w+"
+            os.path.join(os.path.abspath(out_dir), (file_base + ".pdb")), "w+"
         )
         for line in ligand_het_con:
             ligands_connections.write(str(line))
         ligands_connections.close()
-        return os.path.join(os.path.abspath(self.infile), (file_base + ".pdb")), file_base
+        return os.path.join(os.path.abspath(out_dir), (file_base + ".pdb")), file_base
 
 
 class pdb_apo:
