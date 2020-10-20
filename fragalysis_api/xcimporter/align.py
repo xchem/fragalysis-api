@@ -183,29 +183,36 @@ class Align:
 
         reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
         for num, name in enumerate(crys):
+            fofcs = [j for j in [i for i in basenames if name in i] if '_fofc' in j]
+            fofcs2 = [j for j in [i for i in basenames if name in i] if '_2fofc' in j]
+            events = [j for j in [i for i in basenames if name in i] if 'event' in j]
             if not name == self._get_ref:
                 # Do an alignment + save
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
                 current_pdb, transform = current_pdb.align_to(other=reference_pdb)
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
-
                 # Align Xmaps + save!
                 print(name)
-                self.read_reshape_resave(name=name, out_dir=out_dir, ext='_fofc.map', transform=transform)
-                self.read_reshape_resave(name=name, out_dir=out_dir, ext='_2fofc.map', transform=transform)
-                events = [i for i in basenames if f'{name}_event' in i]
+                for i in fofcs:
+                    self.read_reshape_resave(name=i, out_dir=out_dir, ext='.map', transform=transform)
+
+                for i in fofcs2:
+                    self.read_reshape_resave(name=i, out_dir=out_dir, ext='.map', transform=transform)
+
                 for i in events:
-                    print(i)
                     self.read_reshape_resave(name=i, out_dir=out_dir, ext='.ccp4', transform=transform)
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
                                 os.path.join(out_dir, f'{name}_bound.pdb'))
-                shutil.copyfile(os.path.join(self.directory, f'{name}_fofc.map'),
-                                os.path.join(out_dir, f'{name}_fofc.map'))
-                shutil.copyfile(os.path.join(self.directory, f'{name}_2fofc.map'),
-                                os.path.join(out_dir, f'{name}_2fofc.map'))
-                events = [i for i in basenames if f'{name}_event' in i]
+                shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'),
+                                os.path.join(out_dir, f'{name}_smiles.txt'))
+                for i in fofcs:
+                    shutil.copyfile(os.path.join(self.directory, f'{i}.map'),
+                                    os.path.join(out_dir, f'{i}.map'))
+                for i in fofcs2:
+                    shutil.copyfile(os.path.join(self.directory, f'{i}.map'),
+                                    os.path.join(out_dir, f'{i}.map'))
                 for i in events:
                     shutil.copyfile(os.path.join(self.directory, f'{i}.ccp4'),
                                     os.path.join(out_dir, f'{i}.ccp4'))
