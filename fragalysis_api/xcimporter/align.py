@@ -251,14 +251,14 @@ class CutMaps:
                 fofcout = os.path.join(self.out_dir, f'{base}_fofc.map')
                 fofc2out = os.path.join(self.out_dir, f'{base}_2fofc.map')
                 # Now cut the maps and copy the files
-                cmd = (f"module load ccp4 && mapmask mapin {fofcmap} mapout {fofcout} xyzin {xyzin} << eof\n border 0\n end\n eof")
+                cmd = (f"module load ccp4 && mapmask mapin {fofcmap} mapout {fofcout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                 os.system(cmd)
-                cmd = (f"module load ccp4 && mapmask mapin {fofc2map} mapout {fofc2out} xyzin {xyzin} << eof\n border 0\n end\n eof")
+                cmd = (f"module load ccp4 && mapmask mapin {fofc2map} mapout {fofc2out} xyzin {xyzin} << eof\n border 10\n end\n eof")
                 os.system(cmd)
                 for num, j in enumerate(events):
                     eventmap = os.path.join(self.in_dir, f'{j}.ccp4')
                     eventout = os.path.join(self.out_dir, f'{base}_event_{num}.cpp4')
-                    cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 0\n end\n eof")
+                    cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                     os.system(cmd)
                 # clean-up
                 os.remove(xyzin)
