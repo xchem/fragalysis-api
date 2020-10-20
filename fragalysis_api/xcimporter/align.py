@@ -258,6 +258,8 @@ class CutMaps:
                 print(lig_name)
                 xyzin, base = new.create_pdb_for_ligand(lig_name, count=i, monomerize=self.monomerize, smiles_file=None, ret2=True)
                 print(xyzin)
+                if not os.path.exists(os.path.join(self.out_dir, base)):
+                    os.mkdir(os.path.join(self.out_dir, base))
                 fofcout = os.path.join(self.out_dir, base, f'{base}_fofc.map')
                 fofc2out = os.path.join(self.out_dir, base, f'{base}_2fofc.map')
                 # Now cut the maps and copy the files
@@ -275,9 +277,9 @@ class CutMaps:
 
                 # copy txt file?
                 shutil.copyfile(os.path.join(self.in_dir, f'{name}_smiles.txt'),
-                                os.path.join(self.out_dir, name, f'{name}_smiles.txt'))
+                                os.path.join(self.out_dir, base, f'{base}_smiles.txt'))
                 shutil.copyfile(os.path.join(self.in_dir, f'{name}_bound.pdb'),
-                                os.path.join(self.out_dir, name, f'{name}_bound.pdb'))
+                                os.path.join(self.out_dir, base, f'{base}_bound.pdb'))
 
 
 # Conor's stuff
