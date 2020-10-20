@@ -99,7 +99,6 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
     cutmaps.cut_maps()
 
-
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:

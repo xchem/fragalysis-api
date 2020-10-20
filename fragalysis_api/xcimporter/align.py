@@ -244,6 +244,7 @@ class CutMaps:
         for name in crys:
             print(f'Cutting {name}...')
             basepdb = os.path.join(self.in_dir, f'{name}.pdb')
+            name = basepdb.replace('_bound', '')
             new = Ligand(name, basepdb, self.out_dir)
             new.hets_and_cons()
             new.remove_nonligands()
@@ -253,7 +254,7 @@ class CutMaps:
             events = [i for i in basenames if f'{name}_event' in i]
             for i, lig_name in enumerate(new.wanted_ligs):
                 print(lig_name)
-                xyzin, base = new.create_pdb_for_ligand2(lig_name, count=i, monomerize=self.monomerize, smiles_file=None, out_dir=self.out_dir)
+                xyzin, base = new.create_pdb_for_ligand(lig_name, count=i, monomerize=self.monomerize, smiles_file=None, out_dir=self.out_dir, ret2=True)
                 print(xyzin)
                 fofcout = os.path.join(self.out_dir, f'{base}_fofc.map')
                 fofc2out = os.path.join(self.out_dir, f'{base}_2fofc.map')

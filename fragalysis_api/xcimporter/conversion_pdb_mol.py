@@ -143,7 +143,7 @@ class Ligand:
             return mol
 
 
-    def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file):
+    def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file, ret2=False):
         """
         A pdb file is produced for an individual ligand, containing atomic and connection information
 
@@ -234,6 +234,9 @@ class Ligand:
         for line in ligand_het_con:
             ligands_connections.write(str(line))
         ligands_connections.close()
+
+        if ret2:
+            return os.path.join(os.path.abspath(lig_out_dir), (file_base + ".pdb")), file_base
 
         # making pdb file into mol object
         mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file)
