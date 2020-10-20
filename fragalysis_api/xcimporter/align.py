@@ -264,7 +264,7 @@ class CutMaps:
                 os.system(cmd)
                 for num, j in enumerate(events):
                     eventmap = os.path.join(self.in_dir, f'{j}.ccp4')
-                    eventout = os.path.join(self.out_dir, f'{base}_event_{num}.cpp4')
+                    eventout = os.path.join(self.out_dir, f'{base}_event_{num}.ccp4')
                     cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                     os.system(cmd)
                 # clean-up
