@@ -265,6 +265,8 @@ class CutMaps:
                 # copy txt file?
                 shutil.copyfile(os.path.join(self.in_dir, f'{name}_smiles.txt'),
                                 os.path.join(self.out_dir, f'{name}_smiles.txt'))
+                shutil.copyfile(os.path.join(self.in_dir, f'{name}.pdb'),
+                                os.path.join(self.out_dir, f'{name}.pdb'))
 
 
 # Conor's stuff
