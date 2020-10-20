@@ -250,15 +250,15 @@ class CutMaps:
             new.remove_nonligands()
             new.find_ligand_names_new()
             # Change how files are found...
-            fofcmap = os.path.join(self.in_dir, f'{name}_fofc.map')
-            fofc2map = os.path.join(self.in_dir, f'{name}_2fofc.map')
+            fofcmap = os.path.join(self.in_dir,f'{name}_fofc.map')
+            fofc2map = os.path.join(self.in_dir,f'{name}_2fofc.map')
             events = [i for i in basenames if f'{name}_event' in i]
             for i, lig_name in enumerate(new.wanted_ligs):
                 print(lig_name)
                 xyzin, base = new.create_pdb_for_ligand(lig_name, count=i, monomerize=self.monomerize, smiles_file=None, ret2=True)
                 print(xyzin)
-                fofcout = os.path.join(self.out_dir, f'{base}_fofc.map')
-                fofc2out = os.path.join(self.out_dir, f'{base}_2fofc.map')
+                fofcout = os.path.join(self.out_dir, base, f'{base}_fofc.map')
+                fofc2out = os.path.join(self.out_dir, base, f'{base}_2fofc.map')
                 # Now cut the maps and copy the files
                 cmd = (f"module load ccp4 && mapmask mapin {fofcmap} mapout {fofcout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                 os.system(cmd)
@@ -266,16 +266,16 @@ class CutMaps:
                 os.system(cmd)
                 for num, j in enumerate(events):
                     eventmap = os.path.join(self.in_dir, f'{j}.ccp4')
-                    eventout = os.path.join(self.out_dir, f'{base}_event_{num}.ccp4')
+                    eventout = os.path.join(self.out_dir, base, f'{base}_event_{num}.ccp4')
                     cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                     os.system(cmd)
                 # clean-up
                 os.remove(xyzin)
                 # copy txt file?
                 shutil.copyfile(os.path.join(self.in_dir, f'{name}_smiles.txt'),
-                                os.path.join(self.out_dir, f'{name}_smiles.txt'))
-                shutil.copyfile(os.path.join(self.in_dir, f'{name}.pdb'),
-                                os.path.join(self.out_dir, f'{name}.pdb'))
+                                os.path.join(self.out_dir, name, f'{name}_smiles.txt'))
+                shutil.copyfile(os.path.join(self.in_dir, f'{name}_bound.pdb'),
+                                os.path.join(self.out_dir, name, f'{name}_bound.pdb'))
 
 
 # Conor's stuff
