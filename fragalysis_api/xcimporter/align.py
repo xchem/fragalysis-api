@@ -236,13 +236,13 @@ class CutMaps:
 
         for name in crys:
             print(f'Cutting {name}...')
-            basepdb = os.path.join(self.indir, f'{name}.pdb')
+            basepdb = os.path.join(self.in_dir, f'{name}.pdb')
             new = Ligand(name, basepdb, self.out_dir)
             new.hets_and_cons()
             new.remove_nonligands()
             new.find_ligand_names_new()
-            fofcmap = os.path.join(self.indir, f'{name}_fofc.map')
-            fofc2map = os.path.join(self.indir, f'{name}_2fofc.map')
+            fofcmap = os.path.join(self.in_dir, f'{name}_fofc.map')
+            fofc2map = os.path.join(self.in_dir, f'{name}_2fofc.map')
             events = [i for i in basenames if f'{name}_event' in i]
             for i, lig_name in enumerate(new.wanted_ligs):
                 print(lig_name)
@@ -256,7 +256,7 @@ class CutMaps:
                 cmd = (f"module load ccp4 && mapmask mapin {fofc2map} mapout {fofc2out} xyzin {xyzin} << eof\n border 0\n end\n eof")
                 os.system(cmd)
                 for num, j in enumerate(events):
-                    eventmap = os.path.join(self.indir, f'{j}.ccp4')
+                    eventmap = os.path.join(self.in_dir, f'{j}.ccp4')
                     eventout = os.path.join(self.out_dir, f'{base}_event_{num}.cpp4')
                     cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 0\n end\n eof")
                     os.system(cmd)
