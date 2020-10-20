@@ -45,14 +45,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
         os.makedirs(out_dir)
         os.makedirs(os.path.join(out_dir, "tmp"))
 
-    # Mad.
-    print("Cutting Maps around ligands")
-    out = os.path.join(out_dir, 'cut/')
-    if not os.path.isdir(out):
-        os.makedirs(out)
-    cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
-    cutmaps.cut_maps()
-    in_dir = out
+    in_dir2 = in_dir
 
     if monomerize:
         print("Monomerizing input structures")
@@ -98,6 +91,15 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
 
     print(aligned_dict['smiles'])
 
+    # Moving Cut to after aligning... Aligning is a bottle neck and should be avoided...
+    print("Cutting Maps around ligands")
+    out = os.path.join(out_dir, 'cut/')
+    if not os.path.isdir(out):
+        os.makedirs(out)
+    cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
+    cutmaps.cut_maps()
+
+
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
@@ -129,7 +131,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                             f.write(line)
 
     # Move input files into Target/crystallographic folder
-    copy_tree(in_dir, os.path.join(out_dir, target, 'crystallographic') )
+    copy_tree(in_dir2, os.path.join(out_dir, target, 'crystallographic') )
 
     print("Files are now in a fragalysis friendly format!")
 
