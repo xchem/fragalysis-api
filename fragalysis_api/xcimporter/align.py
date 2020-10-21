@@ -35,6 +35,13 @@ class Align:
         txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
         return list(all_files - txt_files)
 
+    @property
+    def _get_maplist(self):
+        all_files = set(glob.glob(os.path.join(self.directory, '*')))
+        txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
+        pdb_files = set(glob.glob(os.path.join(self.directory, '*.pdb')))
+        return list(all_files - txt_files - pdb_files)
+
     def _load_objs(self):
         """
         Loads each pdb into the PyMol instance/object.
@@ -170,52 +177,41 @@ class Align:
         print(str(Path(os.path.join(out_dir, f'{name}{ext}'))))
         map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
 
-    def align(self, out_dir):
+    def align(self, out_dir, monomerized):
         """
         Aligns all pdbs in the pymol object to the pdb_ref.
+        :param monomerized: Logical, whether chains have been split into single PDBs
         :param out_dir: directory to save aligned pdbs in
-        :return: saves the pdbs
+        :return: saves the pdbs + transforms map files (if any!)
         """
         # load ref
         input_files = self._get_files
-        basenames = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
-        crys = [y for y in [x for x in basenames if 'event' not in x] if 'fofc' not in y]
+        map_list = self._get_maplist
+        base_names = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
+        crystals = [y for y in [x for x in base_names if 'event' not in x] if 'fofc' not in y]
 
         reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
-        for num, name in enumerate(crys):
-            fofcs = [j for j in [i for i in basenames if name in i] if '_fofc' in j]
-            fofcs2 = [j for j in [i for i in basenames if name in i] if '_2fofc' in j]
-            events = [j for j in [i for i in basenames if name in i] if 'event' in j]
+        for num, name in enumerate(crystals):
+            all_maps = [j for j in map_list if name in j]
             if not name == self._get_ref:
                 # Do an alignment + save
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
-                current_pdb, transform = current_pdb.align_to(other=reference_pdb)
+                current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=monomerized)
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
                 # Align Xmaps + save!
                 print(name)
-                for i in fofcs:
-                    self.read_reshape_resave(name=i, out_dir=out_dir, ext='.map', transform=transform)
-
-                for i in fofcs2:
-                    self.read_reshape_resave(name=i, out_dir=out_dir, ext='.map', transform=transform)
-
-                for i in events:
-                    self.read_reshape_resave(name=i, out_dir=out_dir, ext='.ccp4', transform=transform)
+                for i in all_maps:
+                    base, ext = os.path.splitext(os.path.basename(i))
+                    self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
                                 os.path.join(out_dir, f'{name}_bound.pdb'))
                 shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'),
                                 os.path.join(out_dir, f'{name}_smiles.txt'))
-                for i in fofcs:
-                    shutil.copyfile(os.path.join(self.directory, f'{i}.map'),
-                                    os.path.join(out_dir, f'{i}.map'))
-                for i in fofcs2:
-                    shutil.copyfile(os.path.join(self.directory, f'{i}.map'),
-                                    os.path.join(out_dir, f'{i}.map'))
-                for i in events:
-                    shutil.copyfile(os.path.join(self.directory, f'{i}.ccp4'),
-                                    os.path.join(out_dir, f'{i}.ccp4'))
+                for i in all_maps:
+                    base, ext = os.path.splitext(os.path.basename(i))
+                    shutil.copyfile(i, os.path.join(out_dir, f"{base}{ext}"))
 
 
 class CutMaps:
@@ -388,7 +384,7 @@ class Structure:
                     for atom in residue:
                         yield atom
 
-    def align_to(self, other):
+    def align_to(self, other, monomerized=False):
         # Warning: inplace!
         # Aligns structures usings carbon alphas and transform self into the frame of the other
 
@@ -400,17 +396,22 @@ class Structure:
             for chain in model:
                 for res_self in chain.get_polymer():
                     if 'LIG' in str(res_self):
+                        print('Skipping Ligand...')
                         continue
 
                     try:
                         current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
-                        res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
-                        print(f'{self.structure}|{res_self}')
-                        print(f'{other.structure}|{res_other}')
+                        if monomerized:
+                            res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
+                        else:
+                            res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
+                        #print(f'{self.structure}|{res_self}')
+                        #print(f'{other.structure}|{res_other}')
                         self_ca_pos = res_self["CA"][0].pos
                         other_ca_pos = res_other["CA"][0].pos
 
                     except:
+                        print('Skipping, Residue not found in chain')
                         continue
 
                     ca_list_self = Transform.pos_to_list(self_ca_pos)
@@ -547,6 +548,13 @@ class Monomerize:
     def get_filelist(self):
         return glob.glob(os.path.join(self.directory, '*.pdb'))
 
+    def get_maplist(self):
+        all_files = set(glob.glob(os.path.join(self.directory, '*')))
+        txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
+        pdb_files = set(glob.glob(os.path.join(self.directory, '*.pdb')))
+        return list(all_files - txt_files - pdb_files)
+
+
     def find_ligs(self, pdb_lines):
         """
         Finds list of ligands contained in the structure, including
@@ -578,7 +586,7 @@ class Monomerize:
 
         return filename
 
-    def process_ligs(self, filename):
+    def process_ligs(self, filename, maplist):
         test_block = open(filename, 'r').readlines()
         ligs = self.find_ligs(test_block)
         print(ligs)
@@ -588,6 +596,15 @@ class Monomerize:
             outnames.append(o)
             if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
                 shutil.copy(filename.replace('.pdb', '_smiles.txt'), o.replace('_mono.pdb', '_smiles.txt'))
+            # Find Maps...
+            base = os.path.splitext(os.path.basename(filename))[0]
+            new = os.path.splitext(os.path.basename(o))[0].replace('_mono', '')
+            allmaps = [j for j in maplist if base in j]
+            for map in allmaps:
+                if os.path.isfile(map):
+                    mapbase = os.path.basename(map)
+                    shutil.copy(map, os.path.join(self.outdir, mapbase.replace(base, new)))
+
         return outnames
 
     def write_bound(self, inname, outname):
@@ -615,9 +632,10 @@ class Monomerize:
                 handle.write(new_pdb)
 
     def monomerize_all(self):
+        maplist = self.get_maplist()
         for f in self.get_filelist():
             print(f)
-            outnames = self.process_ligs(f)
+            outnames = self.process_ligs(f, maplist)
             print(outnames)
             self.write_bound(f, outnames)
             for o in outnames:

@@ -70,7 +70,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     print(pdb_smiles_dict['smiles'])
     print("Aligning protein structures")
     structure = Align(in_dir, pdb_ref="")
-    structure.align(os.path.join(out_dir, "tmp"))
+    structure.align(os.path.join(out_dir, "tmp"), monomerized=monomerize)
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
@@ -91,13 +91,13 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
 
     print(aligned_dict['smiles'])
 
-    # Moving Cut to after aligning... Aligning is a bottle neck and should be avoided...
-    print("Cutting Maps around ligands")
-    out = os.path.join(out_dir, 'cut/')
-    if not os.path.isdir(out):
-        os.makedirs(out)
-    cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
-    cutmaps.cut_maps()
+    # Moving Cut will now be moved to outside of api
+    #print("Cutting Maps around ligands")
+    #out = os.path.join(out_dir, 'cut/')
+    #if not os.path.isdir(out):
+    #    os.makedirs(out)
+    #cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
+    #cutmaps.cut_maps()
 
     print("Identifying ligands")
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
