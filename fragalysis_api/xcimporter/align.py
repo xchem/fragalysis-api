@@ -14,16 +14,19 @@ import json
 import shutil
 import gemmi  # Oh boy...
 import numpy
+import multiprocessing
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
 class Align:
 
-    def __init__(self, directory, pdb_ref=''):
+    def __init__(self, directory, pdb_ref='', mono = False):
 
         self.directory = directory
         self._get_ref = pdb_ref
+        self.mono = mono
+
 
     @property
     def _get_files(self):
@@ -177,7 +180,7 @@ class Align:
         print(str(Path(os.path.join(out_dir, f'{name}{ext}'))))
         map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
 
-    def align(self, out_dir, monomerized):
+    def align(self, out_dir):
         """
         Aligns all pdbs in the pymol object to the pdb_ref.
         :param monomerized: Logical, whether chains have been split into single PDBs
@@ -191,18 +194,25 @@ class Align:
         crystals = [y for y in [x for x in base_names if 'event' not in x] if 'fofc' not in y]
 
         reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
+
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             if not name == self._get_ref:
                 # Do an alignment + save
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
-                current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=monomerized)
+                current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=self.mono)
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
                 # Align Xmaps + save!
                 print(name)
+                pooltuplelist = []
                 for i in all_maps:
-                    base, ext = os.path.splitext(os.path.basename(i))
-                    self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+                    pooltuplelist.append((i, out_dir, transform, self))
+                    # base, ext = os.path.splitext(os.path.basename(i))
+                    # self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+
+                pool = multiprocessing.Pool(4)
+                pool.map(multi_call_rrr, pooltuplelist)
+                pool.close()
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
@@ -212,6 +222,15 @@ class Align:
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     shutil.copyfile(i, os.path.join(out_dir, f"{base}{ext}"))
+
+
+def multi_call_rrr(args):
+    return call_rrr(*args)
+
+
+def call_rrr(i, out_dir, transform, align_class):
+    base, ext = os.path.splitext(os.path.basename(i))
+    align_class.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
 
 
 class CutMaps:
@@ -247,26 +266,30 @@ class CutMaps:
             new.remove_nonligands()
             new.find_ligand_names_new()
             # Change how files are found...
-            fofcmap = os.path.join(self.in_dir,f'{name}_fofc.map')
-            fofc2map = os.path.join(self.in_dir,f'{name}_2fofc.map')
+            fofcmap = os.path.join(self.in_dir, f'{name}_fofc.map')
+            fofc2map = os.path.join(self.in_dir, f'{name}_2fofc.map')
             events = [i for i in basenames if f'{name}_event' in i]
             for i, lig_name in enumerate(new.wanted_ligs):
                 print(lig_name)
-                xyzin, base = new.create_pdb_for_ligand(lig_name, count=i, monomerize=self.monomerize, smiles_file=None, ret2=True)
+                xyzin, base = new.create_pdb_for_ligand(lig_name, count=i, monomerize=self.monomerize, smiles_file=None,
+                                                        ret2=True)
                 print(xyzin)
                 if not os.path.exists(os.path.join(self.out_dir, base)):
                     os.mkdir(os.path.join(self.out_dir, base))
                 fofcout = os.path.join(self.out_dir, base, f'{base}_fofc.map')
                 fofc2out = os.path.join(self.out_dir, base, f'{base}_2fofc.map')
                 # Now cut the maps and copy the files
-                cmd = (f"module load ccp4 && mapmask mapin {fofcmap} mapout {fofcout} xyzin {xyzin} << eof\n border 10\n end\n eof")
+                cmd = (
+                    f"module load ccp4 && mapmask mapin {fofcmap} mapout {fofcout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                 os.system(cmd)
-                cmd = (f"module load ccp4 && mapmask mapin {fofc2map} mapout {fofc2out} xyzin {xyzin} << eof\n border 10\n end\n eof")
+                cmd = (
+                    f"module load ccp4 && mapmask mapin {fofc2map} mapout {fofc2out} xyzin {xyzin} << eof\n border 10\n end\n eof")
                 os.system(cmd)
                 for num, j in enumerate(events):
                     eventmap = os.path.join(self.in_dir, f'{j}.ccp4')
                     eventout = os.path.join(self.out_dir, base, f'{base}_event_{num}.ccp4')
-                    cmd = (f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 10\n end\n eof")
+                    cmd = (
+                        f"module load ccp4 && mapmask mapin {eventmap} mapout {eventout} xyzin {xyzin} << eof\n border 10\n end\n eof")
                     os.system(cmd)
                 # clean-up
                 os.remove(xyzin)
@@ -404,9 +427,10 @@ class Structure:
                         if monomerized:
                             res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                         else:
-                            res_other = other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
-                        #print(f'{self.structure}|{res_self}')
-                        #print(f'{other.structure}|{res_other}')
+                            res_other = \
+                            other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
+                        # print(f'{self.structure}|{res_self}')
+                        # print(f'{other.structure}|{res_other}')
                         self_ca_pos = res_self["CA"][0].pos
                         other_ca_pos = res_other["CA"][0].pos
 
@@ -553,7 +577,6 @@ class Monomerize:
         txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
         pdb_files = set(glob.glob(os.path.join(self.directory, '*.pdb')))
         return list(all_files - txt_files - pdb_files)
-
 
     def find_ligs(self, pdb_lines):
         """
