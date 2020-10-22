@@ -5,7 +5,7 @@ import Bio.PDB as bp
 import pymol
 from pathlib import Path
 from scipy import spatial
-from fragalysis_api.xcimporter.conversion_pdb_mol import Ligand
+from fragalysis_api import Ligand
 import typing
 import dataclasses
 import pandas as pd
@@ -22,7 +22,7 @@ import argparse
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
-class Align:
+class Align2:
 
     def __init__(self, directory, pdb_ref='', mono=False):
 
@@ -656,15 +656,15 @@ class Monomerize:
                     os.remove(o)
 
 
-#if __name__ == "__main__":
-#    parser = argparse.ArgumentParser()
-#    parser.add_argument(
-#        "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
-#    )
-#    args = vars(parser.parse_args())
-#    monomerize = args["monomerize"]
-#    m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/users/mly94721/GitFiles/mono')
-#    m.monomerize_all()
-#    a = Align('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
-#    a.align('/dls/science/users/mly94721/GitFiles/tmp')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
+    )
+    args = vars(parser.parse_args())
+    monomerize = args["monomerize"]
+    m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/users/mly94721/GitFiles/mono')
+    m.monomerize_all()
+    a = Align2('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
+    a.align('/dls/science/users/mly94721/GitFiles/tmp')
 
