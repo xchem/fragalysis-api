@@ -3,7 +3,7 @@ from sys import exit
 import os
 
 from shutil import copyfile
-from fragalysis_api import Validate, Align2, Monomerize
+from fragalysis_api import Validate, Align, Monomerize
 from fragalysis_api import set_up
 
 from distutils.dir_util import copy_tree
@@ -68,7 +68,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     print(pdb_smiles_dict['smiles'])
     print("Aligning protein structures")
     print('New Stuff')
-    structure = Align2(in_dir, "", monomerize)
+    structure = Align(in_dir, "", monomerize)
     structure.align(out_dir=os.path.join(out_dir, "tmp"))
 
     for smiles_file in pdb_smiles_dict['smiles']:

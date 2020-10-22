@@ -22,7 +22,7 @@ import argparse
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
-class Align2:
+class Align:
 
     def __init__(self, directory, pdb_ref='', mono=False):
 
@@ -665,6 +665,6 @@ if __name__ == "__main__":
     monomerize = args["monomerize"]
     m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/users/mly94721/GitFiles/mono')
     m.monomerize_all()
-    a = Align2('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
+    a = Align('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
     a.align('/dls/science/users/mly94721/GitFiles/tmp')
 
