@@ -1,4 +1,6 @@
 import glob
+import time
+
 import Bio.PDB as bp
 import pymol
 from pathlib import Path
@@ -14,14 +16,15 @@ import json
 import shutil
 import gemmi  # Oh boy...
 import numpy
-import multiprocessing
+import argparse
+
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
 class Align:
 
-    def __init__(self, directory, pdb_ref='', mono = False):
+    def __init__(self, directory, pdb_ref='', mono=False):
 
         self.directory = directory
         self._get_ref = pdb_ref
@@ -172,6 +175,7 @@ class Align:
                 handle.write(line)
 
     def read_reshape_resave(self, name, out_dir, ext, transform):
+        s=time.time()
         print(str(Path(os.path.join(self.directory, f'{name}{ext}'))))
         map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
         # Cut Map!
@@ -179,6 +183,8 @@ class Align:
         map.resample(xmap=map, transform=transform)
         print(str(Path(os.path.join(out_dir, f'{name}{ext}'))))
         map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
+        e=time.time()
+        print(f'{int(e-s)/60} minutes ({int(e-s)} seconds) taken...')
 
     def align(self, out_dir):
         """
@@ -204,15 +210,9 @@ class Align:
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
                 # Align Xmaps + save!
                 print(name)
-                pooltuplelist = []
                 for i in all_maps:
-                    pooltuplelist.append((i, out_dir, transform, self))
-                    # base, ext = os.path.splitext(os.path.basename(i))
-                    # self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
-
-                pool = multiprocessing.Pool(4)
-                pool.map(multi_call_rrr, pooltuplelist)
-                pool.close()
+                    base, ext = os.path.splitext(os.path.basename(i))
+                    self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
@@ -222,16 +222,6 @@ class Align:
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     shutil.copyfile(i, os.path.join(out_dir, f"{base}{ext}"))
-
-
-def multi_call_rrr(args):
-    return call_rrr(*args)
-
-
-def call_rrr(i, out_dir, transform, align_class):
-    base, ext = os.path.splitext(os.path.basename(i))
-    align_class.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
-
 
 class CutMaps:
 
@@ -470,7 +460,7 @@ class Structure:
 
         # Transform positions
         for atom in self.all_atoms():
-            print(str(atom))
+            # print(str(atom))
             atom.pos = transform.apply_inverse(atom.pos)
 
         return self, transform
@@ -657,10 +647,24 @@ class Monomerize:
     def monomerize_all(self):
         maplist = self.get_maplist()
         for f in self.get_filelist():
-            print(f)
+            # print(f)
             outnames = self.process_ligs(f, maplist)
             print(outnames)
             self.write_bound(f, outnames)
             for o in outnames:
                 if os.path.isfile(o):
                     os.remove(o)
+
+
+#if __name__ == "__main__":
+#    parser = argparse.ArgumentParser()
+#    parser.add_argument(
+#        "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
+#    )
+#    args = vars(parser.parse_args())
+#    monomerize = args["monomerize"]
+#    m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/users/mly94721/GitFiles/mono')
+#    m.monomerize_all()
+#    a = Align('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
+#    a.align('/dls/science/users/mly94721/GitFiles/tmp')
+

@@ -3,8 +3,8 @@ from sys import exit
 import os
 
 from shutil import copyfile
-from fragalysis_api.xcimporter.align import Align, Monomerize, CutMaps
-from fragalysis_api import Validate#, Align, Monomerize
+#from fragalysis_api.xcimporter.align import Align, Monomerize
+from fragalysis_api import Validate, Align, Monomerize
 from fragalysis_api.xcimporter.conversion_pdb_mol import set_up
 
 from distutils.dir_util import copy_tree
