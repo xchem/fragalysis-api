@@ -201,6 +201,7 @@ class Align:
 
         reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
 
+        s = time.time()
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             if not name == self._get_ref:
@@ -213,6 +214,8 @@ class Align:
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+                    e = time.time()
+                    print(f'Running for: {int(e-s)/60} minutes...')
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
