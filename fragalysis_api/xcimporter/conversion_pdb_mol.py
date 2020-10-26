@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import glob
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -241,19 +242,23 @@ class Ligand:
         # making pdb file into mol object
         mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file)
 
+        # Move Map files into lig_out_dir
+
+
         if not mol:
             print(f'WARNING: {file_base} did not produce a mol object from its pdb lig file!')
+        else :
+            try:
+                Chem.AddHs(mol)
 
-        try:
-            Chem.AddHs(mol)
+                self.mol_lst.append(mol)
+                self.mol_dict["directory"].append(lig_out_dir)
+                self.mol_dict["mol"].append(mol)
+                self.mol_dict["file_base"].append(file_base)
 
-            self.mol_lst.append(mol)
-            self.mol_dict["directory"].append(lig_out_dir)
-            self.mol_dict["mol"].append(mol)
-            self.mol_dict["file_base"].append(file_base)
-
-        except AssertionError:
-            print(file_base, 'is unable to produce a ligand file')
+            except AssertionError:
+                print(file_base, 'is unable to produce a ligand file')
+                pass
 
 
     def create_mol_file(self, directory, file_base, mol_obj, smiles_file=None):
@@ -507,13 +512,17 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None):
             )
             continue
 
-        shutil.copy(
-            infile,
-            os.path.join(
-                new.mol_dict["directory"][i],
-                str(new.mol_dict["file_base"][i] + "_bound.pdb"),
-            ),
-        )
+        shutil.copy(infile,
+            os.path.join(new.mol_dict["directory"][i], str(new.mol_dict["file_base"][i] + "_bound.pdb")))
+
+        inpath = infile.replace('_bound.pdb', '')
+        fofcmap_files = glob.glob(f'{inpath}_*.map')
+        event_files = glob.glob(f'{inpath}_*.ccp4')
+        map_files = fofcmap_files + event_files
+        for map_file in map_files:
+            map_base = os.path.basename(map_file)
+            shutil.copy(map_file,
+                  os.path.join(new.mol_dict["directory"][i], map_base))
 
         new.create_mol_file(
             directory=new.mol_dict["directory"][i],

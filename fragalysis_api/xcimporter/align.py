@@ -220,8 +220,9 @@ class Align:
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
                                 os.path.join(out_dir, f'{name}_bound.pdb'))
-                shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'),
-                                os.path.join(out_dir, f'{name}_smiles.txt'))
+                if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
+                    shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'),
+                                    os.path.join(out_dir, f'{name}_smiles.txt'))
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     shutil.copyfile(i, os.path.join(out_dir, f"{base}{ext}"))
