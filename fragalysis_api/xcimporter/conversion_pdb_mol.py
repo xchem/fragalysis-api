@@ -2,13 +2,14 @@
 
 from rdkit import Chem
 from rdkit.Chem import AllChem
+from rdkit.Geometry import Point3D
 import json
 import os
 import shutil
 import warnings
 import csv
 import pypdb
-
+import numpy as np
 
 class Ligand:
     def __init__(self, target_name, infile, RESULTS_DIRECTORY):
@@ -80,7 +81,69 @@ class Ligand:
 
         return self.wanted_ligs
 
-    def create_pdb_mol(self, file_base, lig_out_dir, smiles_file):
+    def get_3d_distance(self, coord_a, coord_b):
+        sum_ = (sum([(float(coord_a[i]) - float(coord_b[i])) ** 2 for i in range(3)]))
+        return np.sqrt(sum_)
+
+    def handle_covalent_mol(self, lig_res_name, non_cov_mol):
+        # original pdb = self.pdbfile (already aligned)
+        # lig res name = name of ligand to find link for
+
+        covalent = False
+
+        for line in self.pdbfile:
+            if 'LINK' in line:
+                zero = line[13:27]
+                one = line[43:57]
+
+                if lig_res_name in zero:
+                    res = one
+                    covalent = True
+
+                if lig_res_name in one:
+                    res = zero
+                    covalent = True
+
+        if covalent:
+            for line in self.pdbfile:
+                if 'ATOM' in line and line[13:27] == res:
+                    res_x = float(line[31:39])
+                    res_y = float(line[39:47])
+                    res_z = float(line[47:55])
+                    res_coords = [res_x, res_y, res_z]
+                    print(res_coords)
+                    atm = Chem.MolFromPDBBlock(line)
+                    atm_trans = atm.GetAtomWithIdx(0)
+
+            orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
+
+            lig_block = '\n'.join([l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
+            lig_lines = [l for l in lig_block.split('\n') if 'HETATM' in l]
+            j = 0
+            old_dist = 100
+            for line in lig_lines:
+                j += 1
+                #                 print(line)
+                if 'HETATM' in line:
+                    coords = [line[31:39].strip(), line[39:47].strip(), line[47:55].strip()]
+                    dist = self.get_3d_distance(coords, res_coords)
+
+                    if dist < old_dist:
+                        ind_to_add = j
+                        print(dist)
+                        old_dist = dist
+
+            i = non_cov_mol.GetNumAtoms()
+            edmol = Chem.EditableMol(non_cov_mol)
+            edmol.AddAtom(atm_trans)
+            edmol.AddBond(ind_to_add - 1, i, Chem.BondType.SINGLE)
+            new_mol = edmol.GetMol()
+            conf = new_mol.GetConformer()
+            conf.SetAtomPosition(i, Point3D(res_coords[0], res_coords[1], res_coords[2]))
+
+            return new_mol
+
+    def create_pdb_mol(self, file_base, lig_out_dir, smiles_file, handle_cov=False):
         """
         :param file_base: fragalysis crystal name
         :param lig_out_dir: output directory
@@ -90,11 +153,13 @@ class Ligand:
         """
         pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
 
+        lig_line = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').readline()
+        res_name = lig_line[16:20].replace(' ', '')
+
         # Look for PDB entries in PDB bank and use residue name to get bond order
         if not smiles_file:
             try:
-                lig_line = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').readline()
-                res_name = lig_line[16:20].replace(' ', '')
+
 
                 mol = Chem.MolFromPDBBlock(pdb_block)
                 chem_desc = pypdb.describe_chemical(f"{res_name}")
@@ -102,6 +167,9 @@ class Ligand:
 
                 template = Chem.MolFromSmiles(new_smiles)
                 new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
+
+                if handle_cov:
+                    new_mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=new_mol)
 
                 return new_mol
 
@@ -139,6 +207,9 @@ class Ligand:
                 new_pdb_block += '\n'
 
             mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
+
+            if handle_cov:
+                mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=mol)
 
             return mol
 
