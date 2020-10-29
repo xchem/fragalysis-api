@@ -41,6 +41,8 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     print("Making output directories")
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
+
+    if not os.path.isdir(os.path.join(out_dir, f"{target}tmp/")):
         os.makedirs(os.path.join(out_dir, f"{target}tmp/"))
 
     in_dir2 = in_dir
