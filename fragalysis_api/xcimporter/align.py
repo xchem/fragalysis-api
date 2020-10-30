@@ -208,7 +208,7 @@ class Align:
                 try:
                     current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=self.mono)
                 except ValueError:
-                    # Poorly Docu
+                    # Poorly Documented. Use better stuff...
                     print(f'Unable Align {name}')
                     continue
 
