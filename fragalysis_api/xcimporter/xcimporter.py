@@ -42,14 +42,14 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
-    if not os.path.isdir(os.path.join(out_dir, f"{target}tmp/")):
-        os.makedirs(os.path.join(out_dir, f"{target}tmp/"))
+    if not os.path.isdir(os.path.join(out_dir, f"tmp{target}/")):
+        os.makedirs(os.path.join(out_dir, f"tmp{target}/"))
 
     in_dir2 = in_dir
 
     if monomerize:
         print("Monomerizing input structures")
-        out = os.path.join(out_dir, f'{target}mono/')
+        out = os.path.join(out_dir, f'mono{target}/')
         if not os.path.isdir(out):
             os.makedirs(out)
         mono = Monomerize(directory=in_dir, outdir=out)
@@ -71,21 +71,21 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     print("Aligning protein structures")
     print('New Stuff')
     structure = Align(in_dir, "", monomerize)
-    structure.align(out_dir=os.path.join(out_dir, f"{target}tmp"))
+    structure.align(out_dir=os.path.join(out_dir, f"tmp{target}"))
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
             print(smiles_file)
-            copyfile(smiles_file, os.path.join(os.path.join(out_dir, f"{target}tmp", smiles_file.split('/')[-1])))
-            print(os.path.join(out_dir, f"{target}tmp", smiles_file.split('/')[-1]))
+            copyfile(smiles_file, os.path.join(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1])))
+            print(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1]))
 
     aligned_dict = {'bound_pdb':[], 'smiles':[]}
 
     for f in os.listdir(os.path.join(out_dir, f"{target}tmp")):
         if '.pdb' in f:
-            aligned_dict['bound_pdb'].append(os.path.join(out_dir, f"{target}tmp",f))
+            aligned_dict['bound_pdb'].append(os.path.join(out_dir, f"tmp{target}",f))
             if os.path.isfile(os.path.join(out_dir, f"{target}tmp",f).replace('_bound.pdb', '_smiles.txt')):
-                aligned_dict['smiles'].append(os.path.join(out_dir, f"{target}tmp",f).replace('_bound.pdb', '_smiles.txt'))
+                aligned_dict['smiles'].append(os.path.join(out_dir, f"tmp{target}",f).replace('_bound.pdb', '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
 
@@ -113,9 +113,9 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
-            for file in os.listdir(os.path.join(out_dir, f"{target}tmp")):
+            for file in os.listdir(os.path.join(out_dir, f"tmp{target}")):
                 if str(aligned) in file:
-                    os.remove(os.path.join(out_dir, f"{target}tmp", str(file)))
+                    os.remove(os.path.join(out_dir, f"tmp{target}", str(file)))
 
     if metadata == '1':
         print("Preparing metadata file")
@@ -133,10 +133,10 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     # Move input files into Target/crystallographic folder
     copy_tree(in_dir2, os.path.join(out_dir, target, 'crystallographic') )
 
-    if os.path.exists(os.path.join(out_dir, f'{target}mono')):
-        shutil.rmtree(os.path.join(out_dir, f'{target}mono'))
-    if os.path.exists(os.path.join(out_dir, f'{target}tmp')):
-        shutil.rmtree(os.path.join(out_dir, f'{target}tmp'))
+    if os.path.exists(os.path.join(out_dir, f'mono{target}')):
+        shutil.rmtree(os.path.join(out_dir, f'mono{target}'))
+    if os.path.exists(os.path.join(out_dir, f'tmp{target}')):
+        shutil.rmtree(os.path.join(out_dir, f'tmp{target}'))
 
     print("Files are now in a fragalysis friendly format!")
 
