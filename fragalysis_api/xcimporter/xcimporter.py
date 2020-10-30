@@ -81,10 +81,10 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
 
     aligned_dict = {'bound_pdb':[], 'smiles':[]}
 
-    for f in os.listdir(os.path.join(out_dir, f"{target}tmp")):
+    for f in os.listdir(os.path.join(out_dir, f"tmp{target}")):
         if '.pdb' in f:
             aligned_dict['bound_pdb'].append(os.path.join(out_dir, f"tmp{target}",f))
-            if os.path.isfile(os.path.join(out_dir, f"{target}tmp",f).replace('_bound.pdb', '_smiles.txt')):
+            if os.path.isfile(os.path.join(out_dir, f"tmp{target}",f).replace('_bound.pdb', '_smiles.txt')):
                 aligned_dict['smiles'].append(os.path.join(out_dir, f"tmp{target}",f).replace('_bound.pdb', '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
