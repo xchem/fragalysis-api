@@ -18,7 +18,6 @@ import gemmi  # Oh boy...
 import numpy
 import argparse
 
-
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 
@@ -29,7 +28,6 @@ class Align:
         self.directory = directory
         self._get_ref = pdb_ref
         self.mono = mono
-
 
     @property
     def _get_files(self):
@@ -175,7 +173,7 @@ class Align:
                 handle.write(line)
 
     def read_reshape_resave(self, name, out_dir, ext, transform):
-        s=time.time()
+        s = time.time()
         print(str(Path(os.path.join(self.directory, f'{name}{ext}'))))
         map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
         # Cut Map!
@@ -183,8 +181,8 @@ class Align:
         map.resample(xmap=map, transform=transform)
         print(str(Path(os.path.join(out_dir, f'{name}{ext}'))))
         map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
-        e=time.time()
-        print(f'{int(e-s)/60} minutes ({int(e-s)} seconds) taken...')
+        e = time.time()
+        print(f'{int(e - s) / 60} minutes ({int(e - s)} seconds) taken...')
 
     def align(self, out_dir):
         """
@@ -207,7 +205,13 @@ class Align:
             if not name == self._get_ref:
                 # Do an alignment + save
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
-                current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=self.mono)
+                try:
+                    current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=self.mono)
+                except ValueError:
+                    # Poorly Docu
+                    print(f'Unable Align {name}')
+                    continue
+
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
                 # Align Xmaps + save!
                 print(name)
@@ -215,7 +219,7 @@ class Align:
                     base, ext = os.path.splitext(os.path.basename(i))
                     self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
                     e = time.time()
-                    print(f'Running for: {int(e-s)/60} minutes...')
+                    print(f'Running for: {int(e - s) / 60} minutes...')
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
@@ -226,6 +230,7 @@ class Align:
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     shutil.copyfile(i, os.path.join(out_dir, f"{base}{ext}"))
+
 
 class CutMaps:
 
@@ -422,7 +427,7 @@ class Structure:
                             res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                         else:
                             res_other = \
-                            other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
+                                other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
                         # print(f'{self.structure}|{res_self}')
                         # print(f'{other.structure}|{res_other}')
                         self_ca_pos = res_self["CA"][0].pos
@@ -671,4 +676,3 @@ if __name__ == "__main__":
     m.monomerize_all()
     a = Align('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
     a.align('/dls/science/users/mly94721/GitFiles/tmp')
-
