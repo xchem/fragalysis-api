@@ -207,9 +207,9 @@ class Align:
                 current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
                 try:
                     current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=self.mono)
-                except ValueError:
+                except Exception as e:
                     # Poorly Documented. Use better stuff...
-                    print(f'Unable Align {name}')
+                    print(f'{e}')
                     continue
 
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
