@@ -173,16 +173,16 @@ class Align:
                 handle.write(line)
 
     def read_reshape_resave(self, name, out_dir, ext, transform):
-        s = time.time()
-        print(str(Path(os.path.join(self.directory, f'{name}{ext}'))))
         map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
         # Cut Map!
-
+        s2 = time.time()
         map.resample(xmap=map, transform=transform)
-        print(str(Path(os.path.join(out_dir, f'{name}{ext}'))))
+        e2 = time.time()
+        print(f'{int(e2 - s2) / 60} minutes ({int(e2 - s2)} seconds) taken to transform map...')
+        s = time.time()
         map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
         e = time.time()
-        print(f'{int(e - s) / 60} minutes ({int(e - s)} seconds) taken...')
+        print(f'{int(e - s) / 60} minutes ({int(e - s)} seconds) taken to save map...')
 
     def align(self, out_dir):
         """
@@ -603,7 +603,7 @@ if __name__ == "__main__":
     )
     args = vars(parser.parse_args())
     monomerize = args["monomerize"]
-    m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/users/mly94721/GitFiles/mono')
+    m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/groups/i04-1/software/tyler/monotest')
     m.monomerize_all()
-    a = Align('/dls/science/users/mly94721/GitFiles/mono', mono=monomerize)
-    a.align('/dls/science/users/mly94721/GitFiles/tmp')
+    a = Align('/dls/science/groups/i04-1/software/tyler/monotest', mono=monomerize)
+    a.align('/dls/science/groups/i04-1/software/tyler/tmptest')
