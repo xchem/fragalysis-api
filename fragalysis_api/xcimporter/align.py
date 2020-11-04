@@ -5,7 +5,8 @@ import Bio.PDB as bp
 import pymol
 from pathlib import Path
 from scipy import spatial
-from fragalysis_api import Ligand
+# from fragalysis_api import Ligand
+from pandda_gemmi.pandda_types import *
 import typing
 import dataclasses
 import pandas as pd
@@ -196,17 +197,19 @@ class Align:
         map_list = self._get_maplist
         base_names = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
         crystals = [y for y in [x for x in base_names if 'event' not in x] if 'fofc' not in y]
-
-        reference_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{self._get_ref}.pdb')))
+        ref = self._get_ref
+        dir = self.directory
+        mono = self.mono
 
         s = time.time()
         for num, name in enumerate(crystals):
+            reference_pdb = Structure.from_file(file=Path(os.path.join(dir, f'{ref}.pdb')))
             all_maps = [j for j in map_list if name in j]
-            if not name == self._get_ref:
+            if not name == ref:
                 # Do an alignment + save
-                current_pdb = Structure.from_file(file=Path(os.path.join(self.directory, f'{name}.pdb')))
+                current_pdb = Structure.from_file(file=Path(os.path.join(dir, f'{name}.pdb')))
                 try:
-                    current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=self.mono)
+                    current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=mono)
                 except Exception as e:
                     # Poorly Documented. Use better stuff...
                     print(f'{e}')
@@ -217,7 +220,11 @@ class Align:
                 print(name)
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
-                    self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+                    #self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+                    map = Xmap.from_file(file=Path(os.path.join(dir, f'{name}{ext}')))
+                    map.resample(xmap=map, transform=transform)
+                    map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
+
                     e = time.time()
                     print(f'Running for: {int(e - s) / 60} minutes...')
 
@@ -406,90 +413,6 @@ class Structure:
             atom.pos = transform.apply_inverse(atom.pos)
 
         return self, transform
-
-
-@dataclasses.dataclass()
-class Xmap:
-    xmap: gemmi.FloatGrid
-
-    @staticmethod
-    def from_file(file):
-        ccp4 = gemmi.read_ccp4_map(str(file))
-        ccp4.setup()
-        return Xmap(ccp4.grid)
-
-    def resample(
-            self,
-            xmap,
-            transform,  # tranfrom FROM the frame of xmap TO the frame of self
-            sample_rate: float = 3.0,
-    ):
-        print('Map XForm!!!')
-        unaligned_xmap: gemmi.FloatGrid = self.xmap
-
-        unaligned_xmap_array = numpy.array(unaligned_xmap, copy=False)
-        std = numpy.std(unaligned_xmap_array)
-
-        unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
-
-        interpolated_values_tuple = ([], [], [], [])
-
-        alignment_positions: typing.Dict[typing.Tuple[int], gemmi.Position] = {
-            point: unaligned_xmap.point_to_position(unaligned_xmap.get_point(*point))
-            for point, value
-            in numpy.ndenumerate(unaligned_xmap_array)
-        }
-
-        transformed_positions: typing.Dict[typing.Tuple[int], gemmi.Position] = {
-            point: transform.apply(position) for point, position in alignment_positions.items()
-        }
-
-        transformed_positions_fractional: typing.Dict[typing.Tuple[int], gemmi.Fractional] = {
-            point: unaligned_xmap.unit_cell.fractionalize(pos) for point, pos in transformed_positions.items()}
-
-        interpolated_values: typing.Dict[typing.Tuple[int],
-                                         float] = Xmap.interpolate_grid(unaligned_xmap,
-                                                                        transformed_positions_fractional)
-
-        interpolated_values_tuple = (interpolated_values_tuple[0] + [index[0] for index in interpolated_values],
-                                     interpolated_values_tuple[1] + [index[1] for index in interpolated_values],
-                                     interpolated_values_tuple[2] + [index[2] for index in interpolated_values],
-                                     interpolated_values_tuple[3] + [interpolated_values[index] for index in
-                                                                     interpolated_values],
-                                     )
-
-        # Copy data into new grid
-        new_grid = xmap.new_grid()
-        grid_array = numpy.array(new_grid, copy=False)
-        grid_array[interpolated_values_tuple[0:3]] = interpolated_values_tuple[3]
-        return Xmap(new_grid)
-
-    def new_grid(self):
-        spacing = [self.xmap.nu, self.xmap.nv, self.xmap.nw]
-        unit_cell = self.xmap.unit_cell
-        grid = gemmi.FloatGrid(spacing[0], spacing[1], spacing[2])
-        grid.unit_cell = unit_cell
-        grid.spacegroup = self.xmap.spacegroup
-        return grid
-
-    @staticmethod
-    def interpolate_grid(grid: gemmi.FloatGrid,
-                         positions: typing.Dict[typing.Tuple[int],
-                                                gemmi.Position]) -> typing.Dict[typing.Tuple[int], float]:
-        return {coord: grid.interpolate_value(pos) for coord, pos in positions.items()}
-
-    def to_array(self, copy=True):
-        return numpy.array(self.xmap, copy=copy)
-
-    def save(self, path: Path, p1: bool = True):
-        ccp4 = gemmi.Ccp4Map()
-        ccp4.grid = self.xmap
-        if p1:
-            ccp4.grid.spacegroup = gemmi.find_spacegroup_by_name("P 1")
-        else:
-            ccp4.grid.symmetrize_max()
-        ccp4.update_ccp4_header(2, True)
-        ccp4.write_ccp4_map(str(path))
 
 
 class Monomerize:
