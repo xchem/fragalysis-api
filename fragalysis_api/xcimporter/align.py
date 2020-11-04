@@ -217,13 +217,12 @@ class Align:
 
                 current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
                 # Align Xmaps + save!
-                print(name)
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     #self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
-                    map = Xmap.from_file(file=Path(os.path.join(dir, f'{name}{ext}')))
+                    map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
                     map.resample(xmap=map, transform=transform)
-                    map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
+                    map.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
 
                     e = time.time()
                     print(f'Running for: {int(e - s) / 60} minutes...')
