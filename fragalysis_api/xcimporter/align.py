@@ -219,13 +219,17 @@ class Align:
                 # Align Xmaps + save!
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
+                    print(i)
                     #self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+                    s2 = time.time()
                     map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
                     map.resample(xmap=map, transform=transform)
                     map.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
+                    e2 = time.time()
+                    print(f'{int(e2 - s2)} seconds to transform map...')
 
                     e = time.time()
-                    print(f'Running for: {int(e - s) / 60} minutes...')
+                    print(f'Total Running time: {int(e - s) / 60} minutes.')
 
             else:
                 shutil.copyfile(os.path.join(self.directory, f'{name}.pdb'),
