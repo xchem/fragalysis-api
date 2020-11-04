@@ -361,8 +361,8 @@ class Structure:
                     try:
                         current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
                         if monomerized:
-                            print(other.structure[current_res_id.model])
-                            print(len(other.structure[current_res_id.model]))
+                            #print(other.structure[current_res_id.model])
+                            #print(len(other.structure[current_res_id.model]))
                             res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                         else:
                             res_other = \
@@ -505,7 +505,7 @@ class Monomerize:
             with open(o.replace('_mono.pdb', '.pdb'), 'w') as handle:
                 remark = ['REMARK warning: chains may be ommitted for alignment\n']
                 new_pdb = ''.join(remark + header_front + newfile_contents)
-                print(new_pdb)
+                #print(new_pdb)
                 handle.write(new_pdb)
 
     def monomerize_all(self):
