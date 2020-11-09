@@ -457,6 +457,64 @@ class Monomerize:
 
         return wanted_ligs
 
+    def split_chains(self, f):
+        filenames = []
+        base_structure = gemmi.read_structure(f)
+        base_models = base_structure[0]
+        all_chains = [x.name for x in base_models]
+        chain_centers = {}
+        for i in all_chains:
+            chain_centers[i] = get_chain_center(chain_name=i, file=f)
+
+        chain_names = [x.name for x in base_models if x.calculate_mass() > 5000]
+        alt_chains = [x.name for x in base_models if x.calculate_mass() <= 5000]
+
+        for i in chain_names:
+            # For each chain, convert all ligands,
+            temp_structure = gemmi.read_structure(f)
+            temp_models = temp_structure[0]
+            for j in alt_chains:
+                chain_dists = {}
+                for z in chain_names:
+                    chain_dists[z] = chain_centers[j].dist(chain_centers[z])
+
+                temp_models[j].name = min(chain_dists, key=chain_dists.get)
+
+            # Flatten to single chain
+            temp_structure.merge_chain_parts()
+            temp_models = temp_structure[0]
+            leftover_chains = [x.name for x in temp_models]
+
+            # Remove remaining chains
+            for j in leftover_chains:
+                if j == i:
+                    continue
+                else:
+                    temp_models.remove_chain(j)
+
+            # Rename Chain to corresponding chain then save!
+            name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
+            filename = os.path.join(self.outdir, f'{name}_mono.pdb')
+            print(f'Writing to: {filename}')
+            base_structure.write_pdb(filename)
+            filenames.append(filename)
+
+        return filenames
+
+    def process_pdb(self, filename, maplist):
+        out_names = self.save_chains(filename)
+        for o in out_names:
+            if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
+                shutil.copy(filename.replace('.pdb', '_smiles.txt'), o.replace('_mono.pdb', '_smiles.txt'))
+            base = os.path.splitext(os.path.basename(filename))[0]
+            new = os.path.splitext(os.path.basename(o))[0].replace('_mono', '')
+            allmaps = [j for j in maplist if base in j]
+            for map in allmaps:
+                if os.path.isfile(map):
+                    mapbase = os.path.basename(map)
+                    shutil.copy(map, os.path.join(self.outdir, mapbase.replace(base, new)))
+        return out_names
+    
     def save_chain(self, lig, f):
 
         # This is wrong...
@@ -513,6 +571,7 @@ class Monomerize:
             outnames.append(o)
             if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
                 shutil.copy(filename.replace('.pdb', '_smiles.txt'), o.replace('_mono.pdb', '_smiles.txt'))
+
             # Find Maps...
             base = os.path.splitext(os.path.basename(filename))[0]
             new = os.path.splitext(os.path.basename(o))[0].replace('_mono', '')
@@ -552,12 +611,25 @@ class Monomerize:
         maplist = self.get_maplist()
         for f in self.get_filelist():
             # print(f)
-            outnames = self.process_ligs(f, maplist)
+            #outnames = self.process_ligs(f, maplist)
+            outnames = self.process_pdb(f, maplist)
             print(outnames)
             self.write_bound(f, outnames)
             for o in outnames:
                 if os.path.isfile(o):
                     os.remove(o)
+
+
+def get_chain_center(chain_name, file):
+    structure = gemmi.read_pdb(file)[0]
+    names = [x.name for x in structure]
+    for i in names:
+        if i == chain_name:
+            continue
+        else:
+            structure.remove_chain(i)
+
+    return structure.calculate_center_of_mass()
 
 
 if __name__ == "__main__":
