@@ -16,7 +16,7 @@ options:
 -md, --metadata: whether to prepare a metadata template file (1=True, 0=False)
 ```
 
-The input directory should contain a bound state pdb file for eacch crystal structure of the target, and a ``.txt`` file of 
+The input directory should contain a bound state pdb file for eacch crystal structure of the target, and a ``_smiles.txt`` file of 
 the same filename for each structure containing the smiles string of the bound ligand.  
 
 For example:
@@ -24,7 +24,7 @@ For example:
 ```
 Mpro
 - Mpro-x123.pdb
-- Mpro-x123.txt
+- Mpro-x123_smiles.txt
 ```
 
 Example to run:
