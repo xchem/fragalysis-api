@@ -502,7 +502,8 @@ class Monomerize:
             name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
             filename = os.path.join(self.outdir, f'{name}_mono.pdb')
             print(f'Writing to: {filename}')
-            temp_structure.write_pdb(filename)
+            #temp_structure.write_pdb(filename)
+            temp_structure.write_minimal_pdb(filename)
             filenames.append(filename)
 
         return filenames
