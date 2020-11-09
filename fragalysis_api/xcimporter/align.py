@@ -485,9 +485,9 @@ class Monomerize:
 
             # Flatten to single chain
             print([x.name for x in temp_structure[0]])
-            temp_structure.merge_chain_parts()
+            # temp_structure.merge_chain_parts()
             print([x.name for x in temp_structure[0]])
-            leftover_chains = [x.name for x in temp_structure[0] if not x.name == 'S']
+            leftover_chains = [x.name for x in temp_structure[0] if not x.name == i]
             print(leftover_chains)
 
             # Remove remaining chains
