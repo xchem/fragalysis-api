@@ -470,9 +470,9 @@ class Monomerize:
         chain_dists = {}
         for chain in base_models:
             chain_name = chain.name
-            # Probably the wrong way to go about this... need to explore gemmi more
-            if chain.has_subchains_assigned():
 
+            # Defo the wrong way to go about this!!
+            if chain.has_subchains_assigned() and chain.calculate_mass() > 5000:
                 chain_temp = gemmi.read_structure(f)[0]
 
                 for k in [j.name for j in chain_temp]:
