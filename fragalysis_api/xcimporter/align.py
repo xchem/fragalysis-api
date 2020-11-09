@@ -481,14 +481,13 @@ class Monomerize:
 
                 chain_dists[chain_name] = ligchain_pos.dist(chain_temp.calculate_center_of_mass())
 
-        closest_chain = min(chain_dists, key=chain_dists.get)
-
-        ligchain.name = closest_chain
-        base_structure.merge_chain_parts()
-
-        # Remove remaining chain parts
-        for x in [j.name for j in base_models if not j.name == closest_chain]:
-            base_models.remove_chain(x)
+        if len(chain_dists) > 0: # I don't think this is sufficient...
+            # Remove remaining chain parts
+            closest_chain = min(chain_dists, key=chain_dists.get)
+            ligchain.name = closest_chain
+            base_structure.merge_chain_parts()
+            for x in [j.name for j in base_models if not j.name == closest_chain]:
+                base_models.remove_chain(x)
 
         # Rename Chain to corresponding chain then save!
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
