@@ -461,16 +461,16 @@ class Monomerize:
         filenames = []
         base_structure = gemmi.read_structure(f)
         base_models = base_structure[0]
-        all_chains = [x.name for x in base_models]
+        all_chains = [x.name for x in base_models if not x.name == 'S']
         chain_centers = {}
         for i in all_chains:
             chain_centers[i] = get_chain_center(chain_name=i, file=f)
 
         print(chain_centers)
 
-        chain_names = [x.name for x in base_models if x.calculate_mass() > 5000]
+        chain_names = [x.name for x in base_models if x.calculate_mass() > 5000 and not x.name == 'S']
         print(chain_names)
-        alt_chains = [x.name for x in base_models if x.calculate_mass() <= 5000]
+        alt_chains = [x.name for x in base_models if x.calculate_mass() <= 5000 and not x.name == 'S']
         print(alt_chains)
 
         for i in chain_names:
@@ -487,7 +487,7 @@ class Monomerize:
             print([x.name for x in temp_structure[0]])
             temp_structure.merge_chain_parts()
             print([x.name for x in temp_structure[0]])
-            leftover_chains = [x.name for x in temp_structure[0]]
+            leftover_chains = [x.name for x in temp_structure[0] if not x.name == 'S']
             print(leftover_chains)
 
             # Remove remaining chains
@@ -502,8 +502,8 @@ class Monomerize:
             name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
             filename = os.path.join(self.outdir, f'{name}_mono.pdb')
             print(f'Writing to: {filename}')
-            #temp_structure.write_pdb(filename)
-            temp_structure.write_minimal_pdb(filename)
+            temp_structure.write_pdb(filename)
+            #temp_structure.write_minimal_pdb(filename)
             filenames.append(filename)
 
         return filenames
