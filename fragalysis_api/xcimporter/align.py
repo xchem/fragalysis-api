@@ -467,7 +467,9 @@ class Monomerize:
             chain_centers[i] = get_chain_center(chain_name=i, file=f)
 
         chain_names = [x.name for x in base_models if x.calculate_mass() > 5000]
+        print(chain_names)
         alt_chains = [x.name for x in base_models if x.calculate_mass() <= 5000]
+        print(alt_chains)
 
         for i in chain_names:
             # For each chain, convert all ligands,
@@ -478,12 +480,15 @@ class Monomerize:
                 for z in chain_names:
                     chain_dists[z] = chain_centers[j].dist(chain_centers[z])
 
+                print(temp_models[j].name)
                 temp_models[j].name = min(chain_dists, key=chain_dists.get)
+                print(temp_models[j].name)
 
             # Flatten to single chain
             temp_structure.merge_chain_parts()
             temp_models = temp_structure[0]
             leftover_chains = [x.name for x in temp_models]
+            print(leftover_chains)
 
             # Remove remaining chains
             for j in leftover_chains:
