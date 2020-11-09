@@ -458,12 +458,41 @@ class Monomerize:
         return wanted_ligs
 
     def save_chain(self, lig, f):
+        # Figure out what lig and f are...
         lig_chain = lig[5]
+
+        base_structure = gemmi.read_structure(f)
+        base_models = base_structure[0]
+
+        ligchain = base_models.find_chain(lig_chain)
+        ligchain_pos = ligchain[0][0].pos
+
+        chain_dists = {}
+        for chain in base_models:
+            chain_name = chain.name
+            # Probably the wrong way to go about this... need to explore gemmi more
+            if chain.has_subchains_assigned():
+
+                chain_temp = gemmi.read_structure(f)[0]
+
+                for k in [j.name for j in chain_temp]:
+                    if not k == chain_name:
+                        chain_temp.remove_chain(k)
+
+                chain_dists[chain_name] = ligchain_pos.dist(chain_temp.calculate_center_of_mass())
+
+        if len(chain_dists) > 0: # I don't think this is sufficient...
+            # Remove remaining chain parts
+            closest_chain = min(chain_dists, key=chain_dists.get)
+            ligchain.name = closest_chain
+            base_structure.merge_chain_parts()
+            for x in [j.name for j in base_models if not j.name == closest_chain]:
+                base_models.remove_chain(x)
+
+        # Rename Chain to corresponding chain then save!
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')
-        pymol.cmd.load(f, name)
-        pymol.cmd.save(filename, f'chain {lig_chain}')
-        pymol.cmd.reinitialize()
+        base_structure.write_pdb(filename)
 
         return filename
 
