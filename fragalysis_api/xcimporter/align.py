@@ -458,6 +458,11 @@ class Monomerize:
         return wanted_ligs
 
     def save_chain(self, lig, f):
+
+        # This is wrong...
+        # For each ligand, set and assign the closest chain to it.
+        # Then after all the ligands are set correct
+        # Save each individual chain!
         # Figure out what lig and f are...
         print(lig)
         lig_chain = lig[5]
@@ -560,9 +565,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
     )
+    parser.add_argument(
+        "-a", "--align", action="store_true", default=False, help="Align input"
+    )
+    parser.add_argument("-t", "--target", help="Target name", required=True)
     args = vars(parser.parse_args())
     monomerize = args["monomerize"]
-    m = Monomerize('/dls/science/groups/i04-1/fragprep/input_test/70X/', '/dls/science/groups/i04-1/software/tyler/monotest')
+    align = args['align']
+    tar = args['target']
+    m = Monomerize(f'/dls/science/groups/i04-1/fragprep/input_test/{tar}/', '/dls/science/groups/i04-1/software/tyler/monotest')
     m.monomerize_all()
-    a = Align('/dls/science/groups/i04-1/software/tyler/monotest', mono=monomerize)
-    a.align('/dls/science/groups/i04-1/software/tyler/tmptest')
+    if align:
+        a = Align('/dls/science/groups/i04-1/software/tyler/monotest', mono=monomerize)
+        a.align('/dls/science/groups/i04-1/software/tyler/tmptest')
