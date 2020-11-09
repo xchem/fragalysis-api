@@ -459,6 +459,7 @@ class Monomerize:
 
     def save_chain(self, lig, f):
         # Figure out what lig and f are...
+        print(lig)
         lig_chain = lig[5]
 
         base_structure = gemmi.read_structure(f)
@@ -492,6 +493,7 @@ class Monomerize:
         # Rename Chain to corresponding chain then save!
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')
+        print(f'Writing to: {filename}')
         base_structure.write_pdb(filename)
 
         return filename
