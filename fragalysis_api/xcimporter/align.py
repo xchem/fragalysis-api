@@ -502,7 +502,7 @@ class Monomerize:
         return filenames
 
     def process_pdb(self, filename, maplist):
-        out_names = self.save_chains(filename)
+        out_names = self.split_chains(filename)
         for o in out_names:
             if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
                 shutil.copy(filename.replace('.pdb', '_smiles.txt'), o.replace('_mono.pdb', '_smiles.txt'))
@@ -514,7 +514,7 @@ class Monomerize:
                     mapbase = os.path.basename(map)
                     shutil.copy(map, os.path.join(self.outdir, mapbase.replace(base, new)))
         return out_names
-    
+
     def save_chain(self, lig, f):
 
         # This is wrong...
