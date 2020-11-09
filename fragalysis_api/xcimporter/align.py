@@ -491,7 +491,7 @@ class Monomerize:
             base_models.remove_chain(x)
 
         # Rename Chain to corresponding chain then save!
-        name = os.path.splitext(os.path.basename(f))[0] + '_' + str(ligchain.name)
+        name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')
         base_structure.write_pdb(filename)
 
