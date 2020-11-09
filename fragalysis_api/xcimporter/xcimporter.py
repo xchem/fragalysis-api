@@ -2,7 +2,7 @@ import argparse
 from sys import exit
 import os
 
-from shutil import copyfile
+from shutil import copyfile, rmtree
 
 from fragalysis_api import Validate, Align, Monomerize
 
