@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='fragalysis_api',
-    version='0.0.1.9',
+    version='0.0.1.10',
     author='Fragment 5 + Tyler',
     author_email="",
     description="A package to load PDBs into fragalysis format.",
@@ -19,7 +19,6 @@ setuptools.setup(
                       'pandas',
                       'pypdb',
                       'matplotlib',
-                      'gemmi',
                       'scipy'],  # Install requirements extracted from requirements.txt
     include_package_data=True,  # Allow to include other files than .py in package
     package_data={
