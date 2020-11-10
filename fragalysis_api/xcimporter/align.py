@@ -200,16 +200,14 @@ class Align:
         '''
         input_files = in_file
         map_list = self._get_maplist
-        base_names = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
-        crystals = [y for y in [x for x in base_names if 'event' not in x] if 'fofc' not in y]
+        base_names = os.path.splitext(os.path.basename(input_files))[0]
+        crystals = [y for y in [x for x in [base_names] if 'event' not in x] if 'fofc' not in y]
         ref = reference
         dir = self.directory
         mono = self.mono
         for num, name in enumerate(crystals):
             reference_pdb = Structure.from_file(file=Path(ref))
             all_maps = [j for j in map_list if name in j]
-            print(name)
-            print(map_list)
             current_pdb = Structure.from_file(file=Path(in_file))
             try:
                 current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=mono)
@@ -221,6 +219,7 @@ class Align:
             current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
             # Align Xmaps + save!
             s = time.time()
+            print(all_maps)
             for i in all_maps:
                 base, ext = os.path.splitext(os.path.basename(i))
                 print(i)
