@@ -185,6 +185,52 @@ class Align:
         e = time.time()
         print(f'{int(e - s) / 60} minutes ({int(e - s)} seconds) taken to save map...')
 
+    def align_to_reference(self, in_file, reference, out_dir):
+        '''
+
+        Parameters
+        ----------
+        in_file: path to input pdb files (str)
+        reference: path to input pdb file (str)
+        out_dir: desired output directory (str)
+
+        Returns
+        -------
+
+        '''
+        input_files = in_file
+        map_list = self._get_maplist
+        base_names = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
+        crystals = [y for y in [x for x in base_names if 'event' not in x] if 'fofc' not in y]
+        ref = reference
+        dir = self.directory
+        mono = self.mono
+        for num, name in enumerate(crystals):
+            reference_pdb = Structure.from_file(file=Path(ref))
+            all_maps = [j for j in map_list if name in j]
+            current_pdb = Structure.from_file(file=Path(in_file))
+            try:
+                current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=mono)
+            except Exception as e:
+                # Poorly Documented. Use better stuff...
+                print(f'{e}')
+                continue
+
+            current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
+            # Align Xmaps + save!
+            for i in all_maps:
+                base, ext = os.path.splitext(os.path.basename(i))
+                print(i)
+                s2 = time.time()
+                map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
+                map.resample(xmap=map, transform=transform)
+                map.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
+                e2 = time.time()
+                print(f'{int(e2 - s2)} seconds to transform map...')
+                e = time.time()
+                print(f'Total Running time: {int(e - s) / 60} minutes.')
+
+
     def align(self, out_dir):
         """
         Aligns all pdbs in the pymol object to the pdb_ref.
@@ -613,6 +659,14 @@ class Monomerize:
                 new_pdb = ''.join(remark + header_front + newfile_contents)
                 #print(new_pdb)
                 handle.write(new_pdb)
+
+    def monomerize_single(self, file):
+        maplist = self.get_maplist()
+        outnames = self.process_pdb(file, maplist)
+        self.write_bound(file, outnames)
+        for o in outnames:
+            if os.path.isfile(o):
+                os.remove(o)
 
     def monomerize_all(self):
         maplist = self.get_maplist()

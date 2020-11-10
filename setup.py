@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='fragalysis_api',
-    version='0.0.1.10',
+    version='0.0.1.11',
     author='Fragment 5 + Tyler',
     author_email="",
     description="A package to load PDBs into fragalysis format.",

@@ -61,17 +61,18 @@ Other functionalities that are available:
 and shall be between 4 and 20 characters in length.
 * Each pdb file for alignment shall contain the same number of chains.
 * All pdb files to be aligned must be in the same directory.
-* If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
+* If manually selecting a file for reference it must be in the same directory as all pdb files for alignment. 
 * PDB file must abide by best practices set out at https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html#note5
 * In PDB file, ligands must be referred to by same code in 'HET' lines in header and in 'HETATM' lines in main part of file
 * If providing cpp4 map files: All maps should be of the '.map' or '.cpp4' variety and labelled as:
     > ```
-    > Aprot-x0001.pdb
-    > Aprot-x0001_smiles.txt
+    > Aprot.pdb
+    > Aprot_smiles.txt
     > Aprot_fofc.map
     > Aprot_2fofc.map
-    > Aprot_event_0.map
-* If you have multiple event maps increment the number and add accordingly.
+    > Aprot_event.cpp4
+    > ```
+* If you have multiple events, you can add use a `_event_0.cpp4` type naming convention and increment the number accordingly.
 * Maps shall be cut/masked by yourself using your tool of choice after alignment (sorry)
 
 ### 2.1 How to download PDB files
@@ -134,7 +135,7 @@ Alister :panda_face:
 
 We are looked after by Rachael :crown:. 
 
-Finally, this project has been ruined by Tyler.
+Finally, the code quality was ruined by Tyler.
 
 
 
