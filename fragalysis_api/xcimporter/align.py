@@ -218,6 +218,7 @@ class Align:
 
             current_pdb.structure.write_pdb(os.path.join(out_dir, f'{name}_bound.pdb'))
             # Align Xmaps + save!
+            s = time.time()
             for i in all_maps:
                 base, ext = os.path.splitext(os.path.basename(i))
                 print(i)
