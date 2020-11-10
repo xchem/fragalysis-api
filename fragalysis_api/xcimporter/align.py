@@ -208,6 +208,8 @@ class Align:
         for num, name in enumerate(crystals):
             reference_pdb = Structure.from_file(file=Path(ref))
             all_maps = [j for j in map_list if name in j]
+            print(name)
+            print(map_list)
             current_pdb = Structure.from_file(file=Path(in_file))
             try:
                 current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=mono)

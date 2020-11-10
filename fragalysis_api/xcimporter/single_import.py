@@ -40,7 +40,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference):
 
     print("Aligning to Reference")
     structure = Align(in_dir, "", monomerize)
-    
+
     for i in pdb_smiles_dict['pdb']:
         structure.align_to_reference(i, reference, out_dir=os.path.join(out_dir, f"tmp{target}"))
 
