@@ -141,5 +141,6 @@ if __name__ == "__main__":
         print(f'Cannot find file called {reference}, please make sure the path is correct (or specify another reference using -r)!')
     else:
         import_single_file(in_file=in_file, out_dir=out_dir, target=target, monomerize=monomerize, reference=reference)
+        print(f'File has been aligned to {reference}')
 
-    print(f'File has been aligned to {reference}')
+
