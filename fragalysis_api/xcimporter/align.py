@@ -5,9 +5,7 @@ import Bio.PDB as bp
 import pymol
 from pathlib import Path
 from scipy import spatial
-# from fragalysis_api import Ligand
 from pandda_gemmi.pandda_types import *
-import typing
 import dataclasses
 import pandas as pd
 import os
@@ -232,7 +230,6 @@ class Align:
                 e = time.time()
                 print(f'Total Running time: {int(e - s) / 60} minutes.')
 
-
     def align(self, out_dir):
         """
         Aligns all pdbs in the pymol object to the pdb_ref.
@@ -268,7 +265,7 @@ class Align:
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     print(i)
-                    #self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
+                    # self.read_reshape_resave(name=base, out_dir=out_dir, ext=ext, transform=transform)
                     s2 = time.time()
                     map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
                     map.resample(xmap=map, transform=transform)
@@ -288,6 +285,7 @@ class Align:
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
                     shutil.copyfile(i, os.path.join(out_dir, f"{base}{ext}"))
+
 
 # Conor's stuff
 @dataclasses.dataclass()
@@ -413,8 +411,8 @@ class Structure:
                     try:
                         current_res_id = ResidueID.from_residue_chain(model, chain, res_self)
                         if monomerized:
-                            #print(other.structure[current_res_id.model])
-                            #print(len(other.structure[current_res_id.model]))
+                            # print(other.structure[current_res_id.model])
+                            # print(len(other.structure[current_res_id.model]))
                             res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                         else:
                             res_other = \
@@ -509,17 +507,19 @@ class Monomerize:
         filenames = []
         base_structure = gemmi.read_structure(f)
         base_models = base_structure[0]
-        all_chains = [x.name for x in base_models if not x.name == 'S']
+        all_chains = [x.name for x in base_models]
+        HOH_chains = find_water_chains(f)
+
+        nonHOH_chains = list(set(all_chains) - set(HOH_chains))
+
         chain_centers = {}
-        for i in all_chains:
+        for i in nonHOH_chains:
             chain_centers[i] = get_chain_center(chain_name=i, file=f)
 
-        print(chain_centers)
+        # Not a good way to get residue chains
+        chain_names = [x.name for x in base_models if x.calculate_mass() > 4000 and x.name in nonHOH_chains]
 
-        chain_names = [x.name for x in base_models if x.calculate_mass() > 5000 and not x.name == 'S']
-        print(chain_names)
-        alt_chains = [x.name for x in base_models if x.calculate_mass() <= 5000 and not x.name == 'S']
-        print(alt_chains)
+        alt_chains = list(set(nonHOH_chains) - set(chain_names))
 
         for i in chain_names:
             # For each chain, convert all ligands,
@@ -531,16 +531,11 @@ class Monomerize:
                 print(chain_dists)
                 temp_structure[0][j].name = min(chain_dists, key=chain_dists.get)
 
-            # Flatten to single chain
-            print([x.name for x in temp_structure[0]])
-            # temp_structure.merge_chain_parts()
-            print([x.name for x in temp_structure[0]])
-            leftover_chains = [x.name for x in temp_structure[0] if not x.name == i]
-            print(leftover_chains)
-
+            leftover_chains = list(set(nonHOH_chains) - set(i))
             # Remove remaining chains
             for j in leftover_chains:
                 if j == i:
+                    # Just in case.
                     continue
                 else:
                     temp_structure[0].remove_chain(j)
@@ -551,7 +546,6 @@ class Monomerize:
             filename = os.path.join(self.outdir, f'{name}_mono.pdb')
             print(f'Writing to: {filename}')
             temp_structure.write_pdb(filename)
-            #temp_structure.write_minimal_pdb(filename)
             filenames.append(filename)
 
         return filenames
@@ -569,74 +563,6 @@ class Monomerize:
                     mapbase = os.path.basename(map)
                     shutil.copy(map, os.path.join(self.outdir, mapbase.replace(base, new)))
         return out_names
-
-    def save_chain(self, lig, f):
-
-        # This is wrong...
-        # For each ligand, set and assign the closest chain to it.
-        # Then after all the ligands are set correct
-        # Save each individual chain!
-        # Figure out what lig and f are...
-        print(lig)
-        lig_chain = lig[5]
-
-        base_structure = gemmi.read_structure(f)
-        base_models = base_structure[0]
-
-        ligchain = base_models.find_chain(lig_chain)
-        ligchain_pos = ligchain[0][0].pos
-
-        chain_dists = {}
-        for chain in base_models:
-            chain_name = chain.name
-
-            # Defo the wrong way to go about this!!
-            if chain.has_subchains_assigned() and chain.calculate_mass() > 5000:
-                chain_temp = gemmi.read_structure(f)[0]
-
-                for k in [j.name for j in chain_temp]:
-                    if not k == chain_name:
-                        chain_temp.remove_chain(k)
-
-                chain_dists[chain_name] = ligchain_pos.dist(chain_temp.calculate_center_of_mass())
-
-        if len(chain_dists) > 0: # I don't think this is sufficient...
-            # Remove remaining chain parts
-            closest_chain = min(chain_dists, key=chain_dists.get)
-            ligchain.name = closest_chain
-            base_structure.merge_chain_parts()
-            for x in [j.name for j in base_models if not j.name == closest_chain]:
-                base_models.remove_chain(x)
-
-        # Rename Chain to corresponding chain then save!
-        name = os.path.splitext(os.path.basename(f))[0] + '_' + str(lig_chain)
-        filename = os.path.join(self.outdir, f'{name}_mono.pdb')
-        print(f'Writing to: {filename}')
-        base_structure.write_pdb(filename)
-
-        return filename
-
-    def process_ligs(self, filename, maplist):
-        test_block = open(filename, 'r').readlines()
-        ligs = self.find_ligs(test_block)
-        print(ligs)
-        outnames = []
-        for lig in ligs:
-            o = self.save_chain(lig, filename)
-            outnames.append(o)
-            if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
-                shutil.copy(filename.replace('.pdb', '_smiles.txt'), o.replace('_mono.pdb', '_smiles.txt'))
-
-            # Find Maps...
-            base = os.path.splitext(os.path.basename(filename))[0]
-            new = os.path.splitext(os.path.basename(o))[0].replace('_mono', '')
-            allmaps = [j for j in maplist if base in j]
-            for map in allmaps:
-                if os.path.isfile(map):
-                    mapbase = os.path.basename(map)
-                    shutil.copy(map, os.path.join(self.outdir, mapbase.replace(base, new)))
-
-        return outnames
 
     def write_bound(self, inname, outname):
         with open(inname, 'r') as handle:
@@ -659,7 +585,7 @@ class Monomerize:
             with open(o.replace('_mono.pdb', '.pdb'), 'w') as handle:
                 remark = ['REMARK warning: chains may be ommitted for alignment\n']
                 new_pdb = ''.join(remark + header_front + newfile_contents)
-                #print(new_pdb)
+                # print(new_pdb)
                 handle.write(new_pdb)
 
     def monomerize_single(self, file):
@@ -673,8 +599,6 @@ class Monomerize:
     def monomerize_all(self):
         maplist = self.get_maplist()
         for f in self.get_filelist():
-            # print(f)
-            #outnames = self.process_ligs(f, maplist)
             outnames = self.process_pdb(f, maplist)
             print(outnames)
             self.write_bound(f, outnames)
@@ -695,6 +619,15 @@ def get_chain_center(chain_name, file):
     return structure.calculate_center_of_mass()
 
 
+def find_water_chains(file):
+    structure = gemmi.read_pdb(file)
+    old = [x.name for x in structure[0]]
+    structure.remove_waters()
+    structure.remove_empty_chains()
+    new = [x.name for x in structure[0]]
+    return list(set(old) - set(new))
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -708,7 +641,8 @@ if __name__ == "__main__":
     monomerize = args["monomerize"]
     align = args['align']
     tar = args['target']
-    m = Monomerize(f'/dls/science/groups/i04-1/fragprep/input_test/{tar}/', '/dls/science/groups/i04-1/software/tyler/monotest')
+    m = Monomerize(f'/dls/science/groups/i04-1/fragprep/input_test/{tar}/',
+                   '/dls/science/groups/i04-1/software/tyler/monotest')
     m.monomerize_all()
     if align:
         a = Align('/dls/science/groups/i04-1/software/tyler/monotest', mono=monomerize)
