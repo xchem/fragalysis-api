@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
-    parser.add_argument('-r', '--reference', help='Reference Structure', required=True, default=None)
+    parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
 
     args = vars(parser.parse_args())
 
@@ -137,5 +137,9 @@ if __name__ == "__main__":
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
 
-    import_single_file(in_file=in_file, out_dir=out_dir, target=target, monomerize=monomerize, reference=reference)
+    if not os.path.isfile(reference):
+        print(f'Cannot find file called {reference}, please make sure the path is correct (or specify another reference using -r)!')
+    else:
+        import_single_file(in_file=in_file, out_dir=out_dir, target=target, monomerize=monomerize, reference=reference)
+
     print(f'File has been aligned to {reference}')
