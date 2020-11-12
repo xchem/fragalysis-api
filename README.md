@@ -131,7 +131,9 @@ python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=[pdbt
 ```
 Where `in_file` is the filepath of a pdb file we would like to align to the rest of our results (with `_smiles.txt` and other files to be aligned in the same directory)
 and `reference` is the pdb file that you would like to align files associated to `in_file`. If you had previous run xcimporter then a reference.pdb file should be located at `output direct/targetname/reference.pdb`
+If `--reference` or `-r` are not specified then `output direct/targetname/reference.pdb` will be used according to what arguments you have specified.
 
+You should be able to use `single_import` without having to delete any preexisting files. As the new outputs should overwrite what previous exists. Nice.
 
 ### Who we are
 We are the Fragment 5, a group of students at the University of Oxford.

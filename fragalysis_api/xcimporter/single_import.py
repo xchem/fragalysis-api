@@ -8,19 +8,23 @@ from fragalysis_api import Align, Monomerize, set_up
 
 
 def import_single_file(in_file, out_dir, target, monomerize, reference):
+
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
 
     if not os.path.isdir(os.path.join(out_dir, f"tmp{target}/")):
         os.makedirs(os.path.join(out_dir, f"tmp{target}/"))
 
+    in_dir = os.path.dirname(in_file)
+
     pdb_smiles_dict = {'pdb': [], 'smiles': []}
+
     if monomerize:
         print("Monomerizing input structure")
         out = os.path.join(out_dir, f'mono{target}/')
         if not os.path.isdir(out):
             os.makedirs(out)
-            in_dir = os.path.dirname(in_file)
+
         mono = Monomerize(directory=in_dir, outdir=out)
         mono.monomerize_single(file=in_file)
         in_dir = out
@@ -56,7 +60,8 @@ def import_single_file(in_file, out_dir, target, monomerize, reference):
         if '.pdb' in f:
             aligned_dict['bound_pdb'].append(os.path.join(out_dir, f"tmp{target}", f))
             if os.path.isfile(os.path.join(out_dir, f"tmp{target}", f).replace('_bound.pdb', '_smiles.txt')):
-                aligned_dict['smiles'].append(os.path.join(out_dir, f"tmp{target}", f).replace('_bound.pdb', '_smiles.txt'))
+                aligned_dict['smiles'].append(os.path.join(out_dir, f"tmp{target}", f).replace('_bound.pdb',
+                                                                                               '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
 
@@ -85,6 +90,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference):
 
     if os.path.exists(os.path.join(out_dir, f'mono{target}')):
         shutil.rmtree(os.path.join(out_dir, f'mono{target}'))
+
     if os.path.exists(os.path.join(out_dir, f'tmp{target}')):
         shutil.rmtree(os.path.join(out_dir, f'tmp{target}'))
 
@@ -113,7 +119,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
-    parser.add_argument('-r', '--reference', help='Reference Structure', required=True)
+    parser.add_argument('-r', '--reference', help='Reference Structure', required=True, default=None)
 
     args = vars(parser.parse_args())
 
@@ -121,7 +127,12 @@ if __name__ == "__main__":
     out_dir = args["out_dir"]
     monomerize = args["monomerize"]
     target = args["target"]
-    reference = args['reference']
+
+    # Will this work?
+    if args['reference'] is None:
+        reference = os.path.join(out_dir, target, 'reference.pdb')
+    else:
+        reference = args['reference']
 
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
