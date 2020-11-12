@@ -230,6 +230,10 @@ class Align:
                 e = time.time()
                 print(f'Total Running time: {int(e - s) / 60} minutes.')
 
+    def write_align_ref(self, output):
+        fn = os.path.join(self.directory, f'{self._get_ref}.pdb')
+        shutil.copyfile(fn, output)
+
     def align(self, out_dir):
         """
         Aligns all pdbs in the pymol object to the pdb_ref.

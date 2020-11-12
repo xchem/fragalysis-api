@@ -112,7 +112,7 @@ Default directories are used. These can however be changed by using ```-i [input
 
 For example a more elaborate conversion would be:
 ```
-pythom xcimporter -i [input directory] -o [output directory] -t [target name] -m 
+pythom fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directory] -o [output directory] -t [target name] -m 
 ```
 Which will align the input files with respects to individual chains inside the .pdb files (`-m`) and save the output
 to a folder specified by `-t [target name]`.
@@ -123,6 +123,15 @@ The expected output of the xcimporter is a folder located at `[outputdirectory]/
 contain two main folders `aligned` and `crystallographic`. The `aligned` folder will contain multiple sub-folders, one per ligand. These will be labelled as the name of the `pdbfile_[lig_number]` or `pdbfile_[lig_number][chain_letter]` if monomer mode was specified.
 Inside each of these subfolders contains all the information that is required by the fragalysis platform to display and elaborate a given ligand.
 The `crystallographic` folder contains an exact copy of the data supplied to the above command.
+
+#### 3.1 How to submit single PDB files for conversion to a fragalysis friendly format
+If you would like to add individual pdb files to the results of the fragalysis api we can use:
+```
+python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=[pdbtobealigned.pdb] --out_dir=[output directory] --target [targetname] -m --reference[output directory/targetname/reference.pdb]
+```
+Where `in_file` is the filepath of a pdb file we would like to align to the rest of our results (with `_smiles.txt` and other files to be aligned in the same directory)
+and `reference` is the pdb file that you would like to align files associated to `in_file`. If you had previous run xcimporter then a reference.pdb file should be located at `output direct/targetname/reference.pdb`
+
 
 ### Who we are
 We are the Fragment 5, a group of students at the University of Oxford.

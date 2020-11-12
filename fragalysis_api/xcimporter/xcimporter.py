@@ -93,16 +93,8 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
 
 
     print(aligned_dict['smiles'])
-
-    # Moving Cut will now be moved to outside of api
-    #print("Cutting Maps around ligands")
-    #out = os.path.join(out_dir, 'cut/')
-    #if not os.path.isdir(out):
-    #    os.makedirs(out)
-    #cutmaps = CutMaps(in_dir=in_dir, out_dir=out, monomerize=monomerize)
-    #cutmaps.cut_maps()
-
     print("Identifying ligands")
+
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
             if smiles:
@@ -132,8 +124,11 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                         for line in open(csv_path, 'r'):
                             f.write(line)
 
+    # Copy reference pdb to aligned folder as: reference.pdb, so single_import can file off with ease.
+    structure.write_align_ref(os.path.join(out_dir, target, 'reference.pdb'))
+
     # Move input files into Target/crystallographic folder
-    copy_tree(in_dir2, os.path.join(out_dir, target, 'crystallographic') )
+    copy_tree(in_dir2, os.path.join(out_dir, target, 'crystallographic'))
 
     if os.path.exists(os.path.join(out_dir, f'mono{target}')):
         shutil.rmtree(os.path.join(out_dir, f'mono{target}'))
