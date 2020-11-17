@@ -508,6 +508,9 @@ class Monomerize:
         return wanted_ligs
 
     def split_chains(self, f):
+        three_letter = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
+                        'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
+                        'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
         filenames = []
         base_structure = gemmi.read_structure(f)
         base_models = base_structure[0]
@@ -517,14 +520,18 @@ class Monomerize:
         nonHOH_chains = list(set(all_chains) - set(HOH_chains))
 
         chain_centers = {}
+        chain_names = []
+        # From nonHOH chains, identify if they contain any aminoacids, if they do. Assume they are full chains.
+        # else, later on they will be attached to nearest chain by center.
         for i in nonHOH_chains:
             chain_centers[i] = get_chain_center(chain_name=i, file=f)
-
-        # Not a good way to get residue chains
-        chain_names = [x.name for x in base_models if x.calculate_mass() > 4000 and x.name in nonHOH_chains]
-
+            span = base_structure[0][i].whole()
+            residues = [x.name for x in span]
+            # Possible to convert this to a %age
+            if any([True for v in residues if v in three_letter.values()]):
+                chain_names.append(i)
+        
         alt_chains = list(set(nonHOH_chains) - set(chain_names))
-
         for i in chain_names:
             # For each chain, convert all ligands,
             temp_structure = gemmi.read_structure(f)
