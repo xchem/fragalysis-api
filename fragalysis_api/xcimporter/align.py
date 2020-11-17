@@ -530,7 +530,7 @@ class Monomerize:
             # Possible to convert this to a %age
             if any([True for v in residues if v in three_letter.values()]):
                 chain_names.append(i)
-        
+
         alt_chains = list(set(nonHOH_chains) - set(chain_names))
         for i in chain_names:
             # For each chain, convert all ligands,
