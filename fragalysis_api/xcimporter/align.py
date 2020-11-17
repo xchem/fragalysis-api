@@ -508,7 +508,7 @@ class Monomerize:
         return wanted_ligs
 
     def split_chains(self, f):
-        three_letter = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
+        aa_codes = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
                         'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
                         'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
         filenames = []
@@ -528,7 +528,7 @@ class Monomerize:
             span = base_structure[0][i].whole()
             residues = [x.name for x in span]
             # Possible to convert this to a %age
-            if any([True for v in residues if v in three_letter.values()]):
+            if any([True for v in residues if v in aa_codes.values()]):
                 chain_names.append(i)
 
         alt_chains = list(set(nonHOH_chains) - set(chain_names))
