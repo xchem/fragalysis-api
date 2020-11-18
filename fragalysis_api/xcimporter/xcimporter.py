@@ -180,7 +180,7 @@ if __name__ == "__main__":
     monomerize = args["monomerize"]
     target = args["target"]
     metadata = args["metadata"]
-    biomol = args["biomol"]
+    biomol = args["biomol_txt"]
 
     if in_dir == os.path.join("..", "..", "data", "xcimporter", "input"):
         print("Using the default input directory ", in_dir)

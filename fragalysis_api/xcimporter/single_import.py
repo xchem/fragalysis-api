@@ -134,7 +134,7 @@ if __name__ == "__main__":
     out_dir = args["out_dir"]
     monomerize = args["monomerize"]
     target = args["target"]
-    biomol = args["biomol"]
+    biomol = args["biomol_txt"]
     # Will this work?
     if args['reference'] is None:
         reference = os.path.join(out_dir, target, 'reference.pdb')
