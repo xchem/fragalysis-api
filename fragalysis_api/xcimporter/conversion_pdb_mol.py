@@ -310,7 +310,7 @@ class Ligand:
             return os.path.join(os.path.abspath(lig_out_dir), (file_base + ".pdb")), file_base
 
         # making pdb file into mol object
-        mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=True)
+        mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=False)
 
         # Move Map files into lig_out_dir
 
