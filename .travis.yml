@@ -29,6 +29,15 @@ before_install:
 install:
   # Install the requirements from the environment file
   - conda install -c schrodinger pymol -y
+  - git clone https://github.com/xchem/gemmi_pandda.git
+  - cd ./gemmi_pannda/
+  - pip install -U --force-reinstall .
+  - cd ..
+  # Also Required
+  - git clone https://github.com/xchem/pandda_gemmi.git
+  - cd ./pandda_gemmi/
+  - pip install -e .
+  - cd ..
   - conda install -c rdkit rdkit -y
   # Install additional dependencies used only for travis / testing
   - conda install --yes pytest codecov
