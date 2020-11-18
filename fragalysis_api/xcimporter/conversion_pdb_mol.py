@@ -503,6 +503,7 @@ class pdb_apo:
                 or line.startswith("SEQRES")  # Nice.
                 or line.startswith("HEADER")
                 or line.startswith("TITLE")
+                or line.startswith("ANISOU")
             ):
                 continue
             else:
