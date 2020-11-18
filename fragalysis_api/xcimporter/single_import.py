@@ -7,7 +7,7 @@ from shutil import copyfile
 from fragalysis_api import Align, Monomerize, set_up
 
 
-def import_single_file(in_file, out_dir, target, monomerize, reference):
+def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None):
 
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
@@ -68,12 +68,19 @@ def import_single_file(in_file, out_dir, target, monomerize, reference):
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
             if smiles:
-                _ = set_up(target_name=target, infile=os.path.abspath(aligned),
-                           out_dir=out_dir, monomerize=monomerize, smiles_file=os.path.abspath(smiles))
+                _ = set_up(target_name=target,
+                           infile=os.path.abspath(aligned),
+                           out_dir=out_dir,
+                           monomerize=monomerize,
+                           smiles_file=os.path.abspath(smiles),
+                           biomol=biomol)
 
             else:
-                _ = set_up(target_name=target, infile=os.path.abspath(aligned),
-                           out_dir=out_dir, monomerize=monomerize)
+                _ = set_up(target_name=target,
+                           infile=os.path.abspath(aligned),
+                           out_dir=out_dir,
+                           monomerize=monomerize,
+                           biomol=biomol)
 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
@@ -120,14 +127,14 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
     parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
-
+    parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
     args = vars(parser.parse_args())
 
     in_file = args["in_file"]
     out_dir = args["out_dir"]
     monomerize = args["monomerize"]
     target = args["target"]
-
+    biomol = args["biomol"]
     # Will this work?
     if args['reference'] is None:
         reference = os.path.join(out_dir, target, 'reference.pdb')
@@ -140,7 +147,12 @@ if __name__ == "__main__":
     if not os.path.isfile(reference):
         print(f'Cannot find file called {reference}, please make sure the path is correct (or specify another reference using -r)!')
     else:
-        import_single_file(in_file=in_file, out_dir=out_dir, target=target, monomerize=monomerize, reference=reference)
+        import_single_file(in_file=in_file,
+                           out_dir=out_dir,
+                           target=target,
+                           monomerize=monomerize,
+                           reference=reference,
+                           biomol=biomol)
         print(f'File has been aligned to {reference}')
 
 
