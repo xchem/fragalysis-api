@@ -30,12 +30,12 @@ install:
   # Install the requirements from the environment file
   - conda install -c schrodinger pymol -y
   - git clone https://github.com/xchem/gemmi_pandda.git
-  - cd ./gemmi_pannda/
+  - cd ./gemmi_pandda
   - pip install -U --force-reinstall .
   - cd ..
   # Also Required
   - git clone https://github.com/xchem/pandda_gemmi.git
-  - cd ./pandda_gemmi/
+  - cd ./pandda_gemmi
   - pip install -e .
   - cd ..
   - conda install -c rdkit rdkit -y
