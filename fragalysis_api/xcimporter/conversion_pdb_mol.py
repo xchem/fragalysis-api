@@ -498,6 +498,11 @@ class pdb_apo:
                 line.startswith("HETATM")
                 and line.split()[3] not in self.non_ligs
                 or line.startswith("CONECT")
+                or line.startswith("REMARK")
+                or line.startswith("CRYST")
+                or line.startswith("SEQRES")  # Nice.
+                or line.startswith("HEADER")
+                or line.startswith("TITLE")
             ):
                 continue
             else:
