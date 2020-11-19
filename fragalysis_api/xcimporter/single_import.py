@@ -130,8 +130,13 @@ if __name__ == "__main__":
 
     parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
-    parser.add_argument("-c", "--covalent", help="Handle covalent bonds between ligand and target", required=False,
-                        default=False)
+    parser.add_argument("-c",
+                        "--covalent",
+                        action="store_true",
+                        help="Handle covalent bonds between ligand and target",
+                        required=False,
+                        default=False
+                        )
 
     args = vars(parser.parse_args())
 
