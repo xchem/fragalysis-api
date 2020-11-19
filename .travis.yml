@@ -29,10 +29,10 @@ before_install:
 install:
   # Install the requirements from the environment file
   # - conda install -c schrodinger pymol -y
+  # Talk to conor about this..........
   - git clone https://github.com/xchem/gemmi_pandda.git
   - cd ./gemmi_pandda
-  - pip install -U --force-reinstall .
-  - pip install -e .
+  - pip install --force-reinstall -e .
   - cd ..
   # Also Required
   - git clone https://github.com/xchem/pandda_gemmi.git
