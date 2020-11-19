@@ -19,8 +19,7 @@ setuptools.setup(
                       'pandas',
                       'pypdb',
                       'matplotlib',
-                      'scipy',
-                      'psutil'],  # Install requirements extracted from requirements.txt
+                      'scipy'],  # Install requirements extracted from requirements.txt
     include_package_data=True,  # Allow to include other files than .py in package
     package_data={
         '': ['fragalysis_api/xcimporter/non_ligs.json',
