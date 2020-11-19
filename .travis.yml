@@ -34,11 +34,13 @@ install:
   - cd ./gemmi_pandda
   - pip install --force-reinstall .
   - cd ..
+  - rm -rf gemmi_pandda
   # Also Required
   - git clone https://github.com/xchem/pandda_gemmi.git
   - cd ./pandda_gemmi
   - pip install -e .
   - cd ..
+  - rm -rf pandda_gemmi
   - conda install -c rdkit rdkit -y
   # Install additional dependencies used only for travis / testing
   - conda install --yes pytest codecov
