@@ -210,10 +210,10 @@ class Ligand:
                 new_pdb_block += '\n'
 
             mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-            print(mol)
             if handle_cov:
-                mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=mol)
-                print(mol)
+                cov_mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=mol)
+                if cov_mol is not None:
+                    mol = cov_mol
 
             return mol
 
