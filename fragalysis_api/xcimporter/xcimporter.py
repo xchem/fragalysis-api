@@ -11,7 +11,7 @@ from fragalysis_api import set_up
 from distutils.dir_util import copy_tree
 
 
-def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomerize=False, biomol=None, covalent=False):
+def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomerize=False, biomol=None, covalent=False, pdb_ref=""):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -72,7 +72,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     print(pdb_smiles_dict['smiles'])
     print("Aligning protein structures")
     print('New Stuff')
-    structure = Align(in_dir, "", monomerize)
+    structure = Align(directory=in_dir, pdb_ref=pdb_ref, mono=monomerize)
     structure.align(out_dir=os.path.join(out_dir, f"tmp{target}"))
 
     for smiles_file in pdb_smiles_dict['smiles']:
@@ -172,6 +172,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--target", help="Target name", required=True)
     parser.add_argument("-md", "--metadata", help="Metadata output", default=False)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
+    parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
     parser.add_argument("-c",
                         "--covalent",
                         action="store_true",
@@ -191,6 +192,13 @@ if __name__ == "__main__":
     biomol = args["biomol_txt"]
     covalent = args["covalent"]
 
+    if args['reference'] is None:
+        print('Reference not set')
+        reference = ""
+    else:
+        reference = args['reference']
+        print(f'Will use: {reference} for alignment')
+
     if in_dir == os.path.join("..", "..", "data", "xcimporter", "input"):
         print("Using the default input directory ", in_dir)
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
@@ -203,7 +211,8 @@ if __name__ == "__main__":
                monomerize=monomerize,
                metadata=metadata,
                biomol=biomol,
-               covalent=covalent)
+               covalent=covalent,
+               pdb_ref=reference)
 
     fix_pdb = open(os.path.join(out_dir, target, 'aligned', 'pdb_file_failures.txt'), 'w')
 

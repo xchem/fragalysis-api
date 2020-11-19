@@ -23,6 +23,15 @@ warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 class Align:
 
     def __init__(self, directory, pdb_ref='', mono=False):
+        '''
+        :param directory: Directory path contain pdbs to be aligned.
+        :param pdb_ref: The String Reference of a pdb that you want to
+            optionally align the input pdbs to. This should be the name of the PDB without
+            .pbd and should be located inside the specified directory.
+        :param mono: Bool, To indicate if chains have been split into seperate pdb files.
+            If True, this will change the behaviour of the alignment to solely align the first
+            chain of each structure together, and not consider other chains.
+        '''
 
         self.directory = directory
         self._get_ref = pdb_ref
@@ -31,34 +40,20 @@ class Align:
     @property
     def _get_files(self):
         """
-        Extracts a list of paths for all PDBs within the given directory.
+        Extracts a list of filepaths for all PDB files within the input directory
         :return: list of .pdb file names in directory
         """
-        all_files = set(glob.glob(os.path.join(self.directory, '*')))
-        txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
-        return list(all_files - txt_files)
+        return glob.glob(os.path.join(self.directory, '*.pdb'))
 
     @property
     def _get_maplist(self):
-        all_files = set(glob.glob(os.path.join(self.directory, '*')))
-        txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
-        pdb_files = set(glob.glob(os.path.join(self.directory, '*.pdb')))
-        return list(all_files - txt_files - pdb_files)
-
-    def _load_objs(self):
         """
-        Loads each pdb into the PyMol instance/object.
-        :type: object
-        :return: PyMol object with .pdb protein structure file loaded
+        Extracts a list of all files that get with .ccp4 or .map
+        :return: a list of .map or .ccp4 file names in a directory.
         """
-        # Looping through each pdb file in the directory and loading them into the cmd
-        for num, file in enumerate(self._get_files):
-            pymol.cmd.load(file, os.path.splitext(os.path.basename(file))[0])
-
-        # deal with files that have no conect records
-        pymol.cmd.set('pdb_conect_all', 'on')
-
-        return pymol.cmd
+        map_files = glob.glob(os.path.join(self.directory, '*.map'))
+        ccp4_files = glob.glob(os.path.join(self.directory, '*.ccp4'))
+        return map_files + ccp4_files
 
     @property
     def _get_ref(self):
@@ -75,7 +70,7 @@ class Align:
         Determines the best reference structure for alignments if not user provided.
         Chosen based on longest length with lowest resolution.
         :param pdb_ref: pdb to use as reference pdb for alignments
-        :return PyMol instance with reference object assigned as reference property:
+        :return: Sets the name of the __pdb_ref attribute to the align class depending on which pdb was chosen
         """
         if pdb_ref != '':
             try:
@@ -91,7 +86,7 @@ class Align:
         """
         Find the longest pdb structure with the lowest resolution from all imported files.
         This will be used as the reference pdb for alignment against.
-        :param pdb_files:
+        :param pdb_files: List of pdb filepaths
         :return: str of filename with best .pdb file
         """
         a_df = pd.DataFrame(pdb_files, columns=['file'])
@@ -102,8 +97,8 @@ class Align:
     def __get_length_and_resolution(self, file):
         """
         Determine resolution, sequence and length of .pdb file.
-        :param file:
-        :return pandas series with resolution, sequence and length and .pdb filename:
+        :param file: pdb file path.
+        :return: pandas series with resolution, sequence and length and .pdb filename.
         """
         parser = bp.PDBParser()
         ppb = bp.PPBuilder()
@@ -117,84 +112,14 @@ class Align:
         # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
-    def __get_pdb_file(self, pdb_name):
-        """
-        Returns the pdb file path for a given pdb name.
-        :param pdb_name: name of pdb
-        :return: file path to the pdb with the given name
-        """
-
-        for file in self._get_files:
-            if pdb_name == os.path.splitext(os.path.basename(file))[0]:
-                return file
-
-    def __get_header(self, pdb_file):
-        """
-        Identifies the section of a PDB which contains the headers ATOM/HETATM
-        :param pdb_file: The pdb to acquire the header locations of
-        :return: front locations of the ATOM/HETATM headers in the given pdb, end locations of the ATOM/HETATM headers in the given pdb       
-        """
-        with open(pdb_file) as handle:
-            switch = 0
-            header_front, header_end = [], []
-
-            for line in handle:
-
-                if line.startswith('ATOM'): switch = 1
-
-                if line.startswith('HETATM'): switch = 2
-
-                if switch == 0: header_front.append(line)
-
-                if (switch == 2) and not line.startswith('HETATM'): header_end.append(line)
-
-        return header_front, header_end
-
-    def _save_align(self, name, pdb_base, out_dir):
-        """
-        Saves modified pdb as pdb file again. It also ensures the pdb header is kept in the new file.
-        :param name: name of pdb
-        :param pdb_base: coordinates of atom in the pdb format
-        :param out_dir: directory to save new pdb file in
-        :return: a saved pdb file
-        """
-        if not os.path.exists(out_dir):  # Creating output directory if it doesn't already exist
-            os.makedirs(out_dir)
-
-        pdb_file = self.__get_pdb_file(name)
-        header_front = self.__get_header(pdb_file)[0]
-
-        with open(os.path.join(out_dir, f'{name}_bound.pdb'), 'w') as handle:
-
-            new_pdb = header_front + [pdb_base]
-
-            for line in new_pdb:
-                handle.write(line)
-
-    def read_reshape_resave(self, name, out_dir, ext, transform):
-        map = Xmap.from_file(file=Path(os.path.join(self.directory, f'{name}{ext}')))
-        # Cut Map!
-        s2 = time.time()
-        map.resample(xmap=map, transform=transform)
-        e2 = time.time()
-        print(f'{int(e2 - s2) / 60} minutes ({int(e2 - s2)} seconds) taken to transform map...')
-        s = time.time()
-        map.save(path=Path(os.path.join(out_dir, f'{name}{ext}')))
-        e = time.time()
-        print(f'{int(e - s) / 60} minutes ({int(e - s)} seconds) taken to save map...')
-
     def align_to_reference(self, in_file, reference, out_dir):
         '''
-
-        Parameters
-        ----------
-        in_file: path to input pdb files (str)
-        reference: path to input pdb file (str)
-        out_dir: desired output directory (str)
-
-        Returns
-        -------
-
+        Aligns a single pdb file to a reference and adds it to the specified output directory.
+        :param in_file: filepath to corresponding pdb file to align. Accompanying map files should be located within
+            the same directory as input file.
+        :param reference: the reference pdb file to align to.
+        :param out_dir: The desired output directory for the aligned pdb file.
+        :return: an aligned pdb file in the output directory with the same name as input.
         '''
         input_files = in_file
         map_list = self._get_maplist
@@ -231,21 +156,24 @@ class Align:
                 print(f'Total Running time: {int(e - s) / 60} minutes.')
 
     def write_align_ref(self, output):
+        '''
+        Copy the reference pdb structure used for alignment to a new location
+        :param output: The corresponding filename to write the reference pdb to
+        :return: the pdbfile that was chosen as reference copied to the located specified by output
+        '''
         fn = os.path.join(self.directory, f'{self._get_ref}.pdb')
         shutil.copyfile(fn, output)
 
     def align(self, out_dir):
         """
-        Aligns all pdbs in the pymol object to the pdb_ref.
-        :param monomerized: Logical, whether chains have been split into single PDBs
+        Aligns all pdb structures and map files (if any) using gemmi, and save them to a new directory.
         :param out_dir: directory to save aligned pdbs in
         :return: saves the pdbs + transforms map files (if any!)
         """
         # load ref
         input_files = self._get_files
         map_list = self._get_maplist
-        base_names = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
-        crystals = [y for y in [x for x in base_names if 'event' not in x] if 'fofc' not in y]
+        crystals = [os.path.splitext(os.path.basename(f))[0] for f in input_files]
         ref = self._get_ref
         dir = self.directory
         mono = self.mono
