@@ -2,7 +2,6 @@ import glob
 import time
 
 import Bio.PDB as bp
-import pymol
 from pathlib import Path
 from scipy import spatial
 from pandda_gemmi.pandda_types import *
