@@ -31,9 +31,6 @@ class EasyAlign(AlignTest):
         whole_files = sorted([os.path.join(self.align_obj.directory, x) for x in files])
         self.assertCountEqual(self.align_obj._get_files, whole_files)
 
-    def test_load_obj_successfully(self):
-        self.assertIsNotNone(self.align_obj._load_objs)
-
     def test_get_ref_automatically(self):
         """
         Tests it correctly automatically retrieves the best pdb to use as reference for alignments
