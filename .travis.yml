@@ -31,7 +31,8 @@ install:
   # - conda install -c schrodinger pymol -y
   - git clone https://github.com/xchem/gemmi_pandda.git
   - cd ./gemmi_pandda
-  - pip install -U --force-reinstall -e .
+  # - pip install -U --force-reinstall .
+  - pip install -e .
   - cd ..
   # Also Required
   - git clone https://github.com/xchem/pandda_gemmi.git
