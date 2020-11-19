@@ -47,7 +47,6 @@ class EasyAlign(AlignTest):
         self.assertNotEqual(self.align_obj_w_wrong_ref._get_ref, 'wrong_pdb')
         self.assertEqual(self.align_obj_w_wrong_ref._get_ref, '6epv')
 
-
     def test_aligns_saved_correctly(self):
         #align_obj = Align(ATAD2_directory)
         #self.assertIsNotNone(align_obj._save_align)

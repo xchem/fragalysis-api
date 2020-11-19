@@ -22,7 +22,15 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     :param user_id: data ID given to the input. Should be present in in_dir.
     :param in_dir: Directory containing data ID directories.
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists).
-    :return:
+    :param target: Name of the folder to be created inside out_dir
+    :param metadata: If set to 1 will create a csv file called metadata.csv in target directory
+    :param validate: Validates, and explicitly, warns if input PDB files are not suitable
+    :param monomerize: Bool, if True, will attempt to split pdb files into seperate chains
+    :param biomol: plain-text file containing header information about the bio-molecular
+        context of the pdb structures. If provided the contents will be appended to the top of the _apo.pdb files
+    :param covalent: Bool, if True, will attempt to convert output .mol files to account for potential covalent attachments
+    :pdb_ref: String, if provided, all pdb files will be aligned to the name of the file (sans extnesion) that is specified.
+    :return: Hopefully, beautifully aligned files that be used with the fragalysis loader :)
     """
 
     if validate:
