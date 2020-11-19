@@ -145,11 +145,13 @@ class Ligand:
 
             return new_mol
 
-    def create_pdb_mol(self, file_base, lig_out_dir, smiles_file, handle_cov=True):
+    def create_pdb_mol(self, file_base, lig_out_dir, smiles_file, handle_cov=False):
         """
         :param file_base: fragalysis crystal name
         :param lig_out_dir: output directory
         :param smiles_file: smiles file associated with pdb
+        :param handle_cov: bool to indicate if output mol file should account of
+                covalent attachment to model
         :return: mol object that attempts to correct bond order if PDB entry
                 or mol object extracted from pdb file
         """
@@ -208,13 +210,14 @@ class Ligand:
                 new_pdb_block += '\n'
 
             mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-
+            print(mol)
             if handle_cov:
                 mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=mol)
+                print(mol)
 
             return mol
 
-    def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file, ret2=False):
+    def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file, covalent=False):
         """
         A pdb file is produced for an individual ligand, containing atomic and connection information
 
@@ -259,9 +262,9 @@ class Ligand:
             if monomerize:
                 file_base = str(
                     os.path.abspath(self.infile)
-                        .split("/")[-1]
-                        .replace(".pdb", "")
-                        .replace("_bound", "")
+                    .split("/")[-1]
+                    .replace(".pdb", "")
+                    .replace("_bound", "")
                 )
                 chain = file_base.split("_")[-1]
                 file_base = file_base[:-2] + "_" + str(count) + chain
@@ -306,11 +309,8 @@ class Ligand:
             ligands_connections.write(str(line))
         ligands_connections.close()
 
-        if ret2:
-            return os.path.join(os.path.abspath(lig_out_dir), (file_base + ".pdb")), file_base
-
         # making pdb file into mol object
-        mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=False)
+        mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=covalent)
 
         # Move Map files into lig_out_dir
 
@@ -522,7 +522,7 @@ class pdb_apo:
         prot_file.close()
 
 
-def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=None):
+def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=None, covalent=False):
     """
 
     :param pdbcode: pdb code that has already been uploaded into directory of user ID
@@ -545,7 +545,7 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
     new.find_ligand_names_new()  # finds the specific name and locations of desired ligands
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
-            new.wanted_ligs[i], count=i, monomerize=monomerize, smiles_file=smiles_file
+            new.wanted_ligs[i], count=i, monomerize=monomerize, smiles_file=smiles_file, covalent=covalent
         )  # creates pdb file and mol object for specific ligand
 
     for i in range(len(new.mol_dict["directory"])):

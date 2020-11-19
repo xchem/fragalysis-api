@@ -7,7 +7,7 @@ from shutil import copyfile
 from fragalysis_api import Align, Monomerize, set_up
 
 
-def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None):
+def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False):
 
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
@@ -73,14 +73,16 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
                            out_dir=out_dir,
                            monomerize=monomerize,
                            smiles_file=os.path.abspath(smiles),
-                           biomol=biomol)
+                           biomol=biomol,
+                           covalent=covalent)
 
             else:
                 _ = set_up(target_name=target,
                            infile=os.path.abspath(aligned),
                            out_dir=out_dir,
                            monomerize=monomerize,
-                           biomol=biomol)
+                           biomol=biomol,
+                           covalent=covalent)
 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
@@ -128,6 +130,9 @@ if __name__ == "__main__":
 
     parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
+    parser.add_argument("-c", "--covalent", help="Handle covalent bonds between ligand and target", required=False,
+                        default=False)
+
     args = vars(parser.parse_args())
 
     in_file = args["in_file"]
@@ -135,6 +140,7 @@ if __name__ == "__main__":
     monomerize = args["monomerize"]
     target = args["target"]
     biomol = args["biomol_txt"]
+    covalent = args["covalent"]
     # Will this work?
     if args['reference'] is None:
         reference = os.path.join(out_dir, target, 'reference.pdb')
@@ -152,7 +158,8 @@ if __name__ == "__main__":
                            target=target,
                            monomerize=monomerize,
                            reference=reference,
-                           biomol=biomol)
+                           biomol=biomol,
+                           covalent=covalent)
         print(f'File has been aligned to {reference}')
 
 

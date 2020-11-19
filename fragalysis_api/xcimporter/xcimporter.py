@@ -11,7 +11,7 @@ from fragalysis_api import set_up
 from distutils.dir_util import copy_tree
 
 
-def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomerize=False, biomol=None):
+def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomerize=False, biomol=None, covalent=False):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -103,14 +103,16 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                            out_dir=out_dir,
                            monomerize=monomerize,
                            smiles_file=os.path.abspath(smiles),
-                           biomol=biomol)
+                           biomol=biomol,
+                           covalent=covalent)
                 
             else:
                 _ = set_up(target_name=target,
                            infile=os.path.abspath(aligned),
                            out_dir=out_dir,
                            monomerize=monomerize,
-                           biomol=biomol)
+                           biomol=biomol,
+                           covalent=covalent)
                 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
@@ -170,6 +172,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--target", help="Target name", required=True)
     parser.add_argument("-md", "--metadata", help="Metadata output", default=False)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
+    parser.add_argument("-c", "--covalent", help="Handle covalent bonds between ligand and target", required=False, default=False)
 
     args = vars(parser.parse_args())
 
@@ -181,6 +184,7 @@ if __name__ == "__main__":
     target = args["target"]
     metadata = args["metadata"]
     biomol = args["biomol_txt"]
+    covalent = args["covalent"]
 
     if in_dir == os.path.join("..", "..", "data", "xcimporter", "input"):
         print("Using the default input directory ", in_dir)
@@ -193,7 +197,8 @@ if __name__ == "__main__":
                validate=validate,
                monomerize=monomerize,
                metadata=metadata,
-               biomol=biomol)
+               biomol=biomol,
+               covalent=covalent)
 
     fix_pdb = open(os.path.join(out_dir, target, 'aligned', 'pdb_file_failures.txt'), 'w')
 
