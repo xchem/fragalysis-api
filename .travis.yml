@@ -34,13 +34,11 @@ install:
   - cd ./gemmi_pandda
   - pip install --force-reinstall .
   - cd ..
-  - rm -rf gemmi_pandda
   # Also Required
   - git clone https://github.com/xchem/pandda_gemmi.git
   - cd ./pandda_gemmi
   - pip install -e .
   - cd ..
-  - rm -rf pandda_gemmi
   - conda install -c rdkit rdkit -y
   # Install additional dependencies used only for travis / testing
   - conda install --yes pytest codecov
@@ -50,7 +48,7 @@ install:
 
 script:
   - coverage run -m py.test # will run all tests in the package
-  - coverage report -m # Nicely shows a report of coverage of each script
+  - coverage report --omit="pandda_gemmi/*,gemmi_pandda/*" -m  # Nicely shows a report of coverage of each script
   #- coverage run -m unittest discover
   - 
 
