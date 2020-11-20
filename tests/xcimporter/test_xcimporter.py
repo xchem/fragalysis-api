@@ -43,6 +43,7 @@ class XcImporterTest(unittest.TestCase):
             pdb_ref=self.reference
         )
 
+        # Write more Tests
         self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target)))
         self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
 
@@ -55,6 +56,7 @@ class XcImporterTest(unittest.TestCase):
                            covalent=self.covalent)
 
         # Tests should check if a thing is correctly removed and readded etc...
+        # Write Many More... Single import should use a pdb in a seperate test!
         self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
 
 
