@@ -42,8 +42,8 @@ class XcImporterTest(unittest.TestCase):
             covalent=self.covalent,
             pdb_ref=self.reference
         )
-        self.assertTrue(os.path.exists(os.path.join(self.out_dir, self.target)))
-        self.assertTrue(os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
+        self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target)))
+        self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
 
         import_single_file(in_file=self.in_file,
                            out_dir=self.out_dir,
@@ -54,7 +54,7 @@ class XcImporterTest(unittest.TestCase):
                            covalent=self.covalent)
 
         # Tests should check if a thing is correctly removed and readded etc...
-        self.assertTrue(os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
+        self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
 
 
 if __name__ == '__main__':
