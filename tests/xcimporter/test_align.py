@@ -42,46 +42,63 @@ class EasyAlign(AlignTest):
     def test_get_mapfiles(self):
         self.assertCountEqual(self.align_obj._get_maplist, [])
 
-    def test_monomerize_single(self):
+    def test_amonomerize_single(self):
+        dir = os.path.join('tests', 'data_for_tests', 'mono')
+        if not os.path.exists(dir):
+            os.makedirs(dir)
         self.monomerize_obj.monomerize_single(file=os.path.join('tests', 'data_for_tests', 'examples_to_test5', 'Mpro-x2097.pdb'))
-        single_test_cases = ['Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.cpp4']
+        single_test_cases = ['Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.ccp4']
         single_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'mono', x)) for x in single_test_cases]
         print(single_test_exists)
         [self.assertTrue(x) for x in single_test_exists]
 
-    def test_monomerize_all(self):
+    def test_bmonomerize_all(self):
+        dir = os.path.join('tests', 'data_for_tests', 'mono')
+        if not os.path.exists(dir):
+            os.makedirs(dir)
         self.monomerize_obj.monomerize_all()
         all_test_cases = ['Mpro-x0978_A.pdb', 'Mpro-x0981_A.pdb',
-                     'Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.cpp4',
-                     'Mpro-x2119_A.pdb', 'Mpro-x2119_A_event.cpp4']
+                     'Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.ccp4',
+                     'Mpro-x2119_A.pdb', 'Mpro-x2119_A_event.ccp4']
         all_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'mono', x)) for x in all_test_cases]
         print(all_test_exists)
         [self.assertTrue(x) for x in all_test_exists]
 
-    def test_align_from_mono(self):
+    def test_zalign_from_mono(self):
+        print(os.path.exists(os.path.join('tests', 'data_for_tests', 'mono')))
         a = Align(os.path.join('tests', 'data_for_tests', 'mono'), pdb_ref='', mono=True)
-        a.align(out_dir=os.path.join('tests', 'data_for_tests', 'tmpa'))
+        dir = os.path.join('tests', 'data_for_tests', 'tmp')
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        a.align(out_dir=dir)
 
-        a_test_cases = ['Mpro-x0978_A_bound.pdb', 'Mpro-x0981_A_bound.pdb','Mpro-x2097_A_bound.pdb', 'Mpro-x2119_A_bound.pdb', 'Mpro-x2097_A_event.cpp4', 'Mpro-x2119_A_event.cpp4']
-        a_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'tmpa', x)) for x in a_test_cases]
+        a_test_cases = ['Mpro-x0978_A_bound.pdb', 'Mpro-x0981_A_bound.pdb','Mpro-x2097_A_bound.pdb', 'Mpro-x2119_A_bound.pdb', 'Mpro-x2097_A_event.ccp4', 'Mpro-x2119_A_event.ccp4']
+        a_test_exists = [os.path.exists(os.path.join(dir, x)) for x in a_test_cases]
         print(a_test_exists)
         [self.assertTrue(x) for x in a_test_exists]
 
-        a2 = Align(os.path.join('tests', 'data_for_tests', 'mono'), pdb_ref='Mpro-x2119', mono=True)
-        a2.align(out_dir = os.path.join('tests', 'data_for_tests', 'tmpa2'))
+        dir = os.path.join('tests', 'data_for_tests', 'tmpa2')
+        if not os.path.exists(dir):
+            os.makedirs(dir)
 
-        a2_test_cases = ['Mpro-x0978_A_bound.pdb', 'Mpro-x0981_A_bound.pdb','Mpro-x2097_A_bound.pdb', 'Mpro-x2119_A_bound.pdb', 'Mpro-x2097_A_event.cpp4', 'Mpro-x2119_A_event.cpp4']
-        a2_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'tmpa', x)) for x in a2_test_cases]
+        a2 = Align(os.path.join('tests', 'data_for_tests', 'mono'), pdb_ref='Mpro-x2119', mono=True)
+        a2.align(out_dir=dir)
+
+        a2_test_cases = ['Mpro-x0978_A_bound.pdb', 'Mpro-x0981_A_bound.pdb','Mpro-x2097_A_bound.pdb', 'Mpro-x2119_A_bound.pdb', 'Mpro-x2097_A_event.ccp4', 'Mpro-x2119_A_event.ccp4']
+        a2_test_exists = [os.path.exists(os.path.join(dir, x)) for x in a2_test_cases]
         print(a2_test_exists)
         [self.assertTrue(x) for x in a2_test_exists]
 
         # Also test if error state ruins things
         # error = Align(os.path.join('tests', 'data_for_tests', 'mono'), pdb_ref='Mpro-x2119', mono=False)
 
-    def test_align_with_maps(self):
-        self.align_obj_w_maps.align(out_dir=os.path.join('tests', 'data_for_tests', 'tmp_map'))
-        map_test_cases = ['Mpro-x0978_bound.pdb', 'Mpro-x0981_bound.pdb','Mpro-x2097_bound.pdb', 'Mpro-x2119_bound.pdb', 'Mpro-x2097_event.cpp4', 'Mpro-x2119_event.cpp4']
-        map_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'tmp_map', x)) for x in map_test_cases]
+    def test_zalign_with_maps(self):
+        dir = os.path.join('tests', 'data_for_tests', 'tmp_map')
+        if not os.path.exists(dir):
+            os.makedirs(dir)
+        self.align_obj_w_maps.align(out_dir=dir)
+        map_test_cases = ['Mpro-x0978_bound.pdb', 'Mpro-x0981_bound.pdb','Mpro-x2097_bound.pdb', 'Mpro-x2119_bound.pdb', 'Mpro-x2097_event.ccp4', 'Mpro-x2119_event.ccp4']
+        map_test_exists = [os.path.exists(os.path.join(dir, x)) for x in map_test_cases]
         print(map_test_exists)
         [self.assertTrue(x) for x in map_test_exists]
 
