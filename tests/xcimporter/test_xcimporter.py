@@ -18,9 +18,9 @@ class XcImporterTest(unittest.TestCase):
         cls.validate = False
         cls.monomerize = True
         cls.biomol = os.path.join('tests', 'data_for_tests', 'examples_to_test5', 'biomol.txt')
-        cls.metadata = '1'
+        cls.metadata = True
         cls.covalent = True
-        cls.reference = 'Mpro-x0981'
+        cls.reference = 'Mpro-x0981_A'
 
 
     @classmethod
@@ -29,8 +29,8 @@ class XcImporterTest(unittest.TestCase):
         pass
 
 
-    @classmethod
     def test_xcimporter(self):
+
         xcimporter(
             in_dir=self.in_dir,
             out_dir=self.out_dir,
@@ -42,6 +42,7 @@ class XcImporterTest(unittest.TestCase):
             covalent=self.covalent,
             pdb_ref=self.reference
         )
+
         self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target)))
         self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
 
