@@ -128,7 +128,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, f"tmp{target}", str(file)))
 
-    if metadata == '1':
+    if metadata:
         print("Preparing metadata file")
         metadata_fp = os.path.join(out_dir, target, "metadata.csv")
         path = os.path.join(out_dir, target)
@@ -178,7 +178,7 @@ if __name__ == "__main__":
         "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
     )
     parser.add_argument("-t", "--target", help="Target name", required=True)
-    parser.add_argument("-md", "--metadata", help="Metadata output", default=False)
+    parser.add_argument("-md", "--metadata",action="store_true", help="Metadata output", default=False)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
     parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
     parser.add_argument("-c",
