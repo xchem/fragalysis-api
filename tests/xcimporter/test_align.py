@@ -24,7 +24,7 @@ class EasyAlign(AlignTest):
         cls.align_obj_w_maps = Align(os.path.join(cls.dir_input, 'examples_to_test5'), pdb_ref='')
 
         # Do a monomerize
-        out = os.path.join(cls.dir_output, f'mono/')
+        out = os.path.join(cls.dir_output, f'mono')
         if not os.path.isdir(out):
             os.makedirs(out)
         cls.monomerize_obj = Monomerize(directory=os.path.join(cls.dir_input, 'examples_to_test5'), outdir=out)
@@ -43,16 +43,20 @@ class EasyAlign(AlignTest):
         self.assertCountEqual(self.align_obj._get_maplist, [])
 
     def test_monomerize_single(self):
-        self.monomerize_obj.monomerize_single(file=os.path.join('tests', 'data_for_tests', 'examples_to_test5', 'Mpro-x0978.pdb'))
-        testcases = ['Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.cpp4']
-        [self.assertTrue(os.path.exists(os.path.join('tests', 'data_for_tests', 'mono', x))) for x in testcases]
+        self.monomerize_obj.monomerize_single(file=os.path.join('tests', 'data_for_tests', 'examples_to_test5', 'Mpro-x2097.pdb'))
+        single_test_cases = ['Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.cpp4']
+        single_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'mono', x)) for x in single_test_cases]
+        print(single_test_exists)
+        [self.assertTrue(x) for x in single_test_exists]
 
     def test_monomerize_all(self):
         self.monomerize_obj.monomerize_all()
-        testcases = ['Mpro-x0978_A.pdb', 'Mpro-x0981_A.pdb',
+        all_test_cases = ['Mpro-x0978_A.pdb', 'Mpro-x0981_A.pdb',
                      'Mpro-x2097_A.pdb', 'Mpro-x2097_A_event.cpp4',
                      'Mpro-x2119_A.pdb', 'Mpro-x2119_A_event.cpp4']
-        [self.assertTrue(os.path.exists(os.path.join('tests', 'data_for_tests', 'mono', x))) for x in testcases]
+        all_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'mono', x)) for x in all_test_cases]
+        print(all_test_exists)
+        [self.assertTrue(x) for x in all_test_exists]
 
     def test_align_from_mono(self):
         a = Align(os.path.join('tests', 'data_for_tests', 'mono'), pdb_ref='', mono=True)
@@ -60,6 +64,7 @@ class EasyAlign(AlignTest):
 
         a_test_cases = ['Mpro-x0978_A_bound.pdb', 'Mpro-x0981_A_bound.pdb','Mpro-x2097_A_bound.pdb', 'Mpro-x2119_A_bound.pdb', 'Mpro-x2097_A_event.cpp4', 'Mpro-x2119_A_event.cpp4']
         a_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'tmpa', x)) for x in a_test_cases]
+        print(a_test_exists)
         [self.assertTrue(x) for x in a_test_exists]
 
         a2 = Align(os.path.join('tests', 'data_for_tests', 'mono'), pdb_ref='Mpro-x2119', mono=True)
@@ -67,6 +72,7 @@ class EasyAlign(AlignTest):
 
         a2_test_cases = ['Mpro-x0978_A_bound.pdb', 'Mpro-x0981_A_bound.pdb','Mpro-x2097_A_bound.pdb', 'Mpro-x2119_A_bound.pdb', 'Mpro-x2097_A_event.cpp4', 'Mpro-x2119_A_event.cpp4']
         a2_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'tmpa', x)) for x in a2_test_cases]
+        print(a2_test_exists)
         [self.assertTrue(x) for x in a2_test_exists]
 
         # Also test if error state ruins things
@@ -76,8 +82,8 @@ class EasyAlign(AlignTest):
         self.align_obj_w_maps.align(out_dir=os.path.join('tests', 'data_for_tests', 'tmp_map'))
         map_test_cases = ['Mpro-x0978_bound.pdb', 'Mpro-x0981_bound.pdb','Mpro-x2097_bound.pdb', 'Mpro-x2119_bound.pdb', 'Mpro-x2097_event.cpp4', 'Mpro-x2119_event.cpp4']
         map_test_exists = [os.path.exists(os.path.join('tests', 'data_for_tests', 'tmp_map', x)) for x in map_test_cases]
+        print(map_test_exists)
         [self.assertTrue(x) for x in map_test_exists]
-
 
     def test_write_ref(self):
         fp = os.path.join('tests', 'data_for_tests' 'reference.pdb')
