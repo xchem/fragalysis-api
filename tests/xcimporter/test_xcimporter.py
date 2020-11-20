@@ -25,7 +25,8 @@ class XcImporterTest(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        rmtree(os.path.join(cls.out_dir, cls.target))
+        #rmtree(os.path.join(cls.out_dir, cls.target))
+        pass
 
 
     @classmethod
@@ -44,7 +45,6 @@ class XcImporterTest(unittest.TestCase):
         self.assertEqual(os.path.exists(os.path.join(self.out_dir, self.target)), True)
         self.assertEqual(os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')), True)
 
-    def test_import_single_file(self):
         import_single_file(in_file=self.in_file,
                            out_dir=self.out_dir,
                            target=self.target,
@@ -52,9 +52,9 @@ class XcImporterTest(unittest.TestCase):
                            reference=os.path.join(self.out_dir, self.target, 'reference.pdb'),
                            biomol=self.biomol,
                            covalent=self.covalent)
+        
         # Tests should check if a thing is correctly removed and readded etc...
         self.assertEqual(os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')), True)
-
 
 if __name__ == '__main__':
     unittest.main()
