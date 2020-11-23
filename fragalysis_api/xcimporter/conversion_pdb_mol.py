@@ -172,7 +172,9 @@ class Ligand:
                 new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
 
                 if handle_cov:
-                    new_mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=new_mol)
+                    cov_mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=new_mol)
+                    if cov_mol is not None:
+                        new_mol = cov_mol
 
                 return new_mol
 

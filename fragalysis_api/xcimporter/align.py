@@ -408,31 +408,9 @@ class Monomerize:
         return glob.glob(os.path.join(self.directory, '*.pdb'))
 
     def get_maplist(self):
-        all_files = set(glob.glob(os.path.join(self.directory, '*')))
-        txt_files = set(glob.glob(os.path.join(self.directory, '*.txt')))
-        pdb_files = set(glob.glob(os.path.join(self.directory, '*.pdb')))
-        return list(all_files - txt_files - pdb_files)
-
-    def find_ligs(self, pdb_lines):
-        """
-        Finds list of ligands contained in the structure, including
-        """
-        all_ligands = []  # all ligands go in here, including solvents and ions
-        wanted_ligs = []
-        for line in pdb_lines:
-            if line.startswith("HETATM"):
-                all_ligands.append(line)
-
-        for lig in all_ligands:
-            if (
-                    lig.split()[3][-3:] not in self.non_ligs
-            ):  # this takes out the solvents and ions a.k.a non-ligands
-                wanted_ligs.append(lig[16:20] + lig[20:26])
-                # print(lig[16:20].strip() + lig[20:26])
-
-        wanted_ligs = list(set(wanted_ligs))
-
-        return wanted_ligs
+        map_files = glob.glob(os.path.join(self.directory, '*.map'))
+        cpp4_files = glob.glob(os.path.join(self.directory, '*.ccp4'))
+        return map_files + cpp4_files
 
     def split_chains(self, f):
         aa_codes = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
@@ -564,24 +542,3 @@ def find_water_chains(file):
     structure.remove_empty_chains()
     new = [x.name for x in structure[0]]
     return list(set(old) - set(new))
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-m", "--monomerize", action="store_true", default=False, help="Monomerize input"
-    )
-    parser.add_argument(
-        "-a", "--align", action="store_true", default=False, help="Align input"
-    )
-    parser.add_argument("-t", "--target", help="Target name", required=True)
-    args = vars(parser.parse_args())
-    monomerize = args["monomerize"]
-    align = args['align']
-    tar = args['target']
-    m = Monomerize(f'/dls/science/groups/i04-1/fragprep/input_test/{tar}/',
-                   '/dls/science/groups/i04-1/software/tyler/monotest')
-    m.monomerize_all()
-    if align:
-        a = Align('/dls/science/groups/i04-1/software/tyler/monotest', mono=monomerize)
-        a.align('/dls/science/groups/i04-1/software/tyler/tmptest')
