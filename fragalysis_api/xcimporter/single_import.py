@@ -8,6 +8,22 @@ from fragalysis_api import Align, Monomerize, set_up
 
 
 def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False):
+    '''Formats a PDB file into fragalysis friendly format.
+    1. Validates the naming of the pdbs.
+    2. It aligns the pdbs (_bound.pdb file).
+    3. It cleans the pdbs (removes solvents and ions).
+    4. Splits the pdbs into ligands (.mol, .sdf and .pdb formats) and protein files (_apo.pdb file).
+    5. Orders all the files into the correct directory structure required for fragalysis.
+    :param in_file: Filepath of pdb you with to align (where additional files are stored in same directory)
+    :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists)
+    :param target: Name of the folder to be created inside out_dir
+    :param monomerize: Bool, if True, will attempt to split pdb files into seperate chains
+    :param reference: Name of the Reference pdb to align in_file to. If called from command line this will default to out_dir/target/reference.pdb
+    :param biomol: plain-text file containing header information about the bio-molecular
+        context of the pdb structures. If provided the contents will be appended to the top of the _apo.pdb files
+    :param covalent: Bool, if True, will attempt to convert output .mol files to account for potential covalent attachments
+    :return: Hopefully, beautifully aligned files that be used with the fragalysis loader :)
+    '''
 
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)

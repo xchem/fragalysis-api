@@ -398,6 +398,11 @@ class Structure:
 class Monomerize:
 
     def __init__(self, directory, outdir):
+        '''
+        :param directory: Path to folder containing .pdb files to monomerize
+        :param outdir: Output folder where monomerized pdbs will be saved
+        :return: Initialises the Monomerize class that has the ability to split pdb files by chain.
+        '''
         self.directory = directory
         self.outdir = outdir
         self.non_ligs = json.load(
@@ -405,14 +410,27 @@ class Monomerize:
         )
 
     def get_filelist(self):
+        '''
+        Get a list of pdb files within the input directory
+        :return: Returns a list of pdb files
+        '''
         return glob.glob(os.path.join(self.directory, '*.pdb'))
 
     def get_maplist(self):
+        '''
+        Get a list of .map or .ccp4 files from within the input directory
+        :return: Returns a list of filepaths corresponding to said volume density files.
+        '''
         map_files = glob.glob(os.path.join(self.directory, '*.map'))
         cpp4_files = glob.glob(os.path.join(self.directory, '*.ccp4'))
         return map_files + cpp4_files
 
     def split_chains(self, f):
+        '''
+        Split a pdb file according to chain names. While preserving chains that contain waters and assigned small, non-amino acid containing chains to the nearest chain by center of mass.
+        :param f: File name of the pdb file to split
+        :return: A list of pdb_files that have been created with the naming convention f_[chain_name]
+        '''
         aa_codes = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
                         'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
                         'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
@@ -467,6 +485,13 @@ class Monomerize:
         return filenames
 
     def process_pdb(self, filename, maplist):
+        '''
+        Processes a pdb file.
+        Firstly it splits the pdb file according to chains and then makes a copy all accompanying files (e.g. map files) to share the same name as the new split pdb file.
+        :param filename: The filepath of the pdb file to process
+        :param maplist: A list of mapfiles to be copied for the number of chains the filename may have.
+        :return: A list of filenames that were generated from the input pdb.
+        '''
         out_names = self.split_chains(filename)
         for o in out_names:
             if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
@@ -481,6 +506,12 @@ class Monomerize:
         return out_names
 
     def write_bound(self, inname, outname):
+        '''
+        Appends header to pdb file and writes to new location
+        :param inname: input pdb file
+        :param outname: filepath of desired output
+        :return: Formally returns nothing, but a file will be written to outname
+        '''
         with open(inname, 'r') as handle:
             switch = 0
             header_front, header_end = [], []
@@ -505,25 +536,35 @@ class Monomerize:
                 handle.write(new_pdb)
 
     def monomerize_single(self, file):
+        '''
+        Convert a pdb file into it's constituent chains
+        :param file: Input pdb filepath
+        :return: Formally nothing, but will create n number of monomerized pdbs per number of AA containing chains.
+        '''
         maplist = self.get_maplist()
         outnames = self.process_pdb(file, maplist)
+        print(outnames)
         self.write_bound(file, outnames)
         for o in outnames:
             if os.path.isfile(o):
                 os.remove(o)
 
     def monomerize_all(self):
-        maplist = self.get_maplist()
+        '''
+        Converts a set of pdbs into constituent chains
+        :return: Formally nothing, but will separate pdb files according to chains.
+        '''
         for f in self.get_filelist():
-            outnames = self.process_pdb(f, maplist)
-            print(outnames)
-            self.write_bound(f, outnames)
-            for o in outnames:
-                if os.path.isfile(o):
-                    os.remove(o)
+            self.monomerize_single(file=f)
 
 
 def get_chain_center(chain_name, file):
+    '''
+    Calculate the center of mass for a particular chain within a particular pdb file
+    :param chain_name: Name of the chain
+    :param file: Filepath of pdb file.
+    :return: The center of mass of the specified chain.
+    '''
     structure = gemmi.read_pdb(file)[0]
     names = [x.name for x in structure]
     for i in names:
@@ -536,6 +577,11 @@ def get_chain_center(chain_name, file):
 
 
 def find_water_chains(file):
+    '''
+    Find which chain(s) contain only water molecules
+    :param file: A pdb file name.
+    :return: A list of chains that contain water
+    '''
     structure = gemmi.read_pdb(file)
     old = [x.name for x in structure[0]]
     structure.remove_waters()
