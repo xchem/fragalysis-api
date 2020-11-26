@@ -160,6 +160,7 @@ Next, we can get the response from the graph network in json format
 results = search.get_graph_json()
 
 TODO: convert json reponse from graph into a list of smiles strings for follow up compounds
+```
 
 ## Adding computed sets - sdf specification:
 
