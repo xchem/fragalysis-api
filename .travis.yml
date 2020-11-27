@@ -28,19 +28,27 @@ before_install:
 
 install:
   # Install the requirements from the environment file
-  - conda install -c schrodinger pymol -y
+  # - conda install -c schrodinger pymol -y
+  # Required...
+  - git clone https://github.com/xchem/gemmi_pandda.git
+  - cd ./gemmi_pandda
+  - pip install --force-reinstall .
+  - cd ..
+  # Also Required
+  - git clone https://github.com/xchem/pandda_gemmi.git
+  - cd ./pandda_gemmi
+  - pip install -e .
+  - cd ..
   - conda install -c rdkit rdkit -y
   # Install additional dependencies used only for travis / testing
   - conda install --yes pytest codecov
-
   # You can also install some dependencies with pip if not available in conda
   - pip install -e .
 
 script:
   - coverage run -m py.test # will run all tests in the package
-  - coverage report -m # Nicely shows a report of coverage of each script
+  - coverage report --omit="pandda_gemmi/*,gemmi_pandda/*,tests/*" -m  # Nicely shows a report of coverage of each script
   #- coverage run -m unittest discover
-  - 
 
 after_success:
   - codecov # Push the results back to codecov (code coverage) for nicer visualization

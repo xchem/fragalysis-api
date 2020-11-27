@@ -5,17 +5,39 @@ Documentation: https://xchem.github.io/fragalysis-api/
 
 # fragalysis-api
 
-This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
+This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, 
+and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
 ## Installation
 
-### Not recommended: pip
-To install with pip, you will need to install both pymol and rdkit separately, as these don't exist as pip packages. 
+Starting out by initialising an environment and activating it. 
+Clone the repository and cd to the relevant directory. 
+Install rdkit via conda, and the other dependencies via the setup.py file:
+```bash
+conda create -n fragalysis_env anaconda -y
+conda activate fragalysis_env
+conda install -c conda-forge rdkit -y
 
-To install fragalysis-api with pip:
-```
+# Install our-bespoke version of gemmi # Required
+git clone https://github.com/xchem/gemmi_pandda.git
+cd gemmi_pannda/
+pip install -U --force-reinstall .
+cd ..
+
+# Also Required
+git clone https://github.com/xchem/pandda_gemmi.git
+cd pandda_gemmi/
 pip install -e .
+cd ..
+
+# Finally install the api
+git clone "https://github.com/xchem/fragalysis-api.git"
+cd fragalysis-api/
+pip install -e .
+cd ..
 ```
+
+You can check if it has installed using:    ```conda list```
 
 ### How to use API
 
@@ -28,34 +50,56 @@ pip install -e .
 Other functionalities that are available:
 - Import pdb files directly through the API
 - Query the pdb for similar structures that also have ligands bound and have the option to import these structures
+- Align files as individual monomers
+- Align volume density files
 
 
 ### Enforced rules :scroll:
 
 * The pdb file shall not be greater than 5mb.
-* The pdb filename shall not contain non English language ascii characters and shall be between 4 and 20 characters in length.
+* The pdb filename shall not contain non English language ascii characters 
+and shall be between 4 and 20 characters in length.
 * Each pdb file for alignment shall contain the same number of chains.
 * All pdb files to be aligned must be in the same directory.
-* If manually selecting a file for reference it must be in the same director as all pdb files for alignment. 
+* If manually selecting a file for reference it must be in the same directory as all pdb files for alignment. 
 * PDB file must abide by best practices set out at https://www.cgl.ucsf.edu/chimera/docs/UsersGuide/tutorials/pdbintro.html#note5
 * In PDB file, ligands must be referred to by same code in 'HET' lines in header and in 'HETATM' lines in main part of file
+* If providing cpp4 map files: All maps should be of the '.map' or '.cpp4' variety and labelled as:
+    > ```
+    > Aprot.pdb
+    > Aprot_smiles.txt
+    > Aprot_fofc.map
+    > Aprot_2fofc.map
+    > Aprot_event.cpp4
+    > ```
+* If you have multiple events, you can add use a `_event_0.cpp4` type naming convention and increment the number accordingly. Sorry! Here is an example of how you can do it though!
+```bash
+module load ccp4
+cd /staging_dir/target/aligned
+# The directory with the fragalysis stuff. ls should return folders for each ligand
+folders=$(ls)
+for i in $folders
+  do
+    str=$(echo ./$i/)
+    maps=$(find $str -name *.map)
+    ccp4s=$(find $str -name *.ccp4)
+    for j in $maps
+      do
+        mapmask mapin $j mapout $j xyzin ./$i/$i.pdb << eof
+        border 6
+        end
+        eof
+      done
 
-
-##### 1. How to set install, update a fragalysis enviroment
-
-Starting out by initialising an environment and activating it. Clone the repository and cd to the relevant directory. Install pymol and rdkit via conda, and the other dependcies via the setup.py file:
-```python
-conda create -n fragalysis_env anaconda -y
-conda activate fragalysis_env
-conda install -c schrodinger pymol -y
-conda install -c conda-forge rdkit -y
-git clone "https://github.com/xchem/fragalysis-api.git"
-cd fragalysis-api/
-pip install -e .
-cd ..
-
+    for j in $ccp4s
+      do
+        mapmask mapin $j mapout $j xyzin ./$i/$i.pdb << eof
+        border 6
+        end
+        eof
+      done
+  done
 ```
-You can check if it has installed using:    ```conda list```
 
 ### 2.1 How to download PDB files
 
@@ -92,10 +136,32 @@ python xcimporter -id [user id]
 ```
 Default directories are used. These can however be changed by using ```-i [input directory] ``` or   ```-o [output directory] ``` if this is required.
 
+For example a more elaborate conversion would be:
+```
+python fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directory] -o [output directory] -t [target name] -m 
+```
+Which will align the input files with respects to individual chains inside the .pdb files (`-m`) and save the output
+to a folder specified by `-t [target name]`.
+
 The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
 
-### Who we are
+The expected output of the xcimporter is a folder located at `[outputdirectory]/[target name]` which will
+contain two main folders `aligned` and `crystallographic`. The `aligned` folder will contain multiple sub-folders, one per ligand. These will be labelled as the name of the `pdbfile_[lig_number]` or `pdbfile_[lig_number][chain_letter]` if monomer mode was specified.
+Inside each of these subfolders contains all the information that is required by the fragalysis platform to display and elaborate a given ligand.
+The `crystallographic` folder contains an exact copy of the data supplied to the above command.
 
+#### 3.1 How to submit single PDB files for conversion to a fragalysis friendly format
+If you would like to add individual pdb files to the results of the fragalysis api we can use:
+```
+python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=[pdbtobealigned.pdb] --out_dir=[output directory] --target [targetname] -m --reference[output directory/targetname/reference.pdb]
+```
+Where `in_file` is the filepath of a pdb file we would like to align to the rest of our results (with `_smiles.txt` and other files to be aligned in the same directory)
+and `reference` is the pdb file that you would like to align files associated to `in_file`. If you had previous run xcimporter then a reference.pdb file should be located at `output direct/targetname/reference.pdb`
+If `--reference` or `-r` are not specified then `output direct/targetname/reference.pdb` will be used according to what arguments you have specified.
+
+You should be able to use `single_import` without having to delete any preexisting files. As the new outputs should overwrite what previous exists. Nice.
+
+### Who we are
 We are the Fragment 5, a group of students at the University of Oxford.
 
 Anna :whale:   
@@ -105,6 +171,9 @@ Tobias :cow:
 Alister :panda_face:  
 
 We are looked after by Rachael :crown:. 
+
+Finally, the code quality was ruined by Tyler.
+
 
 
 
