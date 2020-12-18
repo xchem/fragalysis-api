@@ -7,7 +7,7 @@ from shutil import copyfile
 from fragalysis_api import Align, Monomerize, set_up
 
 
-def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False):
+def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False, sr=False):
 
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
@@ -46,7 +46,10 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
     structure = Align(in_dir, "", monomerize)
 
     for i in pdb_smiles_dict['pdb']:
-        structure.align_to_reference(i, reference, out_dir=os.path.join(out_dir, f"tmp{target}"))
+        if sr:
+            structure.align_to_reference(i, i, out_dir=os.path.join(out_dir, f"tmp{target}"))
+        else:
+            structure.align_to_reference(i, reference, out_dir=os.path.join(out_dir, f"tmp{target}"))
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
@@ -129,6 +132,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
     parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
+    parser.add_argument('-sr', '--selfreference',action="store_true", help='Not align', required=False, default=False)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
     parser.add_argument("-c",
                         "--covalent",
@@ -146,6 +150,8 @@ if __name__ == "__main__":
     target = args["target"]
     biomol = args["biomol_txt"]
     covalent = args["covalent"]
+    sr = args['selfreference']
+
     # Will this work?
     if args['reference'] is None:
         reference = os.path.join(out_dir, target, 'reference.pdb')
@@ -164,7 +170,8 @@ if __name__ == "__main__":
                            monomerize=monomerize,
                            reference=reference,
                            biomol=biomol,
-                           covalent=covalent)
+                           covalent=covalent,
+                           sr=sr)
         print(f'File has been aligned to {reference}')
 
 
