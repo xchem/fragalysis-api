@@ -20,7 +20,7 @@ conda install -c conda-forge rdkit -y
 
 # Install our-bespoke version of gemmi # Required
 git clone https://github.com/xchem/gemmi_pandda.git
-cd gemmi_pannda/
+cd gemmi_pandda/
 pip install -U --force-reinstall .
 cd ..
 
