@@ -14,7 +14,6 @@ import json
 import shutil
 import gemmi  # Oh boy...
 import numpy
-import argparse
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 

@@ -117,6 +117,17 @@ pythom fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directo
 Which will align the input files with respects to individual chains inside the .pdb files (`-m`) and save the output
 to a folder specified by `-t [target name]`.
 
+A description of the command line arguments are as follows:
+- `-i`, `--in_dir` :  Input Directory
+- `-o`, `--out_dir` : Output Directory
+- `-v`, `--validate`: (Optional) Validate the Inputs
+- `-m`, `--monomerize`: (Optional) Split the input PDBs into separate chains. E.G If a pdb has A and B chains it will create files pdb_name_A.pdb and pdb_name_B.pdb
+- `-t`, `--target`: The name of the output folder to be saved in Output directory
+- `-md`, `--metadata`: (Optional) Automatically populated a metadata.csv in the output directory to be fill in.
+- `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
+- `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
+- `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
+
 The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
 
 The expected output of the xcimporter is a folder located at `[outputdirectory]/[target name]` which will
@@ -133,7 +144,36 @@ Where `in_file` is the filepath of a pdb file we would like to align to the rest
 and `reference` is the pdb file that you would like to align files associated to `in_file`. If you had previous run xcimporter then a reference.pdb file should be located at `output direct/targetname/reference.pdb`
 If `--reference` or `-r` are not specified then `output direct/targetname/reference.pdb` will be used according to what arguments you have specified.
 
-You should be able to use `single_import` without having to delete any preexisting files. As the new outputs should overwrite what previous exists. Nice.
+You should be able to use `single_import` without having to delete any preexisting files. As the new outputs should overwrite what previously exists. Nice.
+
+A description of the command line arguments for `single_import.py` are as follows: 
+- `-i`, `--in_file` :  Input File
+- `-o`, `--out_dir` : Output Directory
+- `-v`, `--validate`: (Optional) Validate the Inputs
+- `-m`, `--monomerize`: (Optional) Split the input PDBs into separate chains. E.G If a pdb has A and B chains it will create files pdb_name_A.pdb and pdb_name_B.pdb
+- `-t`, `--target`: The name of the output folder to be saved in Output directory
+- `-md`, `--metadata`: (Optional) Automatically populated a metadata.csv in the output directory to be fill in.
+- `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
+- `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
+- `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
+- `-sr`, `--self_reference`: (Optional) Indicate whether you want pdb files to align to themselves (for testing purposes)
+
+#### 3.2 Running The Fragalysis API without alignment 
+This is only available to the `single_import.py` method
+If for whatever reason you decide that you would like to simply split a pdb file without the need of an alignment step you can use the `-sr` or `--selfreference` flags when using the fragalysis API. Or specify the `-r` or `--reference` to be itself. 
+
+An example in bash to process a folder of pbds without aligned in bash would be:
+```bash
+$input=/path/to/input/folder
+pdblist=$(ls input)
+for pdb in $pdblist
+do
+  python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=$pdb --out_dir=[output directory] --target [targetname] -m --selfreference
+done
+```
+
+Notably the `-sr` flag will take precedence over the `-r` flag.
+
 
 ### Who we are
 We are the Fragment 5, a group of students at the University of Oxford.
