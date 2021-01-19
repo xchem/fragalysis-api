@@ -20,7 +20,7 @@ conda install -c conda-forge rdkit -y
 
 # Install our-bespoke version of gemmi # Required
 git clone https://github.com/xchem/gemmi_pandda.git
-cd gemmi_pannda/
+cd gemmi_pandda/
 pip install -U --force-reinstall .
 cd ..
 
@@ -72,8 +72,34 @@ and shall be between 4 and 20 characters in length.
     > Aprot_2fofc.map
     > Aprot_event.cpp4
     > ```
-* If you have multiple events, you can add use a `_event_0.cpp4` type naming convention and increment the number accordingly.
-* Maps shall be cut/masked by yourself using your tool of choice after alignment (sorry)
+* If you have multiple events, you can add use a `_event_0.cpp4` type naming convention and increment the number accordingly. Sorry! Here is an example of how you can do it though!
+```bash
+module load ccp4
+cd /staging_dir/target/aligned
+# The directory with the fragalysis stuff. ls should return folders for each ligand
+folders=$(ls)
+for i in $folders
+  do
+    str=$(echo ./$i/)
+    maps=$(find $str -name *.map)
+    ccp4s=$(find $str -name *.ccp4)
+    for j in $maps
+      do
+        mapmask mapin $j mapout $j xyzin ./$i/$i.pdb << eof
+        border 6
+        end
+        eof
+      done
+
+    for j in $ccp4s
+      do
+        mapmask mapin $j mapout $j xyzin ./$i/$i.pdb << eof
+        border 6
+        end
+        eof
+      done
+  done
+```
 
 ### 2.1 How to download PDB files
 
@@ -112,7 +138,7 @@ Default directories are used. These can however be changed by using ```-i [input
 
 For example a more elaborate conversion would be:
 ```
-pythom fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directory] -o [output directory] -t [target name] -m 
+python fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directory] -o [output directory] -t [target name] -m 
 ```
 Which will align the input files with respects to individual chains inside the .pdb files (`-m`) and save the output
 to a folder specified by `-t [target name]`.
