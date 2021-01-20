@@ -171,7 +171,7 @@ if __name__ == "__main__":
     # Will this work?
     if self_ref:
         reference = in_file
-    else if args['reference'] is None:
+    elif args['reference'] is None:
         reference = os.path.join(out_dir, target, 'reference.pdb')
     else:
         reference = args['reference']
