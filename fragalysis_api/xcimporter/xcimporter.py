@@ -112,7 +112,8 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                            monomerize=monomerize,
                            smiles_file=os.path.abspath(smiles),
                            biomol=biomol,
-                           covalent=covalent)
+                           covalent=covalent,
+                           keep_headers=False)
                 
             else:
                 _ = set_up(target_name=target,
@@ -120,7 +121,8 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                            out_dir=out_dir,
                            monomerize=monomerize,
                            biomol=biomol,
-                           covalent=covalent)
+                           covalent=covalent,
+                           keep_headers=False)
                 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")

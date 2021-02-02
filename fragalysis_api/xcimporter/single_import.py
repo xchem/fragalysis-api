@@ -93,7 +93,8 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
                            monomerize=monomerize,
                            smiles_file=os.path.abspath(smiles),
                            biomol=biomol,
-                           covalent=covalent)
+                           covalent=covalent,
+                           keep_headers=self_ref)
 
             else:
                 _ = set_up(target_name=target,
@@ -101,7 +102,8 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
                            out_dir=out_dir,
                            monomerize=monomerize,
                            biomol=biomol,
-                           covalent=covalent)
+                           covalent=covalent,
+                           keep_headers=self_ref)
 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
