@@ -14,7 +14,6 @@ import json
 import shutil
 import gemmi  # Oh boy...
 import numpy
-import argparse
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
@@ -133,6 +132,9 @@ class Align:
             current_pdb = Structure.from_file(file=Path(in_file))
             try:
                 current_pdb, transform = current_pdb.align_to(other=reference_pdb, monomerized=mono)
+                print(transform)
+                print(transform.transform.mat.tolist())
+                print(transform.transform.vec.tolist())
             except Exception as e:
                 # Poorly Documented. Use better stuff...
                 print(f'{e}')
@@ -147,7 +149,11 @@ class Align:
                 print(i)
                 s2 = time.time()
                 map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
+                array = np.array(map.xmap, copy=False)
+                array[~np.isfinite(array)] = 0                
+                #print(map.to_array())
                 map.resample(xmap=map, transform=transform)
+                #print(map.to_array())
                 map.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
                 e2 = time.time()
                 print(f'{int(e2 - s2)} seconds to transform map...')

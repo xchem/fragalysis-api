@@ -2,12 +2,11 @@ import argparse
 import glob
 import os
 import shutil
-from shutil import copyfile
 
 from fragalysis_api import Align, Monomerize, set_up
 
 
-def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False):
+def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False, self_ref=False):
     '''Formats a PDB file into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -22,6 +21,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
     :param biomol: plain-text file containing header information about the bio-molecular
         context of the pdb structures. If provided the contents will be appended to the top of the _apo.pdb files
     :param covalent: Bool, if True, will attempt to convert output .mol files to account for potential covalent attachments
+    :param self_ref: Bool, if True, the import single file will align to itself.
     :return: Hopefully, beautifully aligned files that be used with the fragalysis loader :)
     '''
 
@@ -62,12 +62,15 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
     structure = Align(in_dir, "", monomerize)
 
     for i in pdb_smiles_dict['pdb']:
-        structure.align_to_reference(i, reference, out_dir=os.path.join(out_dir, f"tmp{target}"))
+        if self_ref:
+            structure.align_to_reference(i, i, out_dir=os.path.join(out_dir, f"tmp{target}"))
+        else:
+            structure.align_to_reference(i, reference, out_dir=os.path.join(out_dir, f"tmp{target}"))
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
             print(smiles_file)
-            copyfile(smiles_file, os.path.join(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1])))
+            shutil.copyfile(smiles_file, os.path.join(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1])))
             print(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1]))
 
     aligned_dict = {'bound_pdb': [], 'smiles': []}
@@ -145,6 +148,7 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
     parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
+    parser.add_argument('-sr', '--self_reference', action="store_true", help='Include this flag if you want each pdb file to only align to itself', required=False, default=False)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
     parser.add_argument("-c",
                         "--covalent",
@@ -162,8 +166,12 @@ if __name__ == "__main__":
     target = args["target"]
     biomol = args["biomol_txt"]
     covalent = args["covalent"]
+    self_ref = args['self_reference']
+
     # Will this work?
-    if args['reference'] is None:
+    if self_ref:
+        reference = in_file
+    elif args['reference'] is None:
         reference = os.path.join(out_dir, target, 'reference.pdb')
     else:
         reference = args['reference']
@@ -180,7 +188,8 @@ if __name__ == "__main__":
                            monomerize=monomerize,
                            reference=reference,
                            biomol=biomol,
-                           covalent=covalent)
+                           covalent=covalent,
+                           self_ref=self_ref)
         print(f'File has been aligned to {reference}')
 
 
