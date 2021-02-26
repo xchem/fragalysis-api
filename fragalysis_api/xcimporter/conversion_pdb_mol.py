@@ -449,7 +449,7 @@ class pdb_apo:
         self.apo_file = None
         self.biomol = biomol
 
-    def make_apo_file(self):
+    def make_apo_file(self, keep_headers=False):
         """
         Keeps anything other than unique ligands
 
@@ -457,18 +457,16 @@ class pdb_apo:
         :returns: created XXX_apo.pdb file
         """
         lines = ""
+        if keep_headers:
+            include = ['CONECT', 'SEQRES', 'TITLE', 'ANISOU']
+        else:
+            include = ['CONECT', 'REMARK', 'CRYST', 'SEQRES', 'HEADER', 'TITLE', 'ANISOU']
 
         for line in self.pdbfile:
             if (
                     line.startswith("HETATM")
                     and line.split()[3] not in self.non_ligs
-                    or line.startswith("CONECT")
-                    or line.startswith("REMARK")
-                    or line.startswith("CRYST")
-                    or line.startswith("SEQRES")  # Nice.
-                    or line.startswith("HEADER")
-                    or line.startswith("TITLE")
-                    or line.startswith("ANISOU")
+                    or any([line.startswith(x) for x in include])
             ):
                 continue
             else:
@@ -544,7 +542,7 @@ class pdb_apo:
         prot_file.close()
 
 
-def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=None, covalent=False):
+def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=None, covalent=False, keep_headers=False):
     """
     For each ligand inside a pdb file, process each ligand seperately and create own outputs in individual folders.
     :param target_name: Name of the folder in out_dir
@@ -554,6 +552,7 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
     :param smiles_file: Filepath pointing to text file containing smiles string (if exists)
     :param biomol: Filepath pointing to text file containing biomol/header information for pdbs (if exists)
     :param covalent: Bool, indicate whether or not output mol files should find covalent attachment.
+    :param keep_headers: Bool, indicate whether or not keep headers on apo files.
     :return: for each ligand: pdb, mol, sdf and _apo.pdb in seperate directorys inside out_dir/target_name
     """
 
@@ -634,7 +633,7 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
             new.mol_dict["file_base"][i],
             biomol=biomol
         )
-        new_apo.make_apo_file()  # creates pdb file that doesn't contain any ligand information
+        new_apo.make_apo_file(keep_headers=keep_headers)  # creates pdb file that doesn't contain any ligand information
         new_apo.make_apo_desol_files()  # makes apo file without solvent, ions and buffers, and file with just those
 
     return new
