@@ -51,15 +51,15 @@ jobs:
         chmod +x miniconda.sh
         ./miniconda.sh -b
         export PATH=$GITHUB_WORKSPACE/miniconda2/bin:$PATH
-        conda update conda --yes
-        conda create --yes --name action_env python=3.7.10
-        source activate action_env
+        conda update conda -y
+        conda create -y --name action_env python=3.7.10
+        conda activate action_env
         git clone https://github.com/xchem/gemmi_pandda.git
         cd ./gemmi_pandda
         pip install --force-reinstall .
         cd ..
-        conda install -c rdkit rdkit -y
-        conda install --yes pytest codecov
+        conda install -y -c rdkit rdkit
+        conda install -y pytest codecov
         pip install -e .
         coverage run -m py.test
         coverage report --omit="pandda_gemmi/*,gemmi_pandda/*,tests/*" -m
