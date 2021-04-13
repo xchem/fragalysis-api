@@ -52,8 +52,11 @@ jobs:
         ./miniconda.sh -b
         export PATH=$GITHUB_WORKSPACE/miniconda2/bin:$PATH
         which conda
-        ls -l $GITHUB_WORKSPACE/miniconda2/bin
         conda -V
+        echo $GITHUB_WORKSPACE
+        ls -l $GITHUB_WORKSPACE
+        echo /usr/bin/conda
+        ls -l /usr/bin/conda
         conda update conda -y
         conda create -y -n action_env python=3.7.10
         conda env list
