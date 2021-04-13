@@ -44,7 +44,7 @@ jobs:
     - name: Setup python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7.4
+        python-version: 3.7.10
     - name: Test
       run: |
         wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
@@ -52,7 +52,7 @@ jobs:
         ./miniconda.sh -b
         export PATH=$GITHUB_WORKSPACE/miniconda2/bin:$PATH
         conda update conda --yes
-        conda create --yes --name action_env python=3.7.4
+        conda create --yes --name action_env python=3.7.10
         source activate action_env
         git clone https://github.com/xchem/gemmi_pandda.git
         cd ./gemmi_pandda
