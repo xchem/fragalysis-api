@@ -1,0 +1,65 @@
+---
+name: build main
+
+# Actions that take place after every commit the master/main branch.
+# Here every commit is built and tested.
+#
+# Actions also run if the repository is tagged.
+#
+# Actions also run on a schedule.
+
+# ---------------
+# Control secrets
+# ---------------
+#
+# At the GitHub 'organisation' or 'project' level you are expected to
+# have the following GitHub 'Repository Secrets' defined
+# (i.e. via 'Settings -> Secrets'): -
+#
+# (none)
+#
+# -----------
+# Environment (GitHub Environments)
+# -----------
+#
+# (none)
+
+on:
+  push:
+    branches:
+    - 'master'
+    - 'main'
+    tags:
+    - '**'
+  schedule:
+  # Build every Sunday (0) at 3:45pm
+  - cron: '45 15 * * 0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7.4
+    - name: Test
+      run: |
+        wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+        chmod +x miniconda.sh
+        ./miniconda.sh -b
+        export PATH=$GITHUB_WORKSPACE/miniconda2/bin:$PATH
+        conda update conda --yes
+        conda create --yes --name action_env python=3.7.4
+        source activate action_env
+        git clone https://github.com/xchem/gemmi_pandda.git
+        cd ./gemmi_pandda
+        pip install --force-reinstall .
+        cd ..
+        conda install -c rdkit rdkit -y
+        conda install --yes pytest codecov
+        pip install -e .
+        coverage run -m py.test
+        coverage report --omit="pandda_gemmi/*,gemmi_pandda/*,tests/*" -m
