@@ -35,6 +35,9 @@ on:
   # Build every Sunday (0) at 3:45pm
   - cron: '45 15 * * 0'
 
+env:
+  CONDA_ORIGIN: http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -47,22 +50,45 @@ jobs:
         python-version: 3.7.10
     - name: Test
       run: |
-        wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
+        # Install Miniconda.
+        # This will be installed in /home/runner/miniconda2
+        wget $CONDA_ORIGIN -O miniconda.sh
         chmod +x miniconda.sh
         ./miniconda.sh -b
         export PATH=/home/runner/miniconda2/bin:$PATH
-        which conda
+
+        # Echo (for reference) the installed conda.
+        # When last observed this was '4.0.5'.
         conda -V
+
+        # Update conda (otherwise conda can't be found)
         conda update conda -y
+
+        # Set up a conda environment with the right Python version.
         conda create -y -n action_env python=3.7.10
-        conda env list
         source activate action_env
+
+        # Install the requirements from the environment file
+        # - conda install -c schrodinger pymol -y
+        # Required...
         git clone https://github.com/xchem/gemmi_pandda.git
         cd ./gemmi_pandda
         pip install --force-reinstall .
         cd ..
-        conda install -y -c rdkit rdkit
-        conda install -y pytest codecov
+
+        # Also Required
+        git clone https://github.com/xchem/pandda_gemmi.git
+        cd ./pandda_gemmi
         pip install -e .
+        cd ..
+        conda install -y -c rdkit rdkit
+
+        # Install additional dependencies used only for testing
+        conda install -y pytest codecov
+
+        # You can also install some dependencies with pip if not available in conda
+        pip install -e .
+
+        # Finally - run testing/code-coverage...
         coverage run -m py.test
         coverage report --omit="pandda_gemmi/*,gemmi_pandda/*,tests/*" -m
