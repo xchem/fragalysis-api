@@ -50,15 +50,9 @@ jobs:
         wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh
         chmod +x miniconda.sh
         ./miniconda.sh -b
-        export PATH=$GITHUB_WORKSPACE/miniconda2/bin:$PATH
+        export PATH=/home/runner/miniconda2/bin:$PATH
         which conda
         conda -V
-        echo /home/runner/miniconda2
-        ls -l /home/runner/miniconda2/bin
-        echo $GITHUB_WORKSPACE
-        ls -l $GITHUB_WORKSPACE
-        echo /usr/bin/conda
-        ls -l /usr/bin/conda
         conda update conda -y
         conda create -y -n action_env python=3.7.10
         conda env list
