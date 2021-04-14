@@ -66,8 +66,7 @@ jobs:
 
         # Set up a conda environment with the right Python version.
         conda create -y -n action_env python=3.7.10
-    - name: Configure conda
-      run: |
+
         # Move to the environment
         source activate action_env
 
@@ -91,10 +90,6 @@ jobs:
 
         # You can also install some dependencies with pip if not available in conda
         pip install -e .
-    - name: Test
-      run: |
-        # Move to the environment
-        source activate action_env
 
         # Run tests and coverage report
         coverage run -m py.test
