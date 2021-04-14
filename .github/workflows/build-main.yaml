@@ -48,7 +48,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.7.10
-    - name: Test
+    - name: Install conda
       run: |
         # Install Miniconda.
         # This will be installed in /home/runner/miniconda2
@@ -66,6 +66,9 @@ jobs:
 
         # Set up a conda environment with the right Python version.
         conda create -y -n action_env python=3.7.10
+    - name: Configure conda
+      run: |
+        # Move to the environment
         source activate action_env
 
         # Install the requirements from the environment file
@@ -81,14 +84,18 @@ jobs:
         cd ./pandda_gemmi
         pip install -e .
         cd ..
-        conda install -y -c rdkit rdkit
+        conda install -c rdkit rdkit -y
 
         # Install additional dependencies used only for testing
         conda install -y pytest codecov
 
         # You can also install some dependencies with pip if not available in conda
         pip install -e .
+    - name: Test
+      run: |
+        # Move to the environment
+        source activate action_env
 
-        # Finally - run testing/code-coverage...
+        # Run tests and coverage report
         coverage run -m py.test
         coverage report --omit="pandda_gemmi/*,gemmi_pandda/*,tests/*" -m
