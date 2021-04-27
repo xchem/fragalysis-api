@@ -1,6 +1,6 @@
 # fragalysis-api
 
-[![build main](https://github.com/InformaticsMatters/fragalysis-api/actions/workflows/build-main.yaml/badge.svg)](https://github.com/InformaticsMatters/fragalysis-api/actions/workflows/build-main.yaml)
+[![build main](https://github.com/xchem/fragalysis-api/actions/workflows/build-main.yaml/badge.svg)](https://github.com/xchem/fragalysis-api/actions/workflows/build-main.yaml)
 
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/xchem/fragalysis-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/xchem/fragalysis-api/context:python)
 
