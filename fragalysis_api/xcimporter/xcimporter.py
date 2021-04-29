@@ -97,7 +97,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     structure = Align(directory=in_dir, pdb_ref=pdb_ref, mono=monomerize)
     structure.align(out_dir=os.path.join(out_dir, f"tmp{target}"))
 
-    for smiles_file in pdb_smiles_dict[' smiles']:
+    for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
             print(smiles_file)
             copyfile(smiles_file, os.path.join(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1])))
