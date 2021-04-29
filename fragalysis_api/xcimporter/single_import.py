@@ -3,10 +3,10 @@ import glob
 import os
 import shutil
 
-from fragalysis_api import Align, Monomerize, set_up
+from fragalysis_api import Align, Monomerize, set_up, convert_small_AA_chains, copy_extra_files
 
 
-def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False, self_ref=False):
+def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
     '''Formats a PDB file into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -34,6 +34,17 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
     in_dir = os.path.dirname(in_file)
 
     pdb_smiles_dict = {'pdb': [], 'smiles': []}
+
+    # Experimental - if option is used then chains are converted.
+    if max_lig_len > 0:
+        print(f'EXPERIMENTAL: Converting all chains with less than {max_lig_len} residues to HETATM LIG')
+        out = os.path.join(out_dir, f'maxliglen{target}/')
+        if not os.path.isdir(out):
+            os.makedirs(out)
+        convert_small_AA_chains(in_file=in_file, out_file=os.path.join(out, in_file), max_len=max_lig_len)
+        copy_extra_files(in_file=in_file, out_dir=out)
+        in_dir = out
+
 
     if monomerize:
         print("Monomerizing input structure")
@@ -118,11 +129,9 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
         print(file)
         shutil.copy(file, dest_dir)
 
-    if os.path.exists(os.path.join(out_dir, f'mono{target}')):
-        shutil.rmtree(os.path.join(out_dir, f'mono{target}'))
-
-    if os.path.exists(os.path.join(out_dir, f'tmp{target}')):
-        shutil.rmtree(os.path.join(out_dir, f'tmp{target}'))
+    # Time to use a for loop?
+    clean_up = [os.path.join(out_dir, f'maxliglen{target}'), os.path.join(out_dir, f'mono{target}'), os.path.join(out_dir, f'tmp{target}')]
+    [shutil.rmtree(x) for x in clean_up if os.path.exists(x)]
 
     print("Files are now in a fragalysis friendly format!")
 

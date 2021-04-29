@@ -21,6 +21,7 @@ class XcImporterTest(unittest.TestCase):
         cls.metadata = True
         cls.covalent = True
         cls.reference = 'Mpro-x0981_A'
+        cls.mll = 15
 
 
     @classmethod
@@ -40,7 +41,8 @@ class XcImporterTest(unittest.TestCase):
             metadata=self.metadata,
             biomol=self.biomol,
             covalent=self.covalent,
-            pdb_ref=self.reference
+            pdb_ref=self.reference,
+            mll=self.mll
         )
 
         # Write more Tests
@@ -53,7 +55,8 @@ class XcImporterTest(unittest.TestCase):
                            monomerize=self.monomerize,
                            reference=os.path.join(self.out_dir, self.target, 'reference.pdb'),
                            biomol=self.biomol,
-                           covalent=self.covalent)
+                           covalent=self.covalent,
+                           mll=self.mll)
 
         # Tests should check if a thing is correctly removed and readded etc...
         # Write Many More... Single import should use a pdb in a seperate test!

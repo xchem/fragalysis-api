@@ -150,10 +150,10 @@ class Align:
                 s2 = time.time()
                 map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
                 array = np.array(map.xmap, copy=False)
-                array[~np.isfinite(array)] = 0                
-                #print(map.to_array())
+                array[~np.isfinite(array)] = 0
+                # print(map.to_array())
                 map.resample(xmap=map, transform=transform)
-                #print(map.to_array())
+                # print(map.to_array())
                 map.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
                 e2 = time.time()
                 print(f'{int(e2 - s2)} seconds to transform map...')
@@ -438,8 +438,8 @@ class Monomerize:
         :return: A list of pdb_files that have been created with the naming convention f_[chain_name]
         '''
         aa_codes = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
-                        'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
-                        'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
+                    'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
+                    'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
         filenames = []
         base_structure = gemmi.read_structure(f)
         base_models = base_structure[0]

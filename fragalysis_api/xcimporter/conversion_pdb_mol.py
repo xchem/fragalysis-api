@@ -11,6 +11,7 @@ import warnings
 import csv
 import pypdb
 import numpy as np
+import gemmi
 
 
 class Ligand:
@@ -637,3 +638,25 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
         new_apo.make_apo_desol_files()  # makes apo file without solvent, ions and buffers, and file with just those
 
     return new
+
+
+def convert_small_AA_chains(in_file, out_file, max_len=15):
+    pdb_file = gemmi.read_structure(in_file)
+    structure = pdb_file[0]
+    chain_lens = [j.get_polymer().length() for j in structure]
+    print(chain_lens)
+    for i, j in enumerate(chain_lens):
+        if j <= max_len:
+            for x in structure[i]:
+                x.name = 'LIG'
+                x.het_flag = 'H'
+                x.seqid.num = i + 1
+    pdb_file.write_pdb(out_file)
+
+def copy_extra_files(in_file, out_dir):
+    bn = os.path.basename(in_file).replace('.pdb', '')
+    dirname = os.path.dirname(in_file)
+    other_files = set(glob.glob(os.path.join(dirname, f'{bn}*'))) - set([in_file])
+    new_loc = [os.path.join(out_dir, os.path.basename(x)) for x in other_files]
+    for i, j in zip(other_files, new_loc):
+        shutil.copyfile(i, j)

@@ -153,6 +153,8 @@ A description of the command line arguments are as follows:
 - `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
 - `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
 - `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
+- `-mll`, `--max_lig_len`: (Optional) __EXPERIMENTAL__ Integer, if >0 will convert all chains with residue length <mll to `HETATM LIG` - useful for converting short chain amino acids to ligands for example.
+
 
 The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
 
@@ -183,6 +185,7 @@ A description of the command line arguments for `single_import.py` are as follow
 - `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
 - `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
 - `-sr`, `--self_reference`: (Optional) Indicate whether you want pdb files to align to themselves (for testing purposes)
+- `-mll`, `--max_lig_len`: (Optional) __EXPERIMENTAL__ Integer, if >0 will convert all chains with residue length <mll to `HETATM LIG` - useful for converting short chain amino acids to ligands for example.
 
 #### 3.2 Running The Fragalysis API without alignment 
 This is only available to the `single_import.py` method
