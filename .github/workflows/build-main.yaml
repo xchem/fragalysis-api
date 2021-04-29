@@ -1,0 +1,96 @@
+---
+name: build main
+
+# Actions that take place after every commit the master/main branch.
+# Here every commit is built and tested.
+#
+# Actions also run if the repository is tagged.
+#
+# Actions also run on a schedule.
+
+# ---------------
+# Control secrets
+# ---------------
+#
+# At the GitHub 'organisation' or 'project' level you are expected to
+# have the following GitHub 'Repository Secrets' defined
+# (i.e. via 'Settings -> Secrets'): -
+#
+# (none)
+#
+# -----------
+# Environment (GitHub Environments)
+# -----------
+#
+# (none)
+
+on:
+  push:
+    branches:
+    - 'master'
+    - 'main'
+    tags:
+    - '**'
+  schedule:
+  # Build every Sunday (0) at 3:45pm
+  - cron: '45 15 * * 0'
+
+env:
+  CONDA_ORIGIN: http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7.10
+    - name: Install conda
+      run: |
+        # Install Miniconda.
+        # This will be installed in /home/runner/miniconda2
+        wget $CONDA_ORIGIN -O miniconda.sh
+        chmod +x miniconda.sh
+        ./miniconda.sh -b
+        export PATH=/home/runner/miniconda2/bin:$PATH
+
+        # Echo (for reference) the installed conda.
+        # When last observed this was '4.0.5'.
+        conda -V
+
+        # Update conda (otherwise conda can't be found)
+        conda update conda -y
+
+        # Set up a conda environment with the right Python version.
+        conda create -y -n action_env python=3.7.10
+
+        # Move to the environment
+        source activate action_env
+
+        # Install the requirements from the environment file
+        # - conda install -c schrodinger pymol -y
+        # Required...
+        git clone https://github.com/xchem/gemmi_pandda.git
+        cd ./gemmi_pandda
+        pip install --force-reinstall .
+        cd ..
+
+        # Also Required
+        git clone https://github.com/xchem/pandda_gemmi.git
+        cd ./pandda_gemmi
+        pip install -e .
+        cd ..
+        conda install -c rdkit rdkit -y
+
+        # Install additional dependencies used only for testing
+        conda install -y pytest codecov
+
+        # You can also install some dependencies with pip if not available in conda
+        pip install -e .
+
+        # Run tests and coverage report
+        coverage run -m py.test
+        coverage report --omit="pandda_gemmi/*,gemmi_pandda/*,tests/*" -m

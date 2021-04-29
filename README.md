@@ -1,9 +1,10 @@
-[![Build Status](https://travis-ci.org/xchem/fragalysis-api.svg?branch=master)](https://travis-ci.org/xchem/fragalysis-api)
+# fragalysis-api
+
+[![build main](https://github.com/xchem/fragalysis-api/actions/workflows/build-main.yaml/badge.svg)](https://github.com/xchem/fragalysis-api/actions/workflows/build-main.yaml)
+
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/xchem/fragalysis-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/xchem/fragalysis-api/context:python)
 
 Documentation: https://xchem.github.io/fragalysis-api/
-
-# fragalysis-api
 
 This api aims to allow any user to upload pdb files from the pdb or that they have created themselves, 
 and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
