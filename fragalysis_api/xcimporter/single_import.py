@@ -168,6 +168,11 @@ if __name__ == "__main__":
                         required=False,
                         default=False
                         )
+    parser.add_argument("-mll",
+                        "--max_lig_len",
+                        help="Int, Convert all chains shorter than max_lig_len to HETATM LIG",
+                        required=False,
+                        default=0)
 
     args = vars(parser.parse_args())
 
@@ -178,6 +183,7 @@ if __name__ == "__main__":
     biomol = args["biomol_txt"]
     covalent = args["covalent"]
     self_ref = args['self_reference']
+    mll = args['max_lig_len']
 
     # Will this work?
     if self_ref:
@@ -200,7 +206,8 @@ if __name__ == "__main__":
                            reference=reference,
                            biomol=biomol,
                            covalent=covalent,
-                           self_ref=self_ref)
+                           self_ref=self_ref,
+                           max_lig_len=mll)
         print(f'File has been aligned to {reference}')
 
 
