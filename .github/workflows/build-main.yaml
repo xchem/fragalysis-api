@@ -31,7 +31,13 @@ on:
     - 'main'
     tags:
     - '**'
-  schedule:
+  pull_request:
+    branches:
+    - 'master'
+    - 'main'
+    tags:
+    - '**'
+  schedule:  
   # Build every Sunday (0) at 3:45pm
   - cron: '45 15 * * 0'
 
