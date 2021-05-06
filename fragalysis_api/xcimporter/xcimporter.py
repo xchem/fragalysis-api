@@ -3,6 +3,7 @@ import shutil
 from sys import exit
 import os
 import gemmi
+import glob
 
 from shutil import copyfile, rmtree
 
