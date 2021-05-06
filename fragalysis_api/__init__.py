@@ -1,7 +1,7 @@
 from .xcglobalscripts.set_config import ConfigSetup
 
 from .xcimporter.validate import Validate, ValidatePDB
-from .xcimporter import conversion_pdb_mol
+from .xcimporter.conversion_pdb_mol import set_up, convert_small_AA_chains, copy_extra_files
 from .xcimporter.align import Align, Monomerize
 from .xcimporter.xc_utils import to_fragalysis_dir
 from .xcimporter.xcimporter import xcimporter

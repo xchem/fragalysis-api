@@ -9,7 +9,7 @@ from shutil import copyfile, rmtree
 
 from fragalysis_api import Validate, Align, Monomerize
 #from fragalysis_api import set_up, convert_small_AA_chains, copy_extra_files
-from conversion_pdb_mol import set_up, convert_small_AA_chains, copy_extra_files
+from .conversion_pdb_mol import set_up, convert_small_AA_chains, copy_extra_files
 
 from distutils.dir_util import copy_tree
 
