@@ -61,7 +61,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
     in_dir2 = in_dir
 
     # Experimental - if option is used then chains are converted. All files need to be moved????
-    if max_lig_len > 0:
+    if int(max_lig_len) > int(0):
         print(f'EXPERIMENTAL: Converting all chains with less than {max_lig_len} residues to HETATM LIG')
         out = os.path.join(out_dir, f'maxliglen{target}/')
         if not os.path.isdir(out):

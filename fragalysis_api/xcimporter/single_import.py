@@ -38,7 +38,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference_pdb, refe
     pdb_smiles_dict = {'pdb': [], 'smiles': []}
 
     # Experimental - if option is used then chains are converted.
-    if max_lig_len > 0:
+    if int(max_lig_len) > int(0):
         print(f'EXPERIMENTAL: Converting all chains with less than {max_lig_len} residues to HETATM LIG')
         out = os.path.join(out_dir, f'maxliglen{target}/')
         if not os.path.isdir(out):
