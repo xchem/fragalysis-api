@@ -646,7 +646,7 @@ def convert_small_AA_chains(in_file, out_file, max_len=15):
     chain_lens = [j.get_polymer().length() for j in structure]
     print(chain_lens)
     for i, j in enumerate(chain_lens):
-        if j <= max_len:
+        if int(j) <= int(max_len):
             for x in structure[i]:
                 x.name = 'LIG'
                 x.het_flag = 'H'
