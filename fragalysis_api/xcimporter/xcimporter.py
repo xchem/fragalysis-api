@@ -158,7 +158,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
                             f.write(line)
 
     # Copy reference pdb to aligned folder as: reference.pdb, so single_import can file off with ease.
-    structure.write_align_ref(os.path.join(out_dir, target, 'reference.pdb'))
+    structure.write_align_ref(output=os.path.join(out_dir, target))
 
     # Move input files into Target/crystallographic folder
     copy_tree(in_dir2, os.path.join(out_dir, target, 'crystallographic'))

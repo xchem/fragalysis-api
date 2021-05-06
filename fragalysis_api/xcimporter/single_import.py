@@ -6,7 +6,7 @@ import shutil
 from fragalysis_api import Align, Monomerize, set_up, convert_small_AA_chains, copy_extra_files
 
 
-def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
+def import_single_file(in_file, out_dir, target, monomerize, reference_pdb, reference_map, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
     '''Formats a PDB file into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -17,7 +17,8 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
     :param out_dir: Directory containing processed pdbs (will be created if it doesn't exists)
     :param target: Name of the folder to be created inside out_dir
     :param monomerize: Bool, if True, will attempt to split pdb files into seperate chains
-    :param reference: Name of the Reference pdb to align in_file to. If called from command line this will default to out_dir/target/reference.pdb
+    :param reference_pdb: Name of the Reference pdb to align in_file to. If called from command line this will default to out_dir/target/reference.pdb
+    :param reference_map: Name of the Reference map to align in_file to. If called from command line this will default to out_dir/target/reference.map
     :param biomol: plain-text file containing header information about the bio-molecular
         context of the pdb structures. If provided the contents will be appended to the top of the _apo.pdb files
     :param covalent: Bool, if True, will attempt to convert output .mol files to account for potential covalent attachments
@@ -76,7 +77,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference, biomol=N
         if self_ref:
             structure.align_to_reference(i, i, out_dir=os.path.join(out_dir, f"tmp{target}"))
         else:
-            structure.align_to_reference(i, reference, out_dir=os.path.join(out_dir, f"tmp{target}"))
+            structure.align_to_reference(i, reference_pdb=reference_pdb, reference_map=reference_map, out_dir=os.path.join(out_dir, f"tmp{target}"))
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
@@ -158,7 +159,8 @@ if __name__ == "__main__":
 
     parser.add_argument("-t", "--target", help="Target name", required=True)
 
-    parser.add_argument('-r', '--reference', help='Reference Structure', required=False, default=None)
+    parser.add_argument('-r', '--reference_pdb', help='Reference PDB Structure', required=False, default=None)
+    parser.add_argument('-rmap', '--reference_map', help='Reference Map File', required=False, default=None)
     parser.add_argument('-sr', '--self_reference', action="store_true", help='Include this flag if you want each pdb file to only align to itself', required=False, default=False)
     parser.add_argument("-b", "--biomol_txt", help="Biomol Input txt file", required=False, default=None)
     parser.add_argument("-c",
@@ -187,11 +189,14 @@ if __name__ == "__main__":
 
     # Will this work?
     if self_ref:
-        reference = in_file
-    elif args['reference'] is None:
-        reference = os.path.join(out_dir, target, 'reference.pdb')
+        reference_pdb = in_file
+        reference_map = None
+    elif args['reference_pdb'] is None:
+        reference_pdb = os.path.join(out_dir, target, 'reference.pdb')
+        reference_map = os.path.join(out_dir, target, 'reference.map')
     else:
-        reference = args['reference']
+        reference_pdb = args['reference_pdb']
+        reference_map = args['reference_map']
 
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
@@ -203,7 +208,8 @@ if __name__ == "__main__":
                            out_dir=out_dir,
                            target=target,
                            monomerize=monomerize,
-                           reference=reference,
+                           reference_pdb=reference_pdb,
+                           reference_map=reference_map,
                            biomol=biomol,
                            covalent=covalent,
                            self_ref=self_ref,
