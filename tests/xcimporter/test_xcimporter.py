@@ -42,7 +42,7 @@ class XcImporterTest(unittest.TestCase):
             biomol=self.biomol,
             covalent=self.covalent,
             pdb_ref=self.reference,
-            mll=self.mll
+            max_lig_len=self.mll
         )
 
         # Write more Tests
@@ -53,10 +53,11 @@ class XcImporterTest(unittest.TestCase):
                            out_dir=self.out_dir,
                            target=self.target,
                            monomerize=self.monomerize,
-                           reference=os.path.join(self.out_dir, self.target, 'reference.pdb'),
+                           reference_pdb=os.path.join(self.out_dir, self.target, 'reference.pdb'),
+                           reference_map=os.path.join(self.out_dir, self.target, 'reference.map'),
                            biomol=self.biomol,
                            covalent=self.covalent,
-                           mll=self.mll)
+                           max_lig_len=self.mll)
 
         # Tests should check if a thing is correctly removed and readded etc...
         # Write Many More... Single import should use a pdb in a seperate test!
