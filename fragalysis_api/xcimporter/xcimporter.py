@@ -69,9 +69,10 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, monomeri
             os.makedirs(out)
         infiles = glob.glob(os.path.join(in_dir, '*.pdb'))
         for i in infiles:
-            convert_small_AA_chains(in_file=i, out_file=os.path.join(out, i), max_len=max_lig_len)
+            convert_small_AA_chains(in_file=i, out_file=os.path.join(out, os.path.basename(i)), max_len=max_lig_len)
             copy_extra_files(in_file=i, out_dir=out)
         in_dir = out
+        print(in_dir)
 
     if monomerize:
         print("Monomerizing input structures")
@@ -246,15 +247,15 @@ if __name__ == "__main__":
                covalent=covalent,
                pdb_ref=reference,
                max_lig_len=mll)
+    #This need replacing.
+    #fix_pdb = open(os.path.join(out_dir, target, 'aligned', 'pdb_file_failures.txt'), 'w')
 
-    fix_pdb = open(os.path.join(out_dir, target, 'aligned', 'pdb_file_failures.txt'), 'w')
+    #for target_file in os.listdir(os.path.join(out_dir, target, 'aligned')):
+    #    if target_file != 'pdb_file_failures.txt' and len(os.listdir(os.path.join(out_dir, target, target_file))) < 2:
+    #        rmtree(os.path.join(out_dir, target, target_file))
+    #        fix_pdb.write(target_file.split('-')[1] + '\n')
 
-    for target_file in os.listdir(os.path.join(out_dir, target)):
-        if target_file != 'pdb_file_failures.txt' and len(os.listdir(os.path.join(out_dir, target, target_file))) < 2:
-            rmtree(os.path.join(out_dir, target, target_file))
-            fix_pdb.write(target_file.split('-')[1] + '\n')
-
-    fix_pdb.close()
-    print('For files that we were unable to process, look at the pdb_file_failures.txt file in your results directory.'
-          ' These files were unable to produce RDKit molecules, so the error likely lies in the way the ligand atoms or'
-          'the conect files have been written in the pdb file')
+    #fix_pdb.close()
+    #print('For files that we were unable to process, look at the pdb_file_failures.txt file in your results directory.'
+    #      ' These files were unable to produce RDKit molecules, so the error likely lies in the way the ligand atoms or'
+    #      'the conect files have been written in the pdb file')

@@ -651,6 +651,7 @@ def convert_small_AA_chains(in_file, out_file, max_len=15):
                 x.name = 'LIG'
                 x.het_flag = 'H'
                 x.seqid.num = i + 1
+    print(out_file)
     pdb_file.write_pdb(out_file)
 
 def copy_extra_files(in_file, out_dir):

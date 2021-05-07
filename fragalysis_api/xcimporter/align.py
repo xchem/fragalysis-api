@@ -686,9 +686,9 @@ def resample(
     transform_reference_to_centered.vec.fromlist((-transform.com_reference).tolist())
     transform_reference_to_centered.mat.fromlist(np.eye(3).tolist())
 
-    tranform_centered_to_moving = gemmi.Transform()
-    tranform_centered_to_moving.vec.fromlist(transform.com_moving.tolist())
-    tranform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
+    transform_centered_to_moving = gemmi.Transform()
+    transform_centered_to_moving.vec.fromlist(transform.com_moving.tolist())
+    transform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
 
     # Create ouput grid
     interpolated_grid = gemmi.FloatGrid(
@@ -706,15 +706,22 @@ def resample(
 
         # get position
         #position = interpolated_grid.get_position(*point)
-        position = interpolated_grid.point_to_position(*point)
+        position = interpolated_grid.point_to_position(interpolated_grid.get_point(point[0], point[1], point[2]))
         # Tranform to origin frame
-        position_origin_reference = gemmi.Position(transform_reference_to_centered.apply(position))
+        #position_origin_reference = gemmi.Position(*transform_reference_to_centered.apply(position))
+        trtc = transform_reference_to_centered.apply(position)
+        position_origin_reference = gemmi.Position(trtc[0], trtc[1], trtc[2])
 
         # Rotate
-        position_origin_moving = gemmi.Position(transform_rotate_reference_to_moving.apply(position_origin_reference))
+        #position_origin_moving = gemmi.Position(transform_rotate_reference_to_moving.apply(position_origin_reference))
+        trrtm = transform_rotate_reference_to_moving.apply(position_origin_reference)
+        position_origin_moving = gemmi.Position(trrtm[0], trrtm[1], trrtm[2])
 
         # Transform to moving frame
-        position_moving = gemmi.Position(tranform_centered_to_moving.apply(position_origin_moving))
+        #print('Tr MF')
+        #position_moving = gemmi.Position(tranform_centered_to_moving.apply(position_origin_moving))
+        tctm = transform_centered_to_moving.apply(position_origin_moving)
+        position_moving = gemmi.Position(tctm[0], tctm[1], tctm[2])
 
         # Interpolate moving map
         interpolated_map_value = moving_xmap.xmap.interpolate_value(position_moving)

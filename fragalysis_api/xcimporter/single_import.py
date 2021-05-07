@@ -202,8 +202,8 @@ if __name__ == "__main__":
     if out_dir == os.path.join("..", "..", "data", "xcimporter", "output"):
         print("Using the default input directory ", out_dir)
 
-    if not os.path.isfile(reference):
-        print(f'Cannot find file called {reference}, please make sure the path is correct (or specify another reference using -r)!')
+    if not os.path.isfile(reference_pdb):
+        print(f'Cannot find file called {reference_pdb}, please make sure the path is correct (or specify another reference using -r)!')
     else:
         import_single_file(in_file=in_file,
                            out_dir=out_dir,
@@ -215,6 +215,6 @@ if __name__ == "__main__":
                            covalent=covalent,
                            self_ref=self_ref,
                            max_lig_len=mll)
-        print(f'File has been aligned to {reference}')
+        print(f'File has been aligned to {reference_pdb}')
 
 
