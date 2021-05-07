@@ -696,7 +696,7 @@ def resample(
         reference_xmap.xmap.nv,
         reference_xmap.xmap.nw, )
     interpolated_grid.set_unit_cell(reference_xmap.xmap.unit_cell)
-    interpolated_grid.spacegroup = reference_map.xmap.spacegroup
+    interpolated_grid.spacegroup = reference_xmap.xmap.spacegroup
 
     # indicies to positions
 
