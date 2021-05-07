@@ -705,8 +705,8 @@ def resample(
             continue
 
         # get position
-        position = interpolated_grid.get_position(*point)
-
+        #position = interpolated_grid.get_position(*point)
+        position = interpolated_grid.point_to_position(*point)
         # Tranform to origin frame
         position_origin_reference = gemmi.Position(transform_reference_to_centered.apply(position))
 
