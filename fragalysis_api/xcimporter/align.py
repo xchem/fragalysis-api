@@ -656,7 +656,7 @@ def resample(
         for chain in model:
             for residue in chain.get_polymer():
                 for atom in residue:
-                    fractional = reference_map.xmap.unit_cell.fractionalize(atom.pos)
+                    fractional = reference_xmap.xmap.unit_cell.fractionalize(atom.pos)
                     fractional_coords.append([fractional.x, fractional.y, fractional.z])
 
     fractional_coords_array = np.array(fractional_coords)
