@@ -3,8 +3,7 @@ import glob
 import os
 import shutil
 
-from conversion_pdb_mol import set_up, convert_small_AA_chains, copy_extra_files
-from fragalysis_api import Align, Monomerize
+from fragalysis_api import Align, Monomerize, set_up, convert_small_AA_chains, copy_extra_files
 
 
 def import_single_file(in_file, out_dir, target, monomerize, reference_pdb, reference_map, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
