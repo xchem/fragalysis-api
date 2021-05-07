@@ -701,8 +701,9 @@ def resample(
     # indicies to positions
 
     for point in points:
-        if mask.get_value(*point) < 1.0:
-            continue
+        # is this hiding results???
+        #if mask.get_value(*point) < 1.0:
+        #    continue
 
         # get position
         #position = interpolated_grid.get_position(*point)
