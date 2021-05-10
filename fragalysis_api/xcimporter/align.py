@@ -169,9 +169,6 @@ class Align:
         '''
         fn = os.path.join(self.directory, f'{self._get_ref}.pdb')
         shutil.copyfile(fn, os.path.join(output, 'reference.pdb'))
-        # copy reference map
-        fn = self.ref_map
-        shutil.copyfile(fn, os.path.join(output, 'reference.map'))
 
     def align(self, out_dir):
         """
@@ -669,9 +666,9 @@ def resample(
     transform_reference_to_centered.vec.fromlist((-transform.com_reference).tolist())
     transform_reference_to_centered.mat.fromlist(np.eye(3).tolist())
 
-    tranform_centered_to_moving = gemmi.Transform()
-    tranform_centered_to_moving.vec.fromlist(transform.com_moving.tolist())
-    tranform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
+    transform_centered_to_moving = gemmi.Transform()
+    transform_centered_to_moving.vec.fromlist(transform.com_moving.tolist())
+    transform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
 
 
     # indicies to positions
