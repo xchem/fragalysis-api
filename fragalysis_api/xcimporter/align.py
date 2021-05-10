@@ -111,13 +111,12 @@ class Align:
         # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
-    def align_to_reference(self, in_file, reference_pdb, reference_map, out_dir):
+    def align_to_reference(self, in_file, reference_pdb, out_dir):
         '''
         Aligns a single pdb file to a reference and adds it to the specified output directory.
         :param in_file: filepath to corresponding pdb file to align. Accompanying map files should be located within
             the same directory as input file.
         :param reference_pdb: the reference pdb file to align to.
-        :param reference_map: The reference map file to align to.
         :param out_dir: The desired output directory for the aligned pdb file.
         :return: an aligned pdb file in the output directory with the same name as input.
         '''
@@ -126,12 +125,10 @@ class Align:
         base_names = os.path.splitext(os.path.basename(input_files))[0]
         crystals = [y for y in [x for x in [base_names] if 'event' not in x] if 'fofc' not in y]
         ref = reference_pdb
-        map_ref = reference_map
         dir = self.directory
         mono = self.mono
 
         reference_pdb = Structure.from_file(file=Path(ref))
-        reference_map = Xmap.from_file(file=Path(map_ref))
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             current_pdb = Structure.from_file(file=Path(in_file))
@@ -157,13 +154,8 @@ class Align:
                 array = np.array(map.xmap, copy=False)
                 array[~np.isfinite(array)] = 0
                 # print(map.to_array())
-                if map_ref is not None:
-                    newmap = resample(reference_xmap=reference_map,
-                                      moving_xmap=map,
-                                      transform=transform,
-                                      reference_structure=reference_pdb)
-                    # print(map.to_array())
-                    newmap.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
+                newmap = resample(moving_xmap=map,transform=transform,reference_structure=reference_pdb)
+                newmap.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
                 e2 = time.time()
                 print(f'{int(e2 - s2)} seconds to transform map...')
                 e = time.time()
@@ -197,13 +189,6 @@ class Align:
 
         # Reference stuff
         reference_pdb = Structure.from_file(file=Path(os.path.join(dir, f'{self._get_ref}.pdb')))
-        refmaps = [j for j in self._get_maplist if self._get_ref in j]
-        reference_map = None
-        if len(refmaps) > 0:
-            refmaps = refmaps[0]
-            refmapbase, refmapext = os.path.splitext(os.path.basename(refmaps))
-            reference_map = Xmap.from_file(file=Path(os.path.join(dir, f'{refmapbase}{refmapext}')))
-            self.ref_map = os.path.join(dir, f'{refmapbase}{refmapext}')
 
         s = time.time()
         for num, name in enumerate(crystals):
@@ -229,15 +214,8 @@ class Align:
                     map = Xmap.from_file(file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    if reference_map is not None:
-                        newmap = resample(reference_xmap=reference_map,
-                                          moving_xmap=map,
-                                          transform=transform,
-                                          reference_structure=reference_pdb)
-                        # map.resample(xmap=map, transform=transform)
-                        newmap.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
-                    else:
-                        print(f'''No Reference map found! Not copying map''')
+                    newmap = resample(moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    newmap.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
                     e2 = time.time()
                     print(f'{int(e2 - s2)} seconds to transform map...')
 
@@ -627,25 +605,31 @@ def find_water_chains(file):
     return list(set(old) - set(new))
 
 def resample(
-        reference_xmap: Xmap,
         moving_xmap: Xmap,
         transform: Transform,
         reference_structure: Structure
 ):
     print(f"Transform: {transform}; {transform.transform.vec} {transform.transform.mat}")
 
+    interpolated_grid = gemmi.FloatGrid(
+        moving_xmap.xmap.nu,
+        moving_xmap.xmap.nv,
+        moving_xmap.xmap.nw, )
+    interpolated_grid.set_unit_cell(moving_xmap.xmap.unit_cell)
+    interpolated_grid.spacegroup = moving_xmap.xmap.spacegroup
+
     # points
-    mask = gemmi.FloatGrid(reference_xmap.xmap.nu,
-                           reference_xmap.xmap.nv,
-                           reference_xmap.xmap.nw, )
-    mask.set_unit_cell(reference_xmap.xmap.unit_cell)
+    mask = gemmi.FloatGrid(moving_xmap.xmap.nu,
+                           moving_xmap.xmap.nv,
+                           moving_xmap.xmap.nw, )
+    mask.set_unit_cell(moving_xmap.xmap.unit_cell)
     mask.spacegroup = gemmi.find_spacegroup_by_name("P 1")
 
     for model in reference_structure.structure:
         for chain in model:
             for residue in chain.get_polymer():
                 for atom in residue:
-                    mask.set_points_around(atom.pos, 2.0, 1.0)
+                    mask.set_points_around(atom.pos, 5.0, 1.0)
 
     mask_array = np.array(mask)
     mask_indicies = np.hstack([x.reshape((len(x), 1)) for x in np.nonzero(mask)])
@@ -656,29 +640,28 @@ def resample(
         for chain in model:
             for residue in chain.get_polymer():
                 for atom in residue:
-                    fractional = reference_xmap.xmap.unit_cell.fractionalize(atom.pos)
+                    fractional = moving_xmap.xmap.unit_cell.fractionalize(atom.pos)
                     fractional_coords.append([fractional.x, fractional.y, fractional.z])
 
     fractional_coords_array = np.array(fractional_coords)
     max_coord = np.max(fractional_coords_array, axis=0)
     min_coord = np.min(fractional_coords_array, axis=0)
 
-    min_index = np.floor(min_coord * np.array([reference_xmap.xmap.nu, reference_xmap.xmap.nv, reference_xmap.xmap.nw]))
-    max_index = np.floor(max_coord * np.array([reference_xmap.xmap.nu, reference_xmap.xmap.nv, reference_xmap.xmap.nw]))
+    min_index = np.floor(min_coord * np.array([interpolated_grid.nu, interpolated_grid.nv, interpolated_grid.nw]))
+    max_index = np.floor(max_coord * np.array([interpolated_grid.nu, interpolated_grid.nv, interpolated_grid.nw]))
 
     points = itertools.product(range(int(min_index[0]), int(max_index[0])),
                                range(int(min_index[1]), int(max_index[1])),
                                range(int(min_index[2]), int(max_index[2])),
                                )
 
-    # Unpack the points, positions and transforms
+    # Unpack the points, poitions and transforms
     point_list: List[Tuple[int, int, int]] = []
     position_list: List[Tuple[float, float, float]] = []
     transform_list: List[gemmi.transform] = []
     com_moving_list: List[np.array] = []
     com_reference_list: List[np.array] = []
 
-    #     transform_rotate_reference_to_moving = transform.transform.inverse()
     transform_rotate_reference_to_moving = transform.transform
     transform_rotate_reference_to_moving.vec.fromlist([0.0, 0.0, 0.0])
 
@@ -686,41 +669,24 @@ def resample(
     transform_reference_to_centered.vec.fromlist((-transform.com_reference).tolist())
     transform_reference_to_centered.mat.fromlist(np.eye(3).tolist())
 
-    transform_centered_to_moving = gemmi.Transform()
-    transform_centered_to_moving.vec.fromlist(transform.com_moving.tolist())
-    transform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
+    tranform_centered_to_moving = gemmi.Transform()
+    tranform_centered_to_moving.vec.fromlist(transform.com_moving.tolist())
+    tranform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
 
-    # Create ouput grid
-    interpolated_grid = gemmi.FloatGrid(
-        reference_xmap.xmap.nu,
-        reference_xmap.xmap.nv,
-        reference_xmap.xmap.nw, )
-    interpolated_grid.set_unit_cell(reference_xmap.xmap.unit_cell)
-    interpolated_grid.spacegroup = reference_xmap.xmap.spacegroup
 
     # indicies to positions
-
     for point in points:
-        # is this hiding results???
-        #if mask.get_value(*point) < 1.0:
-        #    continue
-
-        # get position
-        #position = interpolated_grid.get_position(*point)
         position = interpolated_grid.point_to_position(interpolated_grid.get_point(point[0], point[1], point[2]))
         # Tranform to origin frame
-        #position_origin_reference = gemmi.Position(*transform_reference_to_centered.apply(position))
         trtc = transform_reference_to_centered.apply(position)
         position_origin_reference = gemmi.Position(trtc[0], trtc[1], trtc[2])
 
         # Rotate
-        #position_origin_moving = gemmi.Position(transform_rotate_reference_to_moving.apply(position_origin_reference))
         trrtm = transform_rotate_reference_to_moving.apply(position_origin_reference)
         position_origin_moving = gemmi.Position(trrtm[0], trrtm[1], trrtm[2])
 
         # Transform to moving frame
         #print('Tr MF')
-        #position_moving = gemmi.Position(tranform_centered_to_moving.apply(position_origin_moving))
         tctm = transform_centered_to_moving.apply(position_origin_moving)
         position_moving = gemmi.Position(tctm[0], tctm[1], tctm[2])
 

@@ -54,7 +54,6 @@ class XcImporterTest(unittest.TestCase):
                            target=self.target,
                            monomerize=self.monomerize,
                            reference_pdb=os.path.join(self.out_dir, self.target, 'reference.pdb'),
-                           reference_map=os.path.join(self.out_dir, self.target, 'reference.map'),
                            biomol=self.biomol,
                            covalent=self.covalent,
                            max_lig_len=self.mll)
