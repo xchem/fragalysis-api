@@ -71,19 +71,19 @@ def import_single_file(in_file, out_dir, target, monomerize, reference_pdb, biom
 
     print("Aligning to Reference")
     structure = Align(in_dir, "", monomerize)
-
+    print('a1')
     for i in pdb_smiles_dict['pdb']:
         if self_ref:
             structure.align_to_reference(i, i, out_dir=os.path.join(out_dir, f"tmp{target}"))
         else:
             structure.align_to_reference(i, reference_pdb=reference_pdb, out_dir=os.path.join(out_dir, f"tmp{target}"))
-
+    print('a2')
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
             print(smiles_file)
             shutil.copyfile(smiles_file, os.path.join(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1])))
             print(os.path.join(out_dir, f"tmp{target}", smiles_file.split('/')[-1]))
-
+    print('a3')
     aligned_dict = {'bound_pdb': [], 'smiles': []}
 
     for f in os.listdir(os.path.join(out_dir, f"tmp{target}")):
@@ -94,7 +94,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference_pdb, biom
                                                                                                '_smiles.txt'))
             else:
                 aligned_dict['smiles'].append(None)
-
+    print('a4')
     for aligned, smiles in list(zip(aligned_dict['bound_pdb'], aligned_dict['smiles'])):
         try:
             if smiles:
@@ -121,7 +121,7 @@ def import_single_file(in_file, out_dir, target, monomerize, reference_pdb, biom
             for file in os.listdir(os.path.join(out_dir, f"tmp{target}")):
                 if str(aligned) in file:
                     os.remove(os.path.join(out_dir, f"tmp{target}", str(file)))
-
+    print('a5')
     # Write clever method to copy in_file
     dest_dir = os.path.join(out_dir, target, 'crystallographic')
     globstr = in_file.replace('.pdb', '*')
