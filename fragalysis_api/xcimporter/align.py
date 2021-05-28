@@ -387,6 +387,8 @@ class Structure:
             print(model)
             for chain in model:
                 print(chain)
+                print(chain_id)
+                print(chain.name)
                 if rrf:
                     if chain.name not in chain_id:
                         continue
@@ -399,6 +401,7 @@ class Structure:
                         try:
                             current_res_id = ResidueID.from_residue_chain(
                                 model, chain, res_self)
+                            print(current_red_id)
                             if rrf:  # TODO CHANGE?
                                 res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                             else:
