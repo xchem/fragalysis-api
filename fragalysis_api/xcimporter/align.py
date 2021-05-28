@@ -245,8 +245,6 @@ class Align:
                 # Align Xmaps + save!
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
-                    if rrf:
-                        base = base.replace(name, f'{name}_{chain}')
                     s2 = time.time()
                     map = Xmap.from_file(
                         file=Path(os.path.join(dir, f'{base}{ext}')))
@@ -254,6 +252,8 @@ class Align:
                     array[~np.isfinite(array)] = 0
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    if rrf:
+                        base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
                     newmap.save(
                         path=Path(os.path.join(out_dir, fn)))
