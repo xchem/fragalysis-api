@@ -656,7 +656,7 @@ def split_chain_str(f):
             else:
                 temp_structure[0].remove_chain(j)
                 print([x.name for x in temp_structure[0]])
-        return temp_structure, list(set(nonHOH_chains) - set(alt_chains))
+    return temp_structure, list(set(nonHOH_chains) - set(alt_chains))
 
 
 def split_chains(f):
