@@ -210,7 +210,8 @@ class Align:
                 file=Path(os.path.join(dir, f'{name}.pdb'))
             )
             if rrf:
-                current_pdb.structure, chains = split_chain_str(
+                # current_pdb.structure, chains = split_chain_str(
+                chains = split_chain_str(
                     os.path.join(dir, f'{name}.pdb'))
             else:
                 chains = ''
@@ -638,25 +639,26 @@ def split_chain_str(f):
         if any([True for v in residues if v in aa_codes.values()]):
             chain_names.append(i)
     alt_chains = list(set(nonHOH_chains) - set(chain_names))
-    for i in chain_names:
-        # For each chain, convert all ligands,
-        temp_structure = gemmi.read_structure(f)
-        for j in alt_chains:
-            chain_dists = {}
-            for z in chain_names:
-                chain_dists[z] = chain_centers[j].dist(chain_centers[z])
-            print(chain_dists)
-            temp_structure[0][j].name = min(chain_dists, key=chain_dists.get)
-        leftover_chains = list(set(nonHOH_chains) - set(i))
-        # Remove remaining chains
-        for j in leftover_chains:
-            if j == i:
-                # Just in case.
-                continue
-            else:
-                temp_structure[0].remove_chain(j)
-                print([x.name for x in temp_structure[0]])
-    return temp_structure, list(set(nonHOH_chains) - set(alt_chains))
+    # for i in chain_names:
+    #    # For each chain, convert all ligands,
+    #    temp_structure = gemmi.read_structure(f)
+    #    for j in alt_chains:
+    #        chain_dists = {}
+    #        for z in chain_names:
+    #        print(chain_dists)
+    #            chain_dists[z] = chain_centers[j].dist(chain_centers[z])
+    #        temp_structure[0][j].name = min(chain_dists, key=chain_dists.get)
+    #    leftover_chains = list(set(nonHOH_chains) - set(i))
+    #    # Remove remaining chains
+    #    for j in leftover_chains:
+    #        if j == i:
+    #            # Just in case.
+    #            continue
+    #        else:
+    #            temp_structure[0].remove_chain(j)
+    #            print([x.name for x in temp_structure[0]])
+    # return temp_structure, list(set(nonHOH_chains) - set(alt_chains))
+    return list(set(nonHOH_chains) - set(alt_chains))
 
 
 def split_chains(f):
