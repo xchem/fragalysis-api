@@ -74,9 +74,8 @@ class Ligand:
 
         for lig in all_ligands:
             if rrf:
-                os.path.basename(self.infile).rsplit(
-                    '_', 2)[1] == lig.split()[4]
-                continue
+                if not os.path.basename(self.infile).rsplit('_', 2)[1] == lig.split()[4]:
+                    continue
             if lig.split()[3][-3:] not in self.non_ligs:
                 self.wanted_ligs.append(lig[16:20].strip() + lig[20:26])
 
@@ -597,7 +596,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     new.find_ligand_names_new(rrf=rrf)
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
-            new.wanted_ligs[i], count=i, monomerize=monomerize, smiles_file=smiles_file, covalent=covalent
+            new.wanted_ligs[i], count=i, monomerize=rrf, smiles_file=smiles_file, covalent=covalent
         )  # creates pdb file and mol object for specific ligand
     print('set2')
     for i in range(len(new.mol_dict["directory"])):
