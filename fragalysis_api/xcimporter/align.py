@@ -395,14 +395,14 @@ class Structure:
                 else:
                     print('Aligning')
                     for res_self in chain.get_polymer():
-                        print(res_self)
+                        # print(res_self)
                         if 'LIG' in str(res_self):
                             print('Skipping Ligand...')
                             continue
                         try:
                             current_res_id = ResidueID.from_residue_chain(
                                 model, chain, res_self)
-                            print(current_red_id)
+                            # print(current_red_id)
                             if rrf:  # TODO CHANGE?
                                 res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                             else:
@@ -411,7 +411,7 @@ class Structure:
                             self_ca_pos = res_self["CA"][0].pos
                             other_ca_pos = res_other["CA"][0].pos
                         except:
-                            print('Skipping, Residue not found in chain')
+                            #print('Skipping, Residue not found in chain')
                             continue
 
                         ca_list_self = Transform.pos_to_list(self_ca_pos)
@@ -446,6 +446,7 @@ class Structure:
                                                         mean_other,
                                                         mean_self,
                                                         )
+        print(transform)
         # Transform positions
         for atom in self.all_atoms():
             # print(str(atom))
