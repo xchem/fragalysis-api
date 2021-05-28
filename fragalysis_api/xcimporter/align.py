@@ -389,10 +389,9 @@ class Structure:
                 print(chain)
                 print(chain_id)
                 print(chain.name)
-                if rrf:
-                    if chain.name not in chain_id:
-                        print('Skipping')
-                        continue
+                if rrf and chain.name not in chain_id:
+                    print('Skipping')
+                    continue
                 else:
                     print('Aligning')
                     for res_self in chain.get_polymer():
