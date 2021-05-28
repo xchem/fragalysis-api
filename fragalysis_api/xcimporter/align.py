@@ -244,7 +244,8 @@ class Align:
                 # Align Xmaps + save!
                 for i in all_maps:
                     base, ext = os.path.splitext(os.path.basename(i))
-
+                    if rrf:
+                        base.replace(name, f'{name}_{chain}')
                     s2 = time.time()
                     map = Xmap.from_file(
                         file=Path(os.path.join(dir, f'{base}{ext}')))
