@@ -215,7 +215,8 @@ class Align:
             else:
                 chains = ''
             for chain in chains:
-                print(f'Aligning Chain {chain} of {name} to {ref}')
+                if rrf:
+                    print(f'Aligning Chain {chain} of {name} to {ref}')
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -383,12 +384,15 @@ class Structure:
 
         # Get CAs
         for model in self.structure:
+            print(model)
             for chain in model:
+                print(chain)
                 if rrf:
                     if chain.name not in chain_id:
                         continue
                 else:
                     for res_self in chain.get_polymer():
+                        print(res_self)
                         if 'LIG' in str(res_self):
                             print('Skipping Ligand...')
                             continue
