@@ -74,7 +74,8 @@ class Ligand:
 
         for lig in all_ligands:
             if rrf:
-                if not os.path.basename(self.infile).rsplit('_', 2)[1] == lig.split()[4]:
+                # Take First Character?
+                if not os.path.basename(self.infile).rsplit('_', 2)[1] == lig.split()[4][0]:
                     continue
             if lig.split()[3][-3:] not in self.non_ligs:
                 self.wanted_ligs.append(lig[16:20].strip() + lig[20:26])
