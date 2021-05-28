@@ -384,16 +384,10 @@ class Structure:
 
         # Get CAs
         for model in self.structure:
-            print(model)
             for chain in model:
-                print(chain)
-                print(chain_id)
-                print(chain.name)
                 if rrf and chain.name not in chain_id:
-                    print('Skipping')
                     continue
                 else:
-                    print('Aligning')
                     for res_self in chain.get_polymer():
                         # print(res_self)
                         if 'LIG' in str(res_self):
@@ -419,8 +413,6 @@ class Structure:
 
                         ca_self.append(ca_list_self)
                         ca_other.append(ca_list_other)
-                        print(ca_self)
-                        print(ca_other)
 
         # Make coord matricies
         matrix_self = numpy.array(ca_self)
@@ -446,7 +438,6 @@ class Structure:
                                                         mean_other,
                                                         mean_self,
                                                         )
-        print(transform)
         # Transform positions
         for atom in self.all_atoms():
             # print(str(atom))
