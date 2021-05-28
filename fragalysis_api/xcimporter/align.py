@@ -415,6 +415,8 @@ class Structure:
 
                         ca_self.append(ca_list_self)
                         ca_other.append(ca_list_other)
+                        print(ca_self)
+                        print(ca_other)
 
         # Make coord matricies
         matrix_self = numpy.array(ca_self)
