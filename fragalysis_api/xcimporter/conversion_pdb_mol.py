@@ -580,9 +580,8 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     :param keep_headers: Bool, indicate whether or not keep headers on apo files.
     :return: for each ligand: pdb, mol, sdf and _apo.pdb in seperate directorys inside out_dir/target_name
     """
-    print('set1')
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
-
+    print(infile)
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
 
@@ -599,9 +598,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
         new.create_pdb_for_ligand(
             new.wanted_ligs[i], count=i, monomerize=rrf, smiles_file=smiles_file, covalent=covalent
         )  # creates pdb file and mol object for specific ligand
-    print('set2')
     for i in range(len(new.mol_dict["directory"])):
-        print('set3')
         if not new.mol_dict["mol"][i]:
             warnings.warn(
                 str(
@@ -611,7 +608,6 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
                 )
             )
             continue
-        print('set4')
         shutil.copy(infile,
                     os.path.join(new.mol_dict["directory"][i], str(new.mol_dict["file_base"][i] + "_bound.pdb")))
 
@@ -625,21 +621,18 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
             map_base = map_base.replace(basebase, new.mol_dict["file_base"][i])
             shutil.copy(map_file,
                         os.path.join(new.mol_dict["directory"][i], map_base))
-        print('set5')
         new.create_mol_file(
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             mol_obj=new.mol_dict["mol"][i],
             smiles_file=smiles_file,
         )  # creates mol file for each ligand
-        print('set6')
         writer = Chem.rdmolfiles.SDWriter(
             os.path.join(
                 new.mol_dict["directory"][i],
                 str(new.mol_dict["file_base"][i] + ".sdf"),
             )
         )
-        print('set7')
         new.create_sd_file(
             new.mol_lst[i], writer
         )  # creates sd file containing all mol files
@@ -651,7 +644,6 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
             file_base=new.mol_dict["file_base"][i],
             smiles_file=smiles_file,
         )  # create metadata csv file for each ligand
-        print('set8')
         new_apo = pdb_apo(
             infile,
             target_name,
