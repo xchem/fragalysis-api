@@ -54,7 +54,7 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
     else:
         pdb_smiles_dict['smiles'].append(None)
 
-    print("Aligning to Reference")
+    print(f"Aligning to Reference: {reference_pdb}")
     structure = Align(in_dir, "", rrf=reduce_reference_frame)
 
     for i in pdb_smiles_dict['pdb']:
