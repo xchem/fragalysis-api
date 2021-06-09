@@ -136,41 +136,62 @@ class Align:
         rrf = self.rrf
 
         reference_pdb = Structure.from_file(file=Path(ref))
+        print(reference_pdb)
+        s = time.time()
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             current_pdb = Structure.from_file(file=Path(in_file))
-            try:
-                current_pdb, transform = current_pdb.align_to(
-                    other=reference_pdb, rrf=rrf)
-                print(transform)
-                print(transform.transform.mat.tolist())
-                print(transform.transform.vec.tolist())
-            except Exception as e:
-                # Poorly Documented. Use better stuff...
-                print(f'{e}')
-                continue
+            print(current_pdb)
+            if rrf:
+                # current_pdb.structure, chains = split_chain_str(
+                chains = split_chain_str(os.path.join(dir, f'{name}.pdb'))
+            else:
+                chains = ''
+            for chain in chains:
+                if rrf:
+                    print(f'Aligning Chain {chain} of {name} to {ref}')
+                try:
+                    current_pdb, transform = current_pdb.align_to(
+                        other=reference_pdb, rrf=rrf, chain_id=chain
+                    )
+                except Exception as e:
+                    print(f'{e}')
+                    continue
+                # Write new structure according to chain-name?
+                if rrf:
+                    current_pdb.structure.write_pdb(
+                        os.path.join(out_dir, f'{name}_{chain}_bound.pdb')
+                    )
+                    if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
+                        shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
+                            out_dir, f'{name}_{chain}_smiles.txt'))
+                else:
+                    current_pdb.structure.write_pdb(
+                        os.path.join(out_dir, f'{name}_bound.pdb')
+                    )
+                    if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
+                        shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
+                            out_dir, f'{name}_smiles.txt'))
 
-            current_pdb.structure.write_pdb(
-                os.path.join(out_dir, f'{name}_bound.pdb'))
-            # Align Xmaps + save!
-            s = time.time()
-            print(all_maps)
-            for i in all_maps:
-                base, ext = os.path.splitext(os.path.basename(i))
-                print(i)
-                s2 = time.time()
-                map = Xmap.from_file(
-                    file=Path(os.path.join(dir, f'{base}{ext}')))
-                array = np.array(map.xmap, copy=False)
-                array[~np.isfinite(array)] = 0
-                # print(map.to_array())
-                newmap = resample(
-                    moving_xmap=map, transform=transform, reference_structure=reference_pdb)
-                newmap.save(path=Path(os.path.join(out_dir, f'{base}{ext}')))
-                e2 = time.time()
-                print(f'{int(e2 - s2)} seconds to transform map...')
-                e = time.time()
-                print(f'Total Running time: {int(e - s) / 60} minutes.')
+                # Align Xmaps + save!
+                for i in all_maps:
+                    base, ext = os.path.splitext(os.path.basename(i))
+                    s2 = time.time()
+                    map = Xmap.from_file(
+                        file=Path(os.path.join(dir, f'{base}{ext}')))
+                    array = np.array(map.xmap, copy=False)
+                    array[~np.isfinite(array)] = 0
+                    newmap = resample(
+                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    if rrf:
+                        base = base.replace(name, f'{name}_{chain}')
+                    fn = f'{base}{ext}'
+                    newmap.save(
+                        path=Path(os.path.join(out_dir, fn)))
+                    e2 = time.time()
+                    print(f'{int(e2 - s2)} seconds to transform map...')
+                    e = time.time()
+                    print(f'Total Running time: {int(e - s) / 60} minutes.')
 
     def write_align_ref(self, output):
         '''
