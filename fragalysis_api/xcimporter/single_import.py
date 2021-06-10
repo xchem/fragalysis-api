@@ -94,7 +94,7 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
                            smiles_file=os.path.abspath(smiles),
                            biomol=biomol,
                            covalent=covalent,
-                           keep_headers=self_ref)
+                           keep_headers=True)
 
             else:
                 _ = set_up(target_name=target,
@@ -103,7 +103,7 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
                            rrf=reduce_reference_frame,
                            biomol=biomol,
                            covalent=covalent,
-                           keep_headers=self_ref)
+                           keep_headers=True)
 
         except AssertionError:
             print(aligned, "is not suitable, please consider removal or editing")
