@@ -136,12 +136,10 @@ class Align:
         rrf = self.rrf
 
         reference_pdb = Structure.from_file(file=Path(ref))
-        print(reference_pdb)
         s = time.time()
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             current_pdb = Structure.from_file(file=Path(in_file))
-            print(current_pdb)
             if rrf:
                 # current_pdb.structure, chains = split_chain_str(
                 chains = split_chain_str(os.path.join(dir, f'{name}.pdb'))
@@ -409,14 +407,12 @@ class Structure:
                     continue
                 else:
                     for res_self in chain.get_polymer():
-                        # print(res_self)
                         if 'LIG' in str(res_self):
-                            print('Skipping Ligand...')
+                            print('Skipping Ligand Atom...')
                             continue
                         try:
                             current_res_id = ResidueID.from_residue_chain(
                                 model, chain, res_self)
-                            # print(current_red_id)
                             if rrf:  # TODO CHANGE?
                                 res_other = other.structure[current_res_id.model][0][current_res_id.insertion][0]
                             else:
@@ -425,7 +421,6 @@ class Structure:
                             self_ca_pos = res_self["CA"][0].pos
                             other_ca_pos = res_other["CA"][0].pos
                         except:
-                            #print('Skipping, Residue not found in chain')
                             continue
 
                         ca_list_self = Transform.pos_to_list(self_ca_pos)
@@ -460,182 +455,9 @@ class Structure:
                                                         )
         # Transform positions
         for atom in self.all_atoms():
-            # print(str(atom))
             atom.pos = transform.apply_inverse(atom.pos)
 
         return self, transform
-
-
-class Monomerize:
-
-    def __init__(self, directory, outdir):
-        '''
-        :param directory: Path to folder containing .pdb files to monomerize
-        :param outdir: Output folder where monomerized pdbs will be saved
-        :return: Initialises the Monomerize class that has the ability to split pdb files by chain.
-        '''
-        self.directory = directory
-        self.outdir = outdir
-        self.non_ligs = json.load(
-            open(os.path.join(os.path.dirname(__file__), "non_ligs.json"), "r")
-        )
-
-    def get_filelist(self):
-        '''
-        Get a list of pdb files within the input directory
-        :return: Returns a list of pdb files
-        '''
-        return glob.glob(os.path.join(self.directory, '*.pdb'))
-
-    def get_maplist(self):
-        '''
-        Get a list of .map or .ccp4 files from within the input directory
-        :return: Returns a list of filepaths corresponding to said volume density files.
-        '''
-        map_files = glob.glob(os.path.join(self.directory, '*.map'))
-        cpp4_files = glob.glob(os.path.join(self.directory, '*.ccp4'))
-        return map_files + cpp4_files
-    # This might need to go somewhere...
-
-    def split_chains(self, f):
-        '''
-        Split a pdb file according to chain names. While preserving chains that contain waters and assigned small, non-amino acid containing chains to the nearest chain by center of mass.
-        :param f: File name of the pdb file to split
-        :return: A list of pdb_files that have been created with the naming convention f_[chain_name]
-        '''
-        aa_codes = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
-                    'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
-                    'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
-        filenames = []
-        base_structure = gemmi.read_structure(f)
-        base_models = base_structure[0]
-        all_chains = [x.name for x in base_models]
-        HOH_chains = find_water_chains(f)
-
-        nonHOH_chains = list(set(all_chains) - set(HOH_chains))
-
-        chain_centers = {}
-        chain_names = []
-        # From nonHOH chains, identify if they contain any aminoacids, if they do. Assume they are full chains.
-        # else, later on they will be attached to nearest chain by center.
-        for i in nonHOH_chains:
-            chain_centers[i] = get_chain_center(chain_name=i, file=f)
-            span = base_structure[0][i].whole()
-            residues = [x.name for x in span]
-            # Possible to convert this to a %age
-            if any([True for v in residues if v in aa_codes.values()]):
-                chain_names.append(i)
-
-        alt_chains = list(set(nonHOH_chains) - set(chain_names))
-        for i in chain_names:
-            # For each chain, convert all ligands,
-            temp_structure = gemmi.read_structure(f)
-            for j in alt_chains:
-                chain_dists = {}
-                for z in chain_names:
-                    chain_dists[z] = chain_centers[j].dist(chain_centers[z])
-                print(chain_dists)
-                temp_structure[0][j].name = min(
-                    chain_dists, key=chain_dists.get)
-
-            leftover_chains = list(set(nonHOH_chains) - set(i))
-            # Remove remaining chains
-            for j in leftover_chains:
-                if j == i:
-                    # Just in case.
-                    continue
-                else:
-                    temp_structure[0].remove_chain(j)
-                    print([x.name for x in temp_structure[0]])
-
-            # Rename Chain to corresponding chain then save!
-            name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
-            filename = os.path.join(self.outdir, f'{name}_mono.pdb')
-            print(f'Writing to: {filename}')
-            temp_structure.write_pdb(filename)
-            filenames.append(filename)
-
-        return filenames
-
-    def process_pdb(self, filename, maplist):
-        '''
-        Processes a pdb file.
-        Firstly it splits the pdb file according to chains and then makes a copy all accompanying files (e.g. map files) to share the same name as the new split pdb file.
-        :param filename: The filepath of the pdb file to process
-        :param maplist: A list of mapfiles to be copied for the number of chains the filename may have.
-        :return: A list of filenames that were generated from the input pdb.
-        '''
-        out_names = self.split_chains(filename)
-        for o in out_names:
-            if os.path.isfile(filename.replace('.pdb', '_smiles.txt')):
-                shutil.copy(filename.replace('.pdb', '_smiles.txt'),
-                            o.replace('_mono.pdb', '_smiles.txt'))
-            base = os.path.splitext(os.path.basename(filename))[0]
-            new = os.path.splitext(os.path.basename(o))[0].replace('_mono', '')
-            allmaps = [j for j in maplist if base in j]
-            for map in allmaps:
-                if os.path.isfile(map):
-                    mapbase = os.path.basename(map)
-                    shutil.copy(map, os.path.join(
-                        self.outdir, mapbase.replace(base, new)))
-        return out_names
-
-    def write_bound(self, inname, outname):
-        '''
-        Appends header to pdb file and writes to new location
-        :param inname: input pdb file
-        :param outname: filepath of desired output
-        :return: Formally returns nothing, but a file will be written to outname
-        '''
-        with open(inname, 'r') as handle:
-            switch = 0
-            header_front, header_end = [], []
-
-            for line in handle:
-
-                if line.startswith('ATOM'):
-                    switch = 1
-
-                if line.startswith('HETATM'):
-                    switch = 2
-
-                if switch == 0 and not line.startswith('REMARK 350'):
-                    header_front.append(line)
-
-                if (switch == 2) and not line.startswith('HETATM'):
-                    header_end.append(line)
-
-        for o in outname:
-            newfile_contents = open(o, 'r').readlines()
-
-            with open(o.replace('_mono.pdb', '.pdb'), 'w') as handle:
-                remark = [
-                    'REMARK warning: chains may be ommitted for alignment\n']
-                new_pdb = ''.join(remark + header_front + newfile_contents)
-                # print(new_pdb)
-                handle.write(new_pdb)
-
-    def monomerize_single(self, file):
-        '''
-        Convert a pdb file into it's constituent chains
-        :param file: Input pdb filepath
-        :return: Formally nothing, but will create n number of monomerized pdbs per number of AA containing chains.
-        '''
-        maplist = self.get_maplist()
-        outnames = self.process_pdb(file, maplist)
-        print(outnames)
-        self.write_bound(file, outnames)
-        for o in outnames:
-            if os.path.isfile(o):
-                os.remove(o)
-
-    def monomerize_all(self):
-        '''
-        Converts a set of pdbs into constituent chains
-        :return: Formally nothing, but will separate pdb files according to chains.
-        '''
-        for f in self.get_filelist():
-            self.monomerize_single(file=f)
 
 
 def split_chain_str(f):
@@ -657,25 +479,6 @@ def split_chain_str(f):
         if any([True for v in residues if v in aa_codes.values()]):
             chain_names.append(i)
     alt_chains = list(set(nonHOH_chains) - set(chain_names))
-    # for i in chain_names:
-    #    # For each chain, convert all ligands,
-    #    temp_structure = gemmi.read_structure(f)
-    #    for j in alt_chains:
-    #        chain_dists = {}
-    #        for z in chain_names:
-    #        print(chain_dists)
-    #            chain_dists[z] = chain_centers[j].dist(chain_centers[z])
-    #        temp_structure[0][j].name = min(chain_dists, key=chain_dists.get)
-    #    leftover_chains = list(set(nonHOH_chains) - set(i))
-    #    # Remove remaining chains
-    #    for j in leftover_chains:
-    #        if j == i:
-    #            # Just in case.
-    #            continue
-    #        else:
-    #            temp_structure[0].remove_chain(j)
-    #            print([x.name for x in temp_structure[0]])
-    # return temp_structure, list(set(nonHOH_chains) - set(alt_chains))
     return list(set(nonHOH_chains) - set(alt_chains))
 
 
@@ -715,7 +518,6 @@ def split_chains(f):
             chain_dists = {}
             for z in chain_names:
                 chain_dists[z] = chain_centers[j].dist(chain_centers[z])
-            print(chain_dists)
             temp_structure[0][j].name = min(chain_dists, key=chain_dists.get)
         leftover_chains = list(set(nonHOH_chains) - set(i))
         # Remove remaining chains
@@ -773,8 +575,6 @@ def resample(
         transform: Transform,
         reference_structure: Structure
 ):
-    print(
-        f"Transform: {transform}; {transform.transform.vec} {transform.transform.mat}")
 
     interpolated_grid = gemmi.FloatGrid(
         moving_xmap.xmap.nu,
@@ -799,8 +599,6 @@ def resample(
     mask_array = np.array(mask)
     mask_indicies = np.hstack([x.reshape((len(x), 1))
                               for x in np.nonzero(mask)])
-    print(f"Mask indicies shape: {mask_indicies.shape}")
-
     fractional_coords = []
     for model in reference_structure.structure:
         for chain in model:
@@ -858,7 +656,6 @@ def resample(
         position_origin_moving = gemmi.Position(trrtm[0], trrtm[1], trrtm[2])
 
         # Transform to moving frame
-        #print('Tr MF')
         tctm = transform_centered_to_moving.apply(position_origin_moving)
         position_moving = gemmi.Position(tctm[0], tctm[1], tctm[2])
 

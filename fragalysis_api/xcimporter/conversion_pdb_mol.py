@@ -245,12 +245,12 @@ class Ligand:
 
             return mol
 
-    def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file, covalent=False):
+    def create_pdb_for_ligand(self, ligand, count, reduce, smiles_file, covalent=False):
         """
         A pdb file is produced for an individual ligand, containing atomic and connection information
         :param ligand: Name of the Ligand
         :param count: The index of the ligand
-        :param monomerize: Bool, if the file needs to be named using the chain name of the PDB
+        :param reduce: Bool, if the file needs to be named using the chain name of the PDB
         :param smiles_file: File path of smiles_file (if any)
         :param covalent: Bool, indicate whether or not covalent attach should be sought.
         :return: .pdb file for ligand.
@@ -258,7 +258,7 @@ class Ligand:
         print('lig 1')
         # out directory and filename for lig pdb
         if not self.target_name in os.path.abspath(self.infile):
-            if not monomerize:
+            if not reduce:
                 file_base = str(
                     self.target_name
                     + "-"
@@ -269,7 +269,7 @@ class Ligand:
                     + "_"
                     + str(count)
                 )
-            if monomerize:
+            if reduce:
                 file_base = str(self.target_name
                                 + "-"
                                 + os.path.abspath(self.infile)
@@ -281,7 +281,7 @@ class Ligand:
                 file_base = file_base[:-2] + "_" + str(count) + chain
 
         else:
-            if not monomerize:
+            if not reduce:
                 file_base = str(
                     os.path.abspath(self.infile)
                     .split("/")[-1]
@@ -290,7 +290,7 @@ class Ligand:
                     + "_"
                     + str(count)
                 )
-            if monomerize:
+            if reduce:
                 file_base = str(
                     os.path.abspath(self.infile)
                     .split("/")[-1]
@@ -596,7 +596,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     new.find_ligand_names_new(rrf=rrf)
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
-            new.wanted_ligs[i], count=i, monomerize=rrf, smiles_file=smiles_file, covalent=covalent
+            new.wanted_ligs[i], count=i, reduce=rrf, smiles_file=smiles_file, covalent=covalent
         )  # creates pdb file and mol object for specific ligand
     for i in range(len(new.mol_dict["directory"])):
         if not new.mol_dict["mol"][i]:

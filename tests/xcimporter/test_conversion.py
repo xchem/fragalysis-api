@@ -8,7 +8,8 @@ class ConversionTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.dir_input = os.path.join('tests', 'data_for_tests', 'examples_to_test3')
+        cls.dir_input = os.path.join(
+            'tests', 'data_for_tests', 'examples_to_test3')
         cls.dir_output = os.path.join('tests', 'data_for_tests', 'tmp')
 
 
@@ -17,9 +18,9 @@ class PDBexample1(ConversionTest):
     @classmethod
     def setUpClass(cls):
         super(PDBexample1, cls).setUpClass()
-        cls.obj_5q1j = set_up(target_name="5q1j", infile=os.path.join(cls.dir_input,'5q1j.pdb'), monomerize = False,
+        cls.obj_5q1j = set_up(target_name="5q1j", infile=os.path.join(cls.dir_input, '5q1j.pdb'), rrf=False,
                               out_dir=cls.dir_output)
-        cls.obj_5qj7 = set_up(target_name="5qj7", infile=os.path.join(cls.dir_input,'5qj7.pdb'), monomerize = False,
+        cls.obj_5qj7 = set_up(target_name="5qj7", infile=os.path.join(cls.dir_input, '5qj7.pdb'), rrf=False,
                               out_dir=cls.dir_output)
 
     @classmethod
@@ -70,22 +71,26 @@ class PDBexample1(ConversionTest):
         tests that a pdb file has been made for a particular ligand with the correct
         number of lines (HETATM & CONECT)
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.pdb")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY,
+                    "5qj7_0/5qj7_0.pdb")).readlines()
         self.assertEqual(len(file), 36)
 
     def test_make_mol_file(self):
         """
         tests that a mol file has been made with the correct number of lines
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.mol")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY,
+                    "5qj7_0/5qj7_0.mol")).readlines()
         self.assertEqual(len(file), 43)
 
     def test_make_sdf_file(self):
         """
         test that a sdf file has been made that incorporates the different mol objects
         """
-        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY, "5qj7_0/5qj7_0.sdf")).readlines()
+        file = open(os.path.join(self.obj_5qj7.RESULTS_DIRECTORY,
+                    "5qj7_0/5qj7_0.sdf")).readlines()
         self.assertEqual(len(file), 44)
+
 
 if __name__ == '__main__':
     unittest.main()

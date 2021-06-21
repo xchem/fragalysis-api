@@ -3,7 +3,7 @@ import glob
 import os
 import shutil
 
-from fragalysis_api import Align, Monomerize, set_up, convert_small_AA_chains, copy_extra_files
+from fragalysis_api import Align, set_up, convert_small_AA_chains, copy_extra_files
 
 
 def import_single_file(in_file, out_dir, target, reduce_reference_frame, reference_pdb, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
@@ -67,7 +67,6 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:
-            print(smiles_file)
             shutil.copyfile(smiles_file, os.path.join(os.path.join(
                 out_dir, f"tmp{target}", smiles_file.split('/')[-1])))
             print(os.path.join(
@@ -115,7 +114,6 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
     dest_dir = os.path.join(out_dir, target, 'crystallographic')
     globstr = in_file.replace('.pdb', '*')
     for file in glob.glob(globstr):
-        print(file)
         shutil.copy(file, dest_dir)
 
     # Time to use a for loop?
