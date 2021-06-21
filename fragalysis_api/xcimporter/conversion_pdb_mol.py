@@ -126,7 +126,6 @@ class Ligand:
                     res_y = float(line[39:47])
                     res_z = float(line[47:55])
                     res_coords = [res_x, res_y, res_z]
-                    print(res_coords)
                     atm = Chem.MolFromPDBBlock(line)
                     atm_trans = atm.GetAtomWithIdx(0)
 
@@ -139,7 +138,6 @@ class Ligand:
             old_dist = 100
             for line in lig_lines:
                 j += 1
-                #                 print(line)
                 if 'HETATM' in line:
                     coords = [line[31:39].strip(), line[39:47].strip(),
                               line[47:55].strip()]
@@ -147,7 +145,6 @@ class Ligand:
 
                     if dist < old_dist:
                         ind_to_add = j
-                        print(dist)
                         old_dist = dist
 
             i = non_cov_mol.GetNumAtoms()
@@ -173,28 +170,18 @@ class Ligand:
         """
         pdb_block = open(os.path.join(
             lig_out_dir, (file_base + ".pdb")), 'r').read()
-        print('mol1')
         lig_line = open(os.path.join(
             lig_out_dir, (file_base + ".pdb")), 'r').readline()
         res_name = lig_line[16:20].replace(' ', '')
-        print('mol2')
-        print(res_name)
         # Look for PDB entries in PDB bank and use residue name to get bond order
         if not smiles_file:
-            print('mol3')
             try:
-                print('mol4')
-                print(pdb_block)
                 mol = Chem.MolFromPDBBlock(pdb_block)
-                print('mol 4-1')
                 #chem_desc = pypdb.describe_chemical(f"{res_name}")
-                print('mol 4-2')
                 # chem_desc["describeHet"]["ligandInfo"]["ligand"]["smiles"]
                 new_smiles = ''
-                print('mol5')
                 template = Chem.MolFromSmiles(new_smiles)
                 new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
-                print('mol6')
                 if handle_cov:
                     cov_mol = self.handle_covalent_mol(
                         lig_res_name=res_name, non_cov_mol=new_mol)
@@ -205,7 +192,6 @@ class Ligand:
 
             except Exception as e:
                 new_pdb_block = ''
-                print('mol7')
                 for lig in pdb_block.split('\n'):
                     if 'ATM' in lig:
                         pos = 16
@@ -215,9 +201,7 @@ class Ligand:
                         new_pdb_block += lig
 
                     new_pdb_block += '\n'
-                print('mol8')
                 mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-                print('mol9')
                 return mol
 
         # Look for new XChem data - new XChem data must have associated smile.txt file
@@ -255,7 +239,6 @@ class Ligand:
         :param covalent: Bool, indicate whether or not covalent attach should be sought.
         :return: .pdb file for ligand.
         """
-        print('lig 1')
         # out directory and filename for lig pdb
         if not self.target_name in os.path.abspath(self.infile):
             if not reduce:
@@ -301,7 +284,6 @@ class Ligand:
                 file_base = file_base[:-2] + "_" + str(count) + chain
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
-        print('lig2')
         individual_ligand = []
         individual_ligand_conect = []
         # adding atom information for each specific ligand to a list
@@ -310,7 +292,6 @@ class Ligand:
                 individual_ligand.append(atom)
 
         con_num = 0
-        print('lig3')
         for atom in individual_ligand:
             atom_number = atom.split()[1]
             for conection in self.conects:
@@ -325,10 +306,8 @@ class Ligand:
         # (taking into account ligands that are covalently bound to the protein
 
         # assert 0 <= con_num - len(individual_ligand) <= 1
-        print('lig4')
         # making into one list that is compatible with conversion to mol object
         ligand_het_con = individual_ligand + individual_ligand_conect
-        print('lig5')
         # make a pdb file for the ligand molecule
 
         if not os.path.isdir(lig_out_dir):
@@ -340,11 +319,9 @@ class Ligand:
         for line in ligand_het_con:
             ligands_connections.write(str(line))
         ligands_connections.close()
-        print('lig6')
         # making pdb file into mol object
         mol = self.create_pdb_mol(
             file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=covalent)
-        print('lig7')
         # Move Map files into lig_out_dir
 
         if not mol:
@@ -512,7 +489,6 @@ class pdb_apo:
         Add contents of biomol/additional text file to a .pdb file
         '''
         biomol_remark = open(self.biomol).readlines()
-        print(biomol_remark)
         f = self.apo_file
         with open(f) as handle:
             switch = 0
@@ -581,11 +557,8 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     :return: for each ligand: pdb, mol, sdf and _apo.pdb in seperate directorys inside out_dir/target_name
     """
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
-    print(infile)
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
-
-    print(RESULTS_DIRECTORY)
 
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
@@ -663,7 +636,6 @@ def convert_small_AA_chains(in_file, out_file, max_len=15):
     pdb_file = gemmi.read_structure(in_file)
     structure = pdb_file[0]
     chain_lens = [j.get_polymer().length() for j in structure]
-    print(chain_lens)
     for i, j in enumerate(chain_lens):
         if int(j) <= int(max_len):
             for x in structure[i]:
@@ -687,7 +659,6 @@ def convert_small_AA_chains(in_file, out_file, max_len=15):
                 newchain.add_residues(res)
         structure.remove_chain('W')
         structure.add_chain(newchain)
-    print(out_file)
     pdb_file.write_pdb(out_file)
 
 
