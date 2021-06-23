@@ -30,7 +30,7 @@ class EasyAlign(AlignTest):
         cls.align_obj_w_wrong_ref = Align(os.path.join(
             cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
         cls.align_obj_w_maps = Align(os.path.join(
-            cls.dir_input, 'examples_to_test5'), pdb_ref='')
+            cls.dir_input, 'examples_to_test5'), pdb_ref='', rrf=False)
         cls.align_obj_w_maps_rrf = Align(os.path.join(
             cls.dir_input, 'examples_to_test5'), pdb_ref='', rrf=True)
 
@@ -52,6 +52,8 @@ class EasyAlign(AlignTest):
         dir = os.path.join('tests', 'data_for_tests', 'tmp_map')
         if not os.path.exists(dir):
             os.makedirs(dir)
+        print('Tyler blows')
+        print(dir)
         self.align_obj_w_maps.align(out_dir=dir)
         map_test_cases = ['Mpro-x0978_bound.pdb', 'Mpro-x0981_bound.pdb', 'Mpro-x2097_bound.pdb',
                           'Mpro-x2119_bound.pdb', 'Mpro-x2097_event.ccp4', 'Mpro-x2119_event.ccp4']
@@ -68,7 +70,7 @@ class EasyAlign(AlignTest):
         if not os.path.exists(dir):
             os.makedirs(dir)
         self.align_obj_w_maps.align_to_reference(in_file=file,
-                                                 reference=ref,
+                                                 reference_pdb=ref,
                                                  out_dir=dir)
         test_cases = ['Mpro-x2119_bound.pdb', 'Mpro-x2119_event.ccp4']
         test_exists = [os.path.exists(os.path.join(dir, x))
@@ -156,7 +158,7 @@ class EasyAlign(AlignTest):
                         shutil.rmtree(dir2)
 
     def test_write_ref(self):
-        fp = os.path.join('tests', 'data_for_tests' 'reference.pdb')
+        fp = os.path.join('tests', 'data_for_tests')
         self.align_obj_w_ref.write_align_ref(fp)
         self.assertTrue(os.path.exists(fp))
 
@@ -164,7 +166,7 @@ class EasyAlign(AlignTest):
         """
         Tests it correctly automatically retrieves the best pdb to use as reference for alignments
         """
-        self.assertEqual(self.align_obj._get_ref, '6epv')
+        self.assertEqual(self.align_obj._get_ref, '6epu')
 
     def test_get_ref_when_input_ref(self):
         """
@@ -174,7 +176,7 @@ class EasyAlign(AlignTest):
 
     def test_error_for_inserting_wrong_pdb_ref(self):
         self.assertNotEqual(self.align_obj_w_wrong_ref._get_ref, 'wrong_pdb')
-        self.assertEqual(self.align_obj_w_wrong_ref._get_ref, '6epv')
+        self.assertEqual(self.align_obj_w_wrong_ref._get_ref, '6epu')
 
     def test_aligns_saved_correctly(self):
         # align_obj = Align(ATAD2_directory)

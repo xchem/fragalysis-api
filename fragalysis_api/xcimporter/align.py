@@ -221,7 +221,6 @@ class Align:
 
         s = time.time()
         for num, name in enumerate(crystals):
-
             all_maps = [j for j in map_list if name in j]
             # Logic to do...
             # Align Chain N to First Chain in Reference
@@ -229,12 +228,12 @@ class Align:
                 file=Path(os.path.join(dir, f'{name}.pdb'))
             )
             if rrf:
-                # current_pdb.structure, chains = split_chain_str(
                 chains = split_chain_str(
                     os.path.join(dir, f'{name}.pdb'))
             else:
                 chains = ''
             for chain in chains:
+                print(chain)
                 if rrf:
                     print(f'Aligning Chain {chain} of {name} to {ref}')
                 try:
@@ -257,6 +256,7 @@ class Align:
                     current_pdb.structure.write_pdb(
                         os.path.join(out_dir, f'{name}_bound.pdb')
                     )
+                    print(os.path.join(out_dir, f'{name}_bound.pdb'))
                     if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
                         shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
                             out_dir, f'{name}_smiles.txt'))
@@ -274,6 +274,7 @@ class Align:
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
+                    print(fn)
                     newmap.save(
                         path=Path(os.path.join(out_dir, fn)))
                     e2 = time.time()
