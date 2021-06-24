@@ -24,7 +24,7 @@ class XcImporterTest(unittest.TestCase):
         cls.metadata = True
         cls.covalent = True
         cls.reference = 'Mpro-x0981_A'
-        cls.mll = 15
+        cls.mll = -1
 
     @classmethod
     def tearDownClass(cls):

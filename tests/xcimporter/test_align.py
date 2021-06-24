@@ -164,7 +164,7 @@ class EasyAlign(AlignTest):
         """
         Tests it correctly automatically retrieves the best pdb to use as reference for alignments
         """
-        self.assertEqual(self.align_obj._get_ref, '6epu')
+        self.assertEqual(self.align_obj._get_ref, '6epv')
 
     def test_get_ref_when_input_ref(self):
         """
@@ -174,7 +174,7 @@ class EasyAlign(AlignTest):
 
     def test_error_for_inserting_wrong_pdb_ref(self):
         self.assertNotEqual(self.align_obj_w_wrong_ref._get_ref, 'wrong_pdb')
-        self.assertEqual(self.align_obj_w_wrong_ref._get_ref, '6epu')
+        self.assertEqual(self.align_obj_w_wrong_ref._get_ref, '6epv')
 
     def test_aligns_saved_correctly(self):
         # align_obj = Align(ATAD2_directory)
