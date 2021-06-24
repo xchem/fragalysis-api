@@ -10,25 +10,26 @@ class XcImporterTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.in_dir = os.path.join('tests', 'data_for_tests', 'examples_to_test5')
-        cls.in_file = os.path.join('tests', 'data_for_tests', 'examples_to_test5', 'Mpro-x0978.pdb')
+        cls.in_dir = os.path.join(
+            'tests', 'data_for_tests', 'examples_to_test5')
+        cls.in_file = os.path.join(
+            'tests', 'data_for_tests', 'examples_to_test5', 'Mpro-x0978.pdb')
         cls.in_file_no_ext = 'Mpro-x0978'
         cls.out_dir = os.path.join('tests', 'data_for_tests')
         cls.target = 'TestTarget'
         cls.validate = False
-        cls.monomerize = True
-        cls.biomol = os.path.join('tests', 'data_for_tests', 'examples_to_test5', 'biomol.txt')
+        cls.rrf = True
+        cls.biomol = os.path.join(
+            'tests', 'data_for_tests', 'examples_to_test5', 'biomol.txt')
         cls.metadata = True
         cls.covalent = True
         cls.reference = 'Mpro-x0981_A'
         cls.mll = 15
 
-
     @classmethod
     def tearDownClass(cls):
         #rmtree(os.path.join(cls.out_dir, cls.target))
         pass
-
 
     def test_xcimporter(self):
 
@@ -37,7 +38,7 @@ class XcImporterTest(unittest.TestCase):
             out_dir=self.out_dir,
             target=self.target,
             validate=self.validate,
-            monomerize=self.monomerize,
+            reduce_reference_frame=self.rrf,
             metadata=self.metadata,
             biomol=self.biomol,
             covalent=self.covalent,
@@ -46,21 +47,25 @@ class XcImporterTest(unittest.TestCase):
         )
 
         # Write more Tests
-        self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target)))
-        self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
+        self.assertTrue(expr=os.path.exists(
+            os.path.join(self.out_dir, self.target)))
+        self.assertTrue(expr=os.path.exists(os.path.join(
+            self.out_dir, self.target, 'reference.pdb')))
 
         import_single_file(in_file=self.in_file,
                            out_dir=self.out_dir,
                            target=self.target,
-                           monomerize=self.monomerize,
-                           reference_pdb=os.path.join(self.out_dir, self.target, 'reference.pdb'),
+                           reduce_reference_frame=self.rrf,
+                           reference_pdb=os.path.join(
+                               self.out_dir, self.target, 'reference.pdb'),
                            biomol=self.biomol,
                            covalent=self.covalent,
                            max_lig_len=self.mll)
 
         # Tests should check if a thing is correctly removed and readded etc...
         # Write Many More... Single import should use a pdb in a seperate test!
-        self.assertTrue(expr=os.path.exists(os.path.join(self.out_dir, self.target, 'reference.pdb')))
+        self.assertTrue(expr=os.path.exists(os.path.join(
+            self.out_dir, self.target, 'reference.pdb')))
 
 
 if __name__ == '__main__':

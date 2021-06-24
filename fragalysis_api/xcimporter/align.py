@@ -144,10 +144,11 @@ class Align:
                 # current_pdb.structure, chains = split_chain_str(
                 chains = split_chain_str(os.path.join(dir, f'{name}.pdb'))
             else:
-                chains = ''
+                chains = ['']
             for chain in chains:
                 if rrf:
-                    print(f'Aligning Chain {chain} of {name} to {ref}')
+                    print(
+                        f'Aligning Chain {chain} of {name} to first chain of {ref}')
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -231,11 +232,8 @@ class Align:
                 chains = split_chain_str(
                     os.path.join(dir, f'{name}.pdb'))
             else:
-                chains = ''
+                chains = ['']
             for chain in chains:
-                print(chain)
-                if rrf:
-                    print(f'Aligning Chain {chain} of {name} to {ref}')
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -256,7 +254,6 @@ class Align:
                     current_pdb.structure.write_pdb(
                         os.path.join(out_dir, f'{name}_bound.pdb')
                     )
-                    print(os.path.join(out_dir, f'{name}_bound.pdb'))
                     if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
                         shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
                             out_dir, f'{name}_smiles.txt'))
@@ -409,7 +406,6 @@ class Structure:
                 else:
                     for res_self in chain.get_polymer():
                         if 'LIG' in str(res_self):
-                            print('Skipping Ligand Atom...')
                             continue
                         try:
                             current_res_id = ResidueID.from_residue_chain(
@@ -528,12 +524,12 @@ def split_chains(f):
                 continue
             else:
                 temp_structure[0].remove_chain(j)
-                print([x.name for x in temp_structure[0]])
+                #print([x.name for x in temp_structure[0]])
 
         # Rename Chain to corresponding chain then save!
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')
-        print(f'Writing to: {filename}')
+        #print(f'Writing to: {filename}')
         temp_structure.write_pdb(filename)
         filenames.append(filename)
 

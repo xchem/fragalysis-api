@@ -52,8 +52,6 @@ class EasyAlign(AlignTest):
         dir = os.path.join('tests', 'data_for_tests', 'tmp_map')
         if not os.path.exists(dir):
             os.makedirs(dir)
-        print('Tyler blows')
-        print(dir)
         self.align_obj_w_maps.align(out_dir=dir)
         map_test_cases = ['Mpro-x0978_bound.pdb', 'Mpro-x0981_bound.pdb', 'Mpro-x2097_bound.pdb',
                           'Mpro-x2119_bound.pdb', 'Mpro-x2097_event.ccp4', 'Mpro-x2119_event.ccp4']
@@ -114,7 +112,7 @@ class EasyAlign(AlignTest):
 
                         if mono:
                             inpdb = os.path.join(
-                                'tests', 'data_for_tests', 'tmp', 'Mpro-x2119_A_bound.pdb')
+                                'tests', 'data_for_tests', 'tmp_rrf', 'Mpro-x2119_A_bound.pdb')
                             final_path_dir = os.path.join('tests', 'data_for_tests', 'conv', 'target', 'aligned',
                                                           'target-Mpro-x2119_0A')
                             test_cases = ['target-Mpro-x2119_0A.mol',
