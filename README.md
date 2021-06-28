@@ -55,8 +55,108 @@ Other functionalities that are available:
 - Align volume density files
 
 
-### Enforced rules :scroll:
+## Usage in Python
+To prepare input data-files using python you api can import the `xcimporer` or `import_single_file` functions and then provide the necessary values to the functions.
 
+e.g
+```python
+from fragalysis_api import xcimporter, import_single_file
+
+xcimporter(
+    in_dir, 
+    out_dir, 
+    target, 
+    metadata=False, 
+    validate=False, 
+    reduce_reference_frame=False, 
+    biomol=None, 
+    covalent=False,
+    pdb_ref="", 
+    max_lig_len=0
+)
+# Process a single file:
+import_single_file(
+    in_file, 
+    out_dir, 
+    target, 
+    reduce_reference_frame, 
+    reference_pdb, 
+    biomol=None, 
+    covalent=False, 
+    self_ref=False, 
+    max_lig_len=0
+)
+```
+See below for information about the arguments.
+
+## Command-line Usage
+### How to submit PDB files for conversion to a fragalysis friendly format (fff)
+```
+python fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directory] -o [output directory] -t [target name] -m 
+```
+Which will align the input files with respects to individual chains inside the .pdb files (`-m`) and save the output
+to a folder specified by `-t [target name]`.
+
+A description of the command line arguments are as follows:
+- `-i`, `--in_dir` :  Input Directory
+- `-o`, `--out_dir` : Output Directory
+- `-v`, `--validate`: (Optional) Validate the Inputs
+- `-m`, `--monomerize`: (Optional) Split the input PDBs into separate chains. E.G If a pdb has A and B chains it will create files pdb_name_A.pdb and pdb_name_B.pdb
+- `-t`, `--target`: The name of the output folder to be saved in Output directory
+- `-md`, `--metadata`: (Optional) Automatically populated a metadata.csv in the output directory to be fill in.
+- `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
+- `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
+- `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
+- `-mll`, `--max_lig_len`: (Optional) __EXPERIMENTAL__ Integer, if >0 will convert all chains with residue length <mll to `HETATM LIG` - useful for converting short chain amino acids to ligands for example.
+
+The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
+
+The expected output of the xcimporter is a folder located at `[outputdirectory]/[target name]` which will
+contain two main folders `aligned` and `crystallographic`. The `aligned` folder will contain multiple sub-folders, one per ligand. These will be labelled as the name of the `pdbfile_[lig_number]` or `pdbfile_[lig_number][chain_letter]` if monomer mode was specified.
+Inside each of these subfolders contains all the information that is required by the fragalysis platform to display and elaborate a given ligand.
+The `crystallographic` folder contains an exact copy of the data supplied to the above command.
+
+### How to submit single PDB files for conversion to a fragalysis friendly format
+If you would like to add individual pdb files to the results of the fragalysis api we can use:
+```
+python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=[pdbtobealigned.pdb] --out_dir=[output directory] --target [targetname] -m --reference[output directory/targetname/reference.pdb]
+```
+Where `in_file` is the filepath of a pdb file we would like to align to the rest of our results (with `_smiles.txt` and other files to be aligned in the same directory)
+and `reference` is the pdb file that you would like to align files associated to `in_file`. If you had previous run xcimporter then a reference.pdb file should be located at `output direct/targetname/reference.pdb`
+If `--reference` or `-r` are not specified then `output direct/targetname/reference.pdb` will be used according to what arguments you have specified.
+
+You should be able to use `single_import` without having to delete any preexisting files. As the new outputs should overwrite what previously exists. Nice.
+
+A description of the command line arguments for `single_import.py` are as follows: 
+- `-i`, `--in_file` :  Input File
+- `-o`, `--out_dir` : Output Directory
+- `-v`, `--validate`: (Optional) Validate the Inputs
+- `-m`, `--monomerize`: (Optional) Split the input PDBs into separate chains. E.G If a pdb has A and B chains it will create files pdb_name_A.pdb and pdb_name_B.pdb
+- `-t`, `--target`: The name of the output folder to be saved in Output directory
+- `-md`, `--metadata`: (Optional) Automatically populated a metadata.csv in the output directory to be fill in.
+- `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
+- `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
+- `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
+- `-sr`, `--self_reference`: (Optional) Indicate whether you want pdb files to align to themselves (for testing purposes)
+- `-mll`, `--max_lig_len`: (Optional) __EXPERIMENTAL__ Integer, if >0 will convert all chains with residue length <mll to `HETATM LIG` - useful for converting short chain amino acids to ligands for example.
+
+#### Running The Fragalysis API without alignment 
+This is only available to the `single_import.py` method
+If for whatever reason you decide that you would like to simply split a pdb file without the need of an alignment step you can use the `-sr` or `--selfreference` flags when using the fragalysis API. Or specify the `-r` or `--reference` to be itself. 
+
+An example in bash to process a folder of pbds without aligned in bash would be:
+```bash
+$input=/path/to/input/folder
+pdblist=$(ls input)
+for pdb in $pdblist
+do
+  python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=$pdb --out_dir=[output directory] --target [targetname] -m --selfreference
+done
+```
+
+Notably the `-sr` flag will take precedence over the `-r` flag.
+
+### Enforced rules :scroll:
 * The pdb file shall not be greater than 5mb.
 * The pdb filename shall not contain non English language ascii characters 
 and shall be between 4 and 20 characters in length.
@@ -102,8 +202,7 @@ for i in $folders
   done
 ```
 
-### 2.1 How to download PDB files
-
+### How to download PDB files
 Move to the fragalysis-api/xcimporter directory. 
 
 You will need two bits of information:
@@ -119,7 +218,7 @@ In our example, this would be
 
 Alternatively, you can upload your own PDB files. :construction:
 
-### 2.2 How to query the PDB file
+### How to query the PDB file
 
 Note: you don't need to manually download a pdb file before querying the PDB for structures of the same protein
 
@@ -129,85 +228,8 @@ python pdbquery.py -pdb [pdb code] -chain [required chain]
 ```
 The API will then query the PDB for structures of the same protein that also have ligands bound. You will be asked if you would like to see a list of these structures and ligands, and if you would like to download all of these pdb files in bulk. If you choose to download these pdb files, you will be asked for your user id. This is as before: your name followed by the protein name (e.g. Anna_ATAD2).
 
-### 3.How to submit PDB files for conversion to a fragalysis friendly format (fff)
-
-Once you have the files downloaded, they need to be processed before they can be visualised in fragalysis. This is done using
-```
-python xcimporter -id [user id] 
-```
-Default directories are used. These can however be changed by using ```-i [input directory] ``` or   ```-o [output directory] ``` if this is required.
-
-For example a more elaborate conversion would be:
-```
-python fragalysis-api/fragalysis_api/xcimporter/xcimporter.py  -i [input directory] -o [output directory] -t [target name] -m 
-```
-Which will align the input files with respects to individual chains inside the .pdb files (`-m`) and save the output
-to a folder specified by `-t [target name]`.
-
-A description of the command line arguments are as follows:
-- `-i`, `--in_dir` :  Input Directory
-- `-o`, `--out_dir` : Output Directory
-- `-v`, `--validate`: (Optional) Validate the Inputs
-- `-m`, `--monomerize`: (Optional) Split the input PDBs into separate chains. E.G If a pdb has A and B chains it will create files pdb_name_A.pdb and pdb_name_B.pdb
-- `-t`, `--target`: The name of the output folder to be saved in Output directory
-- `-md`, `--metadata`: (Optional) Automatically populated a metadata.csv in the output directory to be fill in.
-- `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
-- `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
-- `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
-- `-mll`, `--max_lig_len`: (Optional) __EXPERIMENTAL__ Integer, if >0 will convert all chains with residue length <mll to `HETATM LIG` - useful for converting short chain amino acids to ligands for example.
-
-
-The terminal will let you know when the conversion has been successful and if there are any files that have been found to be incompatible with the API. We are working to minimize any incompatibilities.
-
-The expected output of the xcimporter is a folder located at `[outputdirectory]/[target name]` which will
-contain two main folders `aligned` and `crystallographic`. The `aligned` folder will contain multiple sub-folders, one per ligand. These will be labelled as the name of the `pdbfile_[lig_number]` or `pdbfile_[lig_number][chain_letter]` if monomer mode was specified.
-Inside each of these subfolders contains all the information that is required by the fragalysis platform to display and elaborate a given ligand.
-The `crystallographic` folder contains an exact copy of the data supplied to the above command.
-
-#### 3.1 How to submit single PDB files for conversion to a fragalysis friendly format
-If you would like to add individual pdb files to the results of the fragalysis api we can use:
-```
-python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=[pdbtobealigned.pdb] --out_dir=[output directory] --target [targetname] -m --reference[output directory/targetname/reference.pdb]
-```
-Where `in_file` is the filepath of a pdb file we would like to align to the rest of our results (with `_smiles.txt` and other files to be aligned in the same directory)
-and `reference` is the pdb file that you would like to align files associated to `in_file`. If you had previous run xcimporter then a reference.pdb file should be located at `output direct/targetname/reference.pdb`
-If `--reference` or `-r` are not specified then `output direct/targetname/reference.pdb` will be used according to what arguments you have specified.
-
-You should be able to use `single_import` without having to delete any preexisting files. As the new outputs should overwrite what previously exists. Nice.
-
-A description of the command line arguments for `single_import.py` are as follows: 
-- `-i`, `--in_file` :  Input File
-- `-o`, `--out_dir` : Output Directory
-- `-v`, `--validate`: (Optional) Validate the Inputs
-- `-m`, `--monomerize`: (Optional) Split the input PDBs into separate chains. E.G If a pdb has A and B chains it will create files pdb_name_A.pdb and pdb_name_B.pdb
-- `-t`, `--target`: The name of the output folder to be saved in Output directory
-- `-md`, `--metadata`: (Optional) Automatically populated a metadata.csv in the output directory to be fill in.
-- `-b`, `--biomol`: (Optional) File path to plain text file that contains an optional header that you would like to be added to PDB files.
-- `-r`, `--reference`: (Optional) The name/filepath of the pdb file you which to use as reference (can be PDB ID)
-- `-c`, `--covalent`: (Optional) Handle Covalent attachments by extending output .mol file to include covalent attachment atoms. Requires modified smiles strings.
-- `-sr`, `--self_reference`: (Optional) Indicate whether you want pdb files to align to themselves (for testing purposes)
-- `-mll`, `--max_lig_len`: (Optional) __EXPERIMENTAL__ Integer, if >0 will convert all chains with residue length <mll to `HETATM LIG` - useful for converting short chain amino acids to ligands for example.
-
-#### 3.2 Running The Fragalysis API without alignment 
-This is only available to the `single_import.py` method
-If for whatever reason you decide that you would like to simply split a pdb file without the need of an alignment step you can use the `-sr` or `--selfreference` flags when using the fragalysis API. Or specify the `-r` or `--reference` to be itself. 
-
-An example in bash to process a folder of pbds without aligned in bash would be:
-```bash
-$input=/path/to/input/folder
-pdblist=$(ls input)
-for pdb in $pdblist
-do
-  python fragalysis-api/fragalysis_api/xcimporter/single_import.py --in_file=$pdb --out_dir=[output directory] --target [targetname] -m --selfreference
-done
-```
-
-Notably the `-sr` flag will take precedence over the `-r` flag.
-
-
 ### Preparing metadata for fragalysis upload
 Each fragalysis upload requires a .csv file (called `metadata.csv`) to be stored inside the output `aligned`. It should have the following structure:
-
 
 |<empty>|crystal_name|RealCrystalName|smiles|new_smiles|alternate_name|site_name|pdb_entry|
 |---|---|---|---|---|---|---|---|
@@ -229,6 +251,7 @@ The rendered table line in plain text will look like this:
 ,crystal_name,RealCrystalName,smiles,new_smiles,alternate_name,site_name,pdb_entry
 1,prot-x0001_0A,prot-x0001,CCCC,,,Binding Site,
 ```
+
 ### Who we are
 We are the Fragment 5, a group of students at the University of Oxford.
 
