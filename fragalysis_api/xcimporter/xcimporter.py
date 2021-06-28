@@ -1,5 +1,4 @@
 import argparse
-import shutil
 from sys import exit
 import os
 import gemmi
@@ -165,7 +164,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, reduce_r
     # Time to use a for loop?
     clean_up = [os.path.join(out_dir, f'maxliglen{target}'), os.path.join(
         out_dir, f'mono{target}'), os.path.join(out_dir, f'tmp{target}')]
-    [shutil.rmtree(x) for x in clean_up if os.path.exists(x)]
+    [rmtree(x) for x in clean_up if os.path.exists(x)]
 
     print("Files are now in a fragalysis friendly format!")
 
