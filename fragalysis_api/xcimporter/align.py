@@ -10,7 +10,6 @@ import pandas as pd
 import os
 import warnings
 import Bio.PDB.PDBExceptions as bpp
-import json
 import shutil
 import gemmi  # Oh boy...
 import numpy
