@@ -19,7 +19,7 @@ warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 class Align:
 
-    def __init__(self, directory, pdb_ref='', rrf=False):
+    def __init__(self, directory, pdb_ref='', rrf=False, refset=True):
         '''
         :param directory: Directory path contain pdbs to be aligned.
         :param pdb_ref: The String Reference of a pdb that you want to
@@ -31,7 +31,8 @@ class Align:
         '''
 
         self.directory = directory
-        self._get_ref = pdb_ref
+        if refset:
+            self._get_ref = pdb_ref
         self.rrf = rrf
         self.ref_map = ''
 
