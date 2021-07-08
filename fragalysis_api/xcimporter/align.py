@@ -691,4 +691,4 @@ def referenceSave(template_map_path, xmap, path_to_save):
     ccp4.grid = xmap.xmap
     ccp4.setup()
     # Save Template Map...
-    ccp4.write_cpp4_map(str(path_to_save))
+    ccp4.write_ccp4_map(str(path_to_save))
