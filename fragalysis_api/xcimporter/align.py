@@ -433,8 +433,8 @@ class Structure:
                                     other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
                             self_ca_pos = res_self["CA"][0].pos
                             other_ca_pos = res_other["CA"][0].pos
-                            ca_res_self_names.append(res_self["CA"][0].name)
-                            ca_res_other_names.append(res_other["CA"][0].name)
+                            ca_res_self_names.append(res_self)
+                            ca_res_other_names.append(res_other)
                         except:
                             continue
 
@@ -447,7 +447,7 @@ class Structure:
         print(f'ca_self {len(ca_self)}')
         print(ca_res_self_names)
         print(f'ca_other {len(ca_other)}')
-        print(ca_res_self_other)
+        print(ca_res_other_names)
         # Make coord matricies
         matrix_self = np.array(ca_self)
         matrix_other = np.array(ca_other)
