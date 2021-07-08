@@ -182,12 +182,13 @@ class Align:
                     array[~np.isfinite(array)] = 0
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    template = Path(
+                        os.path.join(dir, f'{base}{ext}'))
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
                     referenceSave(
-                        template_map_path=Path(
-                            os.path.join(dir, f'{base}{ext}')),
+                        template_map_path=template,
                         xmap=newmap,
                         path_to_save=Path(os.path.join(out_dir, fn))
                     )
@@ -272,6 +273,8 @@ class Align:
                     array[~np.isfinite(array)] = 0
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    template = Path(
+                        os.path.join(dir, f'{base}{ext}'))
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
@@ -279,8 +282,7 @@ class Align:
                     # newmap.save(
                     #    path=Path(os.path.join(out_dir, fn)))
                     referenceSave(
-                        template_map_path=Path(
-                            os.path.join(dir, f'{base}{ext}')),
+                        template_map_path=template,
                         xmap=newmap,
                         path_to_save=Path(os.path.join(out_dir, fn))
                     )
