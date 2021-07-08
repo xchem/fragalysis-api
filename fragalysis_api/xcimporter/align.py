@@ -181,8 +181,8 @@ class Align:
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
                     print(transform)
-                    print(transform.vec.tolist())
-                    print(transform.mat.tolist())
+                    print(transform.transform.vec.tolist())
+                    print(transform.transform.mat.tolist())
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
