@@ -681,6 +681,8 @@ def resample(
 
 def referenceSave(template_map_path, xmap, path_to_save):
     # Open Template map
+    print(str(template_map_path))
+    print(str(path_to_save))
     ccp4 = gemmi.read_ccp4_map(str(template_map_path))
     ccp4.setup()
     # Replace Template map data
