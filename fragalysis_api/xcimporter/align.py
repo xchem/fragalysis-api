@@ -185,8 +185,12 @@ class Align:
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
-                    newmap.save(
-                        path=Path(os.path.join(out_dir, fn)))
+                    referenceSave(
+                        template_map_path=Path(
+                            os.path.join(dir, f'{base}{ext}')),
+                        xmap=newmap,
+                        path_to_save=Path(os.path.join(out_dir, fn))
+                    )
                     e2 = time.time()
                     print(f'{int(e2 - s2)} seconds to transform map...')
                     e = time.time()
@@ -272,8 +276,14 @@ class Align:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
                     print(fn)
-                    newmap.save(
-                        path=Path(os.path.join(out_dir, fn)))
+                    # newmap.save(
+                    #    path=Path(os.path.join(out_dir, fn)))
+                    referenceSave(
+                        template_map_path=Path(
+                            os.path.join(dir, f'{base}{ext}')),
+                        xmap=newmap,
+                        path_to_save=Path(os.path.join(out_dir, fn))
+                    )
                     e2 = time.time()
                     print(f'{int(e2 - s2)} seconds to transform map...')
                     e = time.time()
@@ -667,3 +677,14 @@ def resample(
     interpolated_grid.symmetrize_max()
 
     return Xmap(interpolated_grid)
+
+
+def referenceSave(template_map_path, xmap, path_to_save):
+    # Open Template map
+    ccp4 = gemmi.read_ccp4_map(str(template_map_path))
+    ccp4.setup()
+    # Replace Template map data
+    ccp4.grid = xmap.xmap
+    ccp4.setup()
+    # Save Template Map...
+    ccp4.write_cpp4_map(str(path_to_save))
