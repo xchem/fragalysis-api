@@ -12,7 +12,7 @@ import warnings
 import Bio.PDB.PDBExceptions as bpp
 import shutil
 import gemmi  # Oh boy...
-import numpy
+import numpy as np
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
@@ -323,8 +323,8 @@ class RFree:
 @dataclasses.dataclass()
 class Transform:
     transform: gemmi.Transform
-    com_reference: numpy.array
-    com_moving: numpy.array
+    com_reference: np.array
+    com_moving: np.array
 
     def apply(self, position: gemmi.Position) -> gemmi.Position:
         rotation_frame_position = gemmi.Position(position[0] - self.com_reference[0],
@@ -439,12 +439,12 @@ class Structure:
                         ca_other.append(ca_list_other)
 
         # Make coord matricies
-        matrix_self = numpy.array(ca_self)
-        matrix_other = numpy.array(ca_other)
+        matrix_self = np.array(ca_self)
+        matrix_other = np.array(ca_other)
 
         # Find means
-        mean_self = numpy.mean(matrix_self, axis=0)
-        mean_other = numpy.mean(matrix_other, axis=0)
+        mean_self = np.mean(matrix_self, axis=0)
+        mean_other = np.mean(matrix_other, axis=0)
 
         # demaen
         de_meaned_self = matrix_self - mean_self
@@ -455,7 +455,7 @@ class Structure:
             de_meaned_self, de_meaned_other)
 
         # Get transform
-        vec = numpy.array([0.0, 0.0, 0.0])
+        vec = np.array([0.0, 0.0, 0.0])
         # Transform is from other frame to self frame
         transform = Transform.from_translation_rotation(vec,
                                                         rotation,
@@ -585,13 +585,13 @@ def resample(
         reference_structure: Structure
 ):
 
-    interpolated_grid = gemmi.FloatGrid(
-        moving_xmap.xmap.nu,
-        moving_xmap.xmap.nv,
-        moving_xmap.xmap.nw, )
-    interpolated_grid.set_unit_cell(moving_xmap.xmap.unit_cell)
-    interpolated_grid.spacegroup = moving_xmap.xmap.spacegroup
-
+    # interpolated_grid = gemmi.FloatGrid(
+    #    moving_xmap.xmap.nu,
+    #    moving_xmap.xmap.nv,
+    #    moving_xmap.xmap.nw, )
+    # interpolated_grid.set_unit_cell(moving_xmap.xmap.unit_cell)
+    #interpolated_grid.spacegroup = moving_xmap.xmap.spacegroup
+    interpolated_grid = gridFromTemplate(moving_xmap)
     # points
     mask = gemmi.FloatGrid(moving_xmap.xmap.nu,
                            moving_xmap.xmap.nv,
@@ -676,9 +676,25 @@ def resample(
         interpolated_grid.set_value(
             point[0], point[1], point[2], interpolated_map_value)
 
-    interpolated_grid.symmetrize_max()
+    # interpolated_grid.symmetrize_max()
+    interpolated_array = np.array(interpolated_grid)
 
-    return Xmap(interpolated_grid)
+    interpolated_grid_neg = gridFromTemplate(moving_xmap)
+    interpolated_array_neg = np.array(interpolated_grid_neg, copy=False)
+    interpolated_array_neg[:, :, :] = -interpolated_array[:, :, :]
+    interpolated_grid_neg.symmetrize_max()
+
+    interpolated_grid_pos = gridFromTemplate(moving_xmap)
+    interpolated_array_pos = np.array(interpolated_grid_pos, copy=False)
+    interpolated_array_pos[:, :, :] = interpolated_array[:, :, :]
+    interpolated_grid_pos.symmetrize_max()
+
+    interpolated_grid_sym = gridFromTemplate(moving_xmap)
+    interpolated_array_sym = np.array(interpolated_grid_sym, copy=False)
+    interpolated_array_sym[:, :, :] = interpolated_array_pos[:,
+                                                             :, :] - interpolated_array_neg[:, :, :]
+
+    return Xmap(interpolated_grid_sym)
 
 
 def referenceSave(template_map_path, xmap, path_to_save):
@@ -692,3 +708,13 @@ def referenceSave(template_map_path, xmap, path_to_save):
     ccp4.setup()
     # Save Template Map...
     ccp4.write_ccp4_map(str(path_to_save))
+
+
+def gridFromTemplate(template):
+    interpolated_grid = gemmi.FloatGrid(
+        template.xmap.nu,
+        template.xmap.nv,
+        template.xmap.nw, )
+    interpolated_grid.set_unit_cell(template.xmap.unit_cell)
+    interpolated_grid.spacegroup = template.xmap.spacegroup
+    return interpolated_grid
