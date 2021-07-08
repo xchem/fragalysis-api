@@ -412,7 +412,8 @@ class Structure:
 
         ca_self = []
         ca_other = []
-
+        ca_res_self_names = []
+        ca_res_other_names = []
         # Get CAs
         for model in self.structure:
             for chain in model:
@@ -432,6 +433,8 @@ class Structure:
                                     other.structure[current_res_id.model][current_res_id.chain][current_res_id.insertion][0]
                             self_ca_pos = res_self["CA"][0].pos
                             other_ca_pos = res_other["CA"][0].pos
+                            ca_res_self_names.append(res_self["CA"][0].name)
+                            ca_res_other_names.append(res_other["CA"][0].name)
                         except:
                             continue
 
@@ -442,7 +445,9 @@ class Structure:
                         ca_other.append(ca_list_other)
 
         print(f'ca_self {len(ca_self)}')
+        print(ca_res_self_names)
         print(f'ca_other {len(ca_other)}')
+        print(ca_res_self_other)
         # Make coord matricies
         matrix_self = np.array(ca_self)
         matrix_other = np.array(ca_other)
