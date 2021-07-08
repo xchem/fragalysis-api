@@ -441,6 +441,8 @@ class Structure:
                         ca_self.append(ca_list_self)
                         ca_other.append(ca_list_other)
 
+        print(f'ca_list_self {len(ca_list_self)}')
+        print(f'ca_list_self {len(ca_list_other)}')
         # Make coord matricies
         matrix_self = np.array(ca_self)
         matrix_other = np.array(ca_other)
