@@ -180,6 +180,7 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
+                    print(transform)
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
