@@ -774,7 +774,7 @@ def resample2(
             interpolated_grid.get_point(point[0], point[1], point[2]))
 
         # Tranform to moving frame
-        position_moving = transform.apply_inverse(position)
+        position_moving = transform.apply(position)
 
         # Interpolate moving map
         interpolated_map_value = moving_xmap.xmap.interpolate_value(
