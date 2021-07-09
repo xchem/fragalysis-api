@@ -183,7 +183,7 @@ class Align:
                     print(transform)
                     print(transform.transform.vec.tolist())
                     print(transform.transform.mat.tolist())
-                    newmap = resample2(
+                    newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
@@ -274,7 +274,7 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    newmap = resample2(
+                    newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
