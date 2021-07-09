@@ -183,7 +183,7 @@ class Align:
                     print(transform)
                     print(transform.transform.vec.tolist())
                     print(transform.transform.mat.tolist())
-                    newmap = resample(
+                    newmap = resample2(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
@@ -274,7 +274,7 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    newmap = resample(
+                    newmap = resample2(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
@@ -677,6 +677,104 @@ def resample(
         # Transform to moving frame
         tctm = transform_centered_to_moving.apply(position_origin_moving)
         position_moving = gemmi.Position(tctm[0], tctm[1], tctm[2])
+
+        # Interpolate moving map
+        interpolated_map_value = moving_xmap.xmap.interpolate_value(
+            position_moving)
+
+        # Set original point
+        interpolated_grid.set_value(
+            point[0], point[1], point[2], interpolated_map_value)
+
+    # interpolated_grid.symmetrize_max()
+    interpolated_array = np.array(interpolated_grid)
+
+    interpolated_grid_neg = gridFromTemplate(moving_xmap)
+    interpolated_array_neg = np.array(interpolated_grid_neg, copy=False)
+    interpolated_array_neg[:, :, :] = -interpolated_array[:, :, :]
+    interpolated_grid_neg.symmetrize_max()
+
+    interpolated_grid_pos = gridFromTemplate(moving_xmap)
+    interpolated_array_pos = np.array(interpolated_grid_pos, copy=False)
+    interpolated_array_pos[:, :, :] = interpolated_array[:, :, :]
+    interpolated_grid_pos.symmetrize_max()
+
+    interpolated_grid_sym = gridFromTemplate(moving_xmap)
+    interpolated_array_sym = np.array(interpolated_grid_sym, copy=False)
+    interpolated_array_sym[:, :, :] = interpolated_array_pos[:,
+                                                             :, :] - interpolated_array_neg[:, :, :]
+
+    return Xmap(interpolated_grid_sym)
+
+
+def resample2(
+        moving_xmap: Xmap,
+        transform: Transform,
+        reference_structure: Structure
+):
+
+    # interpolated_grid = gemmi.FloatGrid(
+    #    moving_xmap.xmap.nu,
+    #    moving_xmap.xmap.nv,
+    #    moving_xmap.xmap.nw, )
+    # interpolated_grid.set_unit_cell(moving_xmap.xmap.unit_cell)
+    #interpolated_grid.spacegroup = moving_xmap.xmap.spacegroup
+    interpolated_grid = gridFromTemplate(moving_xmap)
+    # points
+    mask = gemmi.FloatGrid(moving_xmap.xmap.nu,
+                           moving_xmap.xmap.nv,
+                           moving_xmap.xmap.nw, )
+    mask.set_unit_cell(moving_xmap.xmap.unit_cell)
+    mask.spacegroup = gemmi.find_spacegroup_by_name("P 1")
+
+    for model in reference_structure.structure:
+        for chain in model:
+            for residue in chain.get_polymer():
+                for atom in residue:
+                    mask.set_points_around(atom.pos, 5.0, 1.0)
+
+    mask_array = np.array(mask)
+    mask_indicies = np.hstack([x.reshape((len(x), 1))
+                              for x in np.nonzero(mask)])
+    fractional_coords = []
+    for model in reference_structure.structure:
+        for chain in model:
+            for residue in chain.get_polymer():
+                for atom in residue:
+                    fractional = moving_xmap.xmap.unit_cell.fractionalize(
+                        atom.pos)
+                    fractional_coords.append(
+                        [fractional.x, fractional.y, fractional.z])
+
+    fractional_coords_array = np.array(fractional_coords)
+    max_coord = np.max(fractional_coords_array, axis=0)
+    min_coord = np.min(fractional_coords_array, axis=0)
+
+    min_index = np.floor(
+        min_coord * np.array([interpolated_grid.nu, interpolated_grid.nv, interpolated_grid.nw]))
+    max_index = np.floor(
+        max_coord * np.array([interpolated_grid.nu, interpolated_grid.nv, interpolated_grid.nw]))
+
+    points = itertools.product(range(int(min_index[0]), int(max_index[0])),
+                               range(int(min_index[1]), int(max_index[1])),
+                               range(int(min_index[2]), int(max_index[2])),
+                               )
+
+    # Unpack the points, poitions and transforms
+    point_list: List[Tuple[int, int, int]] = []
+    position_list: List[Tuple[float, float, float]] = []
+    transform_list: List[gemmi.transform] = []
+    com_moving_list: List[np.array] = []
+    com_reference_list: List[np.array] = []
+
+    # indicies to positions
+    for point in points:
+        # Reference frame position
+        position = interpolated_grid.point_to_position(
+            interpolated_grid.get_point(point[0], point[1], point[2]))
+
+        # Tranform to moving frame
+        position_moving = transform.apply_inverse(position)
 
         # Interpolate moving map
         interpolated_map_value = moving_xmap.xmap.interpolate_value(
