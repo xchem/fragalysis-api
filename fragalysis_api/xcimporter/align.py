@@ -181,9 +181,6 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    print(transform)
-                    print(transform.transform.vec.tolist())
-                    print(transform.transform.mat.tolist())
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
@@ -447,10 +444,6 @@ class Structure:
                         ca_self.append(ca_list_self)
                         ca_other.append(ca_list_other)
 
-        print(f'ca_self {len(ca_self)}')
-        print(ca_res_self_names)
-        print(f'ca_other {len(ca_other)}')
-        print(ca_res_other_names)
         # Make coord matricies
         matrix_self = np.array(ca_self)
         matrix_other = np.array(ca_other)
