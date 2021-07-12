@@ -149,6 +149,7 @@ class Align:
                 if rrf:
                     print(
                         f'Aligning Chain {chain} of {name} to first chain of {ref}')
+                current_pdb = Structure.from_file(file=Path(in_file))
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -242,6 +243,8 @@ class Align:
             else:
                 chains = ['']
             for chain in chains:
+                current_pdb = Structure.from_file(
+                    file=Path(os.path.join(dir, f'{name}.pdb')))
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
