@@ -836,8 +836,8 @@ def new_resample(
 ):
     print('Using new resample method??')
     unaligned_xmap_array = np.array(unaligned_xmap, copy=False)
-    std = np.std(unaligned_xmap_array)
-    unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
+    #std = np.std(unaligned_xmap_array)
+    #unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
     # Copy data into new grid
     new_grid = unaligned_xmap.new_grid()
 
