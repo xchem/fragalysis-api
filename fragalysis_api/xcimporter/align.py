@@ -867,12 +867,13 @@ def new_resample(
         com_reference_list.append(com_reference)
 
     interpolated_grid = gemmi.interpolate_points(
-        unaligned_xmap,
-        new_grid,
-        point_list,
-        position_list,
-        transform_list,
-        com_moving_list,
-        com_reference_list,
+        unaligned_xmap,  # 0
+        new_grid,  # 1
+        point_list,  # 2
+        position_list,  # 3
+        transform_list,  # 4
+        com_moving_list,  # 5
+        com_reference_list  # 6
     )
+    # 1. (arg0: gemmi.FloatGrid, arg1: gemmi.FloatGrid, arg2: List[List[int]], arg3: List[List[float]], arg4: List[gemmi.Transform], arg5: List[List[float]], arg6: List[List[float]]) -> gemmi.FloatGrid
     return Xmap(interpolated_grid)
