@@ -834,6 +834,7 @@ def new_resample(
     unaligned_xmap,  # gemmi.FloatGrid = self.xmap
     transform
 ):
+    print('Using new resample method??')
     unaligned_xmap_array = np.array(unaligned_xmap, copy=False)
     std = np.std(unaligned_xmap_array)
     unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
