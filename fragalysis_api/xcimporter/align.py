@@ -28,6 +28,8 @@ class Align:
         :param rrf: Bool, To indicate if chains have been split into seperate pdb files.
             If True, this will change the behaviour of the alignment to solely align the first
             chain of each structure together, and not consider other chains.
+        :param refset: Boolean, Indicate whether or not to automatically set a reference when constructing the alignment class
+            Can be set to False if only using align_to_reference function.
         '''
 
         self.directory = directory
@@ -181,8 +183,10 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    newmap = resample(
-                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    # newmap = resample(
+                    #    moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    newmap = new_resample(
+                        unaligned_xmap=map, transform=transform)
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
                     if rrf:
@@ -274,8 +278,10 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    newmap = resample(
-                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    # newmap = resample(
+                    #    moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    newmap = new_resample(
+                        unaligned_xmap=map, transform=transform)
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
                     if rrf:
@@ -822,3 +828,50 @@ def gridFromTemplate(template):
     interpolated_grid.set_unit_cell(template.xmap.unit_cell)
     interpolated_grid.spacegroup = template.xmap.spacegroup
     return interpolated_grid
+
+
+def new_resample(
+    unaligned_xmap,  # gemmi.FloatGrid = self.xmap
+    transform
+):
+    unaligned_xmap_array = np.array(unaligned_xmap, copy=False)
+    std = np.std(unaligned_xmap_array)
+    unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
+    # Copy data into new grid
+    new_grid = unaligned_xmap.new_grid()
+
+    # points
+    original_point_list = list(
+        itertools.product(
+            range(new_grid.nu),
+            range(new_grid.nv),
+            range(new_grid.nw),
+        )
+    )
+    # Unpack the points, poitions and transforms
+    point_list: List[Tuple[int, int, int]] = []
+    position_list: List[Tuple[float, float, float]] = []
+    transform_list: List[gemmi.transform] = []
+    com_moving_list: List[np.array] = []
+    com_reference_list: List[np.array] = []
+    transform = transform.transform.inverse()
+    com_moving = [0.0, 0.0, 0.0]
+    com_reference = [0.0, 0.0, 0.0]
+    position = [0.0, 0.0, 0.0]
+    for point in original_point_list:
+        point_list.append(point)
+        position_list.append(position)
+        transform_list.append(transform)
+        com_moving_list.append(com_moving)
+        com_reference_list.append(com_reference)
+
+    interpolated_grid = gemmi.interpolate_points(
+        unaligned_xmap,
+        new_grid,
+        point_list,
+        position_list,
+        transform_list,
+        com_moving_list,
+        com_reference_list,
+    )
+    return Xmap(interpolated_grid)
