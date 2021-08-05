@@ -19,7 +19,7 @@ warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
 class Align:
 
-    def __init__(self, directory, pdb_ref='', rrf=False, refset=True):
+    def __init__(self, directory, pdb_ref='', rrf=False, refset=True, fast_mode=False):
         '''
         :param directory: Directory path contain pdbs to be aligned.
         :param pdb_ref: The String Reference of a pdb that you want to
@@ -28,6 +28,10 @@ class Align:
         :param rrf: Bool, To indicate if chains have been split into seperate pdb files.
             If True, this will change the behaviour of the alignment to solely align the first
             chain of each structure together, and not consider other chains.
+        :param refset: Boolean, Indicate whether or not to automatically set a reference when constructing the alignment class
+            Can be set to False if only using align_to_reference function.
+        :param fast_mode: Boolean, If True - alignment will use a quicker alignment method. 
+            This method is based on the pandda2 alignment method specifically however could be prone to introducing some errors.
         '''
 
         self.directory = directory
@@ -35,6 +39,7 @@ class Align:
             self._get_ref = pdb_ref
         self.rrf = rrf
         self.ref_map = ''
+        self.fast_mode = fast_mode
 
     @property
     def _get_files(self):
@@ -181,8 +186,13 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    newmap = resample(
-                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    if self.fast_mode:
+                        newmap = fast_resample(
+                            unaligned_xmap=map, transform=transform)
+                    else:
+                        newmap = resample(
+                            moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
                     if rrf:
@@ -274,16 +284,18 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
-                    newmap = resample(
-                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+                    if self.fast_mode:
+                        newmap = fast_resample(
+                            unaligned_xmap=map, transform=transform)
+                    else:
+                        newmap = resample(
+                            moving_xmap=map, transform=transform, reference_structure=reference_pdb)
+
                     template = Path(
                         os.path.join(dir, f'{base}{ext}'))
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
-                    print(fn)
-                    # newmap.save(
-                    #    path=Path(os.path.join(out_dir, fn)))
                     referenceSave(
                         template_map_path=template,
                         xmap=newmap,
@@ -542,12 +554,10 @@ def split_chains(f):
                 continue
             else:
                 temp_structure[0].remove_chain(j)
-                #print([x.name for x in temp_structure[0]])
 
         # Rename Chain to corresponding chain then save!
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')
-        #print(f'Writing to: {filename}')
         temp_structure.write_pdb(filename)
         filenames.append(filename)
 
@@ -590,15 +600,7 @@ def resample(
         transform: Transform,
         reference_structure: Structure
 ):
-
-    # interpolated_grid = gemmi.FloatGrid(
-    #    moving_xmap.xmap.nu,
-    #    moving_xmap.xmap.nv,
-    #    moving_xmap.xmap.nw, )
-    # interpolated_grid.set_unit_cell(moving_xmap.xmap.unit_cell)
-    #interpolated_grid.spacegroup = moving_xmap.xmap.spacegroup
     interpolated_grid = gridFromTemplate(moving_xmap)
-    # points
     mask = gemmi.FloatGrid(moving_xmap.xmap.nu,
                            moving_xmap.xmap.nv,
                            moving_xmap.xmap.nw, )
@@ -703,108 +705,8 @@ def resample(
     return Xmap(interpolated_grid_sym)
 
 
-def resample2(
-        moving_xmap: Xmap,
-        transform: Transform,
-        reference_structure: Structure
-):
-
-    # interpolated_grid = gemmi.FloatGrid(
-    #    moving_xmap.xmap.nu,
-    #    moving_xmap.xmap.nv,
-    #    moving_xmap.xmap.nw, )
-    # interpolated_grid.set_unit_cell(moving_xmap.xmap.unit_cell)
-    #interpolated_grid.spacegroup = moving_xmap.xmap.spacegroup
-    interpolated_grid = gridFromTemplate(moving_xmap)
-    # points
-    mask = gemmi.FloatGrid(moving_xmap.xmap.nu,
-                           moving_xmap.xmap.nv,
-                           moving_xmap.xmap.nw, )
-    mask.set_unit_cell(moving_xmap.xmap.unit_cell)
-    mask.spacegroup = gemmi.find_spacegroup_by_name("P 1")
-
-    for model in reference_structure.structure:
-        for chain in model:
-            for residue in chain.get_polymer():
-                for atom in residue:
-                    mask.set_points_around(atom.pos, 5.0, 1.0)
-
-    mask_array = np.array(mask)
-    mask_indicies = np.hstack([x.reshape((len(x), 1))
-                              for x in np.nonzero(mask)])
-    fractional_coords = []
-    for model in reference_structure.structure:
-        for chain in model:
-            for residue in chain.get_polymer():
-                for atom in residue:
-                    fractional = moving_xmap.xmap.unit_cell.fractionalize(
-                        atom.pos)
-                    fractional_coords.append(
-                        [fractional.x, fractional.y, fractional.z])
-
-    fractional_coords_array = np.array(fractional_coords)
-    max_coord = np.max(fractional_coords_array, axis=0)
-    min_coord = np.min(fractional_coords_array, axis=0)
-
-    min_index = np.floor(
-        min_coord * np.array([interpolated_grid.nu, interpolated_grid.nv, interpolated_grid.nw]))
-    max_index = np.floor(
-        max_coord * np.array([interpolated_grid.nu, interpolated_grid.nv, interpolated_grid.nw]))
-
-    points = itertools.product(range(int(min_index[0]), int(max_index[0])),
-                               range(int(min_index[1]), int(max_index[1])),
-                               range(int(min_index[2]), int(max_index[2])),
-                               )
-
-    # Unpack the points, poitions and transforms
-    point_list: List[Tuple[int, int, int]] = []
-    position_list: List[Tuple[float, float, float]] = []
-    transform_list: List[gemmi.transform] = []
-    com_moving_list: List[np.array] = []
-    com_reference_list: List[np.array] = []
-
-    # indicies to positions
-    for point in points:
-        # Reference frame position
-        position = interpolated_grid.point_to_position(
-            interpolated_grid.get_point(point[0], point[1], point[2]))
-
-        # Tranform to moving frame
-        position_moving = transform.apply(position)
-
-        # Interpolate moving map
-        interpolated_map_value = moving_xmap.xmap.interpolate_value(
-            position_moving)
-
-        # Set original point
-        interpolated_grid.set_value(
-            point[0], point[1], point[2], interpolated_map_value)
-
-    # interpolated_grid.symmetrize_max()
-    interpolated_array = np.array(interpolated_grid)
-
-    interpolated_grid_neg = gridFromTemplate(moving_xmap)
-    interpolated_array_neg = np.array(interpolated_grid_neg, copy=False)
-    interpolated_array_neg[:, :, :] = -interpolated_array[:, :, :]
-    interpolated_grid_neg.symmetrize_max()
-
-    interpolated_grid_pos = gridFromTemplate(moving_xmap)
-    interpolated_array_pos = np.array(interpolated_grid_pos, copy=False)
-    interpolated_array_pos[:, :, :] = interpolated_array[:, :, :]
-    interpolated_grid_pos.symmetrize_max()
-
-    interpolated_grid_sym = gridFromTemplate(moving_xmap)
-    interpolated_array_sym = np.array(interpolated_grid_sym, copy=False)
-    interpolated_array_sym[:, :, :] = interpolated_array_pos[:,
-                                                             :, :] - interpolated_array_neg[:, :, :]
-
-    return Xmap(interpolated_grid_sym)
-
-
 def referenceSave(template_map_path, xmap, path_to_save):
     # Open Template map
-    print(str(template_map_path))
-    print(str(path_to_save))
     ccp4 = gemmi.read_ccp4_map(str(template_map_path))
     ccp4.setup()
     # Replace Template map data
@@ -822,3 +724,50 @@ def gridFromTemplate(template):
     interpolated_grid.set_unit_cell(template.xmap.unit_cell)
     interpolated_grid.spacegroup = template.xmap.spacegroup
     return interpolated_grid
+
+
+def fast_resample(
+    unaligned_xmap,  # gemmi.FloatGrid = self.xmap
+    transform
+):
+    unaligned_xmap_array = np.array(unaligned_xmap.xmap, copy=False)
+    #std = np.std(unaligned_xmap_array)
+    #unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
+    # Copy data into new grid
+    new_grid = unaligned_xmap.new_grid()
+
+    # points
+    original_point_list = list(
+        itertools.product(
+            range(new_grid.nu),
+            range(new_grid.nv),
+            range(new_grid.nw),
+        )
+    )
+    # Unpack the points, poitions and transforms
+    point_list: List[Tuple[int, int, int]] = []
+    position_list: List[Tuple[float, float, float]] = []
+    transform_list: List[gemmi.transform] = []
+    com_moving_list: List[np.array] = []
+    com_reference_list: List[np.array] = []
+    transform = transform.transform.inverse()
+    com_moving = [0.0, 0.0, 0.0]
+    com_reference = [0.0, 0.0, 0.0]
+    position = [0.0, 0.0, 0.0]
+    for point in original_point_list:
+        point_list.append(point)
+        position_list.append(position)
+        transform_list.append(transform)
+        com_moving_list.append(com_moving)
+        com_reference_list.append(com_reference)
+
+    interpolated_grid = gemmi.interpolate_points(
+        unaligned_xmap.xmap,
+        new_grid,
+        point_list,
+        position_list,
+        transform_list,
+        com_moving_list,
+        com_reference_list
+    )
+    return Xmap(interpolated_grid)
