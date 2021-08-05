@@ -13,7 +13,7 @@ from distutils.dir_util import copy_tree
 
 
 def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, reduce_reference_frame=False, biomol=None, covalent=False,
-               pdb_ref="", max_lig_len=0):
+               pdb_ref="", fast_mode=False, max_lig_len=0):
     """Formats a lists of PDB files into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -32,6 +32,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, reduce_r
         context of the pdb structures. If provided the contents will be appended to the top of the _apo.pdb files, Now defunct?
     :param covalent: Bool, if True, will attempt to convert output .mol files to account for potential covalent attachments
     :pdb_ref: String, if provided, all pdb files will be aligned to the name of the file (sans extnesion) that is specified.
+    :param fast_mode: Bool, if True, will use a quick alignment method. This will be much faster but the output maps may have slight inaccuracies
     :max_lig_len: Integer, If >0 will convert all chains with fewer than max_lig_len residues to HETATM with the name LIG. [Currently broken, yikes]
     :return: Hopefully, beautifully aligned files that be used with the fragalysis loader :)
     """
@@ -89,7 +90,7 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, reduce_r
     print(pdb_smiles_dict['smiles'])
     print("Aligning protein structures")
     structure = Align(directory=in_dir, pdb_ref=pdb_ref,
-                      rrf=reduce_reference_frame)
+                      rrf=reduce_reference_frame, fast_mode=fast_mode)
     structure.align(out_dir=os.path.join(out_dir, f"tmp{target}"))
 
     for smiles_file in pdb_smiles_dict['smiles']:
@@ -211,6 +212,14 @@ if __name__ == "__main__":
                         required=False,
                         default=0)
 
+    parser.add_argument('-fm',
+                        '--fastmode',
+                        action='store_true',
+                        help='Use the fast alignment method (may introduce inaccuracies)',
+                        required=False,
+                        default=False
+                        )
+
     args = vars(parser.parse_args())
 
     # user_id = args['user_id']
@@ -223,6 +232,7 @@ if __name__ == "__main__":
     biomol = args["biomol_txt"]
     covalent = args["covalent"]
     mll = args['max_lig_len']
+    fast_mode = args['fastmode']
 
     if args['reference'] is None:
         print('Reference not set')
@@ -245,5 +255,6 @@ if __name__ == "__main__":
                biomol=biomol,
                covalent=covalent,
                pdb_ref=reference,
+               fast_mode=fast_mode,
                max_lig_len=mll
                )
