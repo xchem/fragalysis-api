@@ -730,7 +730,7 @@ def fast_resample(
     unaligned_xmap,  # gemmi.FloatGrid = self.xmap
     transform
 ):
-    unaligned_xmap_array = np.array(unaligned_xmap, copy=False)
+    unaligned_xmap_array = np.array(unaligned_xmap.xmap, copy=False)
     #std = np.std(unaligned_xmap_array)
     #unaligned_xmap_array[:, :, :] = unaligned_xmap_array[:, :, :] / std
     # Copy data into new grid
@@ -762,7 +762,7 @@ def fast_resample(
         com_reference_list.append(com_reference)
 
     interpolated_grid = gemmi.interpolate_points(
-        unaligned_xmap,
+        unaligned_xmap.xmap,
         new_grid,
         point_list,
         position_list,
