@@ -660,9 +660,16 @@ def resample(
     transform_centered_to_moving.mat.fromlist(np.eye(3).tolist())
 
     # indicies to positions
+    #   mask_array = np.array(mask)
+    #mask_indicies = np.hstack([x.reshape((len(x), 1))
+    #                          for x in np.nonzero(mask)])
     for point in points:
+        # check if point[0], point[1], point[2] is in mask_indicies (hashmap)
+        # IF true do
+        # IF False Continue
         position = interpolated_grid.point_to_position(
             interpolated_grid.get_point(point[0], point[1], point[2]))
+        
         # Tranform to origin frame
         trtc = transform_reference_to_centered.apply(position)
         position_origin_reference = gemmi.Position(trtc[0], trtc[1], trtc[2])
