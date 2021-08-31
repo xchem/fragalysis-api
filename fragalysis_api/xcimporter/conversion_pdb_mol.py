@@ -2,7 +2,7 @@
 import glob
 
 from rdkit import Chem
-from rdkit.Chem import AllChem Draw
+from rdkit.Chem import AllChem, Draw
 from rdkit.Geometry import Point3D
 import json
 import os
