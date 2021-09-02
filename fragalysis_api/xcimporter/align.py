@@ -663,20 +663,19 @@ def resample(
     #   mask_array = np.array(mask)
     #mask_indicies = np.hstack([x.reshape((len(x), 1))
     #                          for x in np.nonzero(mask)])
-    points2 = [x for x in points]
-    point_x, point_y, point_z = zip(*points2)
-    ma, mb, mc = zip(*mask_indicies)
-    sma = set(ma)
-    smb = set(mb)
-    smc = set(mc)
-    points_filtered = [(x, y, z) for x, y, z in points2 if x in sma and y in smb and z in smc]
-    for point in points_filtered:
-        # check if point[0], point[1], point[2] is in mask_indicies (hashmap)
-        # IF true do
-        # IF False Continue
+    #points2 = [x for x in points]
+    #ma, mb, mc = zip(*mask_indicies)
+    ##sma = set(ma)
+    #smb = set(mb)
+    #smc = set(mc)
+    #points_filtered = [(x, y, z) for x, y, z in points2 if x in sma and y in smb and z in smc]
+    for point in points: #points_filtered:
+
         position = interpolated_grid.point_to_position(
             interpolated_grid.get_point(point[0], point[1], point[2]))
-        
+
+        if mask.interpolate_value(position) <= 0:
+            continue
         # Tranform to origin frame
         trtc = transform_reference_to_centered.apply(position)
         position_origin_reference = gemmi.Position(trtc[0], trtc[1], trtc[2])
