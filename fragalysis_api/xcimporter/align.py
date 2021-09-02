@@ -663,10 +663,15 @@ def resample(
     #   mask_array = np.array(mask)
     #mask_indicies = np.hstack([x.reshape((len(x), 1))
     #                          for x in np.nonzero(mask)])
-    for point in points:
+    points2 = [x for x in points]
+    point_x, point_y, point_z = zip(*points2)
+    ma, mb, mc = zip(*mask_indicies)
+    sma = set(ma)
+    smb = set(mb)
+    smc = set(mc)
+    points_filtered = [(x, y, z) for x, y, z in points2 if x in sma and y in smb and z in smc]
+    for point in points_filtered:
         # check if point[0], point[1], point[2] is in mask_indicies (hashmap)
-        if point not in mask_indicies:
-            continue
         # IF true do
         # IF False Continue
         position = interpolated_grid.point_to_position(
