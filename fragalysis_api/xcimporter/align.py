@@ -665,6 +665,8 @@ def resample(
     #                          for x in np.nonzero(mask)])
     for point in points:
         # check if point[0], point[1], point[2] is in mask_indicies (hashmap)
+        if point not in mask_indicies:
+            continue
         # IF true do
         # IF False Continue
         position = interpolated_grid.point_to_position(
