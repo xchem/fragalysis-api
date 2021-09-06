@@ -30,9 +30,9 @@ class EasyAlign(AlignTest):
         cls.align_obj_w_wrong_ref = Align(os.path.join(
             cls.dir_input, 'examples_to_test0'), pdb_ref='wrong_pdb')
         cls.align_obj_w_maps = Align(os.path.join(
-            cls.dir_input, 'examples_to_test5'), pdb_ref='', rrf=False, fast_mode=False)
+            cls.dir_input, 'examples_to_test5'), pdb_ref='', rrf=False)
         cls.align_obj_w_maps_rrf = Align(os.path.join(
-            cls.dir_input, 'examples_to_test5'), pdb_ref='', rrf=True, fast_mode=True)
+            cls.dir_input, 'examples_to_test5'), pdb_ref='', rrf=True)
 
     @classmethod
     def tearDownClass(cls):
