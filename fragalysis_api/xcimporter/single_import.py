@@ -6,7 +6,7 @@ import shutil
 from fragalysis_api import Align, set_up, convert_small_AA_chains, copy_extra_files
 
 
-def import_single_file(in_file, out_dir, target, reduce_reference_frame, reference_pdb, biomol=None, covalent=False, self_ref=False, fast_mode=False, max_lig_len=0):
+def import_single_file(in_file, out_dir, target, reduce_reference_frame, reference_pdb, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
     '''Formats a PDB file into fragalysis friendly format.
     1. Validates the naming of the pdbs.
     2. It aligns the pdbs (_bound.pdb file).
@@ -22,7 +22,6 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
         context of the pdb structures. If provided the contents will be appended to the top of the _apo.pdb files
     :param covalent: Bool, if True, will attempt to convert output .mol files to account for potential covalent attachments
     :param self_ref: Bool, if True, the import single file will align to itself.
-    :param fast_mode: Bool, if True, will use a quick alignment method. This will be much faster but the output maps may have slight inaccuracies
     :max_lig_len: Integer, If >0 will convert all chains with fewer than max_lig_len residues to HETATM with the name LIG. [Currently broken, yikes]
     :return: Hopefully, beautifully aligned files that be used with the fragalysis loader :)
     '''
@@ -58,7 +57,7 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
 
     print(f"Aligning to Reference: {reference_pdb}")
     structure = Align(in_dir, "", rrf=reduce_reference_frame,
-                      refset=False, fast_mode=fast_mode)
+                      refset=False)
 
     for i in pdb_smiles_dict['pdb']:
         if self_ref:
@@ -168,14 +167,6 @@ if __name__ == "__main__":
                         required=False,
                         default=0)
 
-    parser.add_argument('-fm',
-                        '--fastmode',
-                        action='store_true',
-                        help='Use the fast alignment method (may introduce inaccuracies)',
-                        required=False,
-                        default=False
-                        )
-
     args = vars(parser.parse_args())
 
     in_file = args["in_file"]
@@ -186,7 +177,6 @@ if __name__ == "__main__":
     covalent = args["covalent"]
     self_ref = args['self_reference']
     mll = args['max_lig_len']
-    fast_mode = args['fastmode']
 
     # Will this work?
     if self_ref:
@@ -211,6 +201,5 @@ if __name__ == "__main__":
                            biomol=biomol,
                            covalent=covalent,
                            self_ref=self_ref,
-                           fast_mode=fast_mode,
                            max_lig_len=mll)
         print(f'File has been aligned to {reference_pdb}')
