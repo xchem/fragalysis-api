@@ -368,14 +368,14 @@ class Ligand:
                 print(e)
                 print('failed to fit template ' + smiles_file)
                 print(f'template smiles: {smiles}')
-                Draw.MolToFile(new_mol, out_png)
+                Draw.MolToFile(mol_obj, out_png)
                 return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
         else:
             print(f'Warning: No smiles file: {file_base}')
 
         # creating mol file
-        Draw.MolToFile(new_mol, out_png)
+        Draw.MolToFile(mol_obj, out_png)
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
     def create_sd_file(self, mol_obj, writer):
