@@ -183,6 +183,9 @@ class Align:
                         file=Path(os.path.join(dir, f'{base}{ext}')))
                     array = np.array(map.xmap, copy=False)
                     array[~np.isfinite(array)] = 0
+                    array_mean = np.mean(array)
+                    array_sd = np.std(array)
+                    array[:, :, :] = (array[:, :, :] - array_mean) / array_sd
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
@@ -278,7 +281,7 @@ class Align:
                     array[~np.isfinite(array)] = 0
                     array_mean = np.mean(array)
                     array_sd = np.std(array)
-                    array[:, :, :] = (array[:, :, :] - array_mean) / array_std
+                    array[:, :, :] = (array[:, :, :] - array_mean) / array_sd
                     newmap = resample(
                         moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     template = Path(
