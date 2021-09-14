@@ -591,12 +591,14 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
         basebase = os.path.basename(inpath)
         fofcmap_files = glob.glob(f'{inpath}_*.map')
         event_files = glob.glob(f'{inpath}_*.ccp4')
-        map_files = fofcmap_files + event_files
-        for map_file in map_files:
-            map_base = os.path.basename(map_file)
-            map_base = map_base.replace(basebase, new.mol_dict["file_base"][i])
-            shutil.copy(map_file,
-                        os.path.join(new.mol_dict["directory"][i], map_base))
+        json_files = glob.glob(f'{inpath}_*.json')
+        other_files = fofcmap_files + event_files + json_files
+        for other_file in other_files:
+            other_base = os.path.basename(other_file)
+            other_base = other_base.replace(
+                basebase, new.mol_dict["file_base"][i])
+            shutil.copy(other_file,
+                        os.path.join(new.mol_dict["directory"][i], other_base))
         new.create_mol_file(
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
