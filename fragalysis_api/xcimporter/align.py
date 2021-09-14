@@ -13,6 +13,7 @@ import Bio.PDB.PDBExceptions as bpp
 import shutil
 import gemmi  # Oh boy...
 import numpy as np
+import json
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
@@ -164,6 +165,8 @@ class Align:
                     current_pdb.structure.write_pdb(
                         os.path.join(out_dir, f'{name}_{chain}_bound.pdb')
                     )
+                    transform.to_json(filename=os.path.join(
+                        out_dir, f'{name}_{chain}_transform.json'))
                     if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
                         shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
                             out_dir, f'{name}_{chain}_smiles.txt'))
@@ -171,6 +174,8 @@ class Align:
                     current_pdb.structure.write_pdb(
                         os.path.join(out_dir, f'{name}_bound.pdb')
                     )
+                    transform.to_json(filename=os.path.join(
+                        out_dir, f'{name}_transform.json'))
                     if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
                         shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
                             out_dir, f'{name}_smiles.txt'))
@@ -260,6 +265,8 @@ class Align:
                     current_pdb.structure.write_pdb(
                         os.path.join(out_dir, f'{name}_{chain}_bound.pdb')
                     )
+                    transform.to_json(filename=os.path.join(
+                        out_dir, f'{name}_{chain}_transform.json'))
                     if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
                         shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
                             out_dir, f'{name}_{chain}_smiles.txt'))
@@ -267,6 +274,8 @@ class Align:
                     current_pdb.structure.write_pdb(
                         os.path.join(out_dir, f'{name}_bound.pdb')
                     )
+                    transform.to_json(filename=os.path.join(
+                        out_dir, f'{name}_transform.json'))
                     if os.path.exists(os.path.join(self.directory, f'{name}_smiles.txt')):
                         shutil.copyfile(os.path.join(self.directory, f'{name}_smiles.txt'), os.path.join(
                             out_dir, f'{name}_smiles.txt'))
@@ -357,6 +366,25 @@ class Transform:
                                               self.com_reference[1],
                                               transformed_vector[2] + self.com_reference[2])
         return transformed_position
+
+    @staticmethod
+    def from_json(json_file):
+        with open(json_file) as jfile:
+            data = json.load(jfile)
+        transform = gemmi.Transform()
+        transform.mat.fromlist(data['transform_mat'])
+        transform.vec.fromlist(data['transform_vec'])
+        return Transform(transform, data['com_reference'], data['com_moving'])
+
+    def to_json(self, filename):
+        data = {
+            'com_moving': self.com_moving.tolist(),
+            'com_reference': self.com_reference.tolist(),
+            'transform_mat': self.transform.mat.tolist(),
+            'transform_vec': self.transform.vec.tolist()
+        }
+        with open(filename, 'w') as f:
+            json.dump(data, f)
 
     @staticmethod
     def from_translation_rotation(translation, rotation, com_reference, com_moving):

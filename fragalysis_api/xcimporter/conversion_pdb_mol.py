@@ -362,7 +362,7 @@ class Ligand:
                 template = AllChem.MolFromSmiles(smiles)
                 new_mol = AllChem.AssignBondOrdersFromTemplate(
                     template, mol_obj)
-                Draw.MolToFile(new_mol, out_png)    
+                Draw.MolToFile(new_mol, out_png)
                 return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
             except Exception as e:
                 print(e)
