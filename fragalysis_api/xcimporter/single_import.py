@@ -123,6 +123,7 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
         out_dir, f'mono{target}'), os.path.join(out_dir, f'tmp{target}')]
     [shutil.rmtree(x) for x in clean_up if os.path.exists(x)]
 
+    # Cut Maps
     print("Files are now in a fragalysis friendly format!")
 
 
