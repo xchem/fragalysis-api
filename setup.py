@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='fragalysis_api',
-    version='0.0.4.0',
+    version='0.0.5.0',
     author='Fragment 5 + Tyler',
     author_email="",
     description="A package to load PDBs into fragalysis format.",
@@ -19,7 +19,8 @@ setuptools.setup(
                       'pandas',
                       'pypdb',
                       'matplotlib',
-                      'scipy'],  # Install requirements extracted from requirements.txt
+                      'scipy',
+                      'fragalysis'],  # Install requirements extracted from requirements.txt
     include_package_data=True,  # Allow to include other files than .py in package
     package_data={
         '': ['fragalysis_api/xcimporter/non_ligs.json',
@@ -32,4 +33,4 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    )
+)
