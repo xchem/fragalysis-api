@@ -276,7 +276,7 @@ if __name__ == "__main__":
         folder = os.path.join(out_dir, target)
         site_obj = Sites.from_folder(folder, recalculate=False)
         site_obj.cluster_missing_mols(
-            folder=folder, com_tolerance=cs_com, other_tolerance=cs_other)
+            com_tolerance=cs_com, other_tolerance=cs_other)
         site_obj.to_json()
         contextualize_crystal_ligands(folder=folder)
         site_obj.apply_to_metadata()
