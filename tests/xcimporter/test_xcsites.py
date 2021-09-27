@@ -1,11 +1,9 @@
 import unittest
 import os
-from fragalysis_api import xcimporter
-
-from fragalysis_api.xcimporter.single_import import import_single_file
+from fragalysis_api import xcimporter, Sites, contextualize_crystal_ligands
 
 
-class XcImporterTest(unittest.TestCase):
+class XcSitesTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -30,7 +28,7 @@ class XcImporterTest(unittest.TestCase):
         #rmtree(os.path.join(cls.out_dir, cls.target))
         pass
 
-    def test_xcimporter(self):
+    def test_sites(self):
 
         xcimporter(
             in_dir=self.in_dir,
@@ -44,26 +42,17 @@ class XcImporterTest(unittest.TestCase):
             pdb_ref=self.reference,
             max_lig_len=self.mll
         )
-        # Write more Tests
-        self.assertTrue(expr=os.path.exists(
-            os.path.join(self.out_dir, self.target)))
-        self.assertTrue(expr=os.path.exists(os.path.join(
-            self.out_dir, self.target, 'reference.pdb')))
 
-        import_single_file(in_file=self.in_file,
-                           out_dir=self.out_dir,
-                           target=self.target,
-                           reduce_reference_frame=self.rrf,
-                           reference_pdb=os.path.join(
-                               self.out_dir, self.target, 'reference.pdb'),
-                           biomol=self.biomol,
-                           covalent=self.covalent,
-                           max_lig_len=self.mll)
+        folder = os.path.join(self.out_dir, self.target)
+        site_obj = Sites.from_folder(folder, recalculate=False)
+        # site_obj.cluster_missing_mols(
+        #        folder=folder, com_tolerance=5.00, other_tolerance=1.00)
+        site_obj.to_json()
+        contextualize_crystal_ligands(folder=folder)
+        site_obj.apply_to_metadata()
 
-        # Tests should check if a thing is correctly removed and readded etc...
-        # Write Many More... Single import should use a pdb in a seperate test!
         self.assertTrue(expr=os.path.exists(os.path.join(
-            self.out_dir, self.target, 'reference.pdb')))
+            self.out_dir, self.target, 'aligned', 'Mpro-x0978_0A', 'Mpro-x0978_0A_sites.json')))
 
 
 if __name__ == '__main__':

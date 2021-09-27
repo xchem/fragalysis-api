@@ -3,7 +3,7 @@ import glob
 import os
 import shutil
 
-from fragalysis_api import Align, set_up, convert_small_AA_chains, copy_extra_files
+from fragalysis_api import Align, set_up, convert_small_AA_chains, copy_extra_files, Sites, contextualize_crystal_ligands
 
 
 def import_single_file(in_file, out_dir, target, reduce_reference_frame, reference_pdb, biomol=None, covalent=False, self_ref=False, max_lig_len=0):
@@ -168,6 +168,31 @@ if __name__ == "__main__":
                         required=False,
                         default=0)
 
+    parser.add_argument(
+        "-cs",
+        "--cluster_sites",
+        action="store_true",
+        help='Include this flag if you would like to automatically assign center of mass sites as site labels',
+        required=False,
+        default=False
+    )
+
+    parser.add_argument(
+        "-cs_com",
+        "--cluster_sites_com",
+        help="Tolerance value for creating new clusters for centre of mass sites",
+        type=float,
+        default=5.00
+    )
+
+    parser.add_argument(
+        "-cs_other",
+        "--cluster_sites_other",
+        help="Tolerance value for creating new clusters for non centre of mass sites",
+        type=float,
+        default=1.00
+    )
+
     args = vars(parser.parse_args())
 
     in_file = args["in_file"]
@@ -178,6 +203,9 @@ if __name__ == "__main__":
     covalent = args["covalent"]
     self_ref = args['self_reference']
     mll = args['max_lig_len']
+    cs = args['cluster_sites']
+    cs_com = args['cluster_sites_com']
+    cs_other = args['cluster_sites_other']
 
     # Will this work?
     if self_ref:
@@ -204,3 +232,11 @@ if __name__ == "__main__":
                            self_ref=self_ref,
                            max_lig_len=mll)
         print(f'File has been aligned to {reference_pdb}')
+        if cs:
+            folder = os.path.join(out_dir, target)
+            site_obj = Sites.from_folder(folder, recalculate=False)
+            site_obj.cluster_missing_mols(
+                folder=folder, com_tolerance=cs_com, other_tolerance=cs_other)
+            site_obj.to_json()
+            contextualize_crystal_ligands(folder=folder)
+            site_obj.apply_to_metadata()

@@ -1,12 +1,11 @@
 import argparse
 from sys import exit
 import os
-import gemmi
 import glob
 
 from shutil import copyfile, rmtree
 
-from fragalysis_api import Validate, Align
+from fragalysis_api import Validate, Align, Sites, contextualize_crystal_ligands
 from fragalysis_api import set_up, convert_small_AA_chains, copy_extra_files
 
 from distutils.dir_util import copy_tree
@@ -209,6 +208,31 @@ if __name__ == "__main__":
                         help="Int, Convert all chains shorter than max_lig_len to HETATM LIG",
                         required=False,
                         default=0)
+
+    parser.add_argument(
+        "-cs",
+        "--cluster_sites",
+        action="store_true",
+        help='Include this flag if you would like to automatically assign center of mass sites as site labels',
+        required=False,
+        default=False
+    )
+
+    parser.add_argument(
+        "-cs_com",
+        "--cluster_sites_com",
+        help="Tolerance value for creating new clusters for centre of mass sites",
+        type=float,
+        default=5.00
+    )
+
+    parser.add_argument(
+        "-cs_other",
+        "--cluster_sites_other",
+        help="Tolerance value for creating new clusters for non centre of mass sites",
+        type=float,
+        default=1.00
+    )
     args = vars(parser.parse_args())
 
     # user_id = args['user_id']
@@ -221,6 +245,9 @@ if __name__ == "__main__":
     biomol = args["biomol_txt"]
     covalent = args["covalent"]
     mll = args['max_lig_len']
+    cs = args['cluster_sites']
+    cs_com = args['cluster_sites_com']
+    cs_other = args['cluster_sites_other']
 
     if args['reference'] is None:
         print('Reference not set')
@@ -245,3 +272,11 @@ if __name__ == "__main__":
                pdb_ref=reference,
                max_lig_len=mll
                )
+    if cs:
+        folder = os.path.join(out_dir, target)
+        site_obj = Sites.from_folder(folder, recalculate=False)
+        site_obj.cluster_missing_mols(
+            folder=folder, com_tolerance=cs_com, other_tolerance=cs_other)
+        site_obj.to_json()
+        contextualize_crystal_ligands(folder=folder)
+        site_obj.apply_to_metadata()

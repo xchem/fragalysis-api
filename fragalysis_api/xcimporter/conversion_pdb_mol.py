@@ -9,7 +9,7 @@ import os
 import shutil
 import warnings
 import csv
-import pypdb
+#import pypdb
 import numpy as np
 import gemmi
 
