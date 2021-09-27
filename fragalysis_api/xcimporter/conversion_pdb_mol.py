@@ -311,6 +311,10 @@ class Ligand:
         ligand_het_con = individual_ligand + individual_ligand_conect
         # make a pdb file for the ligand molecule
 
+        if os.path.isdir(lig_out_dir):
+            # This is stupid but will correctly spec the files... is there a better solution??
+            os.rmdir(lig_out_dir)
+
         if not os.path.isdir(lig_out_dir):
             os.makedirs(lig_out_dir)
 
