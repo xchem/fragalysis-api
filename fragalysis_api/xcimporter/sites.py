@@ -267,9 +267,9 @@ def contextualize_a_crystal(crystal_list):
             'closeatom_Distance': min_d,
             'relationship': relationship
         }
-        fn = molfile.replace('.mol', '_relationships.json')
-        with open(fn, 'w') as f:
-            json.dump(d, f)
+    fn = molfile.replace('.mol', '_relationships.json')
+    with open(fn, 'w') as f:
+        json.dump(d, f)
 
 
 def contextualize_crystal_ligands(folder):
@@ -345,8 +345,7 @@ if __name__ == "__main__":
     # If recalculate is True then stuff happens, if False it reads from jsons.
     site_obj = Sites.from_folder(folder, recalculate=mode == 'new')
     if mode == 'missing':
-        site_obj.cluster_missing_mols(
-            folder=folder, com_tolerance=ct, other_tolerance=ot)
+        site_obj.cluster_missing_mols(com_tolerance=ct, other_tolerance=ot)
     site_obj.to_json()
     if cc:
         contextualize_crystal_ligands(folder=folder)  # Add arguments?
