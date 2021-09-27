@@ -261,15 +261,15 @@ def contextualize_a_crystal(crystal_list):
         for pair in list(set(crystal_list) - set([molfile])):
             similarity, distance, min_d, relationship = compare_2_mols(
                 molfile, pair)
-        d[os.path.basename(pair).replace('.mol', '')] = {
-            'similarity': similarity,
-            'com_Distance': distance,
-            'closeatom_Distance': min_d,
-            'relationship': relationship
-        }
-    fn = molfile.replace('.mol', '_relationships.json')
-    with open(fn, 'w') as f:
-        json.dump(d, f)
+            d[os.path.basename(pair).replace('.mol', '')] = {
+                'similarity': similarity,
+                'com_Distance': distance,
+                'closeatom_Distance': min_d,
+                'relationship': relationship
+            }
+        fn = molfile.replace('.mol', '_relationships.json')
+        with open(fn, 'w') as f:
+            json.dump(d, f)
 
 
 def contextualize_crystal_ligands(folder):
