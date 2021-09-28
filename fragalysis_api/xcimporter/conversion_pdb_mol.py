@@ -345,8 +345,8 @@ class Ligand:
             print(f'Warning: No smiles file: {file_base}')
 
         # creating mol file at the end of the day...
-        Draw.MolToFile(mol_obj, out_png, imageType='png',
-                       fitImage=True, wedgeBonds=False)
+        AllChem.Compute2DCoords(mol_obj)
+        Draw.MolToFile(mol_obj, out_png, imageType='png')
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
     def create_sd_file(self, mol_obj, writer):
