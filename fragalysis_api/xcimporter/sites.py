@@ -237,13 +237,16 @@ def compare_2_mols(molfile, pair):
             dist_list.append(get_distance(p, q))
             min_d = min(dist_list)
     # Some rules:
-    # If similarity >= .95 + closeatom_Dictance = Really Small) : Alternative Conformation
+    # If similarity >= .95 + closeatom_Dictance = Really Small) : Alternative Conformation # If same chain Conf, else Pose
     # If similarity >= .95 + closeatom_Distance = Big : Alternative Position
     # If similarity < % + closeatomDistance = big, Primary
     # If similarity < % + closeatomDistance = big, Secondary
     if similarity >= 0.95:
         if min_d <= 5:  # 5 Angstroms enough?
-            relationship = 'Alternative Conformation'
+            if molfile.replace('.mol', '')[-1] == pair.replace('.mol', '')[-1]:
+                relationship = 'Alternative Conformation'
+            else:
+                relationship = 'Alternative Pose'
         else:
             relationship = 'Alternative Position'
     else:
