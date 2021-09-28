@@ -175,61 +175,28 @@ class Ligand:
         lig_line = open(os.path.join(
             lig_out_dir, (file_base + ".pdb")), 'r').readline()
         res_name = lig_line[16:20].replace(' ', '')
-        # Look for PDB entries in PDB bank and use residue name to get bond order
-        if not smiles_file:
-            try:
-                mol = Chem.MolFromPDBBlock(pdb_block)
-                #chem_desc = pypdb.describe_chemical(f"{res_name}")
-                # chem_desc["describeHet"]["ligandInfo"]["ligand"]["smiles"]
-                new_smiles = ''
-                template = Chem.MolFromSmiles(new_smiles)
-                new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
-                if handle_cov:
-                    cov_mol = self.handle_covalent_mol(
-                        lig_res_name=res_name, non_cov_mol=new_mol)
-                    if cov_mol is not None:
-                        new_mol = cov_mol
 
-                return new_mol
-
-            except Exception as e:
-                new_pdb_block = ''
-                for lig in pdb_block.split('\n'):
-                    if 'ATM' in lig:
-                        pos = 16
-                        s = lig[:pos] + ' ' + lig[pos + 1:]
-                        new_pdb_block += s
-                    else:
-                        new_pdb_block += lig
-
-                    new_pdb_block += '\n'
-                mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-                return mol
-
-        # Look for new XChem data - new XChem data must have associated smile.txt file
-        # Need to do this to catch corner case - x0685 from mArh residue
-        # name NHE was found ----> yielded wrong mol/smiles
-        if smiles_file:
-            new_pdb_block = ''
-
-            for lig in pdb_block.split('\n'):
-                if 'ATM' in lig:
-                    pos = 16
-                    s = lig[:pos] + ' ' + lig[pos + 1:]
-                    new_pdb_block += s
-                else:
-                    new_pdb_block += lig
-
-                new_pdb_block += '\n'
-
-            mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-            if handle_cov:
-                cov_mol = self.handle_covalent_mol(
-                    lig_res_name=res_name, non_cov_mol=mol)
-                if cov_mol is not None:
-                    mol = cov_mol
-
-            return mol
+        # Create new pdb_block and create a mol file regardles... (bond order gets assigned in create_mol_file...
+        new_pdb_block = ''
+        for lig in pdb_block.split('\n'):
+            if 'ATM' in lig:
+                pos = 16
+                s = lig[:pos] + ' ' + lig[pos + 1:]
+                new_pdb_block += s
+            else:
+                new_pdb_block += lig
+            new_pdb_block += '\n'
+        mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
+        # if not smiles_file:  # create a new template?
+        #    new_smiles = ''
+        #    template = Chem.MolFromSmiles(new_smiles)
+        #    mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
+        if handle_cov:
+            cov_mol = self.handle_covalent_mol(
+                lig_res_name=res_name, non_cov_mol=mol)
+            if cov_mol is not None:
+                mol = cov_mol
+        return mol
 
     def create_pdb_for_ligand(self, ligand, count, reduce, smiles_file, covalent=False):
         """
@@ -297,10 +264,7 @@ class Ligand:
         for atom in individual_ligand:
             atom_number = atom.split()[1]
             for conection in self.conects:
-                if (
-                        atom_number in conection
-                        and conection not in individual_ligand_conect
-                ):
+                if (atom_number in conection and conection not in individual_ligand_conect):
                     individual_ligand_conect.append(conection)
                     con_num += 1
 
@@ -366,22 +330,23 @@ class Ligand:
             try:
                 smiles = open(smiles_file, 'r').readlines()[0].rstrip()
                 template = AllChem.MolFromSmiles(smiles)
-                new_mol = AllChem.AssignBondOrdersFromTemplate(
+                mol_obj = AllChem.AssignBondOrdersFromTemplate(
                     template, mol_obj)
-                Draw.MolToFile(new_mol, out_png)
-                return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
+                #Draw.MolToFile(new_mol, out_png)
+                # return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
             except Exception as e:
                 print(e)
                 print('failed to fit template ' + smiles_file)
                 print(f'template smiles: {smiles}')
-                Draw.MolToFile(mol_obj, out_png)
-                return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
+                #Draw.MolToFile(mol_obj, out_png)
+                # return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
         else:
             print(f'Warning: No smiles file: {file_base}')
 
-        # creating mol file
-        Draw.MolToFile(mol_obj, out_png)
+        # creating mol file at the end of the day...
+        Draw.MolToFile(mol_obj, out_png, imageType='png',
+                       fitImage=True, wedgeBonds=False)
         return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
     def create_sd_file(self, mol_obj, writer):
