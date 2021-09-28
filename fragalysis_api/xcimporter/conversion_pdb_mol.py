@@ -343,12 +343,12 @@ class Ligand:
         else:
             print(f'Warning: No smiles file: {file_base}')
 
-        return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
-
-    def draw_mol_file(self, directory, file_base, mol_obj):
+        Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
+        # IS this enough... do we lost stuff?
         out_png = os.path.join(directory, str(file_base + ".png"))
-        AllChem.Compute2DCoords(mol_obj)
-        Draw.MolToFile(mol_obj, out_png, imageType='png')
+        draw_mol = Chem.Mol(mol_obj)
+        AllChem.Compute2DCoords(draw_mol)
+        Draw.MolToFile(draw_mol, out_png, imageType='png')
 
     def create_sd_file(self, mol_obj, writer):
         """
@@ -605,11 +605,6 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
         new_apo.make_apo_file(keep_headers=keep_headers)
         # makes apo file without solvent, ions and buffers, and file with just those
         new_apo.make_apo_desol_files()
-        new.draw_mol_file(
-            directory=new.mol_dict["directory"][i],
-            file_base=new.mol_dict["file_base"][i],
-            mol_obj=new.mol_dict["mol"][i]
-        )
 
     return new
 
