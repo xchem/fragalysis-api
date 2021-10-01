@@ -165,7 +165,6 @@ class Sites:
                 cluster[0] = {'centre_of_mass': com, 'mol_ids': [fn]}
         else:
             cluster[0] = {'centre_of_mass': com, 'mol_ids': [fn]}
-        print(cluster)
 
     def append_data(self, dict, filename, com_tolerance=5, other_tolerance=1):
         for key in dict.keys():
@@ -198,7 +197,6 @@ class Sites:
 
     def cluster_missing_mols(self, com_tolerance=5, other_tolerance=1):
         for x in self.missing_mols:
-            print(x)
             self.append_mol(mol=x, com_tolerance=com_tolerance,
                             other_tolerance=other_tolerance)
 
@@ -259,7 +257,6 @@ def compare_2_mols(molfile, pair):
 
 def contextualize_a_crystal(crystal_list):
     for molfile in crystal_list:
-        print(molfile)
         d = {}
         for pair in list(set(crystal_list) - set([molfile])):
             similarity, distance, min_d, relationship = compare_2_mols(
