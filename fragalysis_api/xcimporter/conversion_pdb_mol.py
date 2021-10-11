@@ -123,7 +123,7 @@ class Ligand:
         chain = res[8]
         if covalent:
             for line in self.pdbfile:
-                if 'ATOM' in line and line[13:27] == res and line[21] == chain:
+                if 'ATOM' in line and line[13:27] == res:
                     res_x = float(line[31:39])
                     res_y = float(line[39:47])
                     res_z = float(line[47:55])
@@ -140,7 +140,7 @@ class Ligand:
             old_dist = 100
             for line in lig_lines:
                 j += 1
-                if 'HETATM' in line and line[21] == chain:
+                if 'HETATM' in line:
                     coords = [line[31:39].strip(), line[39:47].strip(),
                               line[47:55].strip()]
                     dist = self.get_3d_distance(coords, res_coords)
@@ -152,8 +152,11 @@ class Ligand:
             i = non_cov_mol.GetNumAtoms()
             edmol = Chem.EditableMol(non_cov_mol)
             edmol.AddAtom(atm_trans)
+            print(ind_to_add)
             edmol.AddBond(ind_to_add - 1, i, Chem.BondType.SINGLE)
             new_mol = edmol.GetMol()
+            print(non_cov_mol)
+            print(new_mol)
             conf = new_mol.GetConformer()
             conf.SetAtomPosition(i, Point3D(
                 res_coords[0], res_coords[1], res_coords[2]))
