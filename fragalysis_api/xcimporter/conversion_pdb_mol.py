@@ -123,7 +123,7 @@ class Ligand:
                     res = zero
                     chain = zero[8]
                     covalent = True
-        if(fb > 1):
+        if(len(fb) > 1):
             basechain = fb[-1]
             if not chain == basechain:
                 return None
