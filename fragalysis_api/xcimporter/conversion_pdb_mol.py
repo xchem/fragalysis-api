@@ -120,7 +120,7 @@ class Ligand:
                 if lig_res_name in one:
                     res = zero
                     covalent = True
-        chain = res[8]
+
         if covalent:
             for line in self.pdbfile:
                 if 'ATOM' in line and line[13:27] == res:
@@ -152,7 +152,6 @@ class Ligand:
             i = non_cov_mol.GetNumAtoms()
             edmol = Chem.EditableMol(non_cov_mol)
             edmol.AddAtom(atm_trans)
-            print(ind_to_add)
             edmol.AddBond(ind_to_add - 1, i, Chem.BondType.SINGLE)
             new_mol = edmol.GetMol()
             print(non_cov_mol)
