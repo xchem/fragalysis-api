@@ -96,7 +96,7 @@ class Ligand:
             sum([(float(coord_a[i]) - float(coord_b[i])) ** 2 for i in range(3)]))
         return np.sqrt(sum_)
 
-    def handle_covalent_mol(self, lig_res_name, non_cov_mol):
+    def handle_covalent_mol(self, lig_res_name, non_cov_mol, file_base):
         '''
         Do some magic if we think the molecule has a covalent attachment
         :param lig_res_name: Name of the covalent ligand
@@ -105,6 +105,7 @@ class Ligand:
         '''
         # original pdb = self.pdbfile (already aligned)
         # lig res name = name of ligand to find link for
+        fb = file_base.rsplit('_', 1)[1]
 
         covalent = False
 
@@ -122,10 +123,14 @@ class Ligand:
                     res = zero
                     chain = zero[8]
                     covalent = True
+        if(fb > 1):
+            basechain = fb[-1]
+            if not chain == basechain:
+                return None
 
         if covalent:
             for line in self.pdbfile:
-                if 'ATOM' in line and line[13:27] == res and line[21] == chain:
+                if 'ATOM' in line and line[13:27] == res:
                     res_x = float(line[31:39])
                     res_y = float(line[39:47])
                     res_z = float(line[47:55])
@@ -195,7 +200,7 @@ class Ligand:
         #    mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
         if handle_cov:
             cov_mol = self.handle_covalent_mol(
-                lig_res_name=res_name, non_cov_mol=mol)
+                lig_res_name=res_name, non_cov_mol=mol, file_base=file_base)
             if cov_mol is not None:
                 mol = cov_mol
         return mol
