@@ -115,15 +115,17 @@ class Ligand:
 
                 if lig_res_name in zero:
                     res = one
+                    chain = one[8]
                     covalent = True
 
                 if lig_res_name in one:
                     res = zero
+                    chain = zero[8]
                     covalent = True
 
         if covalent:
             for line in self.pdbfile:
-                if 'ATOM' in line and line[13:27] == res:
+                if 'ATOM' in line and line[13:27] == res and line[21] == chain:
                     res_x = float(line[31:39])
                     res_y = float(line[39:47])
                     res_z = float(line[47:55])
@@ -154,8 +156,6 @@ class Ligand:
             edmol.AddAtom(atm_trans)
             edmol.AddBond(ind_to_add - 1, i, Chem.BondType.SINGLE)
             new_mol = edmol.GetMol()
-            print(non_cov_mol)
-            print(new_mol)
             conf = new_mol.GetConformer()
             conf.SetAtomPosition(i, Point3D(
                 res_coords[0], res_coords[1], res_coords[2]))
