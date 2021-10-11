@@ -120,10 +120,10 @@ class Ligand:
                 if lig_res_name in one:
                     res = zero
                     covalent = True
-
+        chain = res[8]
         if covalent:
             for line in self.pdbfile:
-                if 'ATOM' in line and line[13:27] == res:
+                if 'ATOM' in line and line[13:27] == res and line[21] == chain:
                     res_x = float(line[31:39])
                     res_y = float(line[39:47])
                     res_z = float(line[47:55])
