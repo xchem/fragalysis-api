@@ -137,7 +137,7 @@ class Ligand:
                 [l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
             lig_lines = [l for l in lig_block.split('\n') if 'HETATM' in l]
             j = 0
-            old_dist = 100
+            old_dist = 10
             for line in lig_lines:
                 j += 1
                 if 'HETATM' in line:
