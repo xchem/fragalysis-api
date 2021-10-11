@@ -137,10 +137,10 @@ class Ligand:
                 [l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
             lig_lines = [l for l in lig_block.split('\n') if 'HETATM' in l]
             j = 0
-            old_dist = 10
+            old_dist = 100
             for line in lig_lines:
                 j += 1
-                if 'HETATM' in line:
+                if 'HETATM' in line and line[21] == chain:
                     coords = [line[31:39].strip(), line[39:47].strip(),
                               line[47:55].strip()]
                     dist = self.get_3d_distance(coords, res_coords)
