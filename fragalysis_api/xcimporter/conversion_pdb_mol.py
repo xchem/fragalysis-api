@@ -109,6 +109,8 @@ class Ligand:
 
         covalent = False
 
+        chain = ''
+
         for line in self.pdbfile:
             if 'LINK' in line:
                 zero = line[13:27]
@@ -123,6 +125,7 @@ class Ligand:
                     res = zero
                     chain = zero[8]
                     covalent = True
+
         if(len(fb) > 1):
             basechain = fb[-1]
             if not chain == basechain:
