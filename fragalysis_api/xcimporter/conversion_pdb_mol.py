@@ -2,15 +2,17 @@
 import glob
 
 from rdkit import Chem
-from rdkit.Chem import AllChem
+from rdkit.Chem import AllChem, Draw
 from rdkit.Geometry import Point3D
 import json
 import os
 import shutil
 import warnings
 import csv
-import pypdb
+#import pypdb
 import numpy as np
+import gemmi
+import shutil
 
 
 class Ligand:
@@ -61,7 +63,7 @@ class Ligand:
                 self.final_hets.append(line)
         return self.final_hets
 
-    def find_ligand_names_new(self):
+    def find_ligand_names_new(self, rrf=False):
         """
         Finds list of ligands contained in the structure, including solvents and ions
         :return: A listed of ligands that are not listed in the non_ligs.json file!
@@ -72,15 +74,15 @@ class Ligand:
                 all_ligands.append(line)
 
         for lig in all_ligands:
-            if (
-                    lig.split()[3][-3:] not in self.non_ligs
-            ):  # this takes out the solvents and ions a.k.a non-ligands
+            if rrf:
+                # Take First Character?
+                # ? #lig.split()[4][0]: #??? This is breaking stuff??
+                if not os.path.basename(self.infile).rsplit('_', 2)[1] == lig[21]:
+                    continue
+            if lig[17:20].strip() not in self.non_ligs:
                 self.wanted_ligs.append(lig[16:20].strip() + lig[20:26])
-                # print(lig[16:20].strip() + lig[20:26])
 
         self.wanted_ligs = list(set(self.wanted_ligs))
-        # print(self.wanted_ligs)
-
         return self.wanted_ligs
 
     def get_3d_distance(self, coord_a, coord_b):
@@ -90,10 +92,11 @@ class Ligand:
         :param coord_b: List of len 3 corresponding to xyz coords
         :return: The distance.
         '''
-        sum_ = (sum([(float(coord_a[i]) - float(coord_b[i])) ** 2 for i in range(3)]))
+        sum_ = (
+            sum([(float(coord_a[i]) - float(coord_b[i])) ** 2 for i in range(3)]))
         return np.sqrt(sum_)
 
-    def handle_covalent_mol(self, lig_res_name, non_cov_mol):
+    def handle_covalent_mol(self, lig_res_name, non_cov_mol, file_base):
         '''
         Do some magic if we think the molecule has a covalent attachment
         :param lig_res_name: Name of the covalent ligand
@@ -102,8 +105,11 @@ class Ligand:
         '''
         # original pdb = self.pdbfile (already aligned)
         # lig res name = name of ligand to find link for
+        fb = file_base.rsplit('_', 1)[1]
 
         covalent = False
+
+        chain = ''
 
         for line in self.pdbfile:
             if 'LINK' in line:
@@ -112,11 +118,18 @@ class Ligand:
 
                 if lig_res_name in zero:
                     res = one
+                    chain = one[8]
                     covalent = True
 
                 if lig_res_name in one:
                     res = zero
+                    chain = zero[8]
                     covalent = True
+
+        if(len(fb) > 1):
+            basechain = fb[-1]
+            if not chain == basechain:
+                return None
 
         if covalent:
             for line in self.pdbfile:
@@ -125,26 +138,25 @@ class Ligand:
                     res_y = float(line[39:47])
                     res_z = float(line[47:55])
                     res_coords = [res_x, res_y, res_z]
-                    print(res_coords)
                     atm = Chem.MolFromPDBBlock(line)
                     atm_trans = atm.GetAtomWithIdx(0)
 
             orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
 
-            lig_block = '\n'.join([l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
+            lig_block = '\n'.join(
+                [l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
             lig_lines = [l for l in lig_block.split('\n') if 'HETATM' in l]
             j = 0
             old_dist = 100
             for line in lig_lines:
                 j += 1
-                #                 print(line)
                 if 'HETATM' in line:
-                    coords = [line[31:39].strip(), line[39:47].strip(), line[47:55].strip()]
+                    coords = [line[31:39].strip(), line[39:47].strip(),
+                              line[47:55].strip()]
                     dist = self.get_3d_distance(coords, res_coords)
 
                     if dist < old_dist:
                         ind_to_add = j
-                        print(dist)
                         old_dist = dist
 
             i = non_cov_mol.GetNumAtoms()
@@ -153,7 +165,8 @@ class Ligand:
             edmol.AddBond(ind_to_add - 1, i, Chem.BondType.SINGLE)
             new_mol = edmol.GetMol()
             conf = new_mol.GetConformer()
-            conf.SetAtomPosition(i, Point3D(res_coords[0], res_coords[1], res_coords[2]))
+            conf.SetAtomPosition(i, Point3D(
+                res_coords[0], res_coords[1], res_coords[2]))
 
             return new_mol
 
@@ -167,84 +180,47 @@ class Ligand:
         :return: mol object that attempts to correct bond order if PDB entry
                 or mol object extracted from pdb file
         """
-        pdb_block = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').read()
-
-        lig_line = open(os.path.join(lig_out_dir, (file_base + ".pdb")), 'r').readline()
+        pdb_block = open(os.path.join(
+            lig_out_dir, (file_base + ".pdb")), 'r').read()
+        lig_line = open(os.path.join(
+            lig_out_dir, (file_base + ".pdb")), 'r').readline()
         res_name = lig_line[16:20].replace(' ', '')
 
-        # Look for PDB entries in PDB bank and use residue name to get bond order
-        if not smiles_file:
-            try:
+        # Create new pdb_block and create a mol file regardles... (bond order gets assigned in create_mol_file...
+        new_pdb_block = ''
+        for lig in pdb_block.split('\n'):
+            if 'ATM' in lig:
+                pos = 16
+                s = lig[:pos] + ' ' + lig[pos + 1:]
+                new_pdb_block += s
+            else:
+                new_pdb_block += lig
+            new_pdb_block += '\n'
+        mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
+        # if not smiles_file:  # create a new template?
+        #    new_smiles = ''
+        #    template = Chem.MolFromSmiles(new_smiles)
+        #    mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
+        if handle_cov:
+            cov_mol = self.handle_covalent_mol(
+                lig_res_name=res_name, non_cov_mol=mol, file_base=file_base)
+            if cov_mol is not None:
+                mol = cov_mol
+        return mol
 
-                mol = Chem.MolFromPDBBlock(pdb_block)
-                chem_desc = pypdb.describe_chemical(f"{res_name}")
-                new_smiles = chem_desc["describeHet"]["ligandInfo"]["ligand"]["smiles"]
-
-                template = Chem.MolFromSmiles(new_smiles)
-                new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol)
-
-                if handle_cov:
-                    cov_mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=new_mol)
-                    if cov_mol is not None:
-                        new_mol = cov_mol
-
-                return new_mol
-
-            except Exception as e:
-                new_pdb_block = ''
-
-                for lig in pdb_block.split('\n'):
-                    if 'ATM' in lig:
-                        pos = 16
-                        s = lig[:pos] + ' ' + lig[pos + 1:]
-                        new_pdb_block += s
-                    else:
-                        new_pdb_block += lig
-
-                    new_pdb_block += '\n'
-
-                mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-
-                return mol
-
-        # Look for new XChem data - new XChem data must have associated smile.txt file
-        # Need to do this to catch corner case - x0685 from mArh residue
-        # name NHE was found ----> yielded wrong mol/smiles
-        if smiles_file:
-            new_pdb_block = ''
-
-            for lig in pdb_block.split('\n'):
-                if 'ATM' in lig:
-                    pos = 16
-                    s = lig[:pos] + ' ' + lig[pos + 1:]
-                    new_pdb_block += s
-                else:
-                    new_pdb_block += lig
-
-                new_pdb_block += '\n'
-
-            mol = Chem.rdmolfiles.MolFromPDBBlock(new_pdb_block)
-            if handle_cov:
-                cov_mol = self.handle_covalent_mol(lig_res_name=res_name, non_cov_mol=mol)
-                if cov_mol is not None:
-                    mol = cov_mol
-
-            return mol
-
-    def create_pdb_for_ligand(self, ligand, count, monomerize, smiles_file, covalent=False):
+    def create_pdb_for_ligand(self, ligand, count, reduce, smiles_file, covalent=False):
         """
         A pdb file is produced for an individual ligand, containing atomic and connection information
         :param ligand: Name of the Ligand
         :param count: The index of the ligand
-        :param monomerize: Bool, if the file needs to be named using the chain name of the PDB
+        :param reduce: Bool, if the file needs to be named using the chain name of the PDB
         :param smiles_file: File path of smiles_file (if any)
         :param covalent: Bool, indicate whether or not covalent attach should be sought.
         :return: .pdb file for ligand.
         """
-
         # out directory and filename for lig pdb
         if not self.target_name in os.path.abspath(self.infile):
-            if not monomerize:
+            if not reduce:
                 file_base = str(
                     self.target_name
                     + "-"
@@ -255,7 +231,7 @@ class Ligand:
                     + "_"
                     + str(count)
                 )
-            if monomerize:
+            if reduce:
                 file_base = str(self.target_name
                                 + "-"
                                 + os.path.abspath(self.infile)
@@ -267,7 +243,7 @@ class Ligand:
                 file_base = file_base[:-2] + "_" + str(count) + chain
 
         else:
-            if not monomerize:
+            if not reduce:
                 file_base = str(
                     os.path.abspath(self.infile)
                     .split("/")[-1]
@@ -276,7 +252,7 @@ class Ligand:
                     + "_"
                     + str(count)
                 )
-            if monomerize:
+            if reduce:
                 file_base = str(
                     os.path.abspath(self.infile)
                     .split("/")[-1]
@@ -287,7 +263,6 @@ class Ligand:
                 file_base = file_base[:-2] + "_" + str(count) + chain
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
-
         individual_ligand = []
         individual_ligand_conect = []
         # adding atom information for each specific ligand to a list
@@ -299,10 +274,7 @@ class Ligand:
         for atom in individual_ligand:
             atom_number = atom.split()[1]
             for conection in self.conects:
-                if (
-                        atom_number in conection
-                        and conection not in individual_ligand_conect
-                ):
+                if (atom_number in conection and conection not in individual_ligand_conect):
                     individual_ligand_conect.append(conection)
                     con_num += 1
 
@@ -310,11 +282,13 @@ class Ligand:
         # (taking into account ligands that are covalently bound to the protein
 
         # assert 0 <= con_num - len(individual_ligand) <= 1
-
         # making into one list that is compatible with conversion to mol object
         ligand_het_con = individual_ligand + individual_ligand_conect
-
         # make a pdb file for the ligand molecule
+
+        if os.path.isdir(lig_out_dir):
+            # This is stupid but will correctly spec the files... is there a better solution??
+            shutil.rmtree(lig_out_dir)
 
         if not os.path.isdir(lig_out_dir):
             os.makedirs(lig_out_dir)
@@ -325,14 +299,14 @@ class Ligand:
         for line in ligand_het_con:
             ligands_connections.write(str(line))
         ligands_connections.close()
-
         # making pdb file into mol object
-        mol = self.create_pdb_mol(file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=covalent)
-
+        mol = self.create_pdb_mol(
+            file_base=file_base, lig_out_dir=lig_out_dir, smiles_file=smiles_file, handle_cov=covalent)
         # Move Map files into lig_out_dir
 
         if not mol:
-            print(f'WARNING: {file_base} did not produce a mol object from its pdb lig file!')
+            print(
+                f'WARNING: {file_base} did not produce a mol object from its pdb lig file!')
         else:
             try:
                 Chem.AddHs(mol)
@@ -365,20 +339,26 @@ class Ligand:
             try:
                 smiles = open(smiles_file, 'r').readlines()[0].rstrip()
                 template = AllChem.MolFromSmiles(smiles)
-                new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
-
-                return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
+                mol_obj = AllChem.AssignBondOrdersFromTemplate(
+                    template, mol_obj)
+                #Draw.MolToFile(new_mol, out_png)
+                # return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
             except Exception as e:
                 print(e)
                 print('failed to fit template ' + smiles_file)
                 print(f'template smiles: {smiles}')
-                return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
+                #Draw.MolToFile(mol_obj, out_png)
+                # return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
         else:
             print(f'Warning: No smiles file: {file_base}')
 
-        # creating mol file
-        return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
+        Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
+        # IS this enough... do we lost stuff?
+        out_png = os.path.join(directory, str(file_base + ".png"))
+        draw_mol = Chem.Mol(mol_obj)
+        AllChem.Compute2DCoords(draw_mol)
+        Draw.MolToFile(draw_mol, out_png, imageType='png')
 
     def create_sd_file(self, mol_obj, writer):
         """
@@ -398,7 +378,8 @@ class Ligand:
         """
 
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
-        smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
+        smiles_out_file = os.path.join(
+            directory, str(file_base + "_smiles.txt"))
 
         if smiles_file:
             try:
@@ -460,7 +441,8 @@ class pdb_apo:
         if keep_headers:
             include = ['CONECT', 'SEQRES', 'TITLE', 'ANISOU']
         else:
-            include = ['CONECT', 'REMARK', 'CRYST', 'SEQRES', 'HEADER', 'TITLE', 'ANISOU']
+            include = ['CONECT', 'REMARK', 'CRYST',
+                       'SEQRES', 'HEADER', 'TITLE', 'ANISOU']
 
         for line in self.pdbfile:
             if (
@@ -473,7 +455,8 @@ class pdb_apo:
                 lines += line
 
         apo_file = open(
-            os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo.pdb")), "w+"
+            os.path.join(self.RESULTS_DIRECTORY, str(
+                self.filebase + "_apo.pdb")), "w+"
         )
         apo_file.write(str(lines))
         apo_file.close()
@@ -491,22 +474,24 @@ class pdb_apo:
         Add contents of biomol/additional text file to a .pdb file
         '''
         biomol_remark = open(self.biomol).readlines()
-        print(biomol_remark)
         f = self.apo_file
         with open(f) as handle:
             switch = 0
             header_front, header_end = [], []
             pdb = []
             for line in handle:
-                if line.startswith('ATOM'): switch = 1
-                if line.startswith('HETATM'): switch = 2
+                if line.startswith('ATOM'):
+                    switch = 1
+                if line.startswith('HETATM'):
+                    switch = 2
                 if switch == 0:
                     header_front.append(line)
                 elif (switch == 2) and not line.startswith('HETATM'):
                     header_end.append(line)
                 else:
                     pdb.append(line)
-            full_file = ''.join(header_front) + ''.join(biomol_remark) + ''.join(pdb) + ''.join(header_end)
+            full_file = ''.join(
+                header_front) + ''.join(biomol_remark) + ''.join(pdb) + ''.join(header_end)
             with open(f, 'w') as w:
                 w.write(full_file)
 
@@ -525,7 +510,8 @@ class pdb_apo:
             "w+",
         )
         solv_file = open(
-            os.path.join(self.RESULTS_DIRECTORY, str(self.filebase + "_apo-solv.pdb")),
+            os.path.join(self.RESULTS_DIRECTORY, str(
+                self.filebase + "_apo-solv.pdb")),
             "w+",
         )
         if not self.apo_file:
@@ -542,40 +528,35 @@ class pdb_apo:
         prot_file.close()
 
 
-def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=None, covalent=False, keep_headers=False):
+def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, covalent=False, keep_headers=False):
     """
     For each ligand inside a pdb file, process each ligand seperately and create own outputs in individual folders.
     :param target_name: Name of the folder in out_dir
     :param infile: pdb file to be processed
     :param out_dir: Overall location of outputs
-    :param monomerize: Bool, indicate whether or not data was monomerized prior to set_up
+    :param rrf: Bool, indicate whether or not data is to be set to a single reference frame
     :param smiles_file: Filepath pointing to text file containing smiles string (if exists)
     :param biomol: Filepath pointing to text file containing biomol/header information for pdbs (if exists)
     :param covalent: Bool, indicate whether or not output mol files should find covalent attachment.
     :param keep_headers: Bool, indicate whether or not keep headers on apo files.
     :return: for each ligand: pdb, mol, sdf and _apo.pdb in seperate directorys inside out_dir/target_name
     """
-
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
-
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
-
-    print(RESULTS_DIRECTORY)
 
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
     )  # takes in pdb file and returns specific ligand files
     new.hets_and_cons()  # takes only hetatm and conect file lines from pdb file
     new.remove_nonligands()  # removes ions and solvents from list of ligands
-    new.find_ligand_names_new()  # finds the specific name and locations of desired ligands
+    # finds the specific name and locations of desired ligands
+    new.find_ligand_names_new(rrf=rrf)
     for i in range(len(new.wanted_ligs)):
         new.create_pdb_for_ligand(
-            new.wanted_ligs[i], count=i, monomerize=monomerize, smiles_file=smiles_file, covalent=covalent
+            new.wanted_ligs[i], count=i, reduce=rrf, smiles_file=smiles_file, covalent=covalent
         )  # creates pdb file and mol object for specific ligand
-
     for i in range(len(new.mol_dict["directory"])):
-
         if not new.mol_dict["mol"][i]:
             warnings.warn(
                 str(
@@ -585,7 +566,6 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
                 )
             )
             continue
-
         shutil.copy(infile,
                     os.path.join(new.mol_dict["directory"][i], str(new.mol_dict["file_base"][i] + "_bound.pdb")))
 
@@ -593,27 +573,26 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
         basebase = os.path.basename(inpath)
         fofcmap_files = glob.glob(f'{inpath}_*.map')
         event_files = glob.glob(f'{inpath}_*.ccp4')
-        map_files = fofcmap_files + event_files
-        for map_file in map_files:
-            map_base = os.path.basename(map_file)
-            map_base = map_base.replace(basebase, new.mol_dict["file_base"][i])
-            shutil.copy(map_file,
-                        os.path.join(new.mol_dict["directory"][i], map_base))
-
+        json_files = glob.glob(f'{inpath}_*.json')
+        other_files = fofcmap_files + event_files + json_files
+        for other_file in other_files:
+            other_base = os.path.basename(other_file)
+            other_base = other_base.replace(
+                basebase, new.mol_dict["file_base"][i])
+            shutil.copy(other_file,
+                        os.path.join(new.mol_dict["directory"][i], other_base))
         new.create_mol_file(
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             mol_obj=new.mol_dict["mol"][i],
             smiles_file=smiles_file,
         )  # creates mol file for each ligand
-
         writer = Chem.rdmolfiles.SDWriter(
             os.path.join(
                 new.mol_dict["directory"][i],
                 str(new.mol_dict["file_base"][i] + ".sdf"),
             )
         )
-
         new.create_sd_file(
             new.mol_lst[i], writer
         )  # creates sd file containing all mol files
@@ -625,7 +604,6 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
             file_base=new.mol_dict["file_base"][i],
             smiles_file=smiles_file,
         )  # create metadata csv file for each ligand
-
         new_apo = pdb_apo(
             infile,
             target_name,
@@ -633,7 +611,49 @@ def set_up(target_name, infile, out_dir, monomerize, smiles_file=None, biomol=No
             new.mol_dict["file_base"][i],
             biomol=biomol
         )
-        new_apo.make_apo_file(keep_headers=keep_headers)  # creates pdb file that doesn't contain any ligand information
-        new_apo.make_apo_desol_files()  # makes apo file without solvent, ions and buffers, and file with just those
+        # creates pdb file that doesn't contain any ligand information
+        new_apo.make_apo_file(keep_headers=keep_headers)
+        # makes apo file without solvent, ions and buffers, and file with just those
+        new_apo.make_apo_desol_files()
 
     return new
+
+
+def convert_small_AA_chains(in_file, out_file, max_len=15):
+    pdb_file = gemmi.read_structure(in_file)
+    structure = pdb_file[0]
+    chain_lens = [j.get_polymer().length() for j in structure]
+    for i, j in enumerate(chain_lens):
+        if int(j) <= int(max_len):
+            for x in structure[i]:
+                x.name = 'LIG'
+                x.het_flag = 'H'
+                x.seqid.num = i + 1
+    w_chain = structure.find_chain('W')
+    nhoh = 1
+    if w_chain is not None:
+        newchain = gemmi.Chain('W')
+        for res in w_chain:
+            if res.name == 'LIG' or res.name == 'HOH':  # Should be a ligand in the water chain right??
+                for atom in res:
+                    emptyres = gemmi.Residue()
+                    emptyres.add_atom(atom)
+                    emptyres.name = 'HOH'
+                    emptyres.seqid.num = nhoh
+                    nhoh += 1
+                    newchain.add_residue(emptyres)
+            else:
+                newchain.add_residues(res)
+        structure.remove_chain('W')
+        structure.add_chain(newchain)
+    pdb_file.write_pdb(out_file)
+
+
+def copy_extra_files(in_file, out_dir):
+    bn = os.path.basename(in_file).replace('.pdb', '')
+    dirname = os.path.dirname(in_file)
+    other_files = set(glob.glob(os.path.join(
+        dirname, f'{bn}*'))) - set([in_file])
+    new_loc = [os.path.join(out_dir, os.path.basename(x)) for x in other_files]
+    for i, j in zip(other_files, new_loc):
+        shutil.copyfile(i, j)
