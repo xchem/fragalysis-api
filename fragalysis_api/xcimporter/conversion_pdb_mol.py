@@ -13,6 +13,7 @@ import csv
 import numpy as np
 import gemmi
 import shutil
+import re
 
 
 class Ligand:
@@ -543,7 +544,8 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
-
+    #if the input is _bound.pdb and not _A_bound.pdb to indicate rrf mode hasnt been used...
+    rrf = len(infile.rsplit('_')[-2]) == 1
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
     )  # takes in pdb file and returns specific ligand files
