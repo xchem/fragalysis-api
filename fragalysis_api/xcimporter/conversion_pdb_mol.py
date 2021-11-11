@@ -227,9 +227,9 @@ class Ligand:
                     .split("/")[-1]
                     .replace(".pdb", "")
                     .replace("_bound", "")
-                    + "_"
-                    + str(count)
                 )
+                chain = ligand[5]
+                file_base = file_base + "_" + str(count) + chain
             if reduce:
                 file_base = str(self.target_name
                                 + "-"
@@ -248,9 +248,9 @@ class Ligand:
                     .split("/")[-1]
                     .replace(".pdb", "")
                     .replace("_bound", "")
-                    + "_"
-                    + str(count)
                 )
+                chain = ligand[5]
+                file_base = file_base + "_" + str(count) + chain 
             if reduce:
                 file_base = str(
                     os.path.abspath(self.infile)
