@@ -143,6 +143,7 @@ class Align:
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             current_pdb = Structure.from_file(file=Path(in_file))
+            rrf = can_rrf(f = in_file, r = ref)
             if rrf:
                 # current_pdb.structure, chains = split_chain_str(
                 chains = split_chain_str(os.path.join(dir, f'{name}.pdb'))
@@ -244,6 +245,7 @@ class Align:
             current_pdb = Structure.from_file(
                 file=Path(os.path.join(dir, f'{name}.pdb'))
             )
+            rrf = can_rrf(f = os.path.join(dir, f'{name}.pdb'), r = os.path.join(dir, f'{ref}.pdb'))
             if rrf:
                 chains = split_chain_str(
                     os.path.join(dir, f'{name}.pdb'))
@@ -528,6 +530,26 @@ def split_chain_str(f):
             chain_names.append(i)
     alt_chains = list(set(nonHOH_chains) - set(chain_names))
     return list(set(nonHOH_chains) - set(alt_chains))
+
+def can_rrf(f, r):
+    blosum62 = gemmi.prepare_blosum62_scoring()
+    base_structure = gemmi.read_structure(f)
+    ref_structure = gemmi.read_structure(r)
+    r_s = list(ref_structure[0][0].get_polymer().make_one_letter_sequence())
+    # Find chains with ligands...
+    model = base_structure[0]
+    liganded_chains = []
+    for chain in model:
+        action = False
+        span = chain.get_ligands()
+        for res in span:
+            if 'LIG' in res.name:
+                action = True
+        if action:
+            liganded_chains.append(list(chain.get_polymer().make_one_letter_sequence()))
+    # Compare chains to A of reference... if first chain cannot alo?
+    scores = [gemmi.align_string_sequences(x, r_s, [], blosum62).score for x in liganded_chains]
+    return all([x > 0 for x in scores])
 
 
 def split_chains(f):
