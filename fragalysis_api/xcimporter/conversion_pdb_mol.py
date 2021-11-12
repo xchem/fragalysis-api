@@ -9,7 +9,7 @@ import os
 import shutil
 import warnings
 import csv
-#import pypdb
+# import pypdb
 import numpy as np
 import gemmi
 import shutil
@@ -126,7 +126,7 @@ class Ligand:
                     chain = zero[8]
                     covalent = True
 
-        if(len(fb) > 1):
+        if (len(fb) > 1):
             basechain = fb[-1]
             if not chain == basechain:
                 return None
@@ -219,48 +219,20 @@ class Ligand:
         :return: .pdb file for ligand.
         """
         # out directory and filename for lig pdb
-        if not self.target_name in os.path.abspath(self.infile):
-            if not reduce:
-                file_base = str(
-                    self.target_name
-                    + "-"
-                    + os.path.abspath(self.infile)
-                    .split("/")[-1]
-                    .replace(".pdb", "")
-                    .replace("_bound", "")
-                )
-                chain = ligand[5]
-                file_base = file_base + "_" + str(count) + chain
-            if reduce:
-                file_base = str(self.target_name
-                                + "-"
-                                + os.path.abspath(self.infile)
-                                .split("/")[-1]
-                                .replace(".pdb", "")
-                                .replace("_bound", "")
-                                )
-                chain = file_base.split("_")[-1]
-                file_base = file_base[:-2] + "_" + str(count) + chain
+        # This can be optimised... (probably easier to just infer targetname??)
 
+        if self.target_name in os.path.abspath(self.infile):
+            file_base = f'{os.path.abspath(self.infile).split("/")[-1].replace(".pdb", "").replace("_bound", "")}'
         else:
-            if not reduce:
-                file_base = str(
-                    os.path.abspath(self.infile)
-                    .split("/")[-1]
-                    .replace(".pdb", "")
-                    .replace("_bound", "")
-                )
-                chain = ligand[5]
-                file_base = file_base + "_" + str(count) + chain 
-            if reduce:
-                file_base = str(
-                    os.path.abspath(self.infile)
-                    .split("/")[-1]
-                    .replace(".pdb", "")
-                    .replace("_bound", "")
-                )
-                chain = file_base.split("_")[-1]
-                file_base = file_base[:-2] + "_" + str(count) + chain
+            # Add target name to file_base?
+            file_base = f'{self.target_name}-{os.path.abspath(self.infile).split("/")[-1].replace(".pdb", "").replace("_bound", "")}'
+        if reduce:
+            chain = file_base.split("_")[-1]
+            file_base = file_base[:-2]  # remove _chainname from end?
+        else:
+            chain = ligand.split(' ')[1][0]
+
+        file_base = f'{file_base}_{str(count)}{chain}'
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
         individual_ligand = []
@@ -341,13 +313,13 @@ class Ligand:
                 template = AllChem.MolFromSmiles(smiles)
                 mol_obj = AllChem.AssignBondOrdersFromTemplate(
                     template, mol_obj)
-                #Draw.MolToFile(new_mol, out_png)
+                # Draw.MolToFile(new_mol, out_png)
                 # return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
             except Exception as e:
                 print(e)
                 print('failed to fit template ' + smiles_file)
                 print(f'template smiles: {smiles}')
-                #Draw.MolToFile(mol_obj, out_png)
+                # Draw.MolToFile(mol_obj, out_png)
                 # return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
 
         else:
@@ -544,7 +516,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
-    #if the input is _bound.pdb and not _A_bound.pdb to indicate rrf mode hasnt been used...
+    # if the input is _bound.pdb and not _A_bound.pdb to indicate rrf mode hasnt been used...
     rrf = len(infile.rsplit('_')[-2]) == 1
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
