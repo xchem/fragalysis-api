@@ -120,7 +120,7 @@ class Align:
         # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
-    def align_to_reference(self, in_file, reference_pdb, out_dir):
+    def align_to_reference(self, in_file, reference_pdb, out_dir, sr=False):
         '''
         Aligns a single pdb file to a reference and adds it to the specified output directory.
         :param in_file: filepath to corresponding pdb file to align. Accompanying map files should be located within
@@ -143,7 +143,7 @@ class Align:
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             current_pdb = Structure.from_file(file=Path(in_file))
-            rrf = can_rrf(f = in_file, r = ref)
+            rrf = can_rrf(f=in_file, r=ref)
             if rrf:
                 # current_pdb.structure, chains = split_chain_str(
                 chains = split_chain_str(os.path.join(dir, f'{name}.pdb'))
@@ -192,10 +192,12 @@ class Align:
                     array_mean = np.mean(array)
                     array_sd = np.std(array)
                     array[:, :, :] = (array[:, :, :] - array_mean) / array_sd
-                    newmap = resample(
-                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
-                    template = Path(
-                        os.path.join(dir, f'{base}{ext}'))
+                    template = Path(os.path.join(dir, f'{base}{ext}'))
+                    if sr:
+                        newmap = map
+                    else:
+                        newmap = resample(
+                            moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
@@ -245,7 +247,8 @@ class Align:
             current_pdb = Structure.from_file(
                 file=Path(os.path.join(dir, f'{name}.pdb'))
             )
-            rrf = can_rrf(f = os.path.join(dir, f'{name}.pdb'), r = os.path.join(dir, f'{ref}.pdb'))
+            rrf = can_rrf(f=os.path.join(
+                dir, f'{name}.pdb'), r=os.path.join(dir, f'{ref}.pdb'))
             if rrf:
                 chains = split_chain_str(
                     os.path.join(dir, f'{name}.pdb'))
@@ -531,6 +534,7 @@ def split_chain_str(f):
     alt_chains = list(set(nonHOH_chains) - set(chain_names))
     return list(set(nonHOH_chains) - set(alt_chains))
 
+
 def can_rrf(f, r):
     blosum62 = gemmi.prepare_blosum62_scoring()
     base_structure = gemmi.read_structure(f)
@@ -546,9 +550,11 @@ def can_rrf(f, r):
             if 'LIG' in res.name:
                 action = True
         if action:
-            liganded_chains.append(list(chain.get_polymer().make_one_letter_sequence()))
+            liganded_chains.append(
+                list(chain.get_polymer().make_one_letter_sequence()))
     # Compare chains to A of reference... if first chain cannot alo?
-    scores = [gemmi.align_string_sequences(x, r_s, [], blosum62).score for x in liganded_chains]
+    scores = [gemmi.align_string_sequences(
+        x, r_s, [], blosum62).score for x in liganded_chains]
     return all([x > 0 for x in scores])
 
 
