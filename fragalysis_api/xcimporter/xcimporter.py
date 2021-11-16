@@ -53,6 +53,8 @@ def xcimporter(in_dir, out_dir, target, metadata=False, validate=False, reduce_r
     print("Making output directories")
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
+        os.makedirs(os.path.join(out_dir, 'aligned'))
+        os.makedirs(os.path.join(out_dir, 'crystallographic'))
 
     if not os.path.isdir(os.path.join(out_dir, f"tmp{target}/")):
         os.makedirs(os.path.join(out_dir, f"tmp{target}/"))
