@@ -141,7 +141,10 @@ class Ligand:
                     atm = Chem.MolFromPDBBlock(line)
                     atm_trans = atm.GetAtomWithIdx(0)
 
-            orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
+            try:
+                orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
+            except:
+                return None
 
             lig_block = '\n'.join(
                 [l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
