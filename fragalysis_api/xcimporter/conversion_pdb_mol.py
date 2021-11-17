@@ -144,6 +144,7 @@ class Ligand:
             try:
                 orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
             except:
+                print('Could not create covalent block...')
                 return None
 
             lig_block = '\n'.join(
