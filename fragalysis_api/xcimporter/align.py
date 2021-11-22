@@ -14,7 +14,6 @@ import shutil
 import gemmi  # Oh boy...
 import numpy as np
 import json
-from copy import deepcopy
 
 warnings.simplefilter('ignore', bpp.PDBConstructionWarning)
 
@@ -597,6 +596,7 @@ def assign_small_mols_to_chains(f):
     struc = Structure.from_file(Path(f))
     struc.structure = temp
     struc.structure.merge_chain_parts()
+    struc.structure.remove_empty_chains()
     return struc
 
 
