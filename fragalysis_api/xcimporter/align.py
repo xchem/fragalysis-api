@@ -143,8 +143,8 @@ class Align:
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
             # TGS Code here
-            #current_pdb = assign_small_mols_to_chains(f=in_file)
-            current_pdb = Structure.from_file(file=Path(in_file))
+            current_pdb = assign_small_mols_to_chains(f=in_file)
+            #current_pdb = Structure.from_file(file=Path(in_file))
             rrf = can_rrf(f=in_file, r=ref)
             if rrf:
                 # current_pdb.structure, chains = split_chain_str(
@@ -156,8 +156,8 @@ class Align:
                     print(
                         f'Aligning Chain {chain} of {name} to first chain of {ref}')
                 # TGS Here...
-                #current_pdb = assign_small_mols_to_chains(f=in_file)
-                current_pdb = Structure.from_file(file=Path(in_file))
+                current_pdb = assign_small_mols_to_chains(f=in_file)
+                #current_pdb = Structure.from_file(file=Path(in_file))
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -249,10 +249,10 @@ class Align:
             # Logic to do...
             # Align Chain N to First Chain in Reference
             # TGS Here
-            # current_pdb = assign_small_mols_to_chains(
-            #    f=os.path.join(dir, f'{name}.pdb'))
-            current_pdb = Structure.from_file(
-                file=Path(os.path.join(dir, f'{name}.pdb')))
+            current_pdb = assign_small_mols_to_chains(
+                f=os.path.join(dir, f'{name}.pdb'))
+            # current_pdb = Structure.from_file(
+            #    file=Path(os.path.join(dir, f'{name}.pdb')))
             rrf = can_rrf(f=os.path.join(
                 dir, f'{name}.pdb'), r=os.path.join(dir, f'{ref}.pdb'))
             if rrf:
@@ -262,10 +262,10 @@ class Align:
                 chains = ['']
             for chain in chains:
                 # TGS Here
-                # current_pdb = assign_small_mols_to_chains(
-                #    f=os.path.join(dir, f'{name}.pdb'))
-                current_pdb = Structure.from_file(
-                    file=Path(os.path.join(dir, f'{name}.pdb')))
+                current_pdb = assign_small_mols_to_chains(
+                    f=os.path.join(dir, f'{name}.pdb'))
+                # current_pdb = Structure.from_file(
+                #    file=Path(os.path.join(dir, f'{name}.pdb')))
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -545,6 +545,7 @@ def split_chain_str(f):
 
 
 def can_rrf(f, r):
+    # Convert to run on Structure class??
     blosum62 = gemmi.prepare_blosum62_scoring()
     base_structure = gemmi.read_structure(f)
     ref_structure = gemmi.read_structure(r)
