@@ -597,7 +597,11 @@ def assign_small_mols_to_chains(f):
     struc = Structure.from_file(Path(f))
     struc.structure = temp
     struc.structure.merge_chain_parts()
-    struc.structure.remove_empty_chains()
+    # clean up...
+    for chain in struc.structure[0]:
+        subchainname = chain[0].subchain
+        for x in chain:
+            x.subchain = subchainname
     return struc
 
 
