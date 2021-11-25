@@ -593,7 +593,10 @@ def assign_small_mols_to_chains(f):
         chain_dists = {}
         for z in chain_names:
             chain_dists[z] = chain_centers[j].dist(chain_centers[z])
-        temp[0][j].name = min(chain_dists, key=chain_dists.get)
+        try:
+            temp[0][j].name = min(chain_dists, key=chain_dists.get)
+        except:
+            print(f'Cannot compress {j} to {chain_names} in {f}')
     struc = Structure.from_file(Path(f))
     struc.structure = temp
     struc.structure.merge_chain_parts()
