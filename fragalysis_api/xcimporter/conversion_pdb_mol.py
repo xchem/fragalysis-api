@@ -321,6 +321,8 @@ class Ligand:
                 fp1, fp2 = (Chem.RDKFingerprint(Chem.MolFromSmiles(x)) for x in [smiles.rstrip(), molsmile])
                 sim = DataStructs.FingerprintSimilarity(fp1, fp2)
                 similarities.append(sim)
+            print(similarities)
+            print(smiles_list)
             smiles = smiles_list[similarities.index(max(similarities))].rstrip()
             try:
                 template = AllChem.MolFromSmiles(smiles)
