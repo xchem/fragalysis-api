@@ -2,6 +2,7 @@
 import glob
 
 from rdkit import Chem
+from rdkit import DataStructs
 from rdkit.Chem import AllChem, Draw
 from rdkit.Geometry import Point3D
 import json
@@ -312,25 +313,33 @@ class Ligand:
             print(f'WARNING: mol object is empty: {file_base}')
 
         if smiles_file:
+            molsmile = Chem.MolToSmiles(mol_obj)
+            with open(smiles_file, 'r') as sf:
+                smiles_list = sf.readlines()
+            similarities = []
+            for smiles in smiles_list:
+                fp1, fp2 = (Chem.RDKFingerprint(Chem.MolFromSmiles(x)) for x in [smiles.rstrip(), molsmile])
+                sim = DataStructs.FingerprintSimilarity(fp1, fp2)
+                similarities.append(sim)
+            smiles = smiles_list[similarities.index(max(similarities))].rstrip()
             try:
-                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
                 template = AllChem.MolFromSmiles(smiles)
-                mol_obj = AllChem.AssignBondOrdersFromTemplate(
-                    template, mol_obj)
-                # Draw.MolToFile(new_mol, out_png)
-                # return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
+                mol_obj = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
             except Exception as e:
                 print(e)
                 print('failed to fit template ' + smiles_file)
                 print(f'template smiles: {smiles}')
-                # Draw.MolToFile(mol_obj, out_png)
-                # return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
-
         else:
             print(f'Warning: No smiles file: {file_base}')
 
+        # Write output mol file...
         Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
-        # IS this enough... do we lost stuff?
+
+        # Write new smiles_txt
+        smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
+        with open(smiles_out_file, 'w+') as smiles_txt:
+            smiles_txt.write(smiles)
+        # Create output png too
         out_png = os.path.join(directory, str(file_base + ".png"))
         draw_mol = Chem.Mol(mol_obj)
         AllChem.Compute2DCoords(draw_mol)
@@ -354,30 +363,16 @@ class Ligand:
         """
 
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
-        smiles_out_file = os.path.join(
-            directory, str(file_base + "_smiles.txt"))
+        smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
 
-        if smiles_file:
-            try:
-                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
-                # write to .txt file
-                smiles_txt = open(smiles_out_file, "w+")
-                smiles_txt.write(smiles)
-                smiles_txt.close()
-
-            except Exception as e:
-                print(e)
-                print('failed to open smiles file ' + smiles_file)
-                smiles = 'NA'
-
-        if not smiles_file:
+        if os.path.exists(smiles_out_file):
+            with open(smiles_out_file, 'r') as sf:
+                smiles = sf.readlines()[0].rstrip()
+        else:
             try:
                 smiles = Chem.MolToSmiles(mol_obj)
-            except Exception as e:
-                print(e)
-                print('failed to convert mol obj to smiles' + smiles_file)
+            except:
                 smiles = "NA"
-
         meta_data_dict = {'Blank': '',
                           'fragalysis_name': file_base,
                           'crystal_name': file_base.rsplit('_', 1)[0],
@@ -521,6 +516,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
     # if the input is _bound.pdb and not _A_bound.pdb to indicate rrf mode hasnt been used...
+    # This will need cleaning up...
     rrf = len(infile.rsplit('_')[-2]) == 1
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
@@ -574,12 +570,11 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
             new.mol_lst[i], writer
         )  # creates sd file containing all mol files
         writer.close()  # this is important to make sure the file overwrites each time
-
         new.create_metadata_file(
             mol_obj=new.mol_dict["mol"][i],
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
-            smiles_file=smiles_file,
+            smiles_file=smiles_file, # This won't be specced correctly...
         )  # create metadata csv file for each ligand
         new_apo = pdb_apo(
             infile,
