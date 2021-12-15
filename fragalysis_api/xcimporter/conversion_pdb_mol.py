@@ -313,29 +313,34 @@ class Ligand:
             print(f'WARNING: mol object is empty: {file_base}')
 
         if smiles_file:
-            molsmile = Chem.MolToSmiles(mol_obj)
             with open(smiles_file, 'r') as sf:
                 smiles_list = sf.readlines()
-            similarities = []
+            mol_dicts = {}
+            sim_dicts = {}
+            original_fp = Chem.RDKFingerprint(mol_obj)
             for smiles in smiles_list:
-                fp1, fp2 = (Chem.RDKFingerprint(Chem.MolFromSmiles(x)) for x in [smiles.rstrip(), molsmile])
-                sim = DataStructs.FingerprintSimilarity(fp1, fp2)
-                similarities.append(sim)
-            print(f'Assumed Mol: {molsmile}')
-            print(f'Possible Templates:')
-            print(smiles_list)
-            print(f'Calculated Similarities:')
-            print(similarities)
-            smiles = smiles_list[similarities.index(max(similarities))].rstrip()
-            try:
-                template = AllChem.MolFromSmiles(smiles)
-                mol_obj = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
-            except Exception as e:
-                print(e)
-                print('failed to fit template ' + smiles_file)
-                print(f'template smiles: {smiles}')
+                try:
+                    template = AllChem.MolFromSmiles(smiles.rstrip())
+                    new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
+                    new_fp = Chem.RDKFingerprint(new_mol)
+                    mol_dicts[smiles] = new_mol
+                    sim_dicts[smiles] = DataStructs.FingerprintSimilarity(original_fp, new_fp)
+                except Exception as e:
+                    print(e)
+                    print('failed to fit template ' + smiles_file)
+                    print(f'template smiles: {smiles}')
+            # If none of the templates fit...
+            # Just write the smiles and use the mol_obj
+            # If there is 1, just use it
+            # If there are multiple that fit, find the one with the highest similarity
+            if len(mol_dicts) < 1:
+                mol_obj = mol_obj
+            else:
+                mol_obj = mol_dicts[max(sim_dicts, key=sim_dicts.get)]
+                smiles = max(sim_dicts, key=sim_dicts.get)
         else:
             print(f'Warning: No smiles file: {file_base}')
+            smiles = Chem.MolToSmiles(mol_obj)
 
         # Write output mol file...
         Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
