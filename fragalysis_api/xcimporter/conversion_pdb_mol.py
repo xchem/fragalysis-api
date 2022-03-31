@@ -641,37 +641,3 @@ def copy_extra_files(in_file, out_dir):
     for i, j in zip(other_files, new_loc):
         shutil.copyfile(i, j)
 
-
-
-
-def split_headers(file):
-    with open(file) as handle:
-        switch = 0
-        header_front, header_end = [], []
-        pdb = [f'REMARK 777 Header has been moved to {file.rsplit("_", 1)[0]}_header.pdb\n']
-        for line in handle:
-            if line.startswith('ATOM'):
-                switch = 1
-            if line.startswith('HETATM'):
-                switch = 2
-            if switch == 0:
-                header_front.append(line)
-            elif (switch == 2) and not line.startswith('HETATM'):
-                if line.startswith('TER') or line.startswith('END') or line.startswith('ANISOU'):
-                    pdb.append(line)
-                else:
-                    header_end.append(line)
-            else:
-                pdb.append(line)
-    header = ''.join(header_front) + ''.join(header_end)
-    if not header_front[0].startswith('REMARK 777'):
-        with open(file, 'w') as w:
-            w.write(''.join(pdb))
-        with open(f'{file.rsplit("_", 1)[0]}_header.pdb', 'w') as w:
-            w.write(header)
-
-
-files = glob.glob('*/*_apo.pdb') + glob.glob('*/*_apo-desolv.pdb') + glob.glob('*/*_bound.pdb')
-for f in files:
-    print(f)
-    split_headers(file=f)
