@@ -354,6 +354,7 @@ class Ligand:
         draw_mol = Chem.Mol(mol_obj)
         AllChem.Compute2DCoords(draw_mol)
         Draw.MolToFile(draw_mol, out_png, imageType='png')
+        return mol_obj
 
     def create_sd_file(self, mol_obj, writer):
         """
@@ -564,7 +565,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
                 basebase, new.mol_dict["file_base"][i])
             shutil.copy(other_file,
                         os.path.join(new.mol_dict["directory"][i], other_base))
-        new.create_mol_file(
+        new_mol = new.create_mol_file(
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             mol_obj=new.mol_dict["mol"][i],
@@ -577,7 +578,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
             )
         )
         new.create_sd_file(
-            new.mol_lst[i], writer
+            new_mol, writer
         )  # creates sd file containing all mol files
         writer.close()  # this is important to make sure the file overwrites each time
         new.create_metadata_file(
@@ -639,3 +640,38 @@ def copy_extra_files(in_file, out_dir):
     new_loc = [os.path.join(out_dir, os.path.basename(x)) for x in other_files]
     for i, j in zip(other_files, new_loc):
         shutil.copyfile(i, j)
+
+
+
+
+def split_headers(file):
+    with open(file) as handle:
+        switch = 0
+        header_front, header_end = [], []
+        pdb = [f'REMARK 777 Header has been moved to {file.rsplit("_", 1)[0]}_header.pdb\n']
+        for line in handle:
+            if line.startswith('ATOM'):
+                switch = 1
+            if line.startswith('HETATM'):
+                switch = 2
+            if switch == 0:
+                header_front.append(line)
+            elif (switch == 2) and not line.startswith('HETATM'):
+                if line.startswith('TER') or line.startswith('END') or line.startswith('ANISOU'):
+                    pdb.append(line)
+                else:
+                    header_end.append(line)
+            else:
+                pdb.append(line)
+    header = ''.join(header_front) + ''.join(header_end)
+    if not header_front[0].startswith('REMARK 777'):
+        with open(file, 'w') as w:
+            w.write(''.join(pdb))
+        with open(f'{file.rsplit("_", 1)[0]}_header.pdb', 'w') as w:
+            w.write(header)
+
+
+files = glob.glob('*/*_apo.pdb') + glob.glob('*/*_apo-desolv.pdb') + glob.glob('*/*_bound.pdb')
+for f in files:
+    print(f)
+    split_headers(file=f)
