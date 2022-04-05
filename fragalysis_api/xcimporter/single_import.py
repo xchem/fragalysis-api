@@ -28,6 +28,8 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
 
     if not os.path.isdir(out_dir):
         os.makedirs(out_dir)
+        os.makedirs(os.path.join(out_dir, 'aligned'))
+        os.makedirs(os.path.join(out_dir, 'crystallographic'))
 
     if not os.path.isdir(os.path.join(out_dir, f"tmp{target}/")):
         os.makedirs(os.path.join(out_dir, f"tmp{target}/"))
@@ -62,10 +64,10 @@ def import_single_file(in_file, out_dir, target, reduce_reference_frame, referen
     for i in pdb_smiles_dict['pdb']:
         if self_ref:
             structure.align_to_reference(
-                i, i, out_dir=os.path.join(out_dir, f"tmp{target}"))
+                i, i, out_dir=os.path.join(out_dir, f"tmp{target}"), sr=True)
         else:
             structure.align_to_reference(
-                i, reference_pdb=reference_pdb, out_dir=os.path.join(out_dir, f"tmp{target}"))
+                i, reference_pdb=reference_pdb, out_dir=os.path.join(out_dir, f"tmp{target}"), sr=False)
 
     for smiles_file in pdb_smiles_dict['smiles']:
         if smiles_file:

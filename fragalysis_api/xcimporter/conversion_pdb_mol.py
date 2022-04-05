@@ -2,6 +2,7 @@
 import glob
 
 from rdkit import Chem
+from rdkit import DataStructs
 from rdkit.Chem import AllChem, Draw
 from rdkit.Geometry import Point3D
 import json
@@ -9,10 +10,11 @@ import os
 import shutil
 import warnings
 import csv
-#import pypdb
+# import pypdb
 import numpy as np
 import gemmi
 import shutil
+import re
 
 
 class Ligand:
@@ -125,7 +127,7 @@ class Ligand:
                     chain = zero[8]
                     covalent = True
 
-        if(len(fb) > 1):
+        if (len(fb) > 1):
             basechain = fb[-1]
             if not chain == basechain:
                 return None
@@ -140,7 +142,11 @@ class Ligand:
                     atm = Chem.MolFromPDBBlock(line)
                     atm_trans = atm.GetAtomWithIdx(0)
 
-            orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
+            try:
+                orig_pdb_block = Chem.MolToPDBBlock(non_cov_mol)
+            except:
+                print('Could not create covalent block...')
+                return None
 
             lig_block = '\n'.join(
                 [l for l in orig_pdb_block.split('\n') if 'COMPND' not in l])
@@ -218,48 +224,20 @@ class Ligand:
         :return: .pdb file for ligand.
         """
         # out directory and filename for lig pdb
-        if not self.target_name in os.path.abspath(self.infile):
-            if not reduce:
-                file_base = str(
-                    self.target_name
-                    + "-"
-                    + os.path.abspath(self.infile)
-                    .split("/")[-1]
-                    .replace(".pdb", "")
-                    .replace("_bound", "")
-                    + "_"
-                    + str(count)
-                )
-            if reduce:
-                file_base = str(self.target_name
-                                + "-"
-                                + os.path.abspath(self.infile)
-                                .split("/")[-1]
-                                .replace(".pdb", "")
-                                .replace("_bound", "")
-                                )
-                chain = file_base.split("_")[-1]
-                file_base = file_base[:-2] + "_" + str(count) + chain
+        # This can be optimised... (probably easier to just infer targetname??)
 
+        if self.target_name in os.path.abspath(self.infile):
+            file_base = f'{os.path.abspath(self.infile).split("/")[-1].replace(".pdb", "").replace("_bound", "")}'
         else:
-            if not reduce:
-                file_base = str(
-                    os.path.abspath(self.infile)
-                    .split("/")[-1]
-                    .replace(".pdb", "")
-                    .replace("_bound", "")
-                    + "_"
-                    + str(count)
-                )
-            if reduce:
-                file_base = str(
-                    os.path.abspath(self.infile)
-                    .split("/")[-1]
-                    .replace(".pdb", "")
-                    .replace("_bound", "")
-                )
-                chain = file_base.split("_")[-1]
-                file_base = file_base[:-2] + "_" + str(count) + chain
+            # Add target name to file_base?
+            file_base = f'{self.target_name}-{os.path.abspath(self.infile).split("/")[-1].replace(".pdb", "").replace("_bound", "")}'
+        if reduce:
+            chain = file_base.split("_")[-1]
+            file_base = file_base[:-2]  # remove _chainname from end?
+        else:
+            chain = ligand.split(' ')[1][0]
+
+        file_base = f'{file_base}_{str(count)}{chain}'
 
         lig_out_dir = os.path.join(self.RESULTS_DIRECTORY, file_base)
         individual_ligand = []
@@ -335,29 +313,48 @@ class Ligand:
             print(f'WARNING: mol object is empty: {file_base}')
 
         if smiles_file:
-            try:
-                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
-                template = AllChem.MolFromSmiles(smiles)
-                mol_obj = AllChem.AssignBondOrdersFromTemplate(
-                    template, mol_obj)
-                #Draw.MolToFile(new_mol, out_png)
-                # return Chem.rdmolfiles.MolToMolFile(new_mol, out_file)
-            except Exception as e:
-                print(e)
-                print('failed to fit template ' + smiles_file)
-                print(f'template smiles: {smiles}')
-                #Draw.MolToFile(mol_obj, out_png)
-                # return Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
-
+            with open(smiles_file, 'r') as sf:
+                smiles_list = sf.readlines()
+            mol_dicts = {}
+            sim_dicts = {}
+            original_fp = Chem.RDKFingerprint(mol_obj)
+            for smiles in smiles_list:
+                try:
+                    template = AllChem.MolFromSmiles(smiles.rstrip())
+                    new_mol = AllChem.AssignBondOrdersFromTemplate(template, mol_obj)
+                    new_fp = Chem.RDKFingerprint(new_mol)
+                    mol_dicts[smiles] = new_mol
+                    sim_dicts[smiles] = DataStructs.FingerprintSimilarity(original_fp, new_fp)
+                except Exception as e:
+                    print(e)
+                    print('failed to fit template ' + smiles_file)
+                    print(f'template smiles: {smiles}')
+            # If none of the templates fit...
+            # Just write the smiles and use the mol_obj
+            # If there is 1, just use it
+            # If there are multiple that fit, find the one with the highest similarity
+            if len(mol_dicts) < 1:
+                mol_obj = mol_obj
+            else:
+                mol_obj = mol_dicts[max(sim_dicts, key=sim_dicts.get)]
+                smiles = max(sim_dicts, key=sim_dicts.get)
         else:
             print(f'Warning: No smiles file: {file_base}')
+            smiles = Chem.MolToSmiles(mol_obj)
 
+        # Write output mol file...
         Chem.rdmolfiles.MolToMolFile(mol_obj, out_file)
-        # IS this enough... do we lost stuff?
+
+        # Write new smiles_txt
+        smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
+        with open(smiles_out_file, 'w+') as smiles_txt:
+            smiles_txt.write(smiles)
+        # Create output png too
         out_png = os.path.join(directory, str(file_base + ".png"))
         draw_mol = Chem.Mol(mol_obj)
         AllChem.Compute2DCoords(draw_mol)
         Draw.MolToFile(draw_mol, out_png, imageType='png')
+        return mol_obj
 
     def create_sd_file(self, mol_obj, writer):
         """
@@ -377,30 +374,16 @@ class Ligand:
         """
 
         meta_out_file = os.path.join(directory, str(file_base + "_meta.csv"))
-        smiles_out_file = os.path.join(
-            directory, str(file_base + "_smiles.txt"))
+        smiles_out_file = os.path.join(directory, str(file_base + "_smiles.txt"))
 
-        if smiles_file:
-            try:
-                smiles = open(smiles_file, 'r').readlines()[0].rstrip()
-                # write to .txt file
-                smiles_txt = open(smiles_out_file, "w+")
-                smiles_txt.write(smiles)
-                smiles_txt.close()
-
-            except Exception as e:
-                print(e)
-                print('failed to open smiles file ' + smiles_file)
-                smiles = 'NA'
-
-        if not smiles_file:
+        if os.path.exists(smiles_out_file):
+            with open(smiles_out_file, 'r') as sf:
+                smiles = sf.readlines()[0].rstrip()
+        else:
             try:
                 smiles = Chem.MolToSmiles(mol_obj)
-            except Exception as e:
-                print(e)
-                print('failed to convert mol obj to smiles' + smiles_file)
+            except:
                 smiles = "NA"
-
         meta_data_dict = {'Blank': '',
                           'fragalysis_name': file_base,
                           'crystal_name': file_base.rsplit('_', 1)[0],
@@ -543,7 +526,9 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
     RESULTS_DIRECTORY = os.path.join(out_dir, target_name, 'aligned')
     if not os.path.isdir(RESULTS_DIRECTORY):
         os.makedirs(RESULTS_DIRECTORY)
-
+    # if the input is _bound.pdb and not _A_bound.pdb to indicate rrf mode hasnt been used...
+    # This will need cleaning up...
+    rrf = len(infile.rsplit('_')[-2]) == 1
     new = Ligand(
         target_name, infile, RESULTS_DIRECTORY
     )  # takes in pdb file and returns specific ligand files
@@ -580,7 +565,7 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
                 basebase, new.mol_dict["file_base"][i])
             shutil.copy(other_file,
                         os.path.join(new.mol_dict["directory"][i], other_base))
-        new.create_mol_file(
+        new_mol = new.create_mol_file(
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
             mol_obj=new.mol_dict["mol"][i],
@@ -593,15 +578,14 @@ def set_up(target_name, infile, out_dir, rrf, smiles_file=None, biomol=None, cov
             )
         )
         new.create_sd_file(
-            new.mol_lst[i], writer
+            new_mol, writer
         )  # creates sd file containing all mol files
         writer.close()  # this is important to make sure the file overwrites each time
-
         new.create_metadata_file(
             mol_obj=new.mol_dict["mol"][i],
             directory=new.mol_dict["directory"][i],
             file_base=new.mol_dict["file_base"][i],
-            smiles_file=smiles_file,
+            smiles_file=smiles_file, # This won't be specced correctly...
         )  # create metadata csv file for each ligand
         new_apo = pdb_apo(
             infile,
@@ -656,3 +640,4 @@ def copy_extra_files(in_file, out_dir):
     new_loc = [os.path.join(out_dir, os.path.basename(x)) for x in other_files]
     for i, j in zip(other_files, new_loc):
         shutil.copyfile(i, j)
+

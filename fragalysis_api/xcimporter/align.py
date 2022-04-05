@@ -120,7 +120,7 @@ class Align:
         # using a functions from PDBParser parser class to get the resolution and protein id from the pdb file
         return pd.Series([structure.header['resolution'], seq_len, structure.id])
 
-    def align_to_reference(self, in_file, reference_pdb, out_dir):
+    def align_to_reference(self, in_file, reference_pdb, out_dir, sr=False):
         '''
         Aligns a single pdb file to a reference and adds it to the specified output directory.
         :param in_file: filepath to corresponding pdb file to align. Accompanying map files should be located within
@@ -142,7 +142,10 @@ class Align:
         s = time.time()
         for num, name in enumerate(crystals):
             all_maps = [j for j in map_list if name in j]
-            current_pdb = Structure.from_file(file=Path(in_file))
+            # TGS Code here
+            current_pdb = assign_small_mols_to_chains(f=in_file)
+            #current_pdb = Structure.from_file(file=Path(in_file))
+            rrf = can_rrf(f=in_file, r=ref)
             if rrf:
                 # current_pdb.structure, chains = split_chain_str(
                 chains = split_chain_str(os.path.join(dir, f'{name}.pdb'))
@@ -152,7 +155,9 @@ class Align:
                 if rrf:
                     print(
                         f'Aligning Chain {chain} of {name} to first chain of {ref}')
-                current_pdb = Structure.from_file(file=Path(in_file))
+                # TGS Here...
+                current_pdb = assign_small_mols_to_chains(f=in_file)
+                #current_pdb = Structure.from_file(file=Path(in_file))
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -191,10 +196,12 @@ class Align:
                     array_mean = np.mean(array)
                     array_sd = np.std(array)
                     array[:, :, :] = (array[:, :, :] - array_mean) / array_sd
-                    newmap = resample(
-                        moving_xmap=map, transform=transform, reference_structure=reference_pdb)
-                    template = Path(
-                        os.path.join(dir, f'{base}{ext}'))
+                    template = Path(os.path.join(dir, f'{base}{ext}'))
+                    if sr:
+                        newmap = map
+                    else:
+                        newmap = resample(
+                            moving_xmap=map, transform=transform, reference_structure=reference_pdb)
                     if rrf:
                         base = base.replace(name, f'{name}_{chain}')
                     fn = f'{base}{ext}'
@@ -241,17 +248,24 @@ class Align:
             all_maps = [j for j in map_list if name in j]
             # Logic to do...
             # Align Chain N to First Chain in Reference
-            current_pdb = Structure.from_file(
-                file=Path(os.path.join(dir, f'{name}.pdb'))
-            )
+            # TGS Here
+            current_pdb = assign_small_mols_to_chains(
+                f=os.path.join(dir, f'{name}.pdb'))
+            # current_pdb = Structure.from_file(
+            #    file=Path(os.path.join(dir, f'{name}.pdb')))
+            rrf = can_rrf(f=os.path.join(
+                dir, f'{name}.pdb'), r=os.path.join(dir, f'{ref}.pdb'))
             if rrf:
                 chains = split_chain_str(
                     os.path.join(dir, f'{name}.pdb'))
             else:
                 chains = ['']
             for chain in chains:
-                current_pdb = Structure.from_file(
-                    file=Path(os.path.join(dir, f'{name}.pdb')))
+                # TGS Here
+                current_pdb = assign_small_mols_to_chains(
+                    f=os.path.join(dir, f'{name}.pdb'))
+                # current_pdb = Structure.from_file(
+                #    file=Path(os.path.join(dir, f'{name}.pdb')))
                 try:
                     current_pdb, transform = current_pdb.align_to(
                         other=reference_pdb, rrf=rrf, chain_id=chain
@@ -530,6 +544,70 @@ def split_chain_str(f):
     return list(set(nonHOH_chains) - set(alt_chains))
 
 
+def can_rrf(f, r):
+    # Convert to run on Structure class??
+    blosum62 = gemmi.prepare_blosum62_scoring()
+    base_structure = gemmi.read_structure(f)
+    ref_structure = gemmi.read_structure(r)
+    r_s = list(ref_structure[0][0].get_polymer().make_one_letter_sequence())
+    # Find chains with ligands...
+    model = base_structure[0]
+    liganded_chains = []
+    for chain in model:
+        action = False
+        span = chain.get_ligands()
+        for res in span:
+            if 'LIG' in res.name:
+                action = True
+        if action:
+            liganded_chains.append(
+                list(chain.get_polymer().make_one_letter_sequence()))
+    # Compare chains to A of reference... if first chain cannot alo?
+    scores = [gemmi.align_string_sequences(
+        x, r_s, [], blosum62).score for x in liganded_chains]
+    return all([x > 0 for x in scores])
+
+
+def assign_small_mols_to_chains(f):
+    # Return a gemmi file???
+    aa_codes = {'V': 'VAL', 'I': 'ILE', 'L': 'LEU', 'E': 'GLU', 'Q': 'GLN', 'D': 'ASP', 'N': 'ASN', 'H': 'HIS',
+                'W': 'TRP', 'F': 'PHE', 'Y': 'TYR', 'R': 'ARG', 'K': 'LYS', 'S': 'SER', 'T': 'THR', 'M': 'MET',
+                'A': 'ALA', 'G': 'GLY', 'P': 'PRO', 'C': 'CYS'}
+    base_structure = gemmi.read_structure(f)
+    base_models = base_structure[0]
+    all_chains = [x.name for x in base_models]
+    HOH_chains = find_water_chains(f)
+    nonHOH_chains = list(set(all_chains) - set(HOH_chains))
+    chain_centers = {}
+    chain_names = []
+    for i in nonHOH_chains:
+        chain_centers[i] = get_chain_center(chain_name=i, file=f)
+        span = base_structure[0][i].whole()
+        residues = [x.name for x in span]
+        # Possible to convert this to a %age
+        if any([True for v in residues if v in aa_codes.values()]):
+            chain_names.append(i)
+    alt_chains = list(set(nonHOH_chains) - set(chain_names))
+    temp = gemmi.read_structure(f)
+    for j in alt_chains:
+        chain_dists = {}
+        for z in chain_names:
+            chain_dists[z] = chain_centers[j].dist(chain_centers[z])
+        try:
+            temp[0][j].name = min(chain_dists, key=chain_dists.get)
+        except:
+            print(f'Cannot compress {j} to {chain_names} in {f}')
+    struc = Structure.from_file(Path(f))
+    struc.structure = temp
+    struc.structure.merge_chain_parts()
+    # clean up...
+    for chain in struc.structure[0]:
+        subchainname = chain[0].subchain
+        for x in chain:
+            x.subchain = subchainname
+    return struc
+
+
 def split_chains(f):
     '''
     Split a pdb file according to chain names. While preserving chains that contain waters and assigned small, non-amino acid containing chains to the nearest chain by center of mass.
@@ -545,7 +623,6 @@ def split_chains(f):
     all_chains = [x.name for x in base_models]
     HOH_chains = find_water_chains(f)
     nonHOH_chains = list(set(all_chains) - set(HOH_chains))
-
     chain_centers = {}
     chain_names = []
     # From nonHOH chains, identify if they contain any aminoacids, if they do. Assume they are full chains.
@@ -557,7 +634,6 @@ def split_chains(f):
         # Possible to convert this to a %age
         if any([True for v in residues if v in aa_codes.values()]):
             chain_names.append(i)
-
     alt_chains = list(set(nonHOH_chains) - set(chain_names))
     for i in chain_names:
         # For each chain, convert all ligands,
@@ -575,13 +651,11 @@ def split_chains(f):
                 continue
             else:
                 temp_structure[0].remove_chain(j)
-
         # Rename Chain to corresponding chain then save!
         name = os.path.splitext(os.path.basename(f))[0] + '_' + str(i)
         filename = os.path.join(self.outdir, f'{name}_mono.pdb')
         temp_structure.write_pdb(filename)
         filenames.append(filename)
-
     return filenames
 
 
