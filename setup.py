@@ -30,7 +30,7 @@ setuptools.setup(
              'fragalysis_api/xcglobalscripts/config.ini']
     },  # Define which additional files should be included in package
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',  # https://pypi.org/classifiers/
         "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
