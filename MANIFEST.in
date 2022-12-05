@@ -1,0 +1,2 @@
+include fragalysis-api/fragalysis_api/xcglobalscripts/config.ini
+include fragalysis_api/xcimporter/non_ligs.json

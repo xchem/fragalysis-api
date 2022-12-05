@@ -1,13 +1,16 @@
-import setuptools
+import setuptools, os
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+if os.path.exists("README.md"):
+    with open("README.md", "r") as fh:
+        long_description = fh.read()
+else:
+    long_description = ""
 
 
 setuptools.setup(
     name='fragalysis_api',
-    version='0.0.5.1',
-    author='Fragment 5 + Tyler',
+    version='0.6',
+    author='XChem',
     author_email="",
     description="A package to load PDBs into fragalysis format.",
     long_description=long_description,  # README_1.md file as description
@@ -20,6 +23,7 @@ setuptools.setup(
                       'pypdb',
                       'matplotlib',
                       'scipy',
+                      'rdkit',
                       'fragalysis'],  # Install requirements extracted from requirements.txt
     include_package_data=True,  # Allow to include other files than .py in package
     package_data={
@@ -27,10 +31,13 @@ setuptools.setup(
              'fragalysis_api/xcglobalscripts/config.ini']
     },  # Define which additional files should be included in package
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',  # https://pypi.org/classifiers/
         "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+        'Topic :: Scientific/Engineering :: Chemistry',
     ],
     python_requires='>=3.6',
 )

@@ -1,0 +1,11 @@
+## [0.6] - 2022-12-05
+### Removed
+- Removed invalid docker code
+
+### Fixed
+- Moved doc files out of package
+- Cleaned up installation disorder
+
+### Added
+- `MANIFEST.in` for two files which are required by the package
+- Submodule `quick` for a quick download of the data as it appears on the site, which is what most folks want anyway
