@@ -35,6 +35,9 @@ setuptools.setup(
         "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+        'Topic :: Scientific/Engineering :: Chemistry',
     ],
     python_requires='>=3.6',
 )
