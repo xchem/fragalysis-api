@@ -13,6 +13,8 @@ Namely:
 * Upload data, i.e. import into Fragalysis -> **xcimporter** functionality (_vide infra_)
 * Download data, i.e. export from Fragalysis -> **xcexporter** functionality (_vide infra_)
 
+The full list of Fragalysis API endpoints can be found at [fragalysis.diamond.ac.uk/api](https://fragalysis.diamond.ac.uk/api/).
+
 ## Installation
 
 In order to manipulate the data for upload (e.g. aligning crystal maps), 
@@ -52,7 +54,14 @@ Other functionalities that are available:
 ## Usage in Python
 
 ### Export from Fragalysis
-Download relevant data off Fragalysis. See also [extractor notes](extractor.md).
+> TL;DR: This is a Python package for accurately interacting with the Fragalysis API, 
+> if you simply want to download everything of a target,
+> please see the [quick download notes](quick_download.md).
+
+Download relevant data off Fragalysis. 
+
+
+See also [extractor notes](extractor.md).
 
 ```python
 import fragalysis_api

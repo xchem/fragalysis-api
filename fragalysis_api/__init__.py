@@ -21,5 +21,8 @@ from .xcextracter.xcextracter import xcextracter
 from .xcanalyser.graphcreator import GraphRequest, xcgraphcreator
 from .xcanalyser.xcanalyser import xcanalyser
 
+# this is not part of canonical Fragalysis wrapper, but a quick way to get the data.
+from .quick import QuickDownloader
+
 
 
