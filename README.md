@@ -235,7 +235,7 @@ A description of the arguments are as follows:
 ### Enforced rules :scroll:
 
 - The pdb file shall not be greater than 5MB.
-- The pdb filename shall not contain non English language ascii characters
+- The pdb filename shall only contain non ASCII characters (e.g. Unicode characters such as é or ü).
   and shall be between 4 and 20 characters in length.
 - Each pdb file for alignment shall contain the same number of chains.
 - All pdb files to be aligned must be in the same directory.
