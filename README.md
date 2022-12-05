@@ -6,48 +6,36 @@
 
 Documentation: https://xchem.github.io/fragalysis-api/
 
-This api aims to allow any user to upload pdb files from the pdb or that they have created themselves,
+This API aims to allow any user to upload pdb files from the pdb or that they have created themselves,
 and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
 
 ## Installation
 
-Starting out by initialising an environment and activating it.
-Clone the repository and cd to the relevant directory.
-Install rdkit via conda, and the other dependencies via the setup.py file:
+In order to manipulate the data for upload (e.g. aligning crystal maps), some additional dependencies are required,
+namely [xchem/gemmi_pandda](https://github.com/xchem/gemmi_pandda) and [xchem/pandda_gemmi](https://github.com/xchem/pandda_gemmi).
+
 
 ```bash
-conda create -n fragalysis_env anaconda -y
-conda activate fragalysis_env
-conda install -c conda-forge rdkit -y
+# Install our-bespoke version of gemmi # Required for upload
+# Do note this is a drop-in replacement for gemmi, so will interfere with other packages that use gemmi.
+pip install -U --force-reinstall git+https://github.com/xchem/gemmi_pandda.git
 
-# Install our-bespoke version of gemmi # Required
-git clone https://github.com/xchem/gemmi_pandda.git
-cd gemmi_pandda/
-pip install -U --force-reinstall .
-cd ..
-
-# Also Required
-git clone https://github.com/xchem/pandda_gemmi.git
-cd pandda_gemmi/
-pip install -e .
-cd ..
-
-# Finally install the api
-git clone "https://github.com/xchem/fragalysis-api.git"
-cd fragalysis-api/
-pip install -e .
-cd ..
+# Also Required for upload
+pip install -e git+https://github.com/xchem/pandda_gemmi.git
 ```
-
-You can check if it has installed using: `conda list`
+The API itself can be installed via pypi or from the Git repo:
+```bash
+pip install fragalysis-api
+# or (for a later version if available)
+pip install git+https://github.com/xchem/fragalysis-api.git
+```
 
 ### How to use API
 
-1. Set up environment
-2. Download PDB files and query the PDB for structures of the same protein bound to the same or different ligands
-3. Submit PDB files - you will be given a query ID
-4. Push your files into fragalysis and view them online :construction:
-5. Analyse the binding of ligands to your target protein!
+1. Download PDB files and query the PDB for structures of the same protein bound to the same or different ligands
+2. Submit PDB files - you will be given a query ID
+3. Push your files into fragalysis and view them online :construction:
+4. Analyse the binding of ligands to your target protein!
 
 Other functionalities that are available:
 
@@ -209,7 +197,7 @@ A description of the arguments are as follows:
 
 ### Enforced rules :scroll:
 
-- The pdb file shall not be greater than 5mb.
+- The pdb file shall not be greater than 5MB.
 - The pdb filename shall not contain non English language ascii characters
   and shall be between 4 and 20 characters in length.
 - Each pdb file for alignment shall contain the same number of chains.
