@@ -9,7 +9,7 @@ else:
 
 setuptools.setup(
     name='fragalysis_api',
-    version='0.0.6',
+    version='0.6',
     author='XChem',
     author_email="",
     description="A package to load PDBs into fragalysis format.",
