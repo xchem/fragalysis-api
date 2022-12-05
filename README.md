@@ -4,16 +4,20 @@
 
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/xchem/fragalysis-api.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/xchem/fragalysis-api/context:python)
 
-Documentation: https://xchem.github.io/fragalysis-api/
+Documentation: [https://xchem.github.io/fragalysis-api/](https://xchem.github.io/fragalysis-api/)
 
 This API aims to allow any user to upload pdb files from the pdb or that they have created themselves,
 and analyse the ligand binding using the fragalysis webpage (https://fragalysis.diamond.ac.uk).
+Namely:
+
+* Upload data, i.e. import into Fragalysis -> **xcimporter** functionality (_vide infra_)
+* Download data, i.e. export from Fragalysis -> **xcexporter** functionality (_vide infra_)
 
 ## Installation
 
-In order to manipulate the data for upload (e.g. aligning crystal maps), some additional dependencies are required,
+In order to manipulate the data for upload (e.g. aligning crystal maps), 
+some additional dependencies are required,
 namely [xchem/gemmi_pandda](https://github.com/xchem/gemmi_pandda) and [xchem/pandda_gemmi](https://github.com/xchem/pandda_gemmi).
-
 
 ```bash
 # Install our-bespoke version of gemmi # Required for upload
@@ -47,9 +51,33 @@ Other functionalities that are available:
 
 ## Usage in Python
 
-To prepare input data-files using python you api can import the `xcimporer` or `import_single_file` functions and then provide the necessary values to the functions.
+### Export from Fragalysis
+Download relevant data off Fragalysis. See also [extractor notes](extractor.md).
 
-e.g
+```python
+import fragalysis_api
+import os
+import pandas as pd
+
+hit_data: pd.DataFrame = fragalysis_api.xcextracter(target_name='NUDT5A')
+```
+The columns in the dataframe are:
+
+* `id`
+* `prot_id`: unique integer id per crystal, e.g. `protein_code`:`NUDT5A-x0114_1` and `protein_code`:`NUDT5A-x0114_2` have different `prot_id` but same `cmpd_id`.
+* `protein_code`, a string form of the above (e.g. `NUDT5A-x0114_1`)
+* `cmpd_id`, an integer, unique per ligand, but not per crystal
+* `lig_id`, the chemical compounent name, generally `LIG`
+* `chain_id`, the chain id of the ligand
+* `smiles` and `sdf_info`, the SMILE-String and the SDF block of the ligand
+* `molecule_protein`, the bound PDB file address
+* `mw`, `logp`, `tpsa`, `ha`, `hacc`, `hdon`, `rots`, `rings`, `velec`: inferred chemical properties of the ligand
+
+### Import into Fragalysis
+To prepare input data-files using python you api can import the `xcimporer` or `import_single_file` functions and then provide the necessary values to the functions.
+ See also [importer notes](importer.md).
+
+Example:
 
 ```python
 from fragalysis_api import xcimporter, import_single_file
