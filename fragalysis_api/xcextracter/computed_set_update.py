@@ -1,3 +1,4 @@
+import os
 import sys
 import requests
 import json
@@ -6,6 +7,14 @@ import threading
 import _thread as thread
 
 REQ_URL = 'https://fragalysis.diamond.ac.uk/viewer/upload_cset/'
+
+# The keycloak credentials (sensitive).
+# These are required if you're going to use the authenticated API.
+# They will be asserted when the appropriate functions are used.
+KEYCLOAK_USERNAME = os.environ.get('KEYCLOAK_USERNAME')
+KEYCLOAK_PASSWORD = os.environ.get('KEYCLOAK_PASSWORD')
+KEYCLOAK_CLIENT_SECRET = os.environ.get('KEYCLOAK_CLIENT_SECRET')
+
 
 def get_csrf(REQ_URL):
     """Get a csrf token from the request url to authenticate further requests
@@ -31,7 +40,59 @@ def get_csrf(REQ_URL):
     return csrftoken
 
 
-def update_cset(REQ_URL, target_name, sdf_path, update_set='None', submit_choice=None, upload_key=None, pdb_zip_path=None, add=False):
+def get_keycloak_access_token(*,
+                              keycloak_url,
+                              keycloak_realm,
+                              keycloak_client_id):
+    """Gets an 'access token' from Keycloak.
+    If successful we'll get the token (a big long string).
+    
+    Each access tokens should last for a number of minutes depending on the
+    keycloak configuration.
+    
+    To use this function you must have set the corresponding
+    environment variables KEYCLOAK_USERNAME, KEYCLOAK_PASSWORD,
+    and KEYCLOAK_CLIENT_SECRET
+    
+    Parameters
+    ----------
+    keycloak_url string
+        The keycloak authentication URL (ending in '/auth')
+    keycloak_realm string
+        The keycloak realm the stack belongs to
+    keycloak_client_id string
+        The client ID the stack is known by in keycloak
+
+    Returns
+    -------
+    access_token string
+        An API access token
+    """
+    assert KEYCLOAK_USERNAME
+    assert KEYCLOAK_PASSWORD
+    assert KEYCLOAK_CLIENT_SECRET
+    
+    print(KEYCLOAK_USERNAME)
+    print(KEYCLOAK_PASSWORD)
+    print(KEYCLOAK_CLIENT_SECRET)
+    
+    realm_url = f'{keycloak_url}/realms/{keycloak_realm}'
+    url = f'{realm_url}/protocol/openid-connect/token'
+    data = (
+        f'client_id={keycloak_client_id}'
+        f'&grant_type=password'
+        f'&username={KEYCLOAK_USERNAME}'
+        f'&password={KEYCLOAK_PASSWORD}'
+        f'&client_secret={KEYCLOAK_CLIENT_SECRET}'
+    )
+    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    resp = requests.post(url, headers=headers, data=data, timeout=4.0)
+    assert resp.status_code == 200
+    assert 'access_token' in resp.json()
+    return resp.json()['access_token']
+
+
+def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None', submit_choice=None, upload_key=None, pdb_zip_path=None, add=False):
     """Send data to <root_url>/viewer/upload_cset/ to overwrite an existing computed set, or to 
     <root_url>/viewer/update_cset/ to add new molecules without deleting the old ones.
 
@@ -39,6 +100,8 @@ def update_cset(REQ_URL, target_name, sdf_path, update_set='None', submit_choice
     ----------
     REQ_URL: str
         request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload_cset/ or viewer/update_cset)
+    access_token: str
+        a valid OIDC/Keycloak access token, inserted into the request header as a bearer token
     target_name: str
         the name of the target in Fragalysis that the computed set is for
     update_set: str
@@ -63,6 +126,8 @@ def update_cset(REQ_URL, target_name, sdf_path, update_set='None', submit_choice
     taskurl str
         the URL to check for the status of the upload
     """
+    assert access_token
+        
     print(f'Submitting files to update {update_set}...')
     
     csrf_token = get_csrf(REQ_URL)
@@ -85,7 +150,8 @@ def update_cset(REQ_URL, target_name, sdf_path, update_set='None', submit_choice
         files.append(('pdb_zip', open(pdb_zip_path,'rb')))
 
     headers = {'X-CSRFToken': csrf_token,
-              'Cookie': f'csrftoken={csrf_token}'}
+              'Cookie': f'csrftoken={csrf_token}',
+              'Authorization': f'Bearer {access_token}'}
     
     response = requests.request("POST", REQ_URL, headers=headers, data=payload, files=files)
     
@@ -184,9 +250,33 @@ def get_task_response(taskurl):
 # ---- NB: The major difference here is the REQ_URL. For new data, or to overwrite data, use https://fragalysis.diamond.ac.uk/viewer/upload_cset/.
 #          To add new molecules to an existing set, use https://fragalysis.diamond.ac.uk/viewer/update_cset/. ----
 #
+# You must set the following environment variables
+# to avoid assertions when you run the code:
+#
+# - KEYCLOAK_USERNAME (a valid user for the chosen stack)
+# - KEYCLOAK_PASSWORD (the user's password)
+# - KEYCLOAK_CLIENT_SECRET (this is a stack-specific uuid4-like value)
+#
+# i.e.:
+#
+#   export KEYCLOAK_USERNAME=someone
+#   export KEYCLOAK_PASSWORD=someone1234
+#   export KEYCLOAK_CLIENT_SECRET=00000000-0000-0000-0000-000000000000
+#
+# to get an OIDC/Keycloak access token:
+# -------------------------------------
+# Here we get a token for the staging stack...
+#
+# access_token = get_keycloak_access_token(
+#     keycloak_url = 'https://keycloak.xchem.diamond.ac.uk/auth',
+#     keycloak_realm = 'xchem',
+#     keycloak_client_id = 'fragalysis-chem')
+# print(f'access_token="{access_token}"')
+#
 # to overwrite an existing cset:
 # ------------------------------
 # taskurl = update_cset(REQ_URL='https://fragalysis.diamond.ac.uk/viewer/upload_cset/',
+#                       access_token=access_token,
 #                       target_name='Mpro',
 #                       submit_choice='1',
 #                       upload_key='1',
@@ -200,6 +290,7 @@ def get_task_response(taskurl):
 # to update an existing cset:
 # ---------------------------
 # taskurl = update_cset(REQ_URL='https://fragalysis.diamond.ac.uk/viewer/update_cset/',
+#                       access_token=access_token,
 #                       target_name='Mpro',
 #                       update_set='WT-xCOS3-ThreeHop',
 #                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28 copy.sdf',
@@ -208,4 +299,3 @@ def get_task_response(taskurl):
 # task_response, json_results = get_task_response(taskurl)
 # print(task_response)
 # print(json_results)
-
