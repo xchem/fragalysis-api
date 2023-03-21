@@ -270,7 +270,7 @@ def get_task_response(taskurl):
 # access_token = get_keycloak_access_token(
 #     keycloak_url = 'https://keycloak.xchem.diamond.ac.uk/auth',
 #     keycloak_realm = 'xchem',
-#     keycloak_client_id = 'fragalysis-chem')
+#     keycloak_client_id = 'fragalysis-xchem')
 # print(f'access_token="{access_token}"')
 #
 # to overwrite an existing cset:
