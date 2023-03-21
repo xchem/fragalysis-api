@@ -275,7 +275,7 @@ def get_task_response(taskurl):
 #
 # to overwrite an existing cset:
 # ------------------------------
-# taskurl = update_cset(REQ_URL='https://fragalysis.diamond.ac.uk/viewer/upload_cset/',
+# taskurl = update_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/upload_cset/',
 #                       access_token=access_token,
 #                       target_name='Mpro',
 #                       submit_choice='1',
@@ -289,7 +289,7 @@ def get_task_response(taskurl):
 #
 # to update an existing cset:
 # ---------------------------
-# taskurl = update_cset(REQ_URL='https://fragalysis.diamond.ac.uk/viewer/update_cset/',
+# taskurl = update_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/update_cset/',
 #                       access_token=access_token,
 #                       target_name='Mpro',
 #                       update_set='WT-xCOS3-ThreeHop',
