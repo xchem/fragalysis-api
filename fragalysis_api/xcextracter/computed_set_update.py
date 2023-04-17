@@ -113,7 +113,7 @@ def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None',
     sdf_path: str
         path to the sdf file to upload
     submit_choice: int
-        0 for validate, 1 for upload (not required for update - ie. viewer/update_cset)
+        'V' for validate, 'U' for upload or 'D' for deleet
     upload_key: str
         upload key, not currently turned on, so can be any value, but not blank or null (optional)
     pdb_zip_path: str
@@ -127,6 +127,7 @@ def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None',
         the URL to check for the status of the upload
     """
     assert access_token
+    assert submit_choice in ('V', 'U', 'D')
         
     print(f'Submitting files to update {update_set}...')
     
@@ -278,7 +279,7 @@ def get_task_response(taskurl):
 # taskurl = update_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/upload_cset/',
 #                       access_token=access_token,
 #                       target_name='Mpro',
-#                       submit_choice='1',
+#                       submit_choice='U',
 #                       upload_key='1',
 #                       update_set='WT-xCOS3-ThreeHop',
 #                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28.sdf',
@@ -292,6 +293,7 @@ def get_task_response(taskurl):
 # taskurl = update_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/update_cset/',
 #                       access_token=access_token,
 #                       target_name='Mpro',
+#                       submit_choice='U',
 #                       update_set='WT-xCOS3-ThreeHop',
 #                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28 copy.sdf',
 #                       pdb_zip_path='/Users/uzw12877/Downloads/Test_upload/receptor_pdbs copy.zip',
