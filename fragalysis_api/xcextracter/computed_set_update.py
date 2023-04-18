@@ -1,7 +1,6 @@
 import os
 import sys
 import requests
-import json
 import time
 import threading
 import _thread as thread
@@ -91,10 +90,8 @@ def get_keycloak_access_token(*,
     assert 'access_token' in resp.json()
     return resp.json()['access_token']
 
-
-def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None', submit_choice=None, upload_key=None, pdb_zip_path=None, add=False):
-    """Send data to <root_url>/viewer/upload_cset/ to overwrite an existing computed set, or to 
-    <root_url>/viewer/update_cset/ to add new molecules without deleting the old ones.
+def upload_cset(REQ_URL, access_token, target_name, sdf_path, upload_key=None, pdb_zip_path=None):
+    """Upload a computed set to Fragalysis
 
     Parameters
     ----------
@@ -104,43 +101,23 @@ def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None',
         a valid OIDC/Keycloak access token, inserted into the request header as a bearer token
     target_name: str
         the name of the target in Fragalysis that the computed set is for
-    update_set: str
-        the name of the computed set you want to update 
-        (can be found with: "".join(submitter_name.split()) + '-' + "".join(method.split()),
-        where submitter_name is the name in the submitter_name field in the blank mol of the uploaded sdf file,
-        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding
-        a set for the first time
     sdf_path: str
         path to the sdf file to upload
-    submit_choice: int
-        'V' for validate, 'U' for upload or 'D' for deleet
     upload_key: str
         upload key, not currently turned on, so can be any value, but not blank or null (optional)
     pdb_zip_path: str
         path to the zip file of pdb's to upload (optional)
-    add: bool
-        set to True if updating a computed set without overwriting it completely (for <root_url>/viewer/update_cset/)
-        
-    Returns
-    -------
-    taskurl str
-        the URL to check for the status of the upload
     """
     assert access_token
-    assert submit_choice in ('V', 'U', 'D')
-        
-    print(f'Submitting files to update {update_set}...')
+
+    print(f'Uploading new computed set files....')
     
     csrf_token = get_csrf(REQ_URL)
     
-    if not add:
-        payload = {'target_name': target_name,
-                   'submit_choice': submit_choice,
-                   'upload_key': upload_key,
-                   'update_set': update_set}
-    else:
-        payload = {'target_name': target_name,
-                   'update_set': update_set}
+    payload = {'target_name': target_name,
+                'submit_choice': "U",
+                'upload_key': upload_key,
+                'update_set': None}
 
     files = [
         ('sdf_file', open(sdf_path,'rb')),
@@ -156,6 +133,164 @@ def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None',
     
     response = requests.request("POST", REQ_URL, headers=headers, data=payload, files=files)
     
+    taskurl = get_taskidurl(response=response, REQ_URL=REQ_URL)
+    
+    if not taskurl:
+        raise Exception(f'Something went wrong with the upload request! \
+                Please try again or email warren.thompson@diamond.ac.uk for help.\
+                Response: {response.text}') 
+    
+    return taskurl
+
+
+def update_cset(REQ_URL, access_token, target_name, sdf_path, cset_name, upload_key=None, pdb_zip_path=None, add=False):
+    """Send data to <root_url>/viewer/upload_cset/ to overwrite an existing computed set, or to 
+    <root_url>/viewer/update_cset/ to add new molecules without deleting the old ones.
+
+    Parameters
+    ----------
+    REQ_URL: str
+        request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload_cset/ or viewer/update_cset)
+    access_token: str
+        a valid OIDC/Keycloak access token, inserted into the request header as a bearer token
+    target_name: str
+        the name of the target in Fragalysis that the computed set is for
+    cset_name: str
+        the name of the computed set you want to update 
+        (can be found with: "".join(submitter_name.split()) + '-' + "".join(method.split()),
+        where submitter_name is the name in the submitter_name field in the blank mol of the uploaded sdf file,
+        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding
+        a set for the first time
+    sdf_path: str
+        path to the sdf file to upload
+    upload_key: str
+        upload key, not currently turned on, so can be any value, but not blank or null (optional)
+    pdb_zip_path: str
+        path to the zip file of pdb's to upload (optional)
+    add: bool
+        set to True if updating a computed set without overwriting it completely (for <root_url>/viewer/update_cset/)
+
+    Returns
+    -------
+    taskurl: str
+        The URL of the Celery task
+    """
+    assert access_token
+
+    print(f'Submitting files to update {cset_name}...')
+    
+    csrf_token = get_csrf(REQ_URL)
+        
+    if not add:
+        payload = {'target_name': target_name,
+                   'submit_choice': "U",
+                   'upload_key': upload_key,
+                   'update_set': cset_name}
+    else:
+        payload = {'target_name': target_name,
+                   'update_set': cset_name}
+
+    files = [
+        ('sdf_file', open(sdf_path,'rb')),
+        
+    ]
+    
+    if pdb_zip_path:
+        files.append(('pdb_zip', open(pdb_zip_path,'rb')))
+
+    headers = {'X-CSRFToken': csrf_token,
+              'Cookie': f'csrftoken={csrf_token}',
+              'Authorization': f'Bearer {access_token}'}
+    
+    response = requests.request("POST", REQ_URL, headers=headers, data=payload, files=files)
+    
+    taskurl = get_taskidurl(response=response, REQ_URL=REQ_URL)
+    
+    if not taskurl:
+        raise Exception(f'Something went wrong with the update request! \
+                Please try again or email warren.thompson@diamond.ac.uk for help.\
+                Response: {response.text}') 
+    
+    return taskurl
+
+
+def delete_cset(REQ_URL, access_token, target_name, cset_name, upload_key=None):
+    """Delete uploaded computer set
+
+    Parameters
+    ----------
+    REQ_URL: str
+        request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload_cset/ or viewer/update_cset)
+    access_token: str
+        a valid OIDC/Keycloak access token, inserted into the request header as a bearer token
+    target_name: str
+        the name of the target in Fragalysis that the computed set is for
+    cset_name: str
+        the name of the computed set you want to delete 
+        (can be found with: "".join(submitter_name.split()) + '-' + "".join(method.split()),
+        where submitter_name is the name in the submitter_name field in the blank mol of the uploaded sdf file,
+        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding
+        a set for the first time
+    upload_key: str
+        upload key, not currently turned on, so can be any value, but not blank or null (optional)
+    """
+    assert access_token
+    
+    print(f'Deleting {cset_name}...')
+    
+    csrf_token = get_csrf(REQ_URL)
+        
+    payload = {'target_name': target_name,
+                'submit_choice': "D",
+                'upload_key': upload_key,
+                'update_set': cset_name}
+
+    headers = {'X-CSRFToken': csrf_token,
+              'Cookie': f'csrftoken={csrf_token}',
+              'Authorization': f'Bearer {access_token}'}
+    
+    response = requests.request("POST", REQ_URL, headers=headers, data=payload)
+    
+    check_url_csetdeleted(cset_name=cset_name, response=response)
+
+def check_url_csetdeleted(cset_name: str, response: str):
+    """Checks if response yields delete success
+
+    Parameters
+    ----------
+    cset_name: str
+        the name of the computed set you want to delete 
+        (can be found with: "".join(submitter_name.split()) + '-' + "".join(method.split()),
+        where submitter_name is the name in the submitter_name field in the blank mol of the uploaded sdf file,
+        and method is the method field in the blank mol of the uploaded sdf file). Leave blank if you are adding
+        a set for the first time
+    response: str
+        The response from the update cset call
+    REQ_URL: str
+        request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload_cset/ or viewer/update_cset)
+    """
+    lines = response.text.split('\n')
+    delete_check = None
+    for l in lines:
+        if f'<p style="color:blue;">Compound set &quot;{cset_name}&quot; deleted</p>' in l:
+            delete_check = True
+            print(f'Computed set: {cset_name} deleted')
+            break
+    if not delete_check:
+        raise Exception(f'Something went wrong with the delete request! \
+                        Please try again or email warren.thompson@diamond.ac.uk for help.\
+                        Response: {response.text}')             
+
+def get_taskidurl(response: str, REQ_URL: str):
+    """Checks if response yields a Celery task ID and returns the URL
+
+    Parameters
+    ----------
+    response: str
+        The response from the update cset call
+    REQ_URL: str
+        request URL for the upload (e.g. https://fagalysis.diamond.ac.uk/viewer/upload_cset/ or viewer/update_cset)
+    """
     lines = response.text.split('\n')
     taskurl = None
     for l in lines:
@@ -167,14 +302,8 @@ def update_cset(REQ_URL, access_token, target_name, sdf_path, update_set='None',
             taskid = l.split('/')[-2]
             print(f'upload task id: {taskid}')
             taskurl = f'{REQ_URL.replace("/viewer/update_cset/","/viewer/update_task/")}{taskid}'
-
             if taskurl:
                 break
-    if not taskurl:
-        raise Exception(f'Something went wrong with the upload/update request! \
-                        Please try again or email rachael.skyner@diamond.ac.uk for help.\
-                        Response: {response.text}')
-
     return taskurl
 
 
@@ -274,14 +403,25 @@ def get_task_response(taskurl):
 #     keycloak_client_id = 'fragalysis-xchem')
 # print(f'access_token="{access_token}"')
 #
+# to upload a new cset:
+# ------------------------------
+# taskurl = upload_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/upload_cset/',
+#                       access_token=access_token,
+#                       target_name='Mpro',
+#                       upload_key='1',
+#                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28.sdf',
+#                       pdb_zip_path='/Users/uzw12877/Downloads/Test_upload/receptor_pdbs.zip')
+# task_response, json_results = get_task_response(taskurl)
+# print(task_response)
+# print(json_results)
+#
 # to overwrite an existing cset:
 # ------------------------------
 # taskurl = update_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/upload_cset/',
 #                       access_token=access_token,
 #                       target_name='Mpro',
-#                       submit_choice='U',
 #                       upload_key='1',
-#                       update_set='WT-xCOS3-ThreeHop',
+#                       cset_name='WT-xCOS3-ThreeHop',
 #                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28.sdf',
 #                       pdb_zip_path='/Users/uzw12877/Downloads/Test_upload/receptor_pdbs.zip')
 # task_response, json_results = get_task_response(taskurl)
@@ -293,11 +433,21 @@ def get_task_response(taskurl):
 # taskurl = update_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/update_cset/',
 #                       access_token=access_token,
 #                       target_name='Mpro',
-#                       submit_choice='U',
-#                       update_set='WT-xCOS3-ThreeHop',
+#                       cset_name='WT-xCOS3-ThreeHop',
 #                       sdf_path='/Users/uzw12877/Downloads/Test_upload/Top_100_three_hop_XCOS_1.4_2020-07-28 copy.sdf',
 #                       pdb_zip_path='/Users/uzw12877/Downloads/Test_upload/receptor_pdbs copy.zip',
 #                       add=True)
+# task_response, json_results = get_task_response(taskurl)
+# print(task_response)
+# print(json_results)
+#
+# to delete an existing cset:
+# ---------------------------
+# delete_cset(REQ_URL='https://fragalysis.xchem.diamond.ac.uk/viewer/update_cset/',
+#             access_token=access_token,
+#             target_name='Mpro',
+#             cset_name='WT-xCOS3-ThreeHop',
+#             upload_key='1')
 # task_response, json_results = get_task_response(taskurl)
 # print(task_response)
 # print(json_results)
