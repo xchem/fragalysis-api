@@ -37,9 +37,9 @@ on:
     - 'main'
     tags:
     - '**'
-#   schedule:  
+  schedule:  
   # Build every Sunday (0) at 3:45pm
-#   - cron: '45 15 * * 0'
+  - cron: '45 15 * * 0'
 
 env:
   CONDA_ORIGIN: http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
@@ -53,7 +53,7 @@ jobs:
     - name: Setup python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.7.10
+        python-version: '3.7.10'
     - name: Install conda
       run: |
         # Install Miniconda.
